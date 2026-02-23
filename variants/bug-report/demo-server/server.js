@@ -171,6 +171,8 @@ if (hasCerts) {
     logger.info(`  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`);
     logger.info(`  Health check:  GET  https://${HOST}:${HTTPS_PORT}/health`);
     logger.info(`  Log level:     ${LOG_LEVEL}`);
+
+    // Note!! In a production server, you would NOT log the cert paths like this — this is just for demo purposes.
     logger.info(`  TLS cert:      ${CERT_PATH}`);
     logger.info(`  TLS key:       ${KEY_PATH}`);
     logger.info('═'.repeat(72));
