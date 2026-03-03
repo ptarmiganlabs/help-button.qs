@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 
 # TLS certificates (self-signed keys must never be committed)
 **/certs/*.pem
+.DS_Store
