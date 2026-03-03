@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/ptarmiganlabs/qs-help-button/compare/qs-help-button-v1.3.0...qs-help-button-v1.3.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* update zip creation to include all language files and exclude unnecessary directories ([1fa72c5](https://github.com/ptarmiganlabs/qs-help-button/commit/1fa72c57de0a9b69ac786afc703ead9a6c001ef6))
+
 ## [1.3.0](https://github.com/ptarmiganlabs/qs-help-button/compare/qs-help-button-v1.2.1...qs-help-button-v1.3.0) (2026-03-03)
 
 
