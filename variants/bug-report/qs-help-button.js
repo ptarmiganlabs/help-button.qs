@@ -576,7 +576,7 @@
   // Bug Report Dialog
   // ---------------------------------------------------------------------------
 
-  /** Field label mapping for display (falls back to config values). */
+  /** Field label mapping for display (from merged config). */
   var FIELD_LABELS = cfg.bugReport.fieldLabels;
 
   /**
