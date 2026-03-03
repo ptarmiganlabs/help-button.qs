@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.0](https://github.com/ptarmiganlabs/qs-help-button/compare/qs-help-button-v1.2.1...qs-help-button-v1.3.0) (2026-03-03)
+
+
+### Features
+
+* make all bug-report dialog texts configurable ([d09cde2](https://github.com/ptarmiganlabs/qs-help-button/commit/d09cde2786d5bdf218ef87fb9334c629ea7f56f2))
+* make all bug-report dialog texts configurable ([d4c5ee3](https://github.com/ptarmiganlabs/qs-help-button/commit/d4c5ee3667c130684b618275b14c724c48a3b797))
+* **translation:** Added translations for Swedish, Danish, Norwegian, Finnish, German, French, Spanish and Polish ([c11af67](https://github.com/ptarmiganlabs/qs-help-button/commit/c11af67352776d6dac4ad72fa40df923499b16e4))
+* **translation:** update popup title text in Swedish configuration ([3de3efc](https://github.com/ptarmiganlabs/qs-help-button/commit/3de3efc5a24c764afc661a2739cda6a6e494dc43))
+
+
+### Bug Fixes
+
+* update comment for FIELD_LABELS to reflect merged config ([3b98511](https://github.com/ptarmiganlabs/qs-help-button/commit/3b985113f5877622e612b1b4908a5a92e406c674))
+
 ## [1.2.1](https://github.com/ptarmiganlabs/qs-help-button/compare/qs-help-button-v1.2.0...qs-help-button-v1.2.1) (2026-02-23)
 
 
