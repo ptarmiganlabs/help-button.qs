@@ -29,6 +29,16 @@ Current available variants:
   * Flexible authentication: no auth, custom header, Sense session passthrough, or arbitrary headers.
   * Zero dependencies, vanilla JavaScript.
 
+## Multi-Language Support
+
+Both variants ship with self-contained language folders. Each folder contains all the files needed for deployment — just pick the language that fits your organisation:
+
+**English** (`en`), **Swedish** (`sv`), **Norwegian** (`no`), **Danish** (`da`), **Finnish** (`fi`), **German** (`de`), **French** (`fr`), **Polish** (`pl`), **Spanish** (`es`)
+
+See each variant's README for the full language table and installation instructions.
+
+> **A note on folder names:** Language folders are named using [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) **language** codes, not [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) **country** codes. For example, Danish is `da` (not `dk`), Swedish is `sv` (not `se`), and German is `de` (not the country-code for Germany, which is also `de` by coincidence). When adding a new language, always use the two-letter ISO 639-1 language code.
+
 ## Template Fields
 
 Both variants support **template fields** — dynamic `{{…}}` placeholders in URLs that are resolved at click time using live Qlik Sense context. This enables context-sensitive help, such as directing users to app-specific or sheet-specific documentation pages.

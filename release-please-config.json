@@ -44,12 +44,92 @@
     "extra-files": [
         {
             "type": "generic",
-            "path": "variants/basic/qs-help-button.js",
+            "path": "variants/basic/en/qs-help-button.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/qs-help-button.js",
+            "path": "variants/basic/sv/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/en/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/sv/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/no/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/da/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/fi/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/de/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/fr/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/pl/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/es/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/no/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/da/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/fi/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/de/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/fr/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/pl/qs-help-button.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/es/qs-help-button.js",
             "glob": false
         }
     ],

@@ -188,6 +188,40 @@ window.qsHelpButtonConfig = {
     successMessage: 'Bug report submitted successfully!',
     errorMessage: 'Failed to submit bug report.',
 
+    // -- Dialog text overrides (for localisation / custom wording) --
+    // All text strings shown in the bug-report dialog are configurable.
+    // Uncomment any line below to override the default English text.
+
+    /** Label shown above the description textarea */
+    // descriptionLabel: 'Description *',
+
+    /** Text on the Cancel button */
+    // cancelButtonText: 'Cancel',
+
+    /** Text on the Submit button */
+    // submitButtonText: 'Submit',
+
+    /** Text shown on the Submit button while the report is being sent */
+    // submittingButtonText: 'Submitting…',
+
+    /** Text shown while loading environment context */
+    // loadingMessage: 'Gathering environment info…',
+
+    /** Aria-label for the close (×) button in the dialog header */
+    // closeDialogAriaLabel: 'Close dialog',
+
+    /** Labels for each context field shown in the dialog.
+     *  Keys must match the entries in collectFields above. */
+    // fieldLabels: {
+    //   userId: 'User ID',
+    //   userName: 'User Name',
+    //   userDirectory: 'User Directory',
+    //   senseVersion: 'Qlik Sense Version',
+    //   appId: 'App ID',
+    //   sheetId: 'Sheet ID',
+    //   urlPath: 'URL Path',
+    // },
+
     // -- Dialog style overrides (rarely need changing) --
     // dialogStyle: {
     //   overlayColor: 'rgba(0, 0, 0, 0.5)',

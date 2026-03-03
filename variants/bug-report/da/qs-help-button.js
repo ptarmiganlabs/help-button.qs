@@ -137,6 +137,26 @@
 
       // Placeholder text for the description field
       descriptionPlaceholder: 'Describe the issue you encountered…',
+
+      // UI text overrides — every visible string in the dialog
+      descriptionLabel: 'Description *',
+      cancelButtonText: 'Cancel',
+      submitButtonText: 'Submit',
+      submittingButtonText: 'Submitting…',
+      loadingMessage: 'Gathering environment info…',
+      closeDialogAriaLabel: 'Close dialog',
+
+      // Labels shown next to each context field in the dialog.
+      // Keys correspond to the entries in collectFields.
+      fieldLabels: {
+        userId: 'User ID',
+        userName: 'User Name',
+        userDirectory: 'User Directory',
+        senseVersion: 'Qlik Sense Version',
+        appId: 'App ID',
+        sheetId: 'Sheet ID',
+        urlPath: 'URL Path',
+      },
     },
 
     // -- Injection --
@@ -556,16 +576,8 @@
   // Bug Report Dialog
   // ---------------------------------------------------------------------------
 
-  /** Field label mapping for display. */
-  var FIELD_LABELS = {
-    userId: 'User ID',
-    userName: 'User Name',
-    userDirectory: 'User Directory',
-    senseVersion: 'Qlik Sense Version',
-    appId: 'App ID',
-    sheetId: 'Sheet ID',
-    urlPath: 'URL Path',
-  };
+  /** Field label mapping for display (from merged config). */
+  var FIELD_LABELS = cfg.bugReport.fieldLabels;
 
   /**
    * Build inline styles for the bug-report dialog from config.
@@ -896,7 +908,7 @@
 
     var closeBtn = document.createElement('button');
     closeBtn.setAttribute('type', 'button');
-    closeBtn.setAttribute('aria-label', 'Close dialog');
+    closeBtn.setAttribute('aria-label', br.closeDialogAriaLabel);
     closeBtn.setAttribute('style', DS.closeBtn);
     closeBtn.innerHTML = makeSvg('close', 16, br.dialogStyle.headerTextColor);
     closeBtn.addEventListener('mouseenter', function () {
@@ -927,7 +939,7 @@
       '<div style="' + DS.spinner.replace('border-top-color:#ffffff', 'border-top-color:#165a9b')
         .replace('border:2px solid rgba(255,255,255,0.3)', 'border:2px solid rgba(22,90,155,0.2)') +
       ';width:24px;height:24px;margin:0 auto 10px auto;"></div>' +
-      'Gathering environment info…';
+      escapeHtml(br.loadingMessage);
     body.appendChild(loadingMsg);
 
     modal.appendChild(body);
@@ -1035,7 +1047,7 @@
 
       var descLabel = document.createElement('label');
       descLabel.setAttribute('style', DS.label);
-      descLabel.textContent = 'Description *';
+      descLabel.textContent = br.descriptionLabel;
 
       var textarea = document.createElement('textarea');
       textarea.setAttribute('placeholder', br.descriptionPlaceholder || 'Describe the issue…');
@@ -1058,7 +1070,7 @@
 
       var cancelBtn = document.createElement('button');
       cancelBtn.setAttribute('type', 'button');
-      cancelBtn.textContent = 'Cancel';
+      cancelBtn.textContent = br.cancelButtonText;
       cancelBtn.setAttribute('style', DS.cancelBtn);
       cancelBtn.addEventListener('mouseenter', function () {
         cancelBtn.style.cssText = DS.cancelBtn + ';' + DS.cancelBtnHover;
@@ -1074,7 +1086,7 @@
       submitBtn.setAttribute('disabled', 'disabled');
       submitBtn.innerHTML =
         makeSvg('send', 14, '#ffffff') +
-        '<span>Submit</span>';
+        '<span>' + escapeHtml(br.submitButtonText) + '</span>';
 
       // Enable/disable submit based on textarea content
       function updateSubmitState() {
@@ -1083,13 +1095,13 @@
           submitBtn.setAttribute('style', DS.primaryBtn);
           submitBtn.innerHTML =
             makeSvg('send', 14, br.dialogStyle.primaryButtonText) +
-            '<span>Submit</span>';
+            '<span>' + escapeHtml(br.submitButtonText) + '</span>';
         } else {
           submitBtn.setAttribute('disabled', 'disabled');
           submitBtn.setAttribute('style', DS.primaryBtnDisabled);
           submitBtn.innerHTML =
             makeSvg('send', 14, '#ffffff') +
-            '<span>Submit</span>';
+            '<span>' + escapeHtml(br.submitButtonText) + '</span>';
         }
       }
 
@@ -1118,7 +1130,7 @@
         submitBtn.setAttribute('disabled', 'disabled');
         submitBtn.innerHTML =
           '<span style="' + DS.spinner + '"></span>' +
-          '<span>Submitting…</span>';
+          '<span>' + escapeHtml(br.submittingButtonText) + '</span>';
         submitBtn.setAttribute('style', DS.primaryBtnDisabled);
 
         submitBugReport(context, description)
@@ -1137,7 +1149,7 @@
             submitBtn.setAttribute('style', DS.primaryBtn);
             submitBtn.innerHTML =
               makeSvg('send', 14, br.dialogStyle.primaryButtonText) +
-              '<span>Submit</span>';
+              '<span>' + escapeHtml(br.submitButtonText) + '</span>';
           });
       });
 

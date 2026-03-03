@@ -1,0 +1,29 @@
+<!--
+  Qlik Sense Help Button — Loader Snippet
+  ========================================
+  Add this snippet to the Qlik Sense client.html file.
+
+  Location of client.html on the Qlik Sense server:
+    C:\Program Files\Qlik\Sense\Client\client.html
+
+  The JS files must be placed in the Client folder (NOT in Client\resources):
+    C:\Program Files\Qlik\Sense\Client\custom\qs-help-button.js
+    C:\Program Files\Qlik\Sense\Client\custom\qs-help-button.config.js
+
+  The Client folder is served by the Qlik Sense proxy as /resources.
+  client.html is served at /sense/client.html with <base href="./">,
+  so script src paths must use ../resources/ to resolve correctly.
+
+  Insert the following lines just BEFORE the closing </body> tag.
+  This is the ONLY modification needed to the out-of-the-box Qlik Sense files.
+
+  IMPORTANT: After saving client.html, restart the Qlik Sense services.
+  The proxy caches client.html at startup, so changes are not picked up
+  until the services are restarted:
+    PowerShell (elevated):  Get-Service QlikSense* | Restart-Service
+-->
+
+<!-- ===== BEGIN: Qlik Sense Help Button ===== -->
+<script src="../resources/custom/qs-help-button.config.js"></script>
+<script src="../resources/custom/qs-help-button.js" defer></script>
+<!-- ===== END: Qlik Sense Help Button ===== -->
