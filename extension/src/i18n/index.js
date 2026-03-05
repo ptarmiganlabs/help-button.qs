@@ -3,6 +3,10 @@
  *
  * Detects the Qlik UI language and provides translated default strings.
  * Property-panel values always override these defaults (empty string = use default).
+ *
+ * Supports a forced locale via setForceLocale() — when set to a value
+ * other than 'auto', it overrides the auto-detected locale for all
+ * calls to resolveText / getTranslation.
  */
 
 import translations from './translations';
@@ -21,6 +25,41 @@ const SUPPORTED_LOCALES = ['en', 'sv', 'no', 'da', 'fi', 'de', 'fr', 'pl', 'es']
  * @type {string|null}
  */
 let detectedLocale = null;
+
+/**
+ * Forced locale override.
+ * When set to a supported code (not 'auto'), overrides auto-detection.
+ *
+ * @type {string}
+ */
+let forceLocale = 'auto';
+
+/**
+ * Set the forced locale.
+ * Pass 'auto' to revert to auto-detection.
+ *
+ * @param {string} locale - 'auto' or a supported two-letter locale code.
+ */
+export function setForceLocale(locale) {
+    forceLocale = locale || 'auto';
+    logger.debug('Force locale set to:', forceLocale);
+}
+
+/**
+ * Get the effective locale.
+ *
+ * Priority:
+ *   1. Forced locale (if not 'auto')
+ *   2. Auto-detected locale
+ *
+ * @returns {string} Two-letter locale code.
+ */
+export function getEffectiveLocale() {
+    if (forceLocale && forceLocale !== 'auto' && SUPPORTED_LOCALES.includes(forceLocale)) {
+        return forceLocale;
+    }
+    return detectLocale();
+}
 
 /**
  * Detect the current Qlik UI language.
@@ -83,11 +122,11 @@ function normalizeLocale(localeStr) {
  * Get a translated string for the given key and optional locale override.
  *
  * @param {string} key - Translation key (e.g. 'buttonLabel', 'popupTitle').
- * @param {string} [locale] - Optional locale override. Defaults to auto-detected.
+ * @param {string} [locale] - Optional locale override. Defaults to effective locale.
  * @returns {string} Translated string, or the English fallback.
  */
 export function getTranslation(key, locale) {
-    const loc = locale || detectLocale();
+    const loc = locale || getEffectiveLocale();
     const entry = translations[key];
 
     if (!entry) {

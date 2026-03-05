@@ -23,7 +23,7 @@ import { detectPlatform, getPlatformAdapter } from './platform/index';
 import { injectHelpButton, destroyHelpButton } from './ui/toolbar-injector';
 import { makeSvg } from './ui/icons';
 import { fetchTemplateContext } from './util/template-fields';
-import { resolveText } from './i18n/index';
+import { resolveText, setForceLocale } from './i18n/index';
 import { escapeHtml } from './util/template-fields';
 import logger, { PACKAGE_VERSION } from './util/logger';
 import './style.css';
@@ -55,9 +55,11 @@ export default function supernova(galaxy) {
                     ? !options.readOnly
                     : /\/edit(?:\b|$)/.test(window.location.pathname);
 
-            // Keep layout ref current
+            // Keep layout ref current + sync forced locale
             useEffect(() => {
                 layoutRef.current = layout;
+                // Apply language override from property panel
+                setForceLocale(layout.language || 'auto');
             }, [layout]);
 
             // One-time async platform detection + adapter loading
@@ -243,7 +245,7 @@ export default function supernova(galaxy) {
  */
 function renderEditPlaceholder(element, layout) {
     const menuCount = (layout.menuItems || []).length;
-    const hasBugReport = layout.bugReport?.enabled;
+    const hasBugReport = (layout.menuItems || []).some((item) => item.action === 'bugReport');
 
     const statsText =
         `${menuCount} menu item${menuCount !== 1 ? 's' : ''}` +

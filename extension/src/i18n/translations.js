@@ -34,7 +34,7 @@ const translations = {
     // Popup
     popupTitle: {
         en: 'Need assistance?',
-        sv: 'Behöver du hjälp?',
+        sv: 'Hur kan vi hjälpa dig?',
         no: 'Trenger du hjelp?',
         da: 'Brug for hjælp?',
         fi: 'Tarvitsetko apua?',

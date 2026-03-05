@@ -7,6 +7,7 @@
 
 import { makeSvg } from './icons';
 import { resolveTemplateFields } from '../util/template-fields';
+import { resolveColor } from '../util/color';
 import logger from '../util/logger';
 
 /**
@@ -55,12 +56,10 @@ export function createPopupMenu(triggerButton, config) {
     // -- Header --
     const header = document.createElement('div');
     header.className = 'qshb-popup-header';
-    if (popupStyle.headerBackgroundColor) {
-        header.style.backgroundColor = popupStyle.headerBackgroundColor;
-    }
-    if (popupStyle.headerTextColor) {
-        header.style.color = popupStyle.headerTextColor;
-    }
+    const headerBg = resolveColor(popupStyle.headerBackgroundColor);
+    const headerText = resolveColor(popupStyle.headerTextColor);
+    if (headerBg) header.style.backgroundColor = headerBg;
+    if (headerText) header.style.color = headerText;
     header.textContent = popupTitle || '';
     popup.appendChild(header);
 
@@ -69,9 +68,8 @@ export function createPopupMenu(triggerButton, config) {
         if (idx > 0) {
             const sep = document.createElement('hr');
             sep.className = 'qshb-popup-separator';
-            if (popupStyle.separatorColor) {
-                sep.style.borderTopColor = popupStyle.separatorColor;
-            }
+            const sepColor = resolveColor(popupStyle.separatorColor);
+            if (sepColor) sep.style.borderTopColor = sepColor;
             popup.appendChild(sep);
         }
 
@@ -79,18 +77,24 @@ export function createPopupMenu(triggerButton, config) {
         menuItem.className = 'qshb-popup-menu-item';
         menuItem.setAttribute('role', 'menuitem');
 
+        // Resolve per-item colors from color-picker objects
+        const itemBg = resolveColor(item.bgColor);
+        const itemBgHover = resolveColor(item.bgColorHover);
+        const itemText = resolveColor(item.textColor);
+        const itemIcon = resolveColor(item.iconColor, '#165a9b');
+
         // Apply per-item colors
-        if (item.bgColor) menuItem.style.backgroundColor = item.bgColor;
-        if (item.textColor) menuItem.style.color = item.textColor;
+        if (itemBg) menuItem.style.backgroundColor = itemBg;
+        if (itemText) menuItem.style.color = itemText;
 
         // Hover effect via data attributes (CSS handles hover via :hover)
-        if (item.bgColorHover) menuItem.dataset.hoverBg = item.bgColorHover;
-        if (item.iconColor) menuItem.style.setProperty('--qshb-item-icon-color', item.iconColor);
+        if (itemBgHover) menuItem.dataset.hoverBg = itemBgHover;
+        if (itemIcon) menuItem.style.setProperty('--qshb-item-icon-color', itemIcon);
 
         // Icon + label
         const iconSpan = document.createElement('span');
         iconSpan.className = 'qshb-popup-item-icon';
-        iconSpan.innerHTML = makeSvg(item.icon || 'help', 16, item.iconColor || '#165a9b');
+        iconSpan.innerHTML = makeSvg(item.icon || 'help', 16, itemIcon);
         menuItem.appendChild(iconSpan);
 
         const labelSpan = document.createElement('span');
@@ -128,20 +132,22 @@ export function createPopupMenu(triggerButton, config) {
 
         // Hover handlers for per-item colors
         menuItem.addEventListener('mouseenter', () => {
-            if (item.bgColorHover) menuItem.style.backgroundColor = item.bgColorHover;
-            if (item.iconColor) menuItem.style.borderLeftColor = item.iconColor;
+            if (itemBgHover) menuItem.style.backgroundColor = itemBgHover;
+            if (itemIcon) menuItem.style.borderLeftColor = itemIcon;
         });
         menuItem.addEventListener('mouseleave', () => {
-            menuItem.style.backgroundColor = item.bgColor || '';
+            menuItem.style.backgroundColor = itemBg || '';
             menuItem.style.borderLeftColor = 'transparent';
         });
 
         popup.appendChild(menuItem);
     });
 
-    // Apply popup-level styles
-    if (popupStyle.backgroundColor) popup.style.backgroundColor = popupStyle.backgroundColor;
-    if (popupStyle.borderColor) popup.style.borderColor = popupStyle.borderColor;
+    // Apply popup-level styles (resolve from color-picker objects)
+    const popupBg = resolveColor(popupStyle.backgroundColor);
+    const popupBorder = resolveColor(popupStyle.borderColor);
+    if (popupBg) popup.style.backgroundColor = popupBg;
+    if (popupBorder) popup.style.borderColor = popupBorder;
     if (popupStyle.borderRadius) popup.style.borderRadius = popupStyle.borderRadius;
 
     // Append to body to escape overflow clipping

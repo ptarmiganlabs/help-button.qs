@@ -1,11 +1,14 @@
 /**
  * Property panel definition for qs-help-button extension.
  *
+ * Section order: Language → Widget → Button → Popup → Menu Items → Template Fields → About
+ *
  * @param {object} galaxy - Nebula galaxy object.
  * @returns {object} Extension property panel configuration.
  */
 
 import { PACKAGE_VERSION } from './util/logger';
+import { toPickerObj } from './util/color';
 
 export default function ext(_galaxy) {
     return {
@@ -14,30 +17,34 @@ export default function ext(_galaxy) {
             component: 'accordion',
             items: {
                 // ---------------------------------------------------------------
-                // Header / About section
+                // Language override
                 // ---------------------------------------------------------------
-                headerSection: {
+                languageSection: {
                     type: 'items',
-                    label: 'About',
+                    label: 'Language',
                     items: {
-                        headerText: {
+                        languageInfo: {
                             component: 'text',
-                            label: `qs-help-button v${PACKAGE_VERSION}\nConfigurable help button for Qlik Sense.`,
+                            label: 'By default, the extension auto-detects the Qlik UI language. Override here to force a specific locale for all translated strings.',
                         },
-                        linkGithub: {
-                            component: 'link',
-                            label: 'GitHub — docs & source',
-                            url: 'https://github.com/ptarmiganlabs/qs-help-button',
-                        },
-                        linkIssues: {
-                            component: 'link',
-                            label: 'Report a bug / request a feature',
-                            url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
-                        },
-                        linkPtarmigan: {
-                            component: 'link',
-                            label: 'Ptarmigan Labs',
-                            url: 'https://ptarmiganlabs.com',
+                        language: {
+                            ref: 'language',
+                            label: 'Language',
+                            type: 'string',
+                            component: 'dropdown',
+                            defaultValue: 'auto',
+                            options: [
+                                { value: 'auto', label: 'Auto-detect' },
+                                { value: 'en', label: 'English' },
+                                { value: 'sv', label: 'Svenska' },
+                                { value: 'no', label: 'Norsk' },
+                                { value: 'da', label: 'Dansk' },
+                                { value: 'fi', label: 'Suomi' },
+                                { value: 'de', label: 'Deutsch' },
+                                { value: 'fr', label: 'Français' },
+                                { value: 'pl', label: 'Polski' },
+                                { value: 'es', label: 'Español' },
+                            ],
                         },
                     },
                 },
@@ -93,7 +100,7 @@ export default function ext(_galaxy) {
                 },
 
                 // ---------------------------------------------------------------
-                // Button appearance
+                // Toolbar button appearance
                 // ---------------------------------------------------------------
                 buttonSection: {
                     type: 'items',
@@ -125,33 +132,41 @@ export default function ext(_galaxy) {
                                 { value: 'link', label: 'Link (chain)' },
                             ],
                         },
+                        buttonColorsHeader: {
+                            component: 'text',
+                            label: 'Button colors',
+                        },
                         buttonBgColor: {
                             ref: 'buttonStyle.backgroundColor',
-                            label: 'Button background color',
-                            type: 'string',
-                            defaultValue: '#165a9b',
+                            label: 'Background',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#165a9b'),
                         },
                         buttonHoverBgColor: {
                             ref: 'buttonStyle.backgroundColorHover',
-                            label: 'Button hover color',
-                            type: 'string',
-                            defaultValue: '#12487c',
+                            label: 'Hover background',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#12487c'),
                         },
                         buttonTextColor: {
                             ref: 'buttonStyle.textColor',
-                            label: 'Button text color',
-                            type: 'string',
-                            defaultValue: '#ffffff',
+                            label: 'Text / icon',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#ffffff'),
                         },
                         buttonBorderColor: {
                             ref: 'buttonStyle.borderColor',
-                            label: 'Button border color',
-                            type: 'string',
-                            defaultValue: '#0e3b65',
+                            label: 'Border',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#0e3b65'),
                         },
                         buttonBorderRadius: {
                             ref: 'buttonStyle.borderRadius',
-                            label: 'Button border radius',
+                            label: 'Border radius',
                             type: 'string',
                             defaultValue: '4px',
                         },
@@ -171,41 +186,56 @@ export default function ext(_galaxy) {
                             type: 'string',
                             defaultValue: '',
                         },
+                        popupColorsHeader: {
+                            component: 'text',
+                            label: 'Popup colors',
+                        },
                         popupBgColor: {
                             ref: 'popupStyle.backgroundColor',
-                            label: 'Popup background color',
-                            type: 'string',
-                            defaultValue: '#ffffff',
+                            label: 'Background',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#ffffff'),
                         },
                         popupBorderColor: {
                             ref: 'popupStyle.borderColor',
-                            label: 'Popup border color',
-                            type: 'string',
-                            defaultValue: '#0c3256',
+                            label: 'Border',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#0c3256'),
                         },
                         popupBorderRadius: {
                             ref: 'popupStyle.borderRadius',
-                            label: 'Popup border radius',
+                            label: 'Border radius',
                             type: 'string',
                             defaultValue: '8px',
                         },
                         popupHeaderBgColor: {
                             ref: 'popupStyle.headerBackgroundColor',
-                            label: 'Header background color',
-                            type: 'string',
-                            defaultValue: '#0c3256',
+                            label: 'Header background',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#0c3256'),
                         },
                         popupHeaderTextColor: {
                             ref: 'popupStyle.headerTextColor',
-                            label: 'Header text color',
-                            type: 'string',
-                            defaultValue: '#ffcc33',
+                            label: 'Header text',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#ffcc33'),
+                        },
+                        popupSeparatorColor: {
+                            ref: 'popupStyle.separatorColor',
+                            label: 'Separator line',
+                            type: 'object',
+                            component: 'color-picker',
+                            defaultValue: toPickerObj('#e0e0e0'),
                         },
                     },
                 },
 
                 // ---------------------------------------------------------------
-                // Menu items
+                // Menu items (with inline bug-report fields)
                 // ---------------------------------------------------------------
                 menuItemsSection: {
                     type: 'items',
@@ -227,11 +257,34 @@ export default function ext(_galaxy) {
                                     type: 'string',
                                     defaultValue: 'New item',
                                 },
+                                action: {
+                                    ref: 'action',
+                                    label: 'Action',
+                                    type: 'string',
+                                    component: 'dropdown',
+                                    defaultValue: '',
+                                    options: [
+                                        { value: '', label: 'Open URL' },
+                                        { value: 'bugReport', label: 'Open Bug Report dialog' },
+                                    ],
+                                },
                                 url: {
                                     ref: 'url',
-                                    label: 'URL (supports {{appId}}, {{sheetId}}, {{userId}}, {{userDirectory}})',
+                                    label: 'URL (supports {{template}} fields)',
                                     type: 'string',
                                     defaultValue: 'https://example.com',
+                                    show: (item) => item.action !== 'bugReport',
+                                },
+                                target: {
+                                    ref: 'target',
+                                    label: 'Link target',
+                                    type: 'string',
+                                    component: 'dropdown',
+                                    defaultValue: '_blank',
+                                    options: [
+                                        { value: '_blank', label: 'New tab' },
+                                        { value: '_self', label: 'Same tab' },
+                                    ],
                                     show: (item) => item.action !== 'bugReport',
                                 },
                                 icon: {
@@ -248,114 +301,92 @@ export default function ext(_galaxy) {
                                         { value: 'link', label: 'Link' },
                                     ],
                                 },
-                                target: {
-                                    ref: 'target',
-                                    label: 'Link target',
-                                    type: 'string',
-                                    component: 'dropdown',
-                                    defaultValue: '_blank',
-                                    options: [
-                                        { value: '_blank', label: 'New tab' },
-                                        { value: '_self', label: 'Same tab' },
-                                    ],
-                                    show: (item) => item.action !== 'bugReport',
+
+                                // -- Bug Report inline fields --
+                                bugReportDivider: {
+                                    component: 'text',
+                                    label: '── Bug Report Settings ──',
+                                    show: (item) => item.action === 'bugReport',
                                 },
-                                action: {
-                                    ref: 'action',
-                                    label: 'Action',
+                                webhookUrl: {
+                                    ref: 'bugReport.webhookUrl',
+                                    label: 'Webhook URL (POST endpoint)',
+                                    type: 'string',
+                                    defaultValue: '',
+                                    show: (item) => item.action === 'bugReport',
+                                },
+                                authStrategy: {
+                                    ref: 'bugReport.authStrategy',
+                                    label: 'Authentication',
                                     type: 'string',
                                     component: 'dropdown',
-                                    defaultValue: '',
+                                    defaultValue: 'none',
                                     options: [
-                                        { value: '', label: 'Open URL' },
-                                        { value: 'bugReport', label: 'Open Bug Report dialog' },
+                                        { value: 'none', label: 'None' },
+                                        { value: 'header', label: 'Authorization header' },
+                                        { value: 'sense-session', label: 'Sense session (XRF key)' },
+                                        { value: 'custom', label: 'Custom headers' },
                                     ],
+                                    show: (item) => item.action === 'bugReport',
+                                },
+                                authToken: {
+                                    ref: 'bugReport.authToken',
+                                    label: 'Bearer token',
+                                    type: 'string',
+                                    defaultValue: '',
+                                    show: (item) =>
+                                        item.action === 'bugReport' &&
+                                        item.bugReport?.authStrategy === 'header',
+                                },
+                                collectFields: {
+                                    ref: 'bugReport.collectFields',
+                                    label: 'Context fields (comma-separated)',
+                                    type: 'string',
+                                    defaultValue: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                                    show: (item) => item.action === 'bugReport',
+                                },
+                                dialogTitle: {
+                                    ref: 'bugReport.dialogStrings.title',
+                                    label: 'Dialog title (empty = auto)',
+                                    type: 'string',
+                                    defaultValue: '',
+                                    show: (item) => item.action === 'bugReport',
+                                },
+
+                                // -- Per-item colors --
+                                itemColorsHeader: {
+                                    component: 'text',
+                                    label: '── Item Colors ──',
                                 },
                                 iconColor: {
                                     ref: 'iconColor',
-                                    label: 'Icon color',
-                                    type: 'string',
-                                    defaultValue: '#165a9b',
+                                    label: 'Icon',
+                                    type: 'object',
+                                    component: 'color-picker',
+                                    defaultValue: toPickerObj('#165a9b'),
                                 },
                                 bgColor: {
                                     ref: 'bgColor',
-                                    label: 'Background color',
-                                    type: 'string',
-                                    defaultValue: '#f0f6fc',
+                                    label: 'Background',
+                                    type: 'object',
+                                    component: 'color-picker',
+                                    defaultValue: toPickerObj('#f0f6fc'),
                                 },
                                 bgColorHover: {
                                     ref: 'bgColorHover',
-                                    label: 'Hover background color',
-                                    type: 'string',
-                                    defaultValue: '#dbeafe',
+                                    label: 'Hover background',
+                                    type: 'object',
+                                    component: 'color-picker',
+                                    defaultValue: toPickerObj('#dbeafe'),
                                 },
                                 textColor: {
                                     ref: 'textColor',
-                                    label: 'Text color',
-                                    type: 'string',
-                                    defaultValue: '#0c3256',
+                                    label: 'Text',
+                                    type: 'object',
+                                    component: 'color-picker',
+                                    defaultValue: toPickerObj('#0c3256'),
                                 },
                             },
-                        },
-                    },
-                },
-
-                // ---------------------------------------------------------------
-                // Bug Report
-                // ---------------------------------------------------------------
-                bugReportSection: {
-                    type: 'items',
-                    label: 'Bug Report',
-                    items: {
-                        bugReportEnabled: {
-                            ref: 'bugReport.enabled',
-                            label: 'Enable bug report feature',
-                            type: 'boolean',
-                            defaultValue: false,
-                        },
-                        bugReportWebhookUrl: {
-                            ref: 'bugReport.webhookUrl',
-                            label: 'Webhook URL (POST endpoint)',
-                            type: 'string',
-                            defaultValue: '',
-                            show: (layout) => layout.bugReport?.enabled,
-                        },
-                        bugReportAuthStrategy: {
-                            ref: 'bugReport.authStrategy',
-                            label: 'Authentication strategy',
-                            type: 'string',
-                            component: 'dropdown',
-                            defaultValue: 'none',
-                            options: [
-                                { value: 'none', label: 'None' },
-                                { value: 'header', label: 'Authorization header' },
-                                { value: 'sense-session', label: 'Sense session (XRF key)' },
-                                { value: 'custom', label: 'Custom headers' },
-                            ],
-                            show: (layout) => layout.bugReport?.enabled,
-                        },
-                        bugReportAuthToken: {
-                            ref: 'bugReport.authToken',
-                            label: 'Bearer token',
-                            type: 'string',
-                            defaultValue: '',
-                            show: (layout) =>
-                                layout.bugReport?.enabled &&
-                                layout.bugReport?.authStrategy === 'header',
-                        },
-                        bugReportCollectFields: {
-                            ref: 'bugReport.collectFields',
-                            label: 'Context fields (comma separated: userName, appId, sheetId, urlPath, platform, browser, timestamp)',
-                            type: 'string',
-                            defaultValue: 'userName,appId,sheetId,urlPath,platform,timestamp',
-                            show: (layout) => layout.bugReport?.enabled,
-                        },
-                        bugReportDialogTitle: {
-                            ref: 'bugReport.dialogStrings.title',
-                            label: 'Dialog title (empty = auto-translate)',
-                            type: 'string',
-                            defaultValue: '',
-                            show: (layout) => layout.bugReport?.enabled,
                         },
                     },
                 },
@@ -367,14 +398,52 @@ export default function ext(_galaxy) {
                     type: 'items',
                     label: 'Template Fields Reference',
                     items: {
-                        templateInfo: {
+                        templateGeneralHeader: {
+                            component: 'text',
+                            label: 'URLs and webhook URLs can include these placeholders.',
+                        },
+                        templateGeneralFields: {
                             component: 'text',
                             label:
-                                'URLs can use these placeholders:\n' +
-                                '{{appId}} — Current app GUID\n' +
-                                '{{sheetId}} — Current sheet ID\n' +
-                                '{{userId}} — User ID (CM only)\n' +
-                                '{{userDirectory}} — User directory (CM only)',
+                                '── General ──\n' +
+                                '{{appId}}  ·  Current app GUID\n' +
+                                '{{sheetId}}  ·  Current sheet ID',
+                        },
+                        templateCmFields: {
+                            component: 'text',
+                            label:
+                                '── Client Managed only ──\n' +
+                                '{{userId}}  ·  User ID\n' +
+                                '{{userDirectory}}  ·  User directory',
+                        },
+                    },
+                },
+
+                // ---------------------------------------------------------------
+                // About (at bottom)
+                // ---------------------------------------------------------------
+                aboutSection: {
+                    type: 'items',
+                    label: 'About',
+                    items: {
+                        headerText: {
+                            component: 'text',
+                            label: `qs-help-button v${PACKAGE_VERSION}\nConfigurable help button for Qlik Sense.`,
+                        },
+                        linkGithub: {
+                            component: 'link',
+                            label: 'GitHub — docs & source',
+                            url: 'https://github.com/ptarmiganlabs/qs-help-button',
+                        },
+                        linkIssues: {
+                            component: 'link',
+                            label: 'Report a bug / request a feature',
+                            url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
+                        },
+                        linkPtarmigan: {
+                            component: 'link',
+                            label: 'Ptarmigan Labs',
+                            url: 'https://ptarmiganlabs.com',
                         },
                     },
                 },

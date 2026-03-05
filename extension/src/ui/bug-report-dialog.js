@@ -38,9 +38,17 @@ export function openBugReportDialog(config, platformType) {
         authHeaderName = 'Authorization',
         authHeaderValue = '',
         customHeaders = {},
-        collectFields = ['userName', 'appId', 'sheetId', 'urlPath'],
         dialogStrings = {},
     } = config;
+
+    // collectFields can be a comma-separated string (from property panel)
+    // or an array (legacy). Normalise to an array.
+    let collectFields;
+    if (typeof config.collectFields === 'string') {
+        collectFields = config.collectFields.split(',').map((s) => s.trim()).filter(Boolean);
+    } else {
+        collectFields = config.collectFields || ['userName', 'appId', 'sheetId', 'urlPath'];
+    }
 
     // Remove any existing dialog
     const existing = document.getElementById('qshb-bug-report-overlay');

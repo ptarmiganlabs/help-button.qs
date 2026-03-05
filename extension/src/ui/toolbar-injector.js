@@ -9,6 +9,7 @@ import { makeSvg } from './icons';
 import { createPopupMenu } from './popup-menu';
 import { openBugReportDialog } from './bug-report-dialog';
 import { escapeHtml } from '../util/template-fields';
+import { resolveColor } from '../util/color';
 import { resolveText } from '../i18n/index';
 import logger from '../util/logger';
 
@@ -76,7 +77,17 @@ export function injectHelpButton(layout, adapter, platform) {
     const popupTitle = resolveText(layout.popupTitle, 'popupTitle');
     const popupStyle = layout.popupStyle || {};
     const menuItems = layout.menuItems || [];
-    const bugReport = layout.bugReport || {};
+
+    // Derive bug-report config from the first menu item with action='bugReport'
+    const bugReportItem = menuItems.find((item) => item.action === 'bugReport');
+    const bugReport = bugReportItem ? bugReportItem.bugReport || {} : null;
+
+    // Resolve button colors (handles both color-picker objects and plain strings)
+    const btnBg = resolveColor(buttonStyle.backgroundColor, '#165a9b');
+    const btnBgHover = resolveColor(buttonStyle.backgroundColorHover, '#12487c');
+    const btnText = resolveColor(buttonStyle.textColor, '#ffffff');
+    const btnBorder = resolveColor(buttonStyle.borderColor, '#0e3b65');
+    const btnRadius = buttonStyle.borderRadius || '4px';
 
     // -- Container --
     const container = document.createElement('div');
@@ -93,15 +104,15 @@ export function injectHelpButton(layout, adapter, platform) {
     btn.setAttribute('aria-haspopup', 'true');
     btn.setAttribute('aria-expanded', 'false');
 
-    // Apply button colors from layout
-    if (buttonStyle.backgroundColor) btn.style.setProperty('--qshb-btn-bg', buttonStyle.backgroundColor);
-    if (buttonStyle.backgroundColorHover) btn.style.setProperty('--qshb-btn-bg-hover', buttonStyle.backgroundColorHover);
-    if (buttonStyle.textColor) btn.style.setProperty('--qshb-btn-text', buttonStyle.textColor);
-    if (buttonStyle.borderColor) btn.style.setProperty('--qshb-btn-border', buttonStyle.borderColor);
-    if (buttonStyle.borderRadius) btn.style.setProperty('--qshb-btn-radius', buttonStyle.borderRadius);
+    // Apply button colors from layout (resolved from color-picker objects)
+    btn.style.setProperty('--qshb-btn-bg', btnBg);
+    btn.style.setProperty('--qshb-btn-bg-hover', btnBgHover);
+    btn.style.setProperty('--qshb-btn-text', btnText);
+    btn.style.setProperty('--qshb-btn-border', btnBorder);
+    btn.style.setProperty('--qshb-btn-radius', btnRadius);
 
     btn.innerHTML =
-        `<span class="qshb-button-icon">${makeSvg(buttonIcon, 16, buttonStyle.textColor || '#ffffff')}</span>` +
+        `<span class="qshb-button-icon">${makeSvg(buttonIcon, 16, btnText)}</span>` +
         `<span class="qshb-button-label">${escapeHtml(buttonLabel)}</span>`;
 
     container.appendChild(btn);
@@ -124,7 +135,7 @@ export function injectHelpButton(layout, adapter, platform) {
         menuItems,
         popupStyle,
         buttonStyle,
-        onBugReport: bugReport.enabled
+        onBugReport: bugReport
             ? () => openBugReportDialog(bugReport, platform.type)
             : undefined,
     });
