@@ -34,6 +34,15 @@ let activePopup = null;
 let removalObserver = null;
 
 /**
+ * Last-known injection config — stored so watchForRemoval can
+ * re-inject the button after SPA navigation even when the
+ * Supernova component is no longer mounted.
+ *
+ * @type {{ layout: object, adapter: object, platform: object } | null}
+ */
+let lastConfig = null;
+
+/**
  * Inject the help button into the toolbar.
  *
  * @param {object} layout - The extension layout (from useLayout).
@@ -42,6 +51,9 @@ let removalObserver = null;
  * @returns {function} Cleanup function to remove the button and listeners.
  */
 export function injectHelpButton(layout, adapter, platform) {
+    // Persist config so watchForRemoval can re-inject without the component
+    lastConfig = { layout, adapter, platform };
+
     // Guard against double-injection
     if (document.getElementById(CONTAINER_ID)) {
         logger.debug('Help button already exists, updating config');
@@ -122,7 +134,7 @@ export function injectHelpButton(layout, adapter, platform) {
     btn.addEventListener('click', popupControls.toggle);
 
     // -- Watch for removal (SPA navigation) --
-    watchForRemoval(layout, adapter, platform);
+    watchForRemoval();
 
     logger.info('Help button injected into toolbar');
 
@@ -197,12 +209,9 @@ function waitAndInject(layout, adapter, platform) {
 /**
  * Watch for removal of the help button (SPA navigation).
  * Re-injects after a short delay when the button disappears.
- *
- * @param {object} layout - Extension layout.
- * @param {object} adapter - Platform adapter module.
- * @param {object} platform - Platform detection result.
+ * Uses the module-level lastConfig for re-injection parameters.
  */
-function watchForRemoval(layout, adapter, platform) {
+function watchForRemoval() {
     if (removalObserver) {
         removalObserver.disconnect();
         removalObserver = null;
@@ -211,10 +220,12 @@ function watchForRemoval(layout, adapter, platform) {
     if (typeof MutationObserver === 'undefined') return;
 
     removalObserver = new MutationObserver(() => {
-        if (!document.getElementById(CONTAINER_ID)) {
+        if (!document.getElementById(CONTAINER_ID) && lastConfig) {
             logger.debug('Help button removed from DOM (SPA navigation?). Re-injecting…');
             setTimeout(() => {
-                injectHelpButton(layout, adapter, platform);
+                if (lastConfig) {
+                    injectHelpButton(lastConfig.layout, lastConfig.adapter, lastConfig.platform);
+                }
             }, 300);
         }
     });
@@ -228,10 +239,22 @@ function watchForRemoval(layout, adapter, platform) {
 /**
  * Remove the help button and clean up all listeners.
  */
-export function destroyHelpButton() {
+/**
+ * Remove the help button and clean up all listeners.
+ *
+ * @param {{ clearConfig?: boolean }} options - When clearConfig is true,
+ *   also wipe the stored config so watchForRemoval will NOT re-inject.
+ *   Use clearConfig in edit-mode; omit it during normal unmount so the
+ *   button survives sheet navigation.
+ */
+export function destroyHelpButton({ clearConfig = false } = {}) {
     if (activePopup) {
         activePopup.destroy();
         activePopup = null;
+    }
+
+    if (clearConfig) {
+        lastConfig = null;
     }
 
     if (removalObserver) {
@@ -244,5 +267,5 @@ export function destroyHelpButton() {
         container.remove();
     }
 
-    logger.debug('Help button destroyed');
+    logger.debug('Help button destroyed', clearConfig ? '(config cleared)' : '(config kept)');
 }

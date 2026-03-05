@@ -101,27 +101,26 @@ export default function supernova(galaxy) {
                     // Edit mode: show a placeholder inside the extension cell
                     renderEditPlaceholder(element, layout);
 
-                    // Remove toolbar button while editing
-                    destroyHelpButton();
+                    // Remove toolbar button while editing (clear config so watcher won't re-inject)
+                    destroyHelpButton({ clearConfig: true });
                     return;
                 }
 
                 // Analysis mode: inject toolbar button + show minimal placeholder in cell
                 renderAnalysisPlaceholder(element);
 
-                const cleanup = injectHelpButton(layout, adapter, platform);
-
-                return () => {
-                    if (typeof cleanup === 'function') cleanup();
-                };
+                injectHelpButton(layout, adapter, platform);
+                // No cleanup returned — the button is a page-level singleton
+                // that must survive component unmount on sheet navigation.
+                // injectHelpButton() handles updates via its double-injection guard.
+                // watchForRemoval() handles re-injection after SPA navigation.
             }, [platform, adapter, layout, isEditMode]);
 
-            // Cleanup on unmount
-            useEffect(() => {
-                return () => {
-                    destroyHelpButton();
-                };
-            }, []);
+            // NOTE: We intentionally do NOT destroy the toolbar button
+            // on unmount. The button is a page-level singleton that must
+            // persist when navigating to sheets that don't contain the
+            // extension. The watchForRemoval observer in toolbar-injector
+            // handles re-injection after SPA navigation.
         },
 
         ext: ext(galaxy),
