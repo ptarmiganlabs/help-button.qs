@@ -1,0 +1,458 @@
+/* =========================================================================
+ * qs-help-button — Extension styles
+ *
+ * All CSS for the toolbar button, popup menu, bug-report dialog,
+ * edit-mode placeholder, and toast notifications.
+ *
+ * Uses CSS custom properties (--qshb-*) for runtime theming.
+ * ========================================================================= */
+
+/* -------------------------------------------------------------------------
+ * CSS Custom Properties (defaults)
+ * ------------------------------------------------------------------------- */
+:root {
+    --qshb-btn-bg: #165a9b;
+    --qshb-btn-bg-hover: #12487c;
+    --qshb-btn-bg-active: #0e3b65;
+    --qshb-btn-text: #ffffff;
+    --qshb-btn-border: #0e3b65;
+    --qshb-btn-radius: 4px;
+    --qshb-btn-focus: rgba(255, 204, 51, 0.6);
+    --qshb-popup-bg: #ffffff;
+    --qshb-popup-border: #0c3256;
+    --qshb-popup-radius: 8px;
+    --qshb-popup-header-bg: #0c3256;
+    --qshb-popup-header-text: #ffcc33;
+    --qshb-popup-separator: #e0e0e0;
+    --qshb-popup-shadow: rgba(12, 50, 86, 0.25);
+}
+
+/* -------------------------------------------------------------------------
+ * Toolbar button container
+ * ------------------------------------------------------------------------- */
+.qshb-container {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    position: relative;
+    z-index: 100;
+}
+
+/* -------------------------------------------------------------------------
+ * Toolbar button
+ * ------------------------------------------------------------------------- */
+.qshb-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border: 1px solid var(--qshb-btn-border);
+    border-radius: var(--qshb-btn-radius);
+    background: var(--qshb-btn-bg);
+    color: var(--qshb-btn-text);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+    font-weight: 600;
+    height: 32px;
+    white-space: nowrap;
+    transition:
+        background-color 0.15s,
+        border-color 0.15s,
+        box-shadow 0.15s,
+        transform 0.1s;
+    outline: none;
+    box-sizing: border-box;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.qshb-button:hover {
+    background: var(--qshb-btn-bg-hover);
+    border-color: var(--qshb-btn-bg-hover);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.qshb-button:active {
+    background: var(--qshb-btn-bg-active);
+    border-color: var(--qshb-btn-bg-active);
+    transform: scale(0.98);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.qshb-button:focus-visible {
+    box-shadow: 0 0 0 3px var(--qshb-btn-focus);
+}
+
+.qshb-button-icon {
+    display: flex;
+    align-items: center;
+    line-height: 0;
+}
+
+.qshb-button-label {
+    line-height: 1;
+}
+
+/* -------------------------------------------------------------------------
+ * Popup menu (appended to document.body)
+ * ------------------------------------------------------------------------- */
+.qshb-popup {
+    position: fixed;
+    background: var(--qshb-popup-bg);
+    border: 2px solid var(--qshb-popup-border);
+    border-radius: var(--qshb-popup-radius);
+    box-shadow:
+        0 10px 30px var(--qshb-popup-shadow),
+        0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 0;
+    z-index: 10000;
+    min-width: 220px;
+    max-width: 360px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.qshb-popup-header {
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--qshb-popup-header-text);
+    background: var(--qshb-popup-header-bg);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.qshb-popup-separator {
+    height: 0;
+    margin: 0;
+    border: none;
+    border-top: 1px solid var(--qshb-popup-separator);
+}
+
+.qshb-popup-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+    font-weight: 500;
+    transition:
+        background 0.12s,
+        transform 0.1s;
+    cursor: pointer;
+    box-sizing: border-box;
+    border-left: 3px solid transparent;
+    color: inherit;
+}
+
+.qshb-popup-menu-item:hover {
+    border-left-color: var(--qshb-popup-border);
+}
+
+.qshb-popup-item-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    line-height: 0;
+}
+
+.qshb-popup-item-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------
+ * Bug-report dialog overlay
+ * ------------------------------------------------------------------------- */
+.qshb-bug-report-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qshb-bug-report-dialog {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 500px;
+    max-width: 90vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.qshb-bug-report-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: #0c3256;
+    color: #ffcc33;
+    border-radius: 12px 12px 0 0;
+}
+
+.qshb-bug-report-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.qshb-bug-report-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ffcc33;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.15s;
+}
+
+.qshb-bug-report-close:hover {
+    opacity: 0.7;
+}
+
+/* Context section */
+.qshb-bug-report-context {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.qshb-bug-report-context-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+}
+
+.qshb-bug-report-context-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+    font-size: 12px;
+}
+
+.qshb-bug-report-context-key {
+    font-weight: 600;
+    color: #555;
+}
+
+.qshb-bug-report-context-value {
+    color: #333;
+    word-break: break-all;
+}
+
+/* Form section */
+.qshb-bug-report-form {
+    padding: 16px 20px;
+}
+
+.qshb-bug-report-label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.qshb-bug-report-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 13px;
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.15s;
+}
+
+.qshb-bug-report-textarea:focus {
+    outline: none;
+    border-color: #165a9b;
+    box-shadow: 0 0 0 2px rgba(22, 90, 155, 0.15);
+}
+
+/* Action buttons */
+.qshb-bug-report-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 12px 20px 20px;
+}
+
+.qshb-bug-report-btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background 0.15s,
+        border-color 0.15s;
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+}
+
+.qshb-bug-report-btn-cancel {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    color: #555;
+}
+
+.qshb-bug-report-btn-cancel:hover {
+    background: #eee;
+}
+
+.qshb-bug-report-btn-submit {
+    background: #165a9b;
+    border: 1px solid #0e3b65;
+    color: #ffffff;
+}
+
+.qshb-bug-report-btn-submit:hover:not(:disabled) {
+    background: #12487c;
+}
+
+.qshb-bug-report-btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* -------------------------------------------------------------------------
+ * Toast notifications
+ * ------------------------------------------------------------------------- */
+.qshb-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+    z-index: 10002;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+        opacity 0.3s,
+        transform 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.qshb-toast-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.qshb-toast-success {
+    background: #059669;
+    color: #ffffff;
+}
+
+.qshb-toast-error {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+/* -------------------------------------------------------------------------
+ * Spinner (for submit button loading state)
+ * ------------------------------------------------------------------------- */
+@keyframes qshb-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.qshb-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: qshb-spin 0.6s linear infinite;
+    vertical-align: middle;
+}
+
+/* -------------------------------------------------------------------------
+ * Edit-mode placeholder (rendered inside the extension's grid cell)
+ * ------------------------------------------------------------------------- */
+.qshb-edit-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    border: 2px dashed #165a9b;
+    border-radius: 8px;
+    background: #f0f6fc;
+    text-align: center;
+    gap: 8px;
+}
+
+.qshb-edit-placeholder-icon {
+    color: #165a9b;
+    line-height: 0;
+}
+
+.qshb-edit-placeholder-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #165a9b;
+    margin: 0;
+}
+
+.qshb-edit-placeholder-description {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.4;
+}
+
+.qshb-edit-placeholder-badge {
+    display: inline-flex;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.qshb-edit-placeholder-stat {
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------
+ * Analysis-mode placeholder (invisible — the button is in the toolbar)
+ * ------------------------------------------------------------------------- */
+.qshb-analysis-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 11px;
+    color: #aaa;
+    font-style: italic;
+}

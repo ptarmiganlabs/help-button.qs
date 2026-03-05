@@ -14,6 +14,7 @@ body:
       options:
         - basic
         - bug-report
+        - extension
     validations:
       required: true
   - type: input

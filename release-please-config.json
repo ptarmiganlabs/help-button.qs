@@ -131,6 +131,16 @@
             "type": "generic",
             "path": "variants/bug-report/es/qs-help-button.js",
             "glob": false
+        },
+        {
+            "type": "json",
+            "path": "extension/package.json",
+            "jsonpath": "$.version"
+        },
+        {
+            "type": "json",
+            "path": "extension/src/meta.json",
+            "jsonpath": "$.version"
         }
     ],
     "packages": {
