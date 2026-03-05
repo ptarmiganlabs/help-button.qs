@@ -398,23 +398,41 @@ export default function ext(_galaxy) {
                     type: 'items',
                     label: 'Template Fields Reference',
                     items: {
-                        templateGeneralHeader: {
+                        templateIntro: {
                             component: 'text',
-                            label: 'URLs and webhook URLs can include these placeholders.',
+                            label: 'Use these placeholders in URLs and webhook URLs. They are replaced at runtime with actual values.',
                         },
-                        templateGeneralFields: {
+                        templateHeaderGeneral: {
                             component: 'text',
-                            label:
-                                '── General ──\n' +
-                                '{{appId}}  ·  Current app GUID\n' +
-                                '{{sheetId}}  ·  Current sheet ID',
+                            label: '── General ──',
                         },
-                        templateCmFields: {
+                        templateAppId: {
                             component: 'text',
-                            label:
-                                '── Client Managed only ──\n' +
-                                '{{userId}}  ·  User ID\n' +
-                                '{{userDirectory}}  ·  User directory',
+                            label: '{{appId}} — Current app GUID',
+                        },
+                        templateSheetId: {
+                            component: 'text',
+                            label: '{{sheetId}} — Current sheet ID',
+                        },
+                        templateHeaderCm: {
+                            component: 'text',
+                            label: '── Client Managed only ──',
+                        },
+                        templateUserId: {
+                            component: 'text',
+                            label: '{{userId}} — User ID',
+                        },
+                        templateUserDir: {
+                            component: 'text',
+                            label: '{{userDirectory}} — User directory',
+                        },
+                        templateHeaderExample: {
+                            component: 'text',
+                            label: '── Example ──',
+                        },
+                        templateExample: {
+                            component: 'text',
+                            label: 'https://jira.example.com/create?app={{appId}}&user={{userId}}',
                         },
                     },
                 },
