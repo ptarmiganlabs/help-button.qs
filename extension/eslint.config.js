@@ -20,6 +20,6 @@ export default [
         },
     },
     {
-        ignores: ['dist/**', 'qs-help-button-ext/**', 'node_modules/**'],
+        ignores: ['dist/**', 'helpbutton-qs-ext/**', 'node_modules/**'],
     },
 ];

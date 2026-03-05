@@ -1,12 +1,12 @@
 /**
  * Qlik Sense Bouton d'aide (Variante rapport de bug) — Configuration (Français)
  * ===============================================================================
- * Chargez ce fichier AVANT qs-help-button.js pour personnaliser le comportement
+ * Chargez ce fichier AVANT helpbutton-qs.js pour personnaliser le comportement
  * du bouton.
  *
  * Utilisation dans client.html de Qlik Sense (ajouter avant </body>) :
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Toutes les propriétés sont facultatives. Définissez uniquement celles que
  * vous souhaitez remplacer. Les couleurs par défaut utilisent une palette
@@ -14,7 +14,7 @@
  *
  * @see README.md pour la documentation complète.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Bouton de la barre d'outils — texte et infobulle
   // --------------------------------------------------------------------------
@@ -82,7 +82,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Aide et documentation',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       iconColor: '#165a9b',

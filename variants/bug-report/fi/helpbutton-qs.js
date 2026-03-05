@@ -18,20 +18,20 @@
  *   See README.md for full instructions.
  *
  * Configuration:
- *   Set window.qsHelpButtonConfig BEFORE this script loads, or load
- *   qs-help-button.config.js first. See qs-help-button.config.js for options.
+ *   Set window.helpButtonQsConfig BEFORE this script loads, or load
+ *   helpbutton-qs.config.js first. See helpbutton-qs.config.js for options.
  *
  * Compatible with Qlik Sense Enterprise on Windows (client-managed).
  *
  * @version 1.2.1 // x-release-please-version
  * @license MIT
- * @see https://github.com/ptarmiganlabs/qs-help-button
+ * @see https://github.com/ptarmiganlabs/help-button.qs
  */
 (function () {
   'use strict';
 
   // ---------------------------------------------------------------------------
-  // Configuration (merged with window.qsHelpButtonConfig if present)
+  // Configuration (merged with window.helpButtonQsConfig if present)
   // ---------------------------------------------------------------------------
   var DEFAULT_CONFIG = {
     // -- Button appearance --
@@ -167,7 +167,7 @@
   };
 
   // Merge user config (deep merge for nested style objects)
-  var cfg = deepMerge(DEFAULT_CONFIG, window.qsHelpButtonConfig || {});
+  var cfg = deepMerge(DEFAULT_CONFIG, window.helpButtonQsConfig || {});
 
   // ---------------------------------------------------------------------------
   // SVG icon library (16×16 viewBox)
@@ -244,7 +244,7 @@
 
   function log() {
     if (cfg.debug) {
-      var args = ['[qs-help-button]'].concat(Array.prototype.slice.call(arguments));
+      var args = ['[helpbutton-qs]'].concat(Array.prototype.slice.call(arguments));
       console.log.apply(console, args);
     }
   }
@@ -778,7 +778,7 @@
         'border:2px solid rgba(255,255,255,0.3)',
         'border-top-color:#ffffff',
         'border-radius:50%',
-        'animation:qs-help-spin 0.6s linear infinite',
+        'animation:helpbutton-qs-spin 0.6s linear infinite',
       ].join(';'),
     };
   }
@@ -790,7 +790,7 @@
   function injectSpinnerStyle() {
     if (spinnerStyleInjected) return;
     var style = document.createElement('style');
-    style.textContent = '@keyframes qs-help-spin { to { transform: rotate(360deg); } }';
+    style.textContent = '@keyframes helpbutton-qs-spin { to { transform: rotate(360deg); } }';
     document.head.appendChild(style);
     spinnerStyleInjected = true;
   }
@@ -877,7 +877,7 @@
    */
   function showBugReportDialog(closePopupFn) {
     // Prevent multiple dialogs
-    if (document.getElementById('qs-help-bug-dialog-overlay')) return;
+    if (document.getElementById('helpbutton-qs-bug-dialog-overlay')) return;
 
     injectSpinnerStyle();
 
@@ -888,7 +888,7 @@
 
     // -- Overlay --
     var overlay = document.createElement('div');
-    overlay.id = 'qs-help-bug-dialog-overlay';
+    overlay.id = 'helpbutton-qs-bug-dialog-overlay';
     overlay.setAttribute('style', DS.overlay);
 
     // -- Modal --
@@ -923,7 +923,7 @@
 
     // -- Toast area (hidden initially) --
     var toastArea = document.createElement('div');
-    toastArea.id = 'qs-help-bug-toast';
+    toastArea.id = 'helpbutton-qs-bug-toast';
     toastArea.setAttribute('style', 'display:none;');
     modal.appendChild(toastArea);
 
@@ -970,7 +970,7 @@
     });
 
     document.addEventListener('keydown', function onEsc(e) {
-      if (e.key === 'Escape' && document.getElementById('qs-help-bug-dialog-overlay')) {
+      if (e.key === 'Escape' && document.getElementById('helpbutton-qs-bug-dialog-overlay')) {
         closeDialog();
         document.removeEventListener('keydown', onEsc);
       }
@@ -1187,7 +1187,7 @@
   // ---------------------------------------------------------------------------
   function createHelpButton() {
     // Guard against double-injection
-    if (document.getElementById('qs-help-button')) {
+    if (document.getElementById('helpbutton-qs')) {
       log('Button already exists, skipping injection.');
       return;
     }
@@ -1204,12 +1204,12 @@
 
     // -- Container --
     var container = document.createElement('div');
-    container.id = 'qs-help-button-container';
+    container.id = 'helpbutton-qs-container';
     container.setAttribute('style', S.container);
 
     // -- Toolbar button --
     var btn = document.createElement('button');
-    btn.id = 'qs-help-button';
+    btn.id = 'helpbutton-qs';
     btn.setAttribute('type', 'button');
     btn.setAttribute('title', cfg.buttonTooltip);
     btn.setAttribute('aria-label', cfg.buttonTooltip);
@@ -1242,7 +1242,7 @@
 
     // -- Popup --
     var popup = document.createElement('div');
-    popup.id = 'qs-help-popup';
+    popup.id = 'helpbutton-qs-popup';
     popup.setAttribute('role', 'menu');
     popup.setAttribute('aria-label', cfg.popupTitle);
     popup.setAttribute('style', S.popup);
@@ -1371,7 +1371,7 @@
 
     // Close on Escape key (only for popup, not the dialog which has its own handler)
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !document.getElementById('qs-help-bug-dialog-overlay')) {
+      if (e.key === 'Escape' && !document.getElementById('helpbutton-qs-bug-dialog-overlay')) {
         closePopup();
         btn.focus();
       }
@@ -1453,7 +1453,7 @@
     if (typeof MutationObserver === 'undefined') return;
 
     var removalObserver = new MutationObserver(function () {
-      if (!document.getElementById('qs-help-button')) {
+      if (!document.getElementById('helpbutton-qs')) {
         log('Button removed from DOM (SPA navigation?). Re-injecting…');
         // Small delay to let the new toolbar render
         setTimeout(function () {

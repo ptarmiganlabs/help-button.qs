@@ -1,4 +1,4 @@
-qs-help-button Extension
+HelpButton.qs Extension
 ========================
 Version: __VERSION__
 
@@ -8,11 +8,11 @@ on Windows and Qlik Cloud.
 
 Installation
 ------------
-1. Import the inner qs-help-button-ext.zip file via:
+1. Import the inner helpbutton-qs-ext.zip file via:
    - Client-managed: QMC → Extensions → Import
    - Qlik Cloud: Management Console → Extensions → Add
 
-2. Open an app in edit mode and drag "qs-help-button" onto any sheet.
+2. Open an app in edit mode and drag "HelpButton.qs" onto any sheet.
 
 3. Configure the help button using the property panel on the right.
 
@@ -20,4 +20,4 @@ Installation
    extension object is only placed on one sheet.
 
 For full documentation visit:
-https://github.com/ptarmiganlabs/qs-help-button
+https://github.com/ptarmiganlabs/help-button.qs

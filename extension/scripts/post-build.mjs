@@ -13,7 +13,7 @@ async function main() {
 
     console.log(`Post-build: Using BUILD_TYPE=${buildType}, VERSION=${version}`);
 
-    const targetDirs = ['dist', 'qs-help-button-ext'];
+    const targetDirs = ['dist', 'helpbutton-qs-ext'];
 
     for (const dir of targetDirs) {
         try {

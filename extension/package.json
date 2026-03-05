@@ -1,14 +1,14 @@
 {
-    "name": "qs-help-button",
+    "name": "helpbutton-qs",
     "version": "1.2.1",
     "type": "module",
     "description": "Qlik Sense extension that injects a configurable help button into the toolbar",
     "license": "MIT",
     "author": "Göran Sander, Ptarmigan Labs",
     "bugs": {
-        "url": "https://github.com/ptarmiganlabs/qs-help-button/issues"
+        "url": "https://github.com/ptarmiganlabs/help-button.qs/issues"
     },
-    "homepage": "https://github.com/ptarmiganlabs/qs-help-button#readme",
+    "homepage": "https://github.com/ptarmiganlabs/help-button.qs#readme",
     "keywords": [
         "qlik",
         "qliksense",
@@ -20,14 +20,14 @@
     ],
     "files": [
         "dist",
-        "qs-help-button.js",
-        "qs-help-button.qext"
+        "helpbutton-qs.js",
+        "helpbutton-qs.qext"
     ],
     "engines": {
         "node": ">=18.10.0"
     },
-    "main": "dist/qs-help-button.js",
-    "module": "dist/qs-help-button.esm.js",
+    "main": "dist/helpbutton-qs.js",
+    "module": "dist/helpbutton-qs.esm.js",
     "scripts": {
         "build": "cross-env BUILD_TYPE=development nebula build --config nebula.config.cjs --sourcemap false --mode development",
         "build:dist": "cross-env BUILD_TYPE=production nebula build --config nebula.config.cjs --sourcemap false",

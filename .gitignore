@@ -148,6 +148,6 @@ vite.config.ts.timestamp-*
 
 # Extension build artifacts
 extension/dist/
-extension/qs-help-button-ext/
+extension/helpbutton-qs-ext/
 extension/node_modules/
 extension/*.zip

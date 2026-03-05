@@ -1,5 +1,5 @@
 /**
- * Property panel definition for qs-help-button extension.
+ * Property panel definition for HelpButton.qs extension.
  *
  * Section order: Language → Widget → Button → Popup → Menu Items → Template Fields → About
  *
@@ -446,17 +446,17 @@ export default function ext(_galaxy) {
                     items: {
                         headerText: {
                             component: 'text',
-                            label: `qs-help-button v${PACKAGE_VERSION}\nConfigurable help button for Qlik Sense.`,
+                            label: `HelpButton.qs v${PACKAGE_VERSION}\nConfigurable help button for Qlik Sense.`,
                         },
                         linkGithub: {
                             component: 'link',
                             label: 'GitHub — docs & source',
-                            url: 'https://github.com/ptarmiganlabs/qs-help-button',
+                            url: 'https://github.com/ptarmiganlabs/help-button.qs',
                         },
                         linkIssues: {
                             component: 'link',
                             label: 'Report a bug / request a feature',
-                            url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
+                            url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
                         },
                         linkPtarmigan: {
                             component: 'link',

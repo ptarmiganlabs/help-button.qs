@@ -1,18 +1,18 @@
 /**
  * Qlik Sense Help Button (Bug Report Variant) — Configuration
  * =============================================================
- * Load this file BEFORE qs-help-button.js to customise the button behaviour.
+ * Load this file BEFORE helpbutton-qs.js to customise the button behaviour.
  *
  * Usage in Qlik Sense client.html (add before </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * All properties are optional. Only set the ones you want to override.
  * Default colors use a professional blue & yellow palette.
  *
  * @see README.md for full documentation.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Toolbar button — text & tooltip
   // --------------------------------------------------------------------------
@@ -80,7 +80,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Help & documentation',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       // Per-item colors (blue tint)

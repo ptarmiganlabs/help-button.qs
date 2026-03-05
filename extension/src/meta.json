@@ -1,15 +1,15 @@
 {
-    "name": "qs-help-button",
+    "name": "HelpButton.qs",
     "description": "Configurable help button for the Qlik Sense toolbar",
     "type": "visualization",
     "version": "1.2.1",
     "icon": "shapes",
     "preview": "preview.png",
     "author": "Göran Sander, Ptarmigan Labs",
-    "homepage": "https://github.com/ptarmiganlabs/qs-help-button",
+    "homepage": "https://github.com/ptarmiganlabs/help-button.qs",
     "keywords": "qlik-sense, help-button, toolbar, visualization",
     "license": "MIT",
-    "repository": "https://github.com/ptarmiganlabs/qs-help-button",
+    "repository": "https://github.com/ptarmiganlabs/help-button.qs",
     "dependencies": {
         "qlik-sense": ">=3.0.x"
     }

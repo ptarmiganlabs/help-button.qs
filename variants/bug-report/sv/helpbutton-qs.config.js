@@ -1,18 +1,18 @@
 /**
  * Qlik Sense Help Button (Felrapportvariant) — Konfiguration (Svenska)
  * =====================================================================
- * Ladda denna fil FÖRE qs-help-button.js för att anpassa knappens beteende.
+ * Ladda denna fil FÖRE helpbutton-qs.js för att anpassa knappens beteende.
  *
  * Användning i Qlik Sense client.html (lägg till före </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Alla egenskaper är valfria. Ange bara de du vill ändra.
  * Standardfärgerna använder en professionell blå & gul palett.
  *
  * @see README.md för fullständig dokumentation.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Verktygsfältsknapp — text & tooltip
   // --------------------------------------------------------------------------
@@ -80,7 +80,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Hjälp & dokumentation',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       // Färger per alternativ (blå ton)

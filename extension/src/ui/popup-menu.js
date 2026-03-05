@@ -1,5 +1,5 @@
 /**
- * Popup menu component for qs-help-button.
+ * Popup menu component for HelpButton.qs.
  *
  * Creates a floating dropdown popup attached to the toolbar button.
  * Appended to document.body to avoid overflow:hidden clipping.
@@ -43,19 +43,19 @@ export function createPopupMenu(triggerButton, config) {
     const { popupTitle, menuItems = [], popupStyle = {}, onBugReport } = config;
 
     // Remove any existing popup
-    const existingPopup = document.getElementById('qshb-popup');
+    const existingPopup = document.getElementById('hbqs-popup');
     if (existingPopup) existingPopup.remove();
 
     // -- Popup container --
     const popup = document.createElement('div');
-    popup.id = 'qshb-popup';
-    popup.className = 'qshb-popup';
+    popup.id = 'hbqs-popup';
+    popup.className = 'hbqs-popup';
     popup.setAttribute('role', 'menu');
     popup.setAttribute('aria-label', popupTitle || 'Help menu');
 
     // -- Header --
     const header = document.createElement('div');
-    header.className = 'qshb-popup-header';
+    header.className = 'hbqs-popup-header';
     const headerBg = resolveColor(popupStyle.headerBackgroundColor);
     const headerText = resolveColor(popupStyle.headerTextColor);
     if (headerBg) header.style.backgroundColor = headerBg;
@@ -67,14 +67,14 @@ export function createPopupMenu(triggerButton, config) {
     menuItems.forEach((item, idx) => {
         if (idx > 0) {
             const sep = document.createElement('hr');
-            sep.className = 'qshb-popup-separator';
+            sep.className = 'hbqs-popup-separator';
             const sepColor = resolveColor(popupStyle.separatorColor);
             if (sepColor) sep.style.borderTopColor = sepColor;
             popup.appendChild(sep);
         }
 
         const menuItem = document.createElement('a');
-        menuItem.className = 'qshb-popup-menu-item';
+        menuItem.className = 'hbqs-popup-menu-item';
         menuItem.setAttribute('role', 'menuitem');
 
         // Resolve per-item colors from color-picker objects
@@ -89,16 +89,16 @@ export function createPopupMenu(triggerButton, config) {
 
         // Hover effect via data attributes (CSS handles hover via :hover)
         if (itemBgHover) menuItem.dataset.hoverBg = itemBgHover;
-        if (itemIcon) menuItem.style.setProperty('--qshb-item-icon-color', itemIcon);
+        if (itemIcon) menuItem.style.setProperty('--hbqs-item-icon-color', itemIcon);
 
         // Icon + label
         const iconSpan = document.createElement('span');
-        iconSpan.className = 'qshb-popup-item-icon';
+        iconSpan.className = 'hbqs-popup-item-icon';
         iconSpan.innerHTML = makeSvg(item.icon || 'help', 16, itemIcon);
         menuItem.appendChild(iconSpan);
 
         const labelSpan = document.createElement('span');
-        labelSpan.className = 'qshb-popup-item-label';
+        labelSpan.className = 'hbqs-popup-item-label';
         labelSpan.textContent = item.label || '';
         menuItem.appendChild(labelSpan);
 

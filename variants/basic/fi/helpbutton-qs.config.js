@@ -1,19 +1,19 @@
 /**
  * Qlik Sense Help Button — Asetukset (Suomi)
  * ============================================
- * Lataa tämä tiedosto ENNEN qs-help-button.js-tiedostoa mukauttaaksesi
+ * Lataa tämä tiedosto ENNEN helpbutton-qs.js-tiedostoa mukauttaaksesi
  * painikkeen toimintaa.
  *
  * Käyttö Qlik Sensen client.html-tiedostossa (lisää ennen </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Kaikki ominaisuudet ovat valinnaisia. Aseta vain ne, jotka haluat ohittaa.
  * Oletusvärit käyttävät ammattimaista sinistä ja keltaista palettia.
  *
  * @see README.md täydellinen dokumentaatio.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Työkalupalkin painike — teksti ja vihje
   // --------------------------------------------------------------------------
@@ -86,7 +86,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Ohje ja dokumentaatio',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       // Värit per kohde (sininen sävy)
@@ -97,7 +97,7 @@ window.qsHelpButtonConfig = {
     },
     {
       label: 'Ilmoita virheestä',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
       icon: 'bug',
       target: '_blank',
       // Värit per kohde (lämmin meripihkasävy)

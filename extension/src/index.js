@@ -1,5 +1,5 @@
 /**
- * qs-help-button — Supernova entry point.
+ * HelpButton.qs — Supernova entry point.
  *
  * A Qlik Sense extension that injects a configurable help button
  * into the application toolbar. Supports both client-managed and
@@ -105,7 +105,7 @@ export default function supernova(galaxy) {
                     renderEditPlaceholder(element, layout);
 
                     // Responsive size tiers via ResizeObserver
-                    const widgetEl = element.querySelector('.qshb-edit-placeholder');
+                    const widgetEl = element.querySelector('.hbqs-edit-placeholder');
                     let resizeObserver;
                     if (widgetEl && typeof ResizeObserver !== 'undefined') {
                         const classify = () => {
@@ -123,7 +123,7 @@ export default function supernova(galaxy) {
                     }
 
                     // Attach About button handler
-                    const aboutBtn = element.querySelector('.qshb-about-btn');
+                    const aboutBtn = element.querySelector('.hbqs-about-btn');
                     if (aboutBtn) {
                         aboutBtn.addEventListener('click', () => openAboutModal());
                     }
@@ -208,7 +208,7 @@ export default function supernova(galaxy) {
                 let hoverMenuTarget;
                 if (hideHoverMenu) {
                     hoverMenuTarget = qlikWrapper;
-                    hoverMenuTarget.classList.add('qshb-no-hover-menu');
+                    hoverMenuTarget.classList.add('hbqs-no-hover-menu');
                 }
 
                 return () => {
@@ -220,7 +220,7 @@ export default function supernova(galaxy) {
                         contextMenuObserver.disconnect();
                     }
                     if (hoverMenuTarget) {
-                        hoverMenuTarget.classList.remove('qshb-no-hover-menu');
+                        hoverMenuTarget.classList.remove('hbqs-no-hover-menu');
                     }
                 };
             }, [platform, adapter, layout, isEditMode]);
@@ -252,17 +252,17 @@ function renderEditPlaceholder(element, layout) {
         (hasBugReport ? ' · Bug report: On' : '');
 
     element.innerHTML = `
-        <div class="qshb-edit-placeholder"
-             title="qs-help-button — ${statsText}">
-            <div class="qshb-edit-placeholder-info">
-                <div class="qshb-edit-placeholder-icon">
+        <div class="hbqs-edit-placeholder"
+             title="HelpButton.qs — ${statsText}">
+            <div class="hbqs-edit-placeholder-info">
+                <div class="hbqs-edit-placeholder-icon">
                     ${makeSvg('help', 32, '#165a9b')}
                 </div>
-                <div class="qshb-edit-placeholder-title">Help Button</div>
-                <div class="qshb-edit-placeholder-stats">${statsText}</div>
-                <div class="qshb-edit-placeholder-actions">
-                    <button class="qshb-btn qshb-btn--ghost qshb-about-btn"
-                            title="About qs-help-button">
+                <div class="hbqs-edit-placeholder-title">HelpButton.qs</div>
+                <div class="hbqs-edit-placeholder-stats">${statsText}</div>
+                <div class="hbqs-edit-placeholder-actions">
+                    <button class="hbqs-btn hbqs-btn--ghost hbqs-about-btn"
+                            title="About HelpButton.qs">
                         &#9432; About
                     </button>
                 </div>
@@ -283,8 +283,8 @@ function renderAnalysisPlaceholder(element, layout) {
     const text = layout.widget?.analysisPlaceholderText || resolveText('', 'analysisPlaceholder');
 
     element.innerHTML = show
-        ? `<div class="qshb-analysis-placeholder">${escapeHtml(text)}</div>`
-        : `<div class="qshb-analysis-placeholder qshb-analysis-placeholder--hidden"></div>`;
+        ? `<div class="hbqs-analysis-placeholder">${escapeHtml(text)}</div>`
+        : `<div class="hbqs-analysis-placeholder hbqs-analysis-placeholder--hidden"></div>`;
 }
 
 /**
@@ -292,27 +292,27 @@ function renderAnalysisPlaceholder(element, layout) {
  */
 function openAboutModal() {
     // Remove any existing about modal
-    const existing = document.querySelector('.qshb-about-overlay');
+    const existing = document.querySelector('.hbqs-about-overlay');
     if (existing) existing.remove();
 
     const overlay = document.createElement('div');
-    overlay.className = 'qshb-about-overlay';
+    overlay.className = 'hbqs-about-overlay';
     overlay.innerHTML = `
-        <div class="qshb-about-modal">
-            <div class="qshb-about-modal__header">
-                <span class="qshb-about-modal__icon">${makeSvg('help', 28, '#165a9b')}</span>
-                <span class="qshb-about-modal__title">qs-help-button</span>
-                <span class="qshb-about-modal__version">v${escapeHtml(PACKAGE_VERSION)}</span>
+        <div class="hbqs-about-modal">
+            <div class="hbqs-about-modal__header">
+                <span class="hbqs-about-modal__icon">${makeSvg('help', 28, '#165a9b')}</span>
+                <span class="hbqs-about-modal__title">HelpButton.qs</span>
+                <span class="hbqs-about-modal__version">v${escapeHtml(PACKAGE_VERSION)}</span>
             </div>
-            <p class="qshb-about-modal__tagline">
+            <p class="hbqs-about-modal__tagline">
                 Configurable help button for Qlik Sense apps.
             </p>
-            <div class="qshb-about-modal__links">
-                <a href="https://github.com/ptarmiganlabs/qs-help-button" target="_blank" rel="noopener noreferrer">
+            <div class="hbqs-about-modal__links">
+                <a href="https://github.com/ptarmiganlabs/help-button.qs" target="_blank" rel="noopener noreferrer">
                     <strong>Documentation &amp; Source Code</strong>
                     <span>README, docs, and full source on GitHub.</span>
                 </a>
-                <a href="https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose" target="_blank" rel="noopener noreferrer">
                     <strong>Report a Bug / Request a Feature</strong>
                     <span>Open an issue on GitHub to report problems or suggest improvements.</span>
                 </a>
@@ -321,8 +321,8 @@ function openAboutModal() {
                     <span>Qlik Sense tools, blog posts, extensions &amp; consulting.</span>
                 </a>
             </div>
-            <div class="qshb-about-modal__footer">
-                <button class="qshb-btn qshb-btn--secondary qshb-about-close-btn">Close</button>
+            <div class="hbqs-about-modal__footer">
+                <button class="hbqs-btn hbqs-btn--secondary hbqs-about-close-btn">Close</button>
             </div>
         </div>
     `;
@@ -337,7 +337,7 @@ function openAboutModal() {
         if (e.key === 'Escape') close();
     };
     document.addEventListener('keydown', onKey);
-    overlay.querySelector('.qshb-about-close-btn').addEventListener('click', close);
+    overlay.querySelector('.hbqs-about-close-btn').addEventListener('click', close);
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) close();
     });

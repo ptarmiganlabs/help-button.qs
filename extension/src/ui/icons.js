@@ -1,5 +1,5 @@
 /**
- * SVG icon library for qs-help-button.
+ * SVG icon library for HelpButton.qs.
  *
  * All icons use a 16×16 viewBox. The `makeSvg()` factory creates an
  * SVG string from any registered icon key.

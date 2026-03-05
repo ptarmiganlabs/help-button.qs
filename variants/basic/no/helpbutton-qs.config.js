@@ -1,18 +1,18 @@
 /**
  * Qlik Sense Help Button — Konfigurasjon (Norsk)
  * ================================================
- * Last denne filen FØR qs-help-button.js for å tilpasse knappens oppførsel.
+ * Last denne filen FØR helpbutton-qs.js for å tilpasse knappens oppførsel.
  *
  * Bruk i Qlik Sense client.html (legg til før </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Alle egenskaper er valgfrie. Angi bare de du vil overstyre.
  * Standardfargene bruker en profesjonell blå og gul palett.
  *
  * @see README.md for fullstendig dokumentasjon.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Verktøylinjeknapp — tekst og verktøytips
   // --------------------------------------------------------------------------
@@ -85,7 +85,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Hjelp og dokumentasjon',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       // Farger per element (blå tone)
@@ -96,7 +96,7 @@ window.qsHelpButtonConfig = {
     },
     {
       label: 'Rapporter en feil',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
       icon: 'bug',
       target: '_blank',
       // Farger per element (varm ravtone)

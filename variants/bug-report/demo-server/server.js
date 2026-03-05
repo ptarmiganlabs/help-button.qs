@@ -166,7 +166,7 @@ if (hasCerts) {
 
   https.createServer(tlsOptions, app).listen(HTTPS_PORT, HOST, () => {
     logger.info('═'.repeat(72));
-    logger.info('  qs-help-button Demo Server  (HTTPS)');
+    logger.info('  HelpButton.qs Demo Server  (HTTPS)');
     logger.info(`  Listening on:  https://${HOST}:${HTTPS_PORT}`);
     logger.info(`  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`);
     logger.info(`  Health check:  GET  https://${HOST}:${HTTPS_PORT}/health`);
@@ -186,7 +186,7 @@ if (hasCerts) {
 
   app.listen(HTTP_PORT, HOST, () => {
     logger.info('═'.repeat(72));
-    logger.info('  qs-help-button Demo Server  (HTTP)');
+    logger.info('  HelpButton.qs Demo Server  (HTTP)');
     logger.info(`  Listening on:  http://${HOST}:${HTTP_PORT}`);
     logger.info(`  Bug reports:   POST http://${HOST}:${HTTP_PORT}/api/bug-reports`);
     logger.info(`  Health check:  GET  http://${HOST}:${HTTP_PORT}/health`);

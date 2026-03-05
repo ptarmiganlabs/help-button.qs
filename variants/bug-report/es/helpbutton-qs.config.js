@@ -1,19 +1,19 @@
 /**
  * Qlik Sense Botón de Ayuda (Variante informe de errores) — Configuración (Español)
  * ====================================================================================
- * Cargue este archivo ANTES de qs-help-button.js para personalizar el comportamiento
+ * Cargue este archivo ANTES de helpbutton-qs.js para personalizar el comportamiento
  * del botón.
  *
  * Uso en el archivo client.html de Qlik Sense (agregar antes de </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Todas las propiedades son opcionales. Establezca solo las que desee sobrescribir.
  * Los colores predeterminados utilizan una paleta profesional azul y amarilla.
  *
  * @see README.md para la documentación completa.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Botón de la barra de herramientas — texto e información emergente
   // --------------------------------------------------------------------------
@@ -81,7 +81,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Ayuda y documentación',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       iconColor: '#165a9b',

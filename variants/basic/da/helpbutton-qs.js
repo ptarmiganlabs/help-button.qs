@@ -11,8 +11,8 @@
  *   See README.md for full instructions.
  *
  * Configuration:
- *   Set window.qsHelpButtonConfig BEFORE this script loads, or load
- *   qs-help-button.config.js first. See qs-help-button.config.js for options.
+ *   Set window.helpButtonQsConfig BEFORE this script loads, or load
+ *   helpbutton-qs.config.js first. See helpbutton-qs.config.js for options.
  *
  * Compatible with Qlik Sense Enterprise on Windows (client-managed).
  * Tested with versions
@@ -20,13 +20,13 @@
  *
  * @version 1.2.1 // x-release-please-version
  * @license MIT
- * @see https://github.com/ptarmiganlabs/qs-help-button
+ * @see https://github.com/ptarmiganlabs/help-button.qs
  */
 (function () {
   'use strict';
 
   // ---------------------------------------------------------------------------
-  // Configuration (merged with window.qsHelpButtonConfig if present)
+  // Configuration (merged with window.helpButtonQsConfig if present)
   // ---------------------------------------------------------------------------
   var DEFAULT_CONFIG = {
     // -- Button appearance --
@@ -91,7 +91,7 @@
   };
 
   // Merge user config (deep merge for nested style objects)
-  var cfg = deepMerge(DEFAULT_CONFIG, window.qsHelpButtonConfig || {});
+  var cfg = deepMerge(DEFAULT_CONFIG, window.helpButtonQsConfig || {});
 
   // ---------------------------------------------------------------------------
   // SVG icon library (16×16 viewBox)
@@ -161,7 +161,7 @@
 
   function log() {
     if (cfg.debug) {
-      var args = ['[qs-help-button]'].concat(Array.prototype.slice.call(arguments));
+      var args = ['[helpbutton-qs]'].concat(Array.prototype.slice.call(arguments));
       console.log.apply(console, args);
     }
   }
@@ -379,7 +379,7 @@
   // ---------------------------------------------------------------------------
   function createHelpButton() {
     // Guard against double-injection
-    if (document.getElementById('qs-help-button')) {
+    if (document.getElementById('helpbutton-qs')) {
       log('Button already exists, skipping injection.');
       return;
     }
@@ -396,12 +396,12 @@
 
     // -- Container --
     var container = document.createElement('div');
-    container.id = 'qs-help-button-container';
+    container.id = 'helpbutton-qs-container';
     container.setAttribute('style', S.container);
 
     // -- Toolbar button --
     var btn = document.createElement('button');
-    btn.id = 'qs-help-button';
+    btn.id = 'helpbutton-qs';
     btn.setAttribute('type', 'button');
     btn.setAttribute('title', cfg.buttonTooltip);
     btn.setAttribute('aria-label', cfg.buttonTooltip);
@@ -434,7 +434,7 @@
 
     // -- Popup --
     var popup = document.createElement('div');
-    popup.id = 'qs-help-popup';
+    popup.id = 'helpbutton-qs-popup';
     popup.setAttribute('role', 'menu');
     popup.setAttribute('aria-label', cfg.popupTitle);
     popup.setAttribute('style', S.popup);
@@ -619,7 +619,7 @@
     if (typeof MutationObserver === 'undefined') return;
 
     var removalObserver = new MutationObserver(function () {
-      if (!document.getElementById('qs-help-button')) {
+      if (!document.getElementById('helpbutton-qs')) {
         log('Button removed from DOM (SPA navigation?). Re-injecting…');
         // Small delay to let the new toolbar render
         setTimeout(function () {

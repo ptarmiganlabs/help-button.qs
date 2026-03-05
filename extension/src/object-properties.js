@@ -1,5 +1,5 @@
 /**
- * Default properties for the qs-help-button extension.
+ * Default properties for the HelpButton.qs extension.
  *
  * These define the initial state of the extension when first dropped
  * onto a sheet. All values can be overridden via the property panel.
@@ -12,7 +12,7 @@ import { toPickerObj } from './util/color';
 
 export default {
     showTitles: false,
-    title: 'Help Button',
+    title: 'HelpButton.qs',
     subtitle: '',
     footnote: '',
 

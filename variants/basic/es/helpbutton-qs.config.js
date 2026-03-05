@@ -1,12 +1,12 @@
 /**
  * Qlik Sense Botón de Ayuda — Configuración (Español)
  * ====================================================
- * Cargue este archivo ANTES de qs-help-button.js para personalizar
+ * Cargue este archivo ANTES de helpbutton-qs.js para personalizar
  * el comportamiento del botón.
  *
  * Uso en el archivo client.html de Qlik Sense (agregar antes de </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Todas las propiedades son opcionales. Establezca solo las que desee
  * sobrescribir. Los colores predeterminados utilizan una paleta profesional
@@ -14,7 +14,7 @@
  *
  * @see README.md para la documentación completa.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Botón de la barra de herramientas — texto e información emergente
   // --------------------------------------------------------------------------
@@ -87,7 +87,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Ayuda y documentación',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       // Colores por elemento (tonos azules)
@@ -98,7 +98,7 @@ window.qsHelpButtonConfig = {
     },
     {
       label: 'Reportar un error',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
       icon: 'bug',
       target: '_blank',
       // Colores por elemento (tonos ámbar cálidos)

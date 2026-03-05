@@ -1,7 +1,7 @@
 contact_links:
   - name: "\U0001F4A1 Feature Request"
-    url: https://github.com/ptarmiganlabs/qs-help-button/discussions/new
+    url: https://github.com/ptarmiganlabs/help-button.qs/discussions/new
     about: Share ideas for new features
   - name: "\u2753 Question"
-    url: https://github.com/ptarmiganlabs/qs-help-button/discussions/new
+    url: https://github.com/ptarmiganlabs/help-button.qs/discussions/new
     about: General questions

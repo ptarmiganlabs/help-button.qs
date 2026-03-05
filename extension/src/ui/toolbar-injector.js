@@ -1,5 +1,5 @@
 /**
- * Toolbar injection module for qs-help-button.
+ * Toolbar injection module for HelpButton.qs.
  *
  * Handles finding the toolbar anchor, creating the help button element,
  * injecting it, and watching for SPA navigation/removal.
@@ -18,7 +18,7 @@ import logger from '../util/logger';
  *
  * @type {string}
  */
-const CONTAINER_ID = 'qshb-container';
+const CONTAINER_ID = 'hbqs-container';
 
 /**
  * Active popup controls — stored to allow cleanup.
@@ -92,12 +92,12 @@ export function injectHelpButton(layout, adapter, platform) {
     // -- Container --
     const container = document.createElement('div');
     container.id = CONTAINER_ID;
-    container.className = 'qshb-container';
+    container.className = 'hbqs-container';
 
     // -- Toolbar button --
     const btn = document.createElement('button');
-    btn.id = 'qshb-button';
-    btn.className = 'qshb-button';
+    btn.id = 'hbqs-button';
+    btn.className = 'hbqs-button';
     btn.type = 'button';
     btn.title = buttonTooltip;
     btn.setAttribute('aria-label', buttonTooltip);
@@ -105,15 +105,15 @@ export function injectHelpButton(layout, adapter, platform) {
     btn.setAttribute('aria-expanded', 'false');
 
     // Apply button colors from layout (resolved from color-picker objects)
-    btn.style.setProperty('--qshb-btn-bg', btnBg);
-    btn.style.setProperty('--qshb-btn-bg-hover', btnBgHover);
-    btn.style.setProperty('--qshb-btn-text', btnText);
-    btn.style.setProperty('--qshb-btn-border', btnBorder);
-    btn.style.setProperty('--qshb-btn-radius', btnRadius);
+    btn.style.setProperty('--hbqs-btn-bg', btnBg);
+    btn.style.setProperty('--hbqs-btn-bg-hover', btnBgHover);
+    btn.style.setProperty('--hbqs-btn-text', btnText);
+    btn.style.setProperty('--hbqs-btn-border', btnBorder);
+    btn.style.setProperty('--hbqs-btn-radius', btnRadius);
 
     btn.innerHTML =
-        `<span class="qshb-button-icon">${makeSvg(buttonIcon, 16, btnText)}</span>` +
-        `<span class="qshb-button-label">${escapeHtml(buttonLabel)}</span>`;
+        `<span class="hbqs-button-icon">${makeSvg(buttonIcon, 16, btnText)}</span>` +
+        `<span class="hbqs-button-label">${escapeHtml(buttonLabel)}</span>`;
 
     container.appendChild(btn);
 

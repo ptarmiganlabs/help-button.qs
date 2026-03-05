@@ -1,4 +1,4 @@
-# qs-help-button — Bug Report Variant
+# HelpButton.qs — Bug Report Variant
 
 A lightweight, self-contained solution that adds a **Help** button with an integrated **Bug Report** dialog to the toolbar of every app in **Qlik Sense Enterprise on Windows** (client-managed).
 
@@ -31,12 +31,12 @@ Each language folder is **self-contained** — it includes all the files needed 
 
 ```
 en/                              (or sv/, etc.)
-├── qs-help-button.js            ← Main script (identical across languages)
-├── qs-help-button.config.js     ← Configuration with translated UI texts
+├── helpbutton-qs.js            ← Main script (identical across languages)
+├── helpbutton-qs.config.js     ← Configuration with translated UI texts
 └── loader-snippet.html          ← Reference snippet for client.html
 ```
 
-The **main script** (`qs-help-button.js`) is identical across all languages — it contains English defaults that are overridden by the language-specific **config file** (`qs-help-button.config.js`). All user-facing strings in the bug-report dialog (title, labels, buttons, messages, field names) are fully translatable via the config file.
+The **main script** (`helpbutton-qs.js`) is identical across all languages — it contains English defaults that are overridden by the language-specific **config file** (`helpbutton-qs.config.js`). All user-facing strings in the bug-report dialog (title, labels, buttons, messages, field names) are fully translatable via the config file.
 
 ### Shared resources
 
@@ -50,10 +50,10 @@ The [`demo-server/`](demo-server/) folder at the variant root provides a sample 
 # 1. Pick a language folder (e.g. en/ for English, sv/ for Swedish)
 #    and copy its files to your Qlik Sense server:
 mkdir "C:\Program Files\Qlik\Sense\Client\custom"
-copy en\qs-help-button.js        "C:\Program Files\Qlik\Sense\Client\custom\"
-copy en\qs-help-button.config.js "C:\Program Files\Qlik\Sense\Client\custom\"
+copy en\helpbutton-qs.js        "C:\Program Files\Qlik\Sense\Client\custom\"
+copy en\helpbutton-qs.config.js "C:\Program Files\Qlik\Sense\Client\custom\"
 
-# 2. Edit qs-help-button.config.js — set bugReport.webhookUrl to your endpoint
+# 2. Edit helpbutton-qs.config.js — set bugReport.webhookUrl to your endpoint
 
 # 3. Edit client.html — add two <script> lines before </body>
 #    See "Installation" below for the exact snippet.
@@ -84,8 +84,8 @@ Choose the language folder you want (e.g. `en/` or `sv/`) and copy both JavaScri
 C:\Program Files\Qlik\Sense\Client\
 ├── client.html                          ← modified in Step 2
 └── custom\                              ← create this folder
-    ├── qs-help-button.js                ← from your chosen language folder
-    └── qs-help-button.config.js         ← from your chosen language folder
+    ├── helpbutton-qs.js                ← from your chosen language folder
+    └── helpbutton-qs.config.js         ← from your chosen language folder
 ```
 
 > **Important:** The `Client` folder is served by the Qlik Sense proxy as `/resources`. Files placed at `Client\custom\` become accessible at `/resources/custom/` in the browser.
@@ -96,8 +96,8 @@ Open `C:\Program Files\Qlik\Sense\Client\client.html` and add the following line
 
 ```html
 <!-- ===== BEGIN: Qlik Sense Help Button (Bug Report Variant) ===== -->
-<script src="../resources/custom/qs-help-button.config.js"></script>
-<script src="../resources/custom/qs-help-button.js" defer></script>
+<script src="../resources/custom/helpbutton-qs.config.js"></script>
+<script src="../resources/custom/helpbutton-qs.js" defer></script>
 <!-- ===== END: Qlik Sense Help Button (Bug Report Variant) ===== -->
 ```
 
@@ -119,7 +119,7 @@ Get-Service QlikSense* | Restart-Service
 
 ## Configuration
 
-All configuration is done in `qs-help-button.config.js`. See the config file in your chosen language folder for the full list of options with inline documentation.
+All configuration is done in `helpbutton-qs.config.js`. See the config file in your chosen language folder for the full list of options with inline documentation.
 
 ### General options
 
@@ -169,14 +169,14 @@ The [`demo-server/`](demo-server/) folder contains a sample Express.js HTTPS ser
 ## Adding a New Language
 
 1. Copy an existing language folder (e.g. `en/`) to a new folder named with the [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code (e.g. `de/` for German).
-2. Edit `qs-help-button.config.js` in the new folder — translate all user-facing text strings:
+2. Edit `helpbutton-qs.config.js` in the new folder — translate all user-facing text strings:
    - Button label and tooltip
    - Popup title
    - Menu item labels
    - All `bugReport.*` text properties (dialog title, labels, buttons, messages)
    - All `bugReport.fieldLabels.*` entries
    - Code comments (optional but recommended)
-3. The `qs-help-button.js` file does not need modification — it's the same across all languages.
+3. The `helpbutton-qs.js` file does not need modification — it's the same across all languages.
 4. Update this README to list the new language.
 
 ---

@@ -1,5 +1,5 @@
 /**
- * Bug-report dialog component for qs-help-button.
+ * Bug-report dialog component for HelpButton.qs.
  *
  * Modal overlay with a form that collects bug-report data and
  * submits it to a configurable webhook URL.
@@ -51,7 +51,7 @@ export function openBugReportDialog(config, platformType) {
     }
 
     // Remove any existing dialog
-    const existing = document.getElementById('qshb-bug-report-overlay');
+    const existing = document.getElementById('hbqs-bug-report-overlay');
     if (existing) existing.remove();
 
     // Localized strings
@@ -72,26 +72,26 @@ export function openBugReportDialog(config, platformType) {
 
     // -- Build dialog DOM --
     const overlay = document.createElement('div');
-    overlay.id = 'qshb-bug-report-overlay';
-    overlay.className = 'qshb-bug-report-overlay';
+    overlay.id = 'hbqs-bug-report-overlay';
+    overlay.className = 'hbqs-bug-report-overlay';
 
     const dialog = document.createElement('div');
-    dialog.className = 'qshb-bug-report-dialog';
+    dialog.className = 'hbqs-bug-report-dialog';
     dialog.setAttribute('role', 'dialog');
     dialog.setAttribute('aria-modal', 'true');
     dialog.setAttribute('aria-label', title);
 
     // Header
     const headerEl = document.createElement('div');
-    headerEl.className = 'qshb-bug-report-header';
+    headerEl.className = 'hbqs-bug-report-header';
 
     const titleEl = document.createElement('h2');
-    titleEl.className = 'qshb-bug-report-title';
+    titleEl.className = 'hbqs-bug-report-title';
     titleEl.textContent = title;
     headerEl.appendChild(titleEl);
 
     const closeBtn = document.createElement('button');
-    closeBtn.className = 'qshb-bug-report-close';
+    closeBtn.className = 'hbqs-bug-report-close';
     closeBtn.type = 'button';
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.innerHTML = makeSvg('close', 20);
@@ -103,27 +103,27 @@ export function openBugReportDialog(config, platformType) {
     // Context section
     if (collectFields.length > 0 && Object.keys(context).length > 0) {
         const contextSection = document.createElement('div');
-        contextSection.className = 'qshb-bug-report-context';
+        contextSection.className = 'hbqs-bug-report-context';
 
         const contextTitle = document.createElement('div');
-        contextTitle.className = 'qshb-bug-report-context-title';
+        contextTitle.className = 'hbqs-bug-report-context-title';
         contextTitle.textContent = contextHeader;
         contextSection.appendChild(contextTitle);
 
         const contextGrid = document.createElement('div');
-        contextGrid.className = 'qshb-bug-report-context-grid';
+        contextGrid.className = 'hbqs-bug-report-context-grid';
 
         for (const [key, value] of Object.entries(context)) {
             const row = document.createElement('div');
-            row.className = 'qshb-bug-report-context-row';
+            row.className = 'hbqs-bug-report-context-row';
 
             const keyEl = document.createElement('span');
-            keyEl.className = 'qshb-bug-report-context-key';
+            keyEl.className = 'hbqs-bug-report-context-key';
             keyEl.textContent = key;
             row.appendChild(keyEl);
 
             const valEl = document.createElement('span');
-            valEl.className = 'qshb-bug-report-context-value';
+            valEl.className = 'hbqs-bug-report-context-value';
             valEl.textContent = value || '—';
             row.appendChild(valEl);
 
@@ -136,17 +136,17 @@ export function openBugReportDialog(config, platformType) {
 
     // Description textarea
     const formSection = document.createElement('div');
-    formSection.className = 'qshb-bug-report-form';
+    formSection.className = 'hbqs-bug-report-form';
 
     const label = document.createElement('label');
-    label.className = 'qshb-bug-report-label';
+    label.className = 'hbqs-bug-report-label';
     label.textContent = descriptionLabel;
-    label.htmlFor = 'qshb-bug-report-description';
+    label.htmlFor = 'hbqs-bug-report-description';
     formSection.appendChild(label);
 
     const textarea = document.createElement('textarea');
-    textarea.id = 'qshb-bug-report-description';
-    textarea.className = 'qshb-bug-report-textarea';
+    textarea.id = 'hbqs-bug-report-description';
+    textarea.className = 'hbqs-bug-report-textarea';
     textarea.placeholder = descriptionPlaceholder;
     textarea.rows = 6;
     formSection.appendChild(textarea);
@@ -155,17 +155,17 @@ export function openBugReportDialog(config, platformType) {
 
     // Action buttons
     const actions = document.createElement('div');
-    actions.className = 'qshb-bug-report-actions';
+    actions.className = 'hbqs-bug-report-actions';
 
     const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'qshb-bug-report-btn qshb-bug-report-btn-cancel';
+    cancelBtn.className = 'hbqs-bug-report-btn hbqs-bug-report-btn-cancel';
     cancelBtn.type = 'button';
     cancelBtn.textContent = cancelText;
     cancelBtn.addEventListener('click', () => closeDialog());
     actions.appendChild(cancelBtn);
 
     const submitBtn = document.createElement('button');
-    submitBtn.className = 'qshb-bug-report-btn qshb-bug-report-btn-submit';
+    submitBtn.className = 'hbqs-bug-report-btn hbqs-bug-report-btn-submit';
     submitBtn.type = 'button';
     submitBtn.textContent = submitText;
     submitBtn.disabled = true;
@@ -182,7 +182,7 @@ export function openBugReportDialog(config, platformType) {
     submitBtn.addEventListener('click', async () => {
         submitBtn.disabled = true;
         submitBtn.innerHTML =
-            '<span class="qshb-spinner"></span> ' + escapeHtml(submitText);
+            '<span class="hbqs-spinner"></span> ' + escapeHtml(submitText);
 
         try {
             const payload = {
@@ -350,18 +350,18 @@ function generateXrfKey() {
  */
 function showToast(message, type) {
     const toast = document.createElement('div');
-    toast.className = `qshb-toast qshb-toast-${type}`;
+    toast.className = `hbqs-toast hbqs-toast-${type}`;
     toast.textContent = message;
     document.body.appendChild(toast);
 
     // Trigger animation
     requestAnimationFrame(() => {
-        toast.classList.add('qshb-toast-visible');
+        toast.classList.add('hbqs-toast-visible');
     });
 
     // Auto-remove after 4 seconds
     setTimeout(() => {
-        toast.classList.remove('qshb-toast-visible');
+        toast.classList.remove('hbqs-toast-visible');
         setTimeout(() => toast.remove(), 300);
     }, 4000);
 }

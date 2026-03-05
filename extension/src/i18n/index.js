@@ -1,5 +1,5 @@
 /**
- * Internationalization (i18n) module for qs-help-button.
+ * Internationalization (i18n) module for HelpButton.qs.
  *
  * Detects the Qlik UI language and provides translated default strings.
  * Property-panel values always override these defaults (empty string = use default).

@@ -1,12 +1,12 @@
 /**
  * Qlik Sense Hilfe-Schaltfläche — Konfiguration (Deutsch)
  * ========================================================
- * Laden Sie diese Datei VOR qs-help-button.js, um das Verhalten
+ * Laden Sie diese Datei VOR helpbutton-qs.js, um das Verhalten
  * der Schaltfläche anzupassen.
  *
  * Verwendung in Qlik Sense client.html (vor </body> einfügen):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Alle Eigenschaften sind optional. Legen Sie nur die fest, die Sie
  * überschreiben möchten. Standardfarben verwenden eine professionelle
@@ -14,7 +14,7 @@
  *
  * @see README.md für die vollständige Dokumentation.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Symbolleisten-Schaltfläche — Text und Tooltip
   // --------------------------------------------------------------------------
@@ -87,7 +87,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Hilfe & Dokumentation',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       // Farben pro Eintrag (blaue Töne)
@@ -98,7 +98,7 @@ window.qsHelpButtonConfig = {
     },
     {
       label: 'Fehler melden',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
       icon: 'bug',
       target: '_blank',
       // Farben pro Eintrag (warme Bernsteintöne)

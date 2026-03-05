@@ -18,8 +18,8 @@ At the start of each session, read:
 
 - This is a **vanilla JavaScript** project with **zero external dependencies**.
 - There is **no build step** — files are deployed as-is to Qlik Sense servers.
-- Each variant is a self-contained **IIFE** (Immediately Invoked Function Expression) in `qs-help-button.js`.
-- Configuration is loaded from a separate `qs-help-button.config.js` file that sets `window.qsHelpButtonConfig`.
+- Each variant is a self-contained **IIFE** (Immediately Invoked Function Expression) in `helpbutton-qs.js`.
+- Configuration is loaded from a separate `helpbutton-qs.config.js` file that sets `window.helpButtonQsConfig`.
 - The project uses **ES5-compatible** JavaScript for broad browser support within Qlik Sense.
 
 ## 📁 Project Structure
@@ -27,13 +27,13 @@ At the start of each session, read:
 ```
 variants/
   basic/                 ← Basic help button (toolbar button + popup menu)
-    qs-help-button.js          Main script (IIFE)
-    qs-help-button.config.js   Configuration template
+    helpbutton-qs.js           Main script (IIFE)
+    helpbutton-qs.config.js    Configuration template
     loader-snippet.html        HTML to paste into client.html
     README.md                  Deployment docs
   bug-report/            ← Extended variant with bug-report dialog
-    qs-help-button.js          Main script (IIFE)
-    qs-help-button.config.js   Configuration template
+    helpbutton-qs.js           Main script (IIFE)
+    helpbutton-qs.config.js    Configuration template
     loader-snippet.html        HTML to paste into client.html
     README.md                  Deployment docs
     demo-server/               Express.js webhook demo (dev only)
@@ -42,7 +42,7 @@ variants/
 ## 🚀 Deployment Model
 
 Users deploy by:
-1. Copying `qs-help-button.js` and `qs-help-button.config.js` to `C:\Program Files\Qlik\Sense\Client\custom\` on the Qlik Sense server.
+1. Copying `helpbutton-qs.js` and `helpbutton-qs.config.js` to `C:\Program Files\Qlik\Sense\Client\custom\` on the Qlik Sense server.
 2. Adding two `<script>` tags (from `loader-snippet.html`) to `C:\Program Files\Qlik\Sense\Client\client.html`.
 3. Restarting Qlik Sense services.
 
@@ -53,13 +53,13 @@ Users deploy by:
 - **IIFE pattern.** All code must be wrapped in `(function () { 'use strict'; ... })();` to avoid polluting the global scope.
 - **ES5 compatible** — use `var`, not `let`/`const`. Use function expressions, not arrow functions.
 - Keep each variant **fully self-contained** — no shared imports between variants.
-- Configuration is read from `window.qsHelpButtonConfig`, merged with `DEFAULT_CONFIG` defaults.
+- Configuration is read from `window.helpButtonQsConfig`, merged with `DEFAULT_CONFIG` defaults.
 - DOM manipulation targets Qlik Sense's toolbar structure (`.qs-toolbar`, `#qv-toolbar-search-toggle`, etc.).
 
 ## 🔄 Versioning
 
 - Versions are managed by **release-please** via conventional commits.
-- The `@version` JSDoc tag in each variant's `qs-help-button.js` is updated automatically by release-please.
+- The `@version` JSDoc tag in each variant's `helpbutton-qs.js` is updated automatically by release-please.
 - Both variants share the same version number.
 - Use [Conventional Commits](https://www.conventionalcommits.org/) for all commit messages:
   - `feat:` for new features

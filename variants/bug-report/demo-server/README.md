@@ -1,12 +1,12 @@
-# qs-help-button Demo Server
+# HelpButton.qs Demo Server
 
-A minimal Node.js backend that receives bug reports from the **qs-help-button Bug Report variant** and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
+A minimal Node.js backend that receives bug reports from the **HelpButton.qs Bug Report variant** and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
 
 ---
 
 ## Table of Contents
 
-- [qs-help-button Demo Server](#qs-help-button-demo-server)
+- [HelpButton.qs Demo Server](#HelpButton.qs-demo-server)
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Quick Start (HTTP)](#quick-start-http)
@@ -151,17 +151,17 @@ $cert = New-SelfSignedCertificate `
   -NotAfter (Get-Date).AddDays(365) `
   -KeyAlgorithm RSA `
   -KeyLength 2048 `
-  -FriendlyName "qs-help-button demo server"
+  -FriendlyName "HelpButton.qs demo server"
 
 # 2. Export the certificate (public key) to DER, then convert to PEM
 $certPath = "Cert:\CurrentUser\My\$($cert.Thumbprint)"
-$derFile  = "$env:TEMP\qs-help-button-cert.cer"
+$derFile  = "$env:TEMP\HelpButton.qs-cert.cer"
 Export-Certificate -Cert $certPath -FilePath $derFile -Type CERT | Out-Null
 certutil -encode $derFile certs\cert.pem | Out-Null
 Remove-Item $derFile
 
 # 3. Export the private key to PFX, then convert to PEM
-$pfxFile = "$env:TEMP\qs-help-button.pfx"
+$pfxFile = "$env:TEMP\HelpButton.qs.pfx"
 $emptyPwd = New-Object System.Security.SecureString
 Export-PfxCertificate -Cert $certPath -FilePath $pfxFile -Password $emptyPwd | Out-Null
 
@@ -240,7 +240,7 @@ If the `certs/cert.pem` and `certs/key.pem` files are present, the server automa
 
 ```text
 2026-02-14T10:00:00.000Z info: ════════════════════════════════════════════════════════════════════════
-2026-02-14T10:00:00.000Z info:   qs-help-button Demo Server  (HTTPS)
+2026-02-14T10:00:00.000Z info:   HelpButton.qs Demo Server  (HTTPS)
 2026-02-14T10:00:00.000Z info:   Listening on:  https://localhost:3443
 2026-02-14T10:00:00.000Z info:   Bug reports:   POST https://localhost:3443/api/bug-reports
 2026-02-14T10:00:00.000Z info:   Health check:  GET  https://localhost:3443/health
@@ -256,7 +256,7 @@ If the cert files are **not** found, the server falls back to HTTP mode on port 
 
 ### Step 4 — Update the help-button config
 
-In `qs-help-button.config.js`, change the webhook URL to use HTTPS and port 3443:
+In `helpbutton-qs.config.js`, change the webhook URL to use HTTPS and port 3443:
 
 ```js
 bugReport: {

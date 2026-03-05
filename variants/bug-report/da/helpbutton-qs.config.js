@@ -1,18 +1,18 @@
 /**
  * Qlik Sense Hjælpeknap (Fejlrapportvariant) — Konfiguration (Dansk)
  * =====================================================================
- * Indlæs denne fil FØR qs-help-button.js for at tilpasse knappens opførsel.
+ * Indlæs denne fil FØR helpbutton-qs.js for at tilpasse knappens opførsel.
  *
  * Brug i Qlik Sense client.html (tilføj før </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Alle egenskaber er valgfrie. Angiv kun dem, du vil tilsidesætte.
  * Standardfarverne bruger en professionel blå og gul palette.
  *
  * @see README.md for komplet dokumentation.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Værktøjslinjeknap — tekst og tooltip
   // --------------------------------------------------------------------------
@@ -80,7 +80,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Hjælp og dokumentation',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       iconColor: '#165a9b',

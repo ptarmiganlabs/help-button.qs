@@ -1,5 +1,5 @@
 /**
- * Color utility helpers for qs-help-button.
+ * Color utility helpers for HelpButton.qs.
  *
  * The Qlik color-picker component stores values as objects:
  *   { color: '#rrggbb', index: '-1' }

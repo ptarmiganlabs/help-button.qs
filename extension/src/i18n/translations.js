@@ -143,15 +143,15 @@ const translations = {
 
     // Edit mode placeholder
     editPlaceholderTitle: {
-        en: 'Help Button',
-        sv: 'Hjälpknapp',
-        no: 'Hjelpeknapp',
-        da: 'Hjælpeknap',
-        fi: 'Ohjepainike',
-        de: 'Hilfe-Schaltfläche',
-        fr: "Bouton d'aide",
-        pl: 'Przycisk pomocy',
-        es: 'Botón de ayuda',
+        en: 'HelpButton.qs',
+        sv: 'HelpButton.qs',
+        no: 'HelpButton.qs',
+        da: 'HelpButton.qs',
+        fi: 'HelpButton.qs',
+        de: 'HelpButton.qs',
+        fr: 'HelpButton.qs',
+        pl: 'HelpButton.qs',
+        es: 'HelpButton.qs',
     },
 
     editPlaceholderDescription: {

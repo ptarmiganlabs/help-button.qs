@@ -1,36 +1,36 @@
 /* =========================================================================
- * qs-help-button — Extension styles
+ * HelpButton.qs — Extension styles
  *
  * All CSS for the toolbar button, popup menu, bug-report dialog,
  * edit-mode placeholder, and toast notifications.
  *
- * Uses CSS custom properties (--qshb-*) for runtime theming.
+ * Uses CSS custom properties (--hbqs-*) for runtime theming.
  * ========================================================================= */
 
 /* -------------------------------------------------------------------------
  * CSS Custom Properties (defaults)
  * ------------------------------------------------------------------------- */
 :root {
-    --qshb-btn-bg: #165a9b;
-    --qshb-btn-bg-hover: #12487c;
-    --qshb-btn-bg-active: #0e3b65;
-    --qshb-btn-text: #ffffff;
-    --qshb-btn-border: #0e3b65;
-    --qshb-btn-radius: 4px;
-    --qshb-btn-focus: rgba(255, 204, 51, 0.6);
-    --qshb-popup-bg: #ffffff;
-    --qshb-popup-border: #0c3256;
-    --qshb-popup-radius: 8px;
-    --qshb-popup-header-bg: #0c3256;
-    --qshb-popup-header-text: #ffcc33;
-    --qshb-popup-separator: #e0e0e0;
-    --qshb-popup-shadow: rgba(12, 50, 86, 0.25);
+    --hbqs-btn-bg: #165a9b;
+    --hbqs-btn-bg-hover: #12487c;
+    --hbqs-btn-bg-active: #0e3b65;
+    --hbqs-btn-text: #ffffff;
+    --hbqs-btn-border: #0e3b65;
+    --hbqs-btn-radius: 4px;
+    --hbqs-btn-focus: rgba(255, 204, 51, 0.6);
+    --hbqs-popup-bg: #ffffff;
+    --hbqs-popup-border: #0c3256;
+    --hbqs-popup-radius: 8px;
+    --hbqs-popup-header-bg: #0c3256;
+    --hbqs-popup-header-text: #ffcc33;
+    --hbqs-popup-separator: #e0e0e0;
+    --hbqs-popup-shadow: rgba(12, 50, 86, 0.25);
 }
 
 /* -------------------------------------------------------------------------
  * Toolbar button container
  * ------------------------------------------------------------------------- */
-.qshb-container {
+.hbqs-container {
     display: flex;
     align-items: center;
     margin-right: 8px;
@@ -41,15 +41,15 @@
 /* -------------------------------------------------------------------------
  * Toolbar button
  * ------------------------------------------------------------------------- */
-.qshb-button {
+.hbqs-button {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 5px 14px;
-    border: 1px solid var(--qshb-btn-border);
-    border-radius: var(--qshb-btn-radius);
-    background: var(--qshb-btn-bg);
-    color: var(--qshb-btn-text);
+    border: 1px solid var(--hbqs-btn-border);
+    border-radius: var(--hbqs-btn-radius);
+    background: var(--hbqs-btn-bg);
+    color: var(--hbqs-btn-text);
     cursor: pointer;
     font-size: 13px;
     font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
@@ -68,43 +68,43 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
-.qshb-button:hover {
-    background: var(--qshb-btn-bg-hover);
-    border-color: var(--qshb-btn-bg-hover);
+.hbqs-button:hover {
+    background: var(--hbqs-btn-bg-hover);
+    border-color: var(--hbqs-btn-bg-hover);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
-.qshb-button:active {
-    background: var(--qshb-btn-bg-active);
-    border-color: var(--qshb-btn-bg-active);
+.hbqs-button:active {
+    background: var(--hbqs-btn-bg-active);
+    border-color: var(--hbqs-btn-bg-active);
     transform: scale(0.98);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-.qshb-button:focus-visible {
-    box-shadow: 0 0 0 3px var(--qshb-btn-focus);
+.hbqs-button:focus-visible {
+    box-shadow: 0 0 0 3px var(--hbqs-btn-focus);
 }
 
-.qshb-button-icon {
+.hbqs-button-icon {
     display: flex;
     align-items: center;
     line-height: 0;
 }
 
-.qshb-button-label {
+.hbqs-button-label {
     line-height: 1;
 }
 
 /* -------------------------------------------------------------------------
  * Popup menu (appended to document.body)
  * ------------------------------------------------------------------------- */
-.qshb-popup {
+.hbqs-popup {
     position: fixed;
-    background: var(--qshb-popup-bg);
-    border: 2px solid var(--qshb-popup-border);
-    border-radius: var(--qshb-popup-radius);
+    background: var(--hbqs-popup-bg);
+    border: 2px solid var(--hbqs-popup-border);
+    border-radius: var(--hbqs-popup-radius);
     box-shadow:
-        0 10px 30px var(--qshb-popup-shadow),
+        0 10px 30px var(--hbqs-popup-shadow),
         0 4px 12px rgba(0, 0, 0, 0.06);
     padding: 0;
     z-index: 10000;
@@ -114,26 +114,26 @@
     overflow: hidden;
 }
 
-.qshb-popup-header {
+.hbqs-popup-header {
     padding: 10px 16px;
     font-weight: 700;
     font-size: 13px;
-    color: var(--qshb-popup-header-text);
-    background: var(--qshb-popup-header-bg);
+    color: var(--hbqs-popup-header-text);
+    background: var(--hbqs-popup-header-bg);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     box-sizing: border-box;
     margin: 0;
 }
 
-.qshb-popup-separator {
+.hbqs-popup-separator {
     height: 0;
     margin: 0;
     border: none;
-    border-top: 1px solid var(--qshb-popup-separator);
+    border-top: 1px solid var(--hbqs-popup-separator);
 }
 
-.qshb-popup-menu-item {
+.hbqs-popup-menu-item {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -151,18 +151,18 @@
     color: inherit;
 }
 
-.qshb-popup-menu-item:hover {
-    border-left-color: var(--qshb-popup-border);
+.hbqs-popup-menu-item:hover {
+    border-left-color: var(--hbqs-popup-border);
 }
 
-.qshb-popup-item-icon {
+.hbqs-popup-item-icon {
     display: flex;
     align-items: center;
     flex-shrink: 0;
     line-height: 0;
 }
 
-.qshb-popup-item-label {
+.hbqs-popup-item-label {
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -172,7 +172,7 @@
 /* -------------------------------------------------------------------------
  * Bug-report dialog overlay
  * ------------------------------------------------------------------------- */
-.qshb-bug-report-overlay {
+.hbqs-bug-report-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -185,7 +185,7 @@
     justify-content: center;
 }
 
-.qshb-bug-report-dialog {
+.hbqs-bug-report-dialog {
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -196,7 +196,7 @@
     padding: 0;
 }
 
-.qshb-bug-report-header {
+.hbqs-bug-report-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -206,14 +206,14 @@
     border-radius: 12px 12px 0 0;
 }
 
-.qshb-bug-report-title {
+.hbqs-bug-report-title {
     margin: 0;
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.02em;
 }
 
-.qshb-bug-report-close {
+.hbqs-bug-report-close {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -225,17 +225,17 @@
     transition: opacity 0.15s;
 }
 
-.qshb-bug-report-close:hover {
+.hbqs-bug-report-close:hover {
     opacity: 0.7;
 }
 
 /* Context section */
-.qshb-bug-report-context {
+.hbqs-bug-report-context {
     padding: 16px 20px;
     border-bottom: 1px solid #e0e0e0;
 }
 
-.qshb-bug-report-context-title {
+.hbqs-bug-report-context-title {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -244,29 +244,29 @@
     margin-bottom: 8px;
 }
 
-.qshb-bug-report-context-grid {
+.hbqs-bug-report-context-grid {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 4px 12px;
     font-size: 12px;
 }
 
-.qshb-bug-report-context-key {
+.hbqs-bug-report-context-key {
     font-weight: 600;
     color: #555;
 }
 
-.qshb-bug-report-context-value {
+.hbqs-bug-report-context-value {
     color: #333;
     word-break: break-all;
 }
 
 /* Form section */
-.qshb-bug-report-form {
+.hbqs-bug-report-form {
     padding: 16px 20px;
 }
 
-.qshb-bug-report-label {
+.hbqs-bug-report-label {
     display: block;
     font-weight: 600;
     font-size: 13px;
@@ -274,7 +274,7 @@
     margin-bottom: 6px;
 }
 
-.qshb-bug-report-textarea {
+.hbqs-bug-report-textarea {
     width: 100%;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -287,21 +287,21 @@
     transition: border-color 0.15s;
 }
 
-.qshb-bug-report-textarea:focus {
+.hbqs-bug-report-textarea:focus {
     outline: none;
     border-color: #165a9b;
     box-shadow: 0 0 0 2px rgba(22, 90, 155, 0.15);
 }
 
 /* Action buttons */
-.qshb-bug-report-actions {
+.hbqs-bug-report-actions {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
     padding: 12px 20px 20px;
 }
 
-.qshb-bug-report-btn {
+.hbqs-bug-report-btn {
     padding: 8px 20px;
     border-radius: 6px;
     font-size: 13px;
@@ -313,27 +313,27 @@
     font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
 }
 
-.qshb-bug-report-btn-cancel {
+.hbqs-bug-report-btn-cancel {
     background: #f5f5f5;
     border: 1px solid #ccc;
     color: #555;
 }
 
-.qshb-bug-report-btn-cancel:hover {
+.hbqs-bug-report-btn-cancel:hover {
     background: #eee;
 }
 
-.qshb-bug-report-btn-submit {
+.hbqs-bug-report-btn-submit {
     background: #165a9b;
     border: 1px solid #0e3b65;
     color: #ffffff;
 }
 
-.qshb-bug-report-btn-submit:hover:not(:disabled) {
+.hbqs-bug-report-btn-submit:hover:not(:disabled) {
     background: #12487c;
 }
 
-.qshb-bug-report-btn-submit:disabled {
+.hbqs-bug-report-btn-submit:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
@@ -341,7 +341,7 @@
 /* -------------------------------------------------------------------------
  * Toast notifications
  * ------------------------------------------------------------------------- */
-.qshb-toast {
+.hbqs-toast {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -359,17 +359,17 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.qshb-toast-visible {
+.hbqs-toast-visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-.qshb-toast-success {
+.hbqs-toast-success {
     background: #059669;
     color: #ffffff;
 }
 
-.qshb-toast-error {
+.hbqs-toast-error {
     background: #dc2626;
     color: #ffffff;
 }
@@ -377,20 +377,20 @@
 /* -------------------------------------------------------------------------
  * Spinner (for submit button loading state)
  * ------------------------------------------------------------------------- */
-@keyframes qshb-spin {
+@keyframes hbqs-spin {
     to {
         transform: rotate(360deg);
     }
 }
 
-.qshb-spinner {
+.hbqs-spinner {
     display: inline-block;
     width: 14px;
     height: 14px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-top-color: #ffffff;
     border-radius: 50%;
-    animation: qshb-spin 0.6s linear infinite;
+    animation: hbqs-spin 0.6s linear infinite;
     vertical-align: middle;
 }
 
@@ -398,7 +398,7 @@
  * Edit-mode placeholder (rendered inside the extension's grid cell)
  * Matches onboard.qs layout: icon, title, stats, About button.
  * ------------------------------------------------------------------------- */
-.qshb-edit-placeholder {
+.hbqs-edit-placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -411,7 +411,7 @@
     overflow: hidden;
 }
 
-.qshb-edit-placeholder-info {
+.hbqs-edit-placeholder-info {
     text-align: center;
     padding: 12px;
     display: flex;
@@ -420,25 +420,25 @@
     gap: 2px;
 }
 
-.qshb-edit-placeholder-icon {
+.hbqs-edit-placeholder-icon {
     color: #165a9b;
     line-height: 0;
 }
 
-.qshb-edit-placeholder-title {
+.hbqs-edit-placeholder-title {
     font-size: 14px;
     font-weight: 700;
     color: #165a9b;
     margin: 0;
 }
 
-.qshb-edit-placeholder-stats {
+.hbqs-edit-placeholder-stats {
     font-size: 11px;
     color: #666;
     margin-bottom: 4px;
 }
 
-.qshb-edit-placeholder-actions {
+.hbqs-edit-placeholder-actions {
     display: flex;
     gap: 6px;
     align-items: center;
@@ -449,31 +449,31 @@
 /* --- Edit mode: responsive size tiers (xs / sm / md via data-size) --- */
 
 /* sm tier (80-159px) */
-.qshb-edit-placeholder[data-size='sm'] .qshb-edit-placeholder-stats {
+.hbqs-edit-placeholder[data-size='sm'] .hbqs-edit-placeholder-stats {
     display: none;
 }
-.qshb-edit-placeholder[data-size='sm'] .qshb-edit-placeholder-info {
+.hbqs-edit-placeholder[data-size='sm'] .hbqs-edit-placeholder-info {
     padding: 6px;
 }
 
 /* xs tier (< 80px) */
-.qshb-edit-placeholder[data-size='xs'] .qshb-edit-placeholder-icon {
+.hbqs-edit-placeholder[data-size='xs'] .hbqs-edit-placeholder-icon {
     display: none;
 }
-.qshb-edit-placeholder[data-size='xs'] .qshb-edit-placeholder-stats {
+.hbqs-edit-placeholder[data-size='xs'] .hbqs-edit-placeholder-stats {
     display: none;
 }
-.qshb-edit-placeholder[data-size='xs'] .qshb-edit-placeholder-info {
+.hbqs-edit-placeholder[data-size='xs'] .hbqs-edit-placeholder-info {
     flex-direction: row;
     gap: 6px;
     padding: 4px 8px;
     text-align: left;
 }
-.qshb-edit-placeholder[data-size='xs'] .qshb-edit-placeholder-title {
+.hbqs-edit-placeholder[data-size='xs'] .hbqs-edit-placeholder-title {
     font-size: 12px;
     white-space: nowrap;
 }
-.qshb-edit-placeholder[data-size='xs'] .qshb-btn {
+.hbqs-edit-placeholder[data-size='xs'] .hbqs-btn {
     padding: 3px 8px;
     font-size: 11px;
     white-space: nowrap;
@@ -481,7 +481,7 @@
 }
 
 /* xs + narrow: stack vertically again */
-.qshb-edit-placeholder[data-size='xs'][data-narrow='true'] .qshb-edit-placeholder-info {
+.hbqs-edit-placeholder[data-size='xs'][data-narrow='true'] .hbqs-edit-placeholder-info {
     flex-direction: column;
     text-align: center;
 }
@@ -489,7 +489,7 @@
 /* -------------------------------------------------------------------------
  * Analysis-mode placeholder
  * ------------------------------------------------------------------------- */
-.qshb-analysis-placeholder {
+.hbqs-analysis-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -499,14 +499,14 @@
     font-style: italic;
 }
 
-.qshb-analysis-placeholder--hidden {
+.hbqs-analysis-placeholder--hidden {
     visibility: hidden;
 }
 
 /* -------------------------------------------------------------------------
  * Shared button styles (ghost / secondary variants)
  * ------------------------------------------------------------------------- */
-.qshb-btn {
+.hbqs-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -523,28 +523,28 @@
     line-height: 1.4;
 }
 
-.qshb-btn--ghost {
+.hbqs-btn--ghost {
     background: transparent;
     color: #666;
     border: 1px solid #ccc;
     font-size: 12px;
     padding: 5px 10px;
 }
-.qshb-btn--ghost:hover {
+.hbqs-btn--ghost:hover {
     background: #f0f0f0;
     color: #333;
     border-color: #999;
 }
 
-.qshb-btn--secondary {
+.hbqs-btn--secondary {
     background: #e8e8e8;
     color: #333;
 }
-.qshb-btn--secondary:hover {
+.hbqs-btn--secondary:hover {
     background: #d0d0d0;
 }
 
-.qshb-btn:disabled {
+.hbqs-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }
@@ -552,7 +552,7 @@
 /* -------------------------------------------------------------------------
  * About modal overlay
  * ------------------------------------------------------------------------- */
-.qshb-about-overlay {
+.hbqs-about-overlay {
     position: fixed;
     inset: 0;
     z-index: 100000;
@@ -563,17 +563,17 @@
     font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
 }
 
-.qshb-about-modal {
+.hbqs-about-modal {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     width: 380px;
     max-width: 92vw;
     padding: 28px 28px 20px;
-    animation: qshb-about-fade-in 0.15s ease;
+    animation: hbqs-about-fade-in 0.15s ease;
 }
 
-@keyframes qshb-about-fade-in {
+@keyframes hbqs-about-fade-in {
     from {
         opacity: 0;
         transform: translateY(8px);
@@ -584,44 +584,44 @@
     }
 }
 
-.qshb-about-modal__header {
+.hbqs-about-modal__header {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 4px;
 }
 
-.qshb-about-modal__icon {
+.hbqs-about-modal__icon {
     line-height: 0;
 }
 
-.qshb-about-modal__title {
+.hbqs-about-modal__title {
     font-size: 18px;
     font-weight: 700;
     color: #222;
 }
 
-.qshb-about-modal__version {
+.hbqs-about-modal__version {
     font-size: 12px;
     color: #888;
     margin-left: auto;
 }
 
-.qshb-about-modal__tagline {
+.hbqs-about-modal__tagline {
     font-size: 13px;
     color: #555;
     margin: 4px 0 16px;
     line-height: 1.4;
 }
 
-.qshb-about-modal__links {
+.hbqs-about-modal__links {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.qshb-about-modal__links a {
+.hbqs-about-modal__links a {
     display: block;
     padding: 10px 12px;
     border: 1px solid #e0e0e0;
@@ -633,35 +633,35 @@
         background 0.15s;
 }
 
-.qshb-about-modal__links a:hover {
+.hbqs-about-modal__links a:hover {
     border-color: #165a9b;
     background: #f0f6fc;
 }
 
-.qshb-about-modal__links a strong {
+.hbqs-about-modal__links a strong {
     display: block;
     font-size: 13px;
     color: #165a9b;
     margin-bottom: 2px;
 }
 
-.qshb-about-modal__links a span {
+.hbqs-about-modal__links a span {
     display: block;
     font-size: 12px;
     color: #666;
     line-height: 1.4;
 }
 
-.qshb-about-modal__footer {
+.hbqs-about-modal__footer {
     text-align: right;
 }
 
 /* -------------------------------------------------------------------------
  * Hover menu override — hides Qlik's hover nav when enabled
  * ------------------------------------------------------------------------- */
-.qshb-no-hover-menu .qv-object-nav,
-.qshb-no-hover-menu .qv-object-actions-toolbar,
-.qshb-no-hover-menu .on-demand-holder,
-.qshb-no-hover-menu [class*='ActionsToolbar'] {
+.hbqs-no-hover-menu .qv-object-nav,
+.hbqs-no-hover-menu .qv-object-actions-toolbar,
+.hbqs-no-hover-menu .on-demand-holder,
+.hbqs-no-hover-menu [class*='ActionsToolbar'] {
     display: none !important;
 }

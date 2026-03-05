@@ -1,18 +1,18 @@
 /**
  * Qlik Sense Help Button — Konfiguration (Dansk)
  * ================================================
- * Indlæs denne fil FØR qs-help-button.js for at tilpasse knappens adfærd.
+ * Indlæs denne fil FØR helpbutton-qs.js for at tilpasse knappens adfærd.
  *
  * Brug i Qlik Sense client.html (tilføj før </body>):
- *   <script src="../resources/custom/qs-help-button.config.js"></script>
- *   <script src="../resources/custom/qs-help-button.js" defer></script>
+ *   <script src="../resources/custom/helpbutton-qs.config.js"></script>
+ *   <script src="../resources/custom/helpbutton-qs.js" defer></script>
  *
  * Alle egenskaber er valgfrie. Angiv kun dem, du ønsker at tilsidesætte.
  * Standardfarverne bruger en professionel blå og gul palet.
  *
  * @see README.md for fuld dokumentation.
  */
-window.qsHelpButtonConfig = {
+window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   // Værktøjslinjeknap — tekst og tooltip
   // --------------------------------------------------------------------------
@@ -85,7 +85,7 @@ window.qsHelpButtonConfig = {
   menuItems: [
     {
       label: 'Hjælp og dokumentation',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs',
       icon: 'help',
       target: '_blank',
       // Farver per punkt (blå tone)
@@ -96,7 +96,7 @@ window.qsHelpButtonConfig = {
     },
     {
       label: 'Rapportér en fejl',
-      url: 'https://github.com/ptarmiganlabs/qs-help-button/issues/new/choose',
+      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
       icon: 'bug',
       target: '_blank',
       // Farver per punkt (varm ravtone)

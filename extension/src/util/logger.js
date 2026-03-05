@@ -1,5 +1,5 @@
 /**
- * Logger utility for qs-help-button extension.
+ * Logger utility for HelpButton.qs extension.
  * Controls logging based on build type.
  */
 
@@ -27,7 +27,7 @@ const logger = {
      */
     debug: (...args) => {
         if (!muteAll && !IS_PRODUCTION) {
-            console.log('qs-help-button [DEBUG]:', ...args);
+            console.log('helpbutton-qs [DEBUG]:', ...args);
         }
     },
 
@@ -38,7 +38,7 @@ const logger = {
      */
     info: (...args) => {
         if (!muteAll) {
-            console.log('qs-help-button [INFO]:', ...args);
+            console.log('helpbutton-qs [INFO]:', ...args);
         }
     },
 
@@ -49,7 +49,7 @@ const logger = {
      */
     warn: (...args) => {
         if (!muteAll) {
-            console.warn('qs-help-button [WARN]:', ...args);
+            console.warn('helpbutton-qs [WARN]:', ...args);
         }
     },
 
@@ -59,7 +59,7 @@ const logger = {
      * @param {...unknown} args - Arguments to log.
      */
     error: (...args) => {
-        console.error('qs-help-button [ERROR]:', ...args);
+        console.error('helpbutton-qs [ERROR]:', ...args);
     },
 };
 

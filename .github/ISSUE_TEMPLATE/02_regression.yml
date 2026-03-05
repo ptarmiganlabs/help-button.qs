@@ -1,5 +1,5 @@
 name: "\u23EE\uFE0F Regression report"
-description: Report a bug not seen in an earlier version of qs-help-button
+description: Report a bug not seen in an earlier version of HelpButton.qs
 labels: 'template: regression'
 body:
   - type: markdown
@@ -19,13 +19,13 @@ body:
       required: true
   - type: input
     attributes:
-      label: What version of qs-help-button are you using?
-      description: 'Check the @version tag at the top of qs-help-button.js — for example: 2.1.0'
+      label: What version of HelpButton.qs are you using?
+      description: 'Check the @version tag at the top of helpbutton-qs.js — for example: 2.1.0'
     validations:
       required: true
   - type: input
     attributes:
-      label: Which version(s) of qs-help-button work for you?
+      label: Which version(s) of HelpButton.qs work for you?
       description: 'The last version where the issue did not occur — for example: 2.0.0'
     validations:
       required: true
@@ -68,7 +68,7 @@ body:
   - type: textarea
     attributes:
       label: Configuration
-      description: Paste relevant parts of your qs-help-button.config.js (redact any sensitive URLs or tokens).
+      description: Paste relevant parts of your helpbutton-qs.config.js (redact any sensitive URLs or tokens).
       render: javascript
     validations:
       required: false
