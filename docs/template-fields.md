@@ -17,7 +17,7 @@ Use double curly braces around the field name:
 {{fieldName}}
 ```
 
-Place them anywhere inside a URL string in `qs-help-button.config.js`:
+Place them anywhere inside a URL string in `helpbutton-qs.config.js`:
 
 ```js
 url: 'https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}'
@@ -177,7 +177,7 @@ menuItems: [
 
 ## Debugging
 
-Enable debug logging in `qs-help-button.config.js`:
+Enable debug logging in `helpbutton-qs.config.js`:
 
 ```js
 debug: true,
@@ -186,14 +186,14 @@ debug: true,
 Open the browser console (F12) and click a link that uses template fields. You will see log entries like:
 
 ```
-[qs-help-button] Template context loaded: {"userDirectory":"LAB","userId":"goran"}
-[qs-help-button] Template URL resolved: https://help.example.com/{{appId}} → https://help.example.com/4634fbc8-65eb-4aff-a686-34e75326e534
+[helpbutton-qs] Template context loaded: {"userDirectory":"LAB","userId":"goran"}
+[helpbutton-qs] Template URL resolved: https://help.example.com/{{appId}} → https://help.example.com/4634fbc8-65eb-4aff-a686-34e75326e534
 ```
 
 If the template context fetch fails (e.g. the proxy API is unreachable), a warning is logged:
 
 ```
-[qs-help-button] Failed to fetch template context (user info): Error: HTTP 401
+[helpbutton-qs] Failed to fetch template context (user info): Error: HTTP 401
 ```
 
 ---

@@ -145,3 +145,9 @@ vite.config.ts.timestamp-*
 # TLS certificates (self-signed keys must never be committed)
 **/certs/*.pem
 .DS_Store
+
+# Extension build artifacts
+extension/dist/
+extension/helpbutton-qs-ext/
+extension/node_modules/
+extension/*.zip

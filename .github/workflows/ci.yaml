@@ -59,7 +59,7 @@ jobs:
     permissions:
       contents: write
     env:
-      DIST_FILE_NAME: qs-help-button
+      DIST_FILE_NAME: helpbutton-qs
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -104,6 +104,34 @@ jobs:
           echo "=== Bug-report variant ==="
           zipinfo "${DIST_FILE_NAME}-bug-report-v${{ needs.release-please.outputs.release_version }}.zip"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build extension
+        run: |
+          cd extension
+          npm ci
+          npm run pack:prod
+
+      - name: Create extension release zip
+        run: |
+          VERSION=${{ needs.release-please.outputs.release_version }}
+
+          # Create readme.txt from template
+          sed "s/__VERSION__/${VERSION}/g" extension/release-config/readme-template.txt > extension-readme.txt
+
+          # Create outer zip containing the extension zip + readme + license
+          zip "${DIST_FILE_NAME}-ext-v${VERSION}.zip" \
+            extension/helpbutton-qs.zip \
+            extension-readme.txt \
+            LICENSE
+
+          echo ""
+          echo "=== Extension variant ==="
+          zipinfo "${DIST_FILE_NAME}-ext-v${VERSION}.zip"
+
       - name: Upload release artifacts
         uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
         with:
@@ -116,3 +144,4 @@ jobs:
           artifacts: |
             ${{ env.DIST_FILE_NAME }}-basic-v${{ needs.release-please.outputs.release_version }}.zip
             ${{ env.DIST_FILE_NAME }}-bug-report-v${{ needs.release-please.outputs.release_version }}.zip
+            ${{ env.DIST_FILE_NAME }}-ext-v${{ needs.release-please.outputs.release_version }}.zip

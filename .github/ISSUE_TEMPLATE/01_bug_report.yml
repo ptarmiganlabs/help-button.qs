@@ -1,5 +1,5 @@
 name: "\U0001F41E Bug Report"
-description: Create a bug report for qs-help-button
+description: Create a bug report for HelpButton.qs
 labels: 'template: bug'
 body:
   - type: markdown
@@ -14,12 +14,13 @@ body:
       options:
         - basic
         - bug-report
+        - extension
     validations:
       required: true
   - type: input
     attributes:
-      label: What version of qs-help-button are you using?
-      description: 'Check the @version tag at the top of qs-help-button.js — for example: 2.0.0'
+      label: What version of HelpButton.qs are you using?
+      description: 'Check the @version tag at the top of helpbutton-qs.js — for example: 2.0.0'
     validations:
       required: true
   - type: input
@@ -61,7 +62,7 @@ body:
   - type: textarea
     attributes:
       label: Configuration
-      description: Paste relevant parts of your qs-help-button.config.js (redact any sensitive URLs or tokens).
+      description: Paste relevant parts of your helpbutton-qs.config.js (redact any sensitive URLs or tokens).
       render: javascript
     validations:
       required: false

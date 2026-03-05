@@ -1,0 +1,73 @@
+{
+    "name": "helpbutton-qs",
+    "version": "1.2.1",
+    "type": "module",
+    "description": "Qlik Sense extension that injects a configurable help button into the toolbar",
+    "license": "MIT",
+    "author": "Göran Sander, Ptarmigan Labs",
+    "bugs": {
+        "url": "https://github.com/ptarmiganlabs/help-button.qs/issues"
+    },
+    "homepage": "https://github.com/ptarmiganlabs/help-button.qs#readme",
+    "keywords": [
+        "qlik",
+        "qliksense",
+        "nebula",
+        "stardust",
+        "help-button",
+        "toolbar",
+        "ptarmiganlabs"
+    ],
+    "files": [
+        "dist",
+        "helpbutton-qs.js",
+        "helpbutton-qs.qext"
+    ],
+    "engines": {
+        "node": ">=18.10.0"
+    },
+    "main": "dist/helpbutton-qs.js",
+    "module": "dist/helpbutton-qs.esm.js",
+    "scripts": {
+        "build": "cross-env BUILD_TYPE=development nebula build --config nebula.config.cjs --sourcemap false --mode development",
+        "build:dist": "cross-env BUILD_TYPE=production nebula build --config nebula.config.cjs --sourcemap false",
+        "lint": "eslint src scripts",
+        "lint:fix": "eslint src scripts --fix",
+        "format": "prettier --write \"./**/*.{js,mjs,css,json,yaml,md}\"",
+        "format:check": "prettier --check \"./**/*.{js,mjs,css,json,yaml,md}\"",
+        "start": "nebula serve",
+        "sense": "nebula sense --meta src/meta.json",
+        "post-build": "node scripts/post-build.mjs",
+        "zip": "node scripts/zip-extension.mjs",
+        "pack:dev": "cross-env BUILD_TYPE=development npm run build && npm run sense && cross-env BUILD_TYPE=development npm run post-build && npm run zip",
+        "pack:prod": "cross-env BUILD_TYPE=production npm run build:dist && cross-env BUILD_TYPE=production npm run sense && cross-env BUILD_TYPE=production npm run post-build && npm run zip"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@nebula.js/cli": "^6.6.0",
+        "@nebula.js/cli-build": "^6.6.0",
+        "@nebula.js/cli-sense": "^6.6.0",
+        "@nebula.js/cli-serve": "^6.5.0",
+        "@rollup/plugin-replace": "^6.0.2",
+        "archiver": "^7.0.1",
+        "cross-env": "^10.1.0",
+        "eslint": "^10.0.2",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^17.4.0",
+        "prettier": "^3.8.1"
+    },
+    "peerDependencies": {
+        "@nebula.js/stardust": ">=5.0.0"
+    },
+    "lint-staged": {
+        "**/*.{js,mjs,css,json,yaml,md}": [
+            "prettier --write"
+        ],
+        "src/**/*.{js,mjs,cjs}": [
+            "eslint --fix"
+        ],
+        "scripts/**/*.{js,mjs,cjs}": [
+            "eslint --fix"
+        ]
+    }
+}

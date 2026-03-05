@@ -44,98 +44,108 @@
     "extra-files": [
         {
             "type": "generic",
-            "path": "variants/basic/en/qs-help-button.js",
+            "path": "variants/basic/en/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/sv/qs-help-button.js",
+            "path": "variants/basic/sv/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/en/qs-help-button.js",
+            "path": "variants/bug-report/en/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/sv/qs-help-button.js",
+            "path": "variants/bug-report/sv/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/no/qs-help-button.js",
+            "path": "variants/basic/no/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/da/qs-help-button.js",
+            "path": "variants/basic/da/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/fi/qs-help-button.js",
+            "path": "variants/basic/fi/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/de/qs-help-button.js",
+            "path": "variants/basic/de/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/fr/qs-help-button.js",
+            "path": "variants/basic/fr/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/pl/qs-help-button.js",
+            "path": "variants/basic/pl/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/basic/es/qs-help-button.js",
+            "path": "variants/basic/es/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/no/qs-help-button.js",
+            "path": "variants/bug-report/no/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/da/qs-help-button.js",
+            "path": "variants/bug-report/da/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/fi/qs-help-button.js",
+            "path": "variants/bug-report/fi/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/de/qs-help-button.js",
+            "path": "variants/bug-report/de/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/fr/qs-help-button.js",
+            "path": "variants/bug-report/fr/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/pl/qs-help-button.js",
+            "path": "variants/bug-report/pl/helpbutton-qs.js",
             "glob": false
         },
         {
             "type": "generic",
-            "path": "variants/bug-report/es/qs-help-button.js",
+            "path": "variants/bug-report/es/helpbutton-qs.js",
             "glob": false
+        },
+        {
+            "type": "json",
+            "path": "extension/package.json",
+            "jsonpath": "$.version"
+        },
+        {
+            "type": "json",
+            "path": "extension/src/meta.json",
+            "jsonpath": "$.version"
         }
     ],
     "packages": {
         ".": {
-            "package-name": "qs-help-button"
+            "package-name": "helpbutton-qs"
         }
     }
 }

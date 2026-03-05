@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140">
+  <defs>
+    <linearGradient id="iconGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0078D4"/>
+      <stop offset="100%" stop-color="#005A9E"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EAF4FC"/>
+      <stop offset="100%" stop-color="#D6ECFB"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Card background with rounded corners -->
+  <rect x="4" y="4" width="132" height="132" rx="16" ry="16" fill="url(#bgGrad)"/>
+
+  <!-- Help circle -->
+  <circle cx="70" cy="58" r="34" fill="url(#iconGrad)"/>
+
+  <!-- Question mark - main curve -->
+  <path d="M62 46 Q62 38 70 38 Q78 38 78 46 Q78 52 72 54 L72 62"
+        fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Question mark - dot -->
+  <circle cx="72" cy="70" r="3" fill="#ffffff"/>
+
+  <!-- Extension name text -->
+  <text x="70" y="110" text-anchor="middle"
+        font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+        font-size="12" font-weight="600" fill="#0078D4">
+    Help Button
+  </text>
+</svg>

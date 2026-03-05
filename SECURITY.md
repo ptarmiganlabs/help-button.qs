@@ -2,14 +2,14 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in qs-help-button, please report it responsibly.
+If you discover a security vulnerability in HelpButton.qs, please report it responsibly.
 
 **Do NOT open a public GitHub issue for security vulnerabilities.**
 
 Instead, please use one of these methods:
 
 1. **GitHub Private Vulnerability Reporting:**
-   Go to the [Security tab](https://github.com/ptarmiganlabs/qs-help-button/security/advisories/new) of this repository and create a private security advisory.
+   Go to the [Security tab](https://github.com/ptarmiganlabs/help-button.qs/security/advisories/new) of this repository and create a private security advisory.
 
 2. **Email:**
    Send details to **security@ptarmiganlabs.com**.
@@ -28,8 +28,8 @@ Please include:
 
 ## Scope
 
-This policy applies to the qs-help-button source code hosted at
-[github.com/ptarmiganlabs/qs-help-button](https://github.com/ptarmiganlabs/qs-help-button).
+This policy applies to the HelpButton.qs source code hosted at
+[github.com/ptarmiganlabs/help-button.qs](https://github.com/ptarmiganlabs/help-button.qs).
 
 ## Supported Versions
 
