@@ -40,7 +40,7 @@ The **main script** (`helpbutton-qs.js`) is identical across all languages — i
 
 ### Shared resources
 
-The [`demo-server/`](demo-server/) folder at the variant root provides a sample Express.js HTTPS server for testing webhook submissions. It is language-independent and works with any language configuration.
+The [`shared/demo-server/`](../../shared/demo-server/) folder at the repository root provides a sample Express.js HTTPS server for testing webhook submissions. It is shared between the extension and HTML injection variants, and works with any language configuration.
 
 ---
 
@@ -162,7 +162,7 @@ The `bugReport.auth` object supports four strategies:
 
 ## Demo Server
 
-The [`demo-server/`](demo-server/) folder contains a sample Express.js HTTPS server that receives and logs bug report payloads. See the [demo-server README](demo-server/README.md) for setup instructions.
+The [`shared/demo-server/`](../../shared/demo-server/) folder (at the repository root) contains a sample Express.js HTTPS server that receives and logs bug report payloads. See the [demo-server README](../../shared/demo-server/README.md) for setup instructions.
 
 ---
 

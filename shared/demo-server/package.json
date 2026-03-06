@@ -1,7 +1,7 @@
 {
   "name": "helpbutton-qs-demo-server",
   "version": "1.0.0",
-  "description": "Demo backend server for receiving bug reports from the HelpButton.qs Bug Report variant",
+  "description": "Demo backend server for receiving bug reports from HelpButton.qs (extension and HTML variant)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

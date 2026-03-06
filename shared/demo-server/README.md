@@ -1,12 +1,14 @@
 # HelpButton.qs Demo Server
 
-A minimal Node.js backend that receives bug reports from the **HelpButton.qs Bug Report variant** and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
+A minimal Node.js backend that receives bug reports from **HelpButton.qs** — both the **Qlik Sense extension** and the **HTML injection Bug Report variant** — and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
+
+> **Location:** This server lives in `shared/demo-server/` at the repository root and is shared across all HelpButton.qs delivery methods.
 
 ---
 
 ## Table of Contents
 
-- [HelpButton.qs Demo Server](#HelpButton.qs-demo-server)
+- [HelpButton.qs Demo Server](#helpbuttonqs-demo-server)
   - [Table of Contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Quick Start (HTTP)](#quick-start-http)
@@ -47,7 +49,7 @@ A minimal Node.js backend that receives bug reports from the **HelpButton.qs Bug
 If you just want to test the server locally **without** Qlik Sense (e.g. using `curl`), HTTP mode works fine:
 
 ```bash
-cd demo-server
+cd shared/demo-server
 npm install
 npm start
 ```
@@ -86,7 +88,7 @@ Create a `certs/` directory inside `demo-server/` and generate a certificate + p
 
 ```bash
 # Navigate to the demo-server directory
-cd demo-server
+cd shared/demo-server
 
 # Create the certs directory
 mkdir -p certs
@@ -119,7 +121,7 @@ If you have [Git for Windows](https://gitforwindows.org) installed, OpenSSL is a
 
 ```powershell
 # Navigate to the demo-server directory
-cd demo-server
+cd shared\demo-server
 
 # Create the certs directory
 New-Item -ItemType Directory -Force -Path certs
@@ -204,6 +206,7 @@ Because the certificate is self-signed, browsers will not trust it by default. Y
    - **Chrome:** Click _"Advanced"_ → _"Proceed to localhost (unsafe)"_.
    - **Edge:** Click _"Advanced"_ → _"Continue to localhost (unsafe)"_.
    - **Firefox:** Click _"Advanced…"_ → _"Accept the Risk and Continue"_.
+   - **Safari:** Click _"Show Details"_ → _"visit this website"_ → _"Visit Website"_ (You may be prompted for your Mac system password).
 4. You should see the JSON response: `{"status":"ok","uptime":…}`.
 
 > **Important:** You must complete this step in the **same browser profile** you use for Qlik Sense. The trust decision is stored per browser profile. You only need to do this once (or again after the certificate expires).
@@ -213,10 +216,13 @@ Because the certificate is self-signed, browsers will not trust it by default. Y
 If you prefer to avoid the browser warning entirely, you can add the certificate to the macOS Keychain:
 
 ```bash
+# Navigate to the demo-server directory
+cd shared/demo-server
+
 # Add the cert and mark it as trusted (will prompt for your password)
 sudo security add-trusted-cert -d -r trustRoot \
   -k /Library/Keychains/System.keychain \
-  demo-server/certs/cert.pem
+  certs/cert.pem
 ```
 
 After this, all browsers on the machine will trust the certificate without any warning.
@@ -232,7 +238,7 @@ sudo security delete-certificate -c "localhost" /Library/Keychains/System.keycha
 ### Step 3 — Start the server
 
 ```bash
-cd demo-server
+cd shared/demo-server
 npm start
 ```
 
@@ -256,7 +262,13 @@ If the cert files are **not** found, the server falls back to HTTP mode on port 
 
 ### Step 4 — Update the help-button config
 
-In `helpbutton-qs.config.js`, change the webhook URL to use HTTPS and port 3443:
+Update the webhook URL to use HTTPS and port 3443.
+
+**HTML injection variant** — in `helpbutton-qs.config.js`:
+
+**Extension** — set the *Webhook URL* in the Property Panel to `https://localhost:3443/api/bug-reports`.
+
+Example config value:
 
 ```js
 bugReport: {

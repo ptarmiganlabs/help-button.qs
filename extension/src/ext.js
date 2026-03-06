@@ -394,7 +394,8 @@ export default function ext(_galaxy) {
                                     ref: 'bugReport.collectFields',
                                     label: 'Context fields (comma-separated)',
                                     type: 'string',
-                                    defaultValue: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                                    defaultValue:
+                                        'userDirectory,userId,senseVersion,appId,sheetId,urlPath',
                                     show: (item) => item.action === 'bugReport',
                                 },
                                 dialogTitle: {

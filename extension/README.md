@@ -45,6 +45,44 @@ flowchart TD
 3. Configure the appearance, links, and behavior in the Property Panel on the right.
 4. Switch to Analysis Mode to see the button appear in the top toolbar.
 
+## Menu Item Types
+
+When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. The help button supports two types of menu actions:
+
+1. **Outbound Link (`link`)**: 
+   - Opens a specified URL (can be configured to open in a new tab or the same window).
+   - Useful for pointing users to external documentation, intranet pages, wikis, or company portals.
+   - Supports [template fields](../docs/template-fields.md) in the URL (e.g. `https://help.example.com/sys/{{appId}}`), allowing for context-sensitive deep links that adapt to the user's current app or sheet.
+2. **Bug Report Dialog (`bugReport`)**: 
+   - Opens an interactive modal directly inside Qlik Sense where users can write a detailed text description of an issue.
+   - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request. 
+
+## Bug Report Context Fields
+
+When the extension is configured to use the **Report a Bug** action, it will automatically gather and submit relevant context metadata about the user's environment alongside their bug description. 
+
+You can configure exactly which fields are visible in the bug report dialog—and subsequently sent to your webhook—using the **"Context fields (comma-separated)"** setting in the property panel. 
+
+The following fields are available:
+
+| Field Name | Description | Example |
+|---|---|---|
+| `userName` | Full name of the authenticated user | `John Doe` |
+| `userId` | User ID of the authenticated user | `johnd` |
+| `userDirectory` | Directory of the authenticated user | `CORP` |
+| `appId` | GUID of the active Qlik Sense application | `df68e14d-...` |
+| `sheetId` | ID of the active sheet | `850cffb0-...` |
+| `urlPath` | Current URL path context of the browser | `/sense/app/.../sheet/...` |
+| `senseVersion` | Qlik Sense product version (Client-managed) or region (SaaS) | `November 2023` |
+| `platform` | Auto-detected platform type | `client-managed` or `saas` |
+| `browser` | Basic browser user-agent detail | `User-Agent: Mozilla/5.0...` |
+| `timestamp` | Local time the report dialog was opened | `3/6/2026, 8:51:57 AM` |
+
+By default, the property panel has this pre-populated setting:
+`userDirectory,userId,senseVersion,appId,sheetId,urlPath`
+
+*Note: You can omit any fields you do not want to show or submit as part of the bug report layout by simply removing them from the comma-separated list.*
+
 ---
 
 For technical documentation and development setup, please see the [developer documentation](docs/DEVELOPMENT.md).

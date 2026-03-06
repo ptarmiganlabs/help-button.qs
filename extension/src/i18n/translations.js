@@ -141,6 +141,18 @@ const translations = {
         es: 'Contexto (recopilado automáticamente)',
     },
 
+    bugReportLoadingMessage: {
+        en: 'Gathering environment info…',
+        sv: 'Samlar in miljöinformation…',
+        no: 'Samler inn miljøinformasjon…',
+        da: 'Indsamler miljøoplysninger…',
+        fi: 'Kerätään ympäristötietoja…',
+        de: 'Umgebungsinformationen werden erfasst…',
+        fr: "Collecte des informations d'environnement…",
+        pl: 'Zbieranie informacji o środowisku…',
+        es: 'Recopilando información del entorno…',
+    },
+
     // Edit mode placeholder
     editPlaceholderTitle: {
         en: 'HelpButton.qs',

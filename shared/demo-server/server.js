@@ -182,7 +182,7 @@ if (hasCerts) {
   logger.warn('No TLS certificates found — starting in plain HTTP mode.');
   logger.warn(`  Looked for cert: ${CERT_PATH}`);
   logger.warn(`  Looked for key:  ${KEY_PATH}`);
-  logger.warn('  See README.md in demo-server/ for instructions on generating certs.');
+  logger.warn('  See README.md for instructions on generating certs.');
 
   app.listen(HTTP_PORT, HOST, () => {
     logger.info('═'.repeat(72));

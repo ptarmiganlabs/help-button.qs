@@ -187,30 +187,39 @@
 
 .hbqs-bug-report-dialog {
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    width: 500px;
+    border: 2px solid #0c3256;
+    border-radius: 10px;
+    box-shadow:
+        0 20px 60px rgba(12, 50, 86, 0.3),
+        0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 700px;
     max-width: 90vw;
-    max-height: 85vh;
+    max-height: 90vh;
     overflow-y: auto;
-    padding: 0;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .hbqs-bug-report-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
+    padding: 14px 20px;
     background: #0c3256;
     color: #ffcc33;
-    border-radius: 12px 12px 0 0;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 8px 8px 0 0;
+    margin: 0;
 }
 
 .hbqs-bug-report-title {
     margin: 0;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
 }
 
 .hbqs-bug-report-close {
@@ -229,62 +238,126 @@
     opacity: 0.7;
 }
 
-/* Context section */
-.hbqs-bug-report-context {
-    padding: 16px 20px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.hbqs-bug-report-context-title {
-    font-size: 11px;
+/* In-dialog toast notification */
+.hbqs-bug-report-toast {
+    display: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 600;
-    text-transform: uppercase;
-    color: #888;
-    letter-spacing: 0.06em;
-    margin-bottom: 8px;
+    margin: 0 20px 12px 20px;
+    transition: opacity 0.5s;
+    align-items: center;
+    gap: 8px;
 }
 
-.hbqs-bug-report-context-grid {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 4px 12px;
+.hbqs-bug-report-toast-visible {
+    display: flex;
+}
+
+.hbqs-bug-report-toast-success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.hbqs-bug-report-toast-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* Dialog body */
+.hbqs-bug-report-body {
+    padding: 20px;
+}
+
+/* Loading indicator */
+.hbqs-bug-report-loading {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.hbqs-bug-report-loading .hbqs-spinner-context {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 10px auto;
+    border-color: rgba(22, 90, 155, 0.2);
+    border-top-color: #165a9b;
+}
+
+/* Field group — label + input */
+.hbqs-bug-report-field-group {
+    margin-bottom: 10px;
+}
+
+/* Side-by-side paired fields */
+.hbqs-bug-report-field-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.hbqs-bug-report-field-row-item {
+    flex: 1;
+    min-width: 0;
+}
+
+.hbqs-bug-report-field-row-item .hbqs-bug-report-field-group {
+    margin-bottom: 0;
+}
+
+/* Context field label */
+.hbqs-bug-report-field-label {
+    display: block;
     font-size: 12px;
-}
-
-.hbqs-bug-report-context-key {
     font-weight: 600;
-    color: #555;
+    color: #374151;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
-.hbqs-bug-report-context-value {
-    color: #333;
-    word-break: break-all;
+/* Read-only context input */
+.hbqs-bug-report-readonly-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+    background: #f9fafb;
+    color: #6b7280;
+    box-sizing: border-box;
+    cursor: default;
 }
 
-/* Form section */
-.hbqs-bug-report-form {
-    padding: 16px 20px;
-}
-
+/* Description label */
 .hbqs-bug-report-label {
     display: block;
     font-weight: 600;
-    font-size: 13px;
-    color: #333;
-    margin-bottom: 6px;
+    font-size: 12px;
+    color: #374151;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .hbqs-bug-report-textarea {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 10px 12px;
     font-size: 13px;
     font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
     resize: vertical;
     min-height: 100px;
+    outline: none;
     transition: border-color 0.15s;
+    line-height: 1.5;
 }
 
 .hbqs-bug-report-textarea:focus {
@@ -298,7 +371,8 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
-    padding: 12px 20px 20px;
+    padding: 16px 20px;
+    border-top: 1px solid #e5e7eb;
 }
 
 .hbqs-bug-report-btn {
@@ -314,18 +388,21 @@
 }
 
 .hbqs-bug-report-btn-cancel {
-    background: #f5f5f5;
-    border: 1px solid #ccc;
-    color: #555;
+    background: #e5e7eb;
+    border: none;
+    color: #374151;
 }
 
 .hbqs-bug-report-btn-cancel:hover {
-    background: #eee;
+    background: #d1d5db;
 }
 
 .hbqs-bug-report-btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     background: #165a9b;
-    border: 1px solid #0e3b65;
+    border: none;
     color: #ffffff;
 }
 
@@ -333,49 +410,15 @@
     background: #12487c;
 }
 
-.hbqs-bug-report-btn-submit:disabled {
-    opacity: 0.5;
+.hbqs-bug-report-btn-submit:disabled,
+.hbqs-bug-report-btn-submit-disabled {
+    background: #9ca3af;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
 /* -------------------------------------------------------------------------
- * Toast notifications
- * ------------------------------------------------------------------------- */
-.hbqs-toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
-    z-index: 10002;
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-        opacity 0.3s,
-        transform 0.3s;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.hbqs-toast-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.hbqs-toast-success {
-    background: #059669;
-    color: #ffffff;
-}
-
-.hbqs-toast-error {
-    background: #dc2626;
-    color: #ffffff;
-}
-
-/* -------------------------------------------------------------------------
- * Spinner (for submit button loading state)
+ * Spinner (for submit button and loading states)
  * ------------------------------------------------------------------------- */
 @keyframes hbqs-spin {
     to {
