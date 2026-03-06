@@ -151,3 +151,5 @@ extension/dist/
 extension/helpbutton-qs-ext/
 extension/node_modules/
 extension/*.zip
+helpbutton-qs-basic-v*
+helpbutton-qs-extension-v*
