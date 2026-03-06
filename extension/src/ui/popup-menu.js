@@ -144,9 +144,7 @@ export function createPopupMenu(triggerButton, config) {
     });
 
     // Apply popup-level styles (resolve from color-picker objects)
-    const popupBg = resolveColor(popupStyle.backgroundColor);
     const popupBorder = resolveColor(popupStyle.borderColor);
-    if (popupBg) popup.style.backgroundColor = popupBg;
     if (popupBorder) popup.style.borderColor = popupBorder;
     if (popupStyle.borderRadius) popup.style.borderRadius = popupStyle.borderRadius;
 

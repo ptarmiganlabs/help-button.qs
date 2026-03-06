@@ -18,7 +18,6 @@
     --hbqs-btn-border: #0e3b65;
     --hbqs-btn-radius: 4px;
     --hbqs-btn-focus: rgba(255, 204, 51, 0.6);
-    --hbqs-popup-bg: #ffffff;
     --hbqs-popup-border: #0c3256;
     --hbqs-popup-radius: 8px;
     --hbqs-popup-header-bg: #0c3256;
@@ -100,7 +99,7 @@
  * ------------------------------------------------------------------------- */
 .hbqs-popup {
     position: fixed;
-    background: var(--hbqs-popup-bg);
+    background: #ffffff;
     border: 2px solid var(--hbqs-popup-border);
     border-radius: var(--hbqs-popup-radius);
     box-shadow:

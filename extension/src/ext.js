@@ -242,13 +242,6 @@ export default function ext(_galaxy) {
                             component: 'text',
                             label: 'Popup colors',
                         },
-                        popupBgColor: {
-                            ref: 'popupStyle.backgroundColor',
-                            label: 'Background',
-                            type: 'object',
-                            component: 'color-picker',
-                            defaultValue: toPickerObj('#ffffff'),
-                        },
                         popupBorderColor: {
                             ref: 'popupStyle.borderColor',
                             label: 'Border',
