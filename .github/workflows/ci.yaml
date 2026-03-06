@@ -78,7 +78,9 @@ jobs:
             no \
             pl \
             sv \
-            -x "*/demo-server/*" "*/node_modules/*"
+            -x "*/node_modules/*"
+          cd ../..
+          zip -j "${DIST_FILE_NAME}-basic-v${{ needs.release-please.outputs.release_version }}.zip" LICENSE
 
       - name: Create bug-report variant zip
         run: |
@@ -94,7 +96,9 @@ jobs:
             no \
             pl \
             sv \
-            -x "demo-server/node_modules/*" "*/demo-server/node_modules/*"
+            -x "*/node_modules/*"
+          cd ../..
+          zip -j "${DIST_FILE_NAME}-bug-report-v${{ needs.release-please.outputs.release_version }}.zip" LICENSE
 
       - name: List zip contents (debug)
         run: |
@@ -120,17 +124,17 @@ jobs:
           VERSION=${{ needs.release-please.outputs.release_version }}
 
           # Create readme.txt from template
-          sed "s/__VERSION__/${VERSION}/g" extension/release-config/readme-template.txt > extension-readme.txt
+          sed "s/__VERSION__/${VERSION}/g" extension/release-config/readme-template.txt > readme.txt
 
           # Create outer zip containing the extension zip + readme + license
-          zip "${DIST_FILE_NAME}-ext-v${VERSION}.zip" \
+          zip -j "${DIST_FILE_NAME}-extension-v${VERSION}.zip" \
             extension/helpbutton-qs.zip \
-            extension-readme.txt \
+            readme.txt \
             LICENSE
 
           echo ""
           echo "=== Extension variant ==="
-          zipinfo "${DIST_FILE_NAME}-ext-v${VERSION}.zip"
+          zipinfo "${DIST_FILE_NAME}-extension-v${VERSION}.zip"
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
@@ -144,4 +148,4 @@ jobs:
           artifacts: |
             ${{ env.DIST_FILE_NAME }}-basic-v${{ needs.release-please.outputs.release_version }}.zip
             ${{ env.DIST_FILE_NAME }}-bug-report-v${{ needs.release-please.outputs.release_version }}.zip
-            ${{ env.DIST_FILE_NAME }}-ext-v${{ needs.release-please.outputs.release_version }}.zip
+            ${{ env.DIST_FILE_NAME }}-extension-v${{ needs.release-please.outputs.release_version }}.zip
