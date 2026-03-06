@@ -36,7 +36,8 @@ variants/
     helpbutton-qs.config.js    Configuration template
     loader-snippet.html        HTML to paste into client.html
     README.md                  Deployment docs
-    demo-server/               Express.js webhook demo (dev only)
+shared/
+  demo-server/               Express.js webhook demo (dev only, shared)
 ```
 
 ## 🚀 Deployment Model
@@ -71,5 +72,5 @@ Users deploy by:
 ## 🚫 Repo Hygiene
 
 - Do not commit `node_modules/`, build artifacts, or IDE-specific files.
-- The `demo-server/` directory is for development/testing only — it is not included in release packages.
+- The `shared/demo-server/` directory is for development/testing only — it is not included in release packages.
 - Keep diffs focused on the requested change — avoid drive-by formatting.

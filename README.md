@@ -79,6 +79,12 @@ Both methods support localized interfaces so you can provide menus built for you
 
 > **A note on folder names (HTML Variants):** Language folders are named using [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) **language** codes, not [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) **country** codes. For example, Danish is `da` (not `dk`), Swedish is `sv` (not `se`), and German is `de` (not the country-code for Germany, which is also `de` by coincidence).
 
+### Demo Server (Bug Report Webhook)
+
+Both the extension and the HTML Bug Report variant can submit reports to a configurable webhook endpoint. A ready-to-use **Express.js demo server** is included for local testing and development — see the [Demo Server documentation](./shared/demo-server/README.md).
+
+The demo server supports both HTTP and HTTPS, logs incoming bug reports to the console, and includes step-by-step instructions for generating self-signed certificates (required when testing with Qlik Sense Enterprise on Windows).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
