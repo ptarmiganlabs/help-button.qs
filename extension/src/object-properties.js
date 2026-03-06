@@ -55,8 +55,26 @@ export default {
     menuItems: [
         {
             label: 'Help documentation',
-            url: 'https://help.example.com',
+            url: 'https://github.com/ptarmiganlabs/help-button.qs',
             icon: 'help',
+            target: '_blank',
+            action: '',
+            iconColor: toPickerObj('#165a9b'),
+            bgColor: toPickerObj('#f0f6fc'),
+            bgColorHover: toPickerObj('#dbeafe'),
+            textColor: toPickerObj('#0c3256'),
+            bugReport: {
+                webhookUrl: '',
+                authStrategy: 'none',
+                authToken: '',
+                collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                dialogStrings: { title: '' },
+            },
+        },
+        {
+            label: 'Ptarmigan Labs',
+            url: 'https://ptarmiganlabs.com',
+            icon: 'link',
             target: '_blank',
             action: '',
             iconColor: toPickerObj('#165a9b'),
