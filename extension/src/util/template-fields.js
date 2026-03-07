@@ -22,12 +22,12 @@ let templateContext = { userDirectory: '', userId: '' };
 let contextFetched = false;
 
 /**
- * Fetch user context from the Qlik Sense proxy API (client-managed)
- * and cache it for template resolution. Fire-and-forget on startup.
+ * Fetch user context and cache it for template resolution.
+ * Fire-and-forget on startup.
  *
- * For Cloud, user context is not available via the same endpoint,
- * so we leave userDirectory/userId empty (Cloud apps typically don't
- * need these in help URLs).
+ * **Client-managed**: fetches from `/qps/user`.
+ * **Cloud**: fetches from `/api/v1/users/me` — `email` is mapped to
+ * `userId`; `userDirectory` is left empty (not applicable on Cloud).
  *
  * @param {'client-managed' | 'cloud'} platformType - Current platform.
  * @returns {Promise<void>}
@@ -37,7 +37,16 @@ export async function fetchTemplateContext(platformType) {
     contextFetched = true;
 
     if (platformType === 'cloud') {
-        logger.debug('Cloud platform — skipping /qps/user fetch for template context');
+        try {
+            const resp = await fetch('/api/v1/users/me');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+            templateContext.userId = data.email || '';
+            templateContext.userDirectory = '';
+            logger.debug('Cloud template context loaded:', JSON.stringify(templateContext));
+        } catch (err) {
+            logger.warn('Failed to fetch Cloud template context (user info):', err);
+        }
         return;
     }
 

@@ -46,15 +46,39 @@ export function getToolbarAnchorSelector(codePath) {
 // ---------------------------------------------------------------------------
 
 /**
- * Get user context for Cloud. Cloud does not expose /qps/user,
- * so we return minimal context.
+ * Cached user context.
  *
- * @returns {Promise<{ userDirectory: string, userId: string }>}
+ * @type {{ userDirectory: string, userId: string, userName: string } | null}
+ */
+let cachedUserContext = null;
+
+/**
+ * Get user context for Cloud via the `/api/v1/users/me` REST API.
+ *
+ * Returns the authenticated user's email as `userId` and display name
+ * as `userName`. `userDirectory` is not applicable on Cloud and is
+ * always returned as an empty string.
+ *
+ * @returns {Promise<{ userDirectory: string, userId: string, userName: string }>}
  */
 export async function getUserContext() {
-    // Cloud doesn't have a simple proxy API for user info
-    logger.debug('Cloud platform — user context not available via proxy API');
-    return { userDirectory: '', userId: '' };
+    if (cachedUserContext) return cachedUserContext;
+
+    try {
+        const resp = await fetch('/api/v1/users/me');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        cachedUserContext = {
+            userDirectory: '',
+            userId: data.email || '',
+            userName: data.name || '',
+        };
+        logger.debug('Cloud user context loaded:', JSON.stringify(cachedUserContext));
+        return cachedUserContext;
+    } catch (err) {
+        logger.warn('Failed to fetch Cloud user context:', err);
+        return { userDirectory: '', userId: '', userName: '' };
+    }
 }
 
 // ---------------------------------------------------------------------------

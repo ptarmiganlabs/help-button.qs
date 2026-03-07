@@ -68,15 +68,45 @@ The following fields are available:
 | Field Name | Description | Example |
 |---|---|---|
 | `userName` | Full name of the authenticated user | `John Doe` |
-| `userId` | User ID of the authenticated user | `johnd` |
-| `userDirectory` | Directory of the authenticated user | `CORP` |
+| `userId` | User ID of the authenticated user | `johnd` (client-managed) / `johnd@example.com` (Cloud) |
+| `userDirectory` | Directory of the authenticated user (client-managed only) | `CORP` |
+| `tenantId` | Tenant ID of the user (Qlik Cloud only) | `tenantxyz` |
+| `status` | Account status (Qlik Cloud only) | `active` |
+| `picture` | URL to the user's avatar (Qlik Cloud only) | `https://s.gravatar.com/...` |
+| `preferredZoneinfo` | User's preferred time zone (Qlik Cloud only) | `Europe/Stockholm` |
+| `roles` | Comma-separated list of user roles (Qlik Cloud only) | `[AnalyticsAdmin], [SharedSpaceCreator]` |
 | `appId` | GUID of the active Qlik Sense application | `df68e14d-...` |
 | `sheetId` | ID of the active sheet | `850cffb0-...` |
 | `urlPath` | Current URL path context of the browser | `/sense/app/.../sheet/...` |
-| `senseVersion` | Qlik Sense product version (Client-managed) or region (SaaS) | `November 2023` |
-| `platform` | Auto-detected platform type | `client-managed` or `saas` |
-| `browser` | Basic browser user-agent detail | `User-Agent: Mozilla/5.0...` |
+| `senseVersion` | Qlik Sense product version (client-managed only) | `November 2023 (v14.187.4)` |
+| `platform` | Auto-detected platform type | `client-managed` or `cloud` |
+| `browser` | Browser user-agent string | `Mozilla/5.0...` |
 | `timestamp` | Local time the report dialog was opened | `3/6/2026, 8:51:57 AM` |
+
+### Cloud vs Client-Managed Availability
+
+Not all context fields are available on every platform. The table below summarises what each field returns on **Qlik Cloud** and **Client-Managed** (Enterprise on Windows) deployments.
+
+| Field | Client-Managed | Qlik Cloud |
+|---|---|---|
+| `userName` | ✅ User's full name from the Qlik Sense proxy API | ✅ User's display name from the Cloud `/api/v1/users/me` API |
+| `userId` | ✅ Windows login name (e.g. `jsmith`) | ✅ User's email address (e.g. `jsmith@example.com`) |
+| `userDirectory` | ✅ Active Directory / user directory (e.g. `CORP`) | ❌ Not applicable — shown as `(N/A)` |
+| `tenantId` | ❌ Not applicable — shown as `(N/A)` | ✅ Included in the Cloud `/api/v1/users/me` API |
+| `status` | ❌ Not applicable — shown as `(N/A)` | ✅ Included in the Cloud `/api/v1/users/me` API |
+| `picture` | ❌ Not applicable — shown as `(N/A)` | ✅ Included in the Cloud `/api/v1/users/me` API |
+| `preferredZoneinfo` | ❌ Not applicable — shown as `(N/A)` | ✅ Included in the Cloud `/api/v1/users/me` API |
+| `roles` | ❌ Not applicable — shown as `(N/A)` | ✅ Included in the Cloud `/api/v1/users/me` API |
+| `senseVersion` | ✅ Product version from `product-info.js` | ❌ Not available — shown as `(N/A)` |
+| `appId` | ✅ Parsed from URL | ✅ Parsed from URL |
+| `sheetId` | ✅ Parsed from URL | ✅ Parsed from URL |
+| `urlPath` | ✅ Current browser URL path | ✅ Current browser URL path |
+| `platform` | ✅ `client-managed` | ✅ `cloud` |
+| `browser` | ✅ `navigator.userAgent` | ✅ `navigator.userAgent` |
+| `timestamp` | ✅ Local date/time | ✅ Local date/time |
+
+> **Tip:** For Qlik Cloud deployments you may want to remove `userDirectory` and `senseVersion` from the `collectFields` setting since they are not applicable. A recommended Cloud configuration would be:
+> `userId,userName,appId,sheetId,urlPath,platform,browser,timestamp`
 
 By default, the property panel has this pre-populated setting:
 `userDirectory,userId,senseVersion,appId,sheetId,urlPath`
