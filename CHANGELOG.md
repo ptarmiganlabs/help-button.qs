@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.0.0...helpbutton-qs-v2.1.0) (2026-03-07)
+
+
+### Features
+
+* add Qlik Cloud user info support for bug report dialog and template fields ([cf53b0d](https://github.com/ptarmiganlabs/help-button.qs/commit/cf53b0d75c45ef227af9b90bccd9f3778d2d3450))
+* **cloud:** enhance bug report dialog with additional user info fields for Qlik Cloud ([d60e55b](https://github.com/ptarmiganlabs/help-button.qs/commit/d60e55b0c133c45afd3664845b5d324e7c9847d7))
+* resolve User ID and User Name on Qlik Cloud via /api/v1/users/me ([497bb92](https://github.com/ptarmiganlabs/help-button.qs/commit/497bb92195059c06aae580a5b4217d9922387a2d))
+
+
+### Bug Fixes
+
+* address code review feedback — consistent fallback values, expand CM abbreviation ([ae01962](https://github.com/ptarmiganlabs/help-button.qs/commit/ae01962ab3625757888a2851114e66f641380535))
+
 ## [2.0.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v1.3.1...helpbutton-qs-v2.0.0) (2026-03-06)
 
 

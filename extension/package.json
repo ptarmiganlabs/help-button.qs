@@ -1,6 +1,6 @@
 {
     "name": "helpbutton-qs",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "type": "module",
     "description": "Qlik Sense extension that injects a configurable help button into the toolbar",
     "license": "MIT",
