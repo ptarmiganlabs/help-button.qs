@@ -171,17 +171,11 @@ if (hasCerts) {
     logger.info(`  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`);
     logger.info(`  Health check:  GET  https://${HOST}:${HTTPS_PORT}/health`);
     logger.info(`  Log level:     ${LOG_LEVEL}`);
-
-    // Note!! In a production server, you would NOT log the cert paths like this — this is just for demo purposes.
-    logger.info(`  TLS cert:      ${CERT_PATH}`);
-    logger.info(`  TLS key:       ${KEY_PATH}`);
     logger.info('═'.repeat(72));
   });
 } else {
   // ---- HTTP mode (no certs found) ----------------------------------------
   logger.warn('No TLS certificates found — starting in plain HTTP mode.');
-  logger.warn(`  Looked for cert: ${CERT_PATH}`);
-  logger.warn(`  Looked for key:  ${KEY_PATH}`);
   logger.warn('  See README.md for instructions on generating certs.');
 
   app.listen(HTTP_PORT, HOST, () => {
