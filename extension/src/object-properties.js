@@ -51,7 +51,7 @@ export default {
         separatorColor: toPickerObj('#e0e0e0'),
     },
 
-    // -- Menu items (bug-report config is inline per-item) --
+    // -- Menu items (bug-report and feedback config is inline per-item) --
     menuItems: [
         {
             label: 'Help documentation',
@@ -70,6 +70,16 @@ export default {
                 collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
                 dialogStrings: { title: '' },
             },
+            feedback: {
+                webhookUrl: '',
+                authStrategy: 'none',
+                authToken: '',
+                enableRating: true,
+                enableComment: true,
+                commentMaxLength: 500,
+                collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                dialogStrings: { title: '' },
+            },
         },
         {
             label: 'Ptarmigan Labs',
@@ -85,6 +95,16 @@ export default {
                 webhookUrl: '',
                 authStrategy: 'none',
                 authToken: '',
+                collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                dialogStrings: { title: '' },
+            },
+            feedback: {
+                webhookUrl: '',
+                authStrategy: 'none',
+                authToken: '',
+                enableRating: true,
+                enableComment: true,
+                commentMaxLength: 500,
                 collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
                 dialogStrings: { title: '' },
             },

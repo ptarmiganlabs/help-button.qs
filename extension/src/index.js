@@ -246,10 +246,12 @@ export default function supernova(galaxy) {
 function renderEditPlaceholder(element, layout) {
     const menuCount = (layout.menuItems || []).length;
     const hasBugReport = (layout.menuItems || []).some((item) => item.action === 'bugReport');
+    const hasFeedback = (layout.menuItems || []).some((item) => item.action === 'feedback');
 
     const statsText =
         `${menuCount} menu item${menuCount !== 1 ? 's' : ''}` +
-        (hasBugReport ? ' · Bug report: On' : '');
+        (hasBugReport ? ' · Bug report: On' : '') +
+        (hasFeedback ? ' · Feedback: On' : '');
 
     element.innerHTML = `
         <div class="hbqs-edit-placeholder"

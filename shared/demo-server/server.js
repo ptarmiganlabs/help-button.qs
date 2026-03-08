@@ -145,6 +145,80 @@ app.post('/api/bug-reports', (req, res) => {
   });
 });
 
+/**
+ * User feedback endpoint.
+ * POST /api/feedback
+ *
+ * Expected payload:
+ * {
+ *   "timestamp": "2026-02-14T10:30:45.123Z",
+ *   "context": {
+ *     "userName": "Göran Sander",
+ *     "appId": "4634fbc8-65eb-4aff-a686-34e75326e534",
+ *     "sheetId": "tAyTET",
+ *     "urlPath": "/sense/app/4634fbc8-.../sheet/tAyTET/state/analysis",
+ *     "platform": "client-managed",
+ *     "timestamp": "3/8/2026, 12:00:00 PM"
+ *   },
+ *   "rating": 4,
+ *   "comment": "Great app, very useful dashboards!"
+ * }
+ */
+app.post('/api/feedback', (req, res) => {
+  const { timestamp, context, rating, comment } = req.body;
+
+  // --- Validation ---
+  const errors = [];
+  if (!timestamp) errors.push('Missing required field: timestamp');
+  if (!context || typeof context !== 'object') errors.push('Missing or invalid field: context');
+
+  // At least one of rating or comment must be provided
+  const hasRating = typeof rating === 'number' && rating >= 1 && rating <= 5;
+  const hasComment = typeof comment === 'string' && comment.trim().length > 0;
+
+  if (!hasRating && !hasComment) {
+    errors.push('At least one of rating (1-5) or comment must be provided');
+  }
+
+  if (typeof rating !== 'undefined' && !hasRating) {
+    errors.push('Rating must be a number between 1 and 5');
+  }
+
+  if (errors.length > 0) {
+    logger.warn(`FEEDBACK: Rejected — validation failed: ${errors.join('; ')}`);
+    return res.status(400).json({ status: 'error', errors });
+  }
+
+  // --- Log the feedback ---
+  const user = context.userName || context.userId || '(unknown user)';
+  const appId = context.appId || '(no app)';
+  const sheet = context.sheetId || '(no sheet)';
+
+  const commentExcerpt = hasComment
+    ? (comment.length > 80 ? comment.substring(0, 80) + '…' : comment)
+    : '(no comment)';
+
+  logger.info('─'.repeat(72));
+  logger.info(`FEEDBACK received at ${timestamp}`);
+  logger.info(`  User:      ${user}`);
+  logger.info(`  App:       ${appId}`);
+  logger.info(`  Sheet:     ${sheet}`);
+  if (hasRating) {
+    logger.info(`  Rating:    ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5)`);
+  }
+  logger.info(`  Comment:   ${commentExcerpt}`);
+  logger.info('─'.repeat(72));
+
+  // Full payload at verbose level for debugging
+  logger.verbose(`FEEDBACK: Full payload:\n${JSON.stringify(req.body, null, 2)}`);
+
+  res.json({
+    status: 'ok',
+    message: 'Feedback received',
+    id: `fb-${Date.now()}`,
+  });
+});
+
 // Catch-all for unknown routes
 app.use((req, res) => {
   res.status(404).json({ status: 'error', message: `Route not found: ${req.method} ${req.url}` });
@@ -169,6 +243,7 @@ if (hasCerts) {
     logger.info('  HelpButton.qs Demo Server  (HTTPS)');
     logger.info(`  Listening on:  https://${HOST}:${HTTPS_PORT}`);
     logger.info(`  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`);
+    logger.info(`  Feedback:      POST https://${HOST}:${HTTPS_PORT}/api/feedback`);
     logger.info(`  Health check:  GET  https://${HOST}:${HTTPS_PORT}/health`);
     logger.info(`  Log level:     ${LOG_LEVEL}`);
     logger.info('═'.repeat(72));
@@ -183,6 +258,7 @@ if (hasCerts) {
     logger.info('  HelpButton.qs Demo Server  (HTTP)');
     logger.info(`  Listening on:  http://${HOST}:${HTTP_PORT}`);
     logger.info(`  Bug reports:   POST http://${HOST}:${HTTP_PORT}/api/bug-reports`);
+    logger.info(`  Feedback:      POST http://${HOST}:${HTTP_PORT}/api/feedback`);
     logger.info(`  Health check:  GET  http://${HOST}:${HTTP_PORT}/health`);
     logger.info(`  Log level:     ${LOG_LEVEL}`);
     logger.info('═'.repeat(72));

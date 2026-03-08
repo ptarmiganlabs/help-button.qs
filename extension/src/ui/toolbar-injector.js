@@ -8,6 +8,7 @@
 import { makeSvg } from './icons';
 import { createPopupMenu } from './popup-menu';
 import { openBugReportDialog } from './bug-report-dialog';
+import { openFeedbackDialog } from './feedback-dialog';
 import { escapeHtml } from '../util/template-fields';
 import { resolveColor } from '../util/color';
 import { resolveText } from '../i18n/index';
@@ -82,6 +83,10 @@ export function injectHelpButton(layout, adapter, platform) {
     const bugReportItem = menuItems.find((item) => item.action === 'bugReport');
     const bugReport = bugReportItem ? bugReportItem.bugReport || {} : null;
 
+    // Derive feedback config from the first menu item with action='feedback'
+    const feedbackItem = menuItems.find((item) => item.action === 'feedback');
+    const feedbackConfig = feedbackItem ? feedbackItem.feedback || {} : null;
+
     // Resolve button colors (handles both color-picker objects and plain strings)
     const btnBg = resolveColor(buttonStyle.backgroundColor, '#165a9b');
     const btnBgHover = resolveColor(buttonStyle.backgroundColorHover, '#12487c');
@@ -137,6 +142,9 @@ export function injectHelpButton(layout, adapter, platform) {
         buttonStyle,
         onBugReport: bugReport
             ? () => openBugReportDialog(bugReport, platform.type)
+            : undefined,
+        onFeedback: feedbackConfig
+            ? () => openFeedbackDialog(feedbackConfig, platform.type)
             : undefined,
     });
     activePopup = popupControls;

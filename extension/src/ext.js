@@ -71,6 +71,9 @@ export default function ext(_galaxy) {
                                                 if (item.action === 'bugReport' && item.bugReport && item.bugReport.dialogStrings) {
                                                     item.bugReport.dialogStrings.title = '';
                                                 }
+                                                if (item.action === 'feedback' && item.feedback && item.feedback.dialogStrings) {
+                                                    item.feedback.dialogStrings.title = '';
+                                                }
                                             });
                                         }
                                     } else {
@@ -88,6 +91,11 @@ export default function ext(_galaxy) {
                                                     if (!item.bugReport) item.bugReport = {};
                                                     if (!item.bugReport.dialogStrings) item.bugReport.dialogStrings = {};
                                                     item.bugReport.dialogStrings.title = translations.bugReportTitle[lang] || '';
+                                                }
+                                                if (item.action === 'feedback') {
+                                                    if (!item.feedback) item.feedback = {};
+                                                    if (!item.feedback.dialogStrings) item.feedback.dialogStrings = {};
+                                                    item.feedback.dialogStrings.title = translations.feedbackTitle[lang] || '';
                                                 }
                                             });
                                         }
@@ -311,6 +319,7 @@ export default function ext(_galaxy) {
                                     options: [
                                         { value: '', label: 'Open URL' },
                                         { value: 'bugReport', label: 'Open Bug Report dialog' },
+                                        { value: 'feedback', label: 'Open Feedback dialog' },
                                     ],
                                 },
                                 url: {
@@ -344,6 +353,7 @@ export default function ext(_galaxy) {
                                         { value: 'bug', label: 'Bug' },
                                         { value: 'mail', label: 'Mail' },
                                         { value: 'link', label: 'Link' },
+                                        { value: 'star', label: 'Star' },
                                     ],
                                 },
 
@@ -397,6 +407,91 @@ export default function ext(_galaxy) {
                                     type: 'string',
                                     defaultValue: '',
                                     show: (item) => item.action === 'bugReport',
+                                },
+
+                                // -- Feedback inline fields --
+                                feedbackDivider: {
+                                    component: 'text',
+                                    label: '── Feedback Settings ──',
+                                    show: (item) => item.action === 'feedback',
+                                },
+                                feedbackWebhookUrl: {
+                                    ref: 'feedback.webhookUrl',
+                                    label: 'Webhook URL (POST endpoint)',
+                                    type: 'string',
+                                    defaultValue: '',
+                                    show: (item) => item.action === 'feedback',
+                                },
+                                feedbackAuthStrategy: {
+                                    ref: 'feedback.authStrategy',
+                                    label: 'Authentication',
+                                    type: 'string',
+                                    component: 'dropdown',
+                                    defaultValue: 'none',
+                                    options: [
+                                        { value: 'none', label: 'None' },
+                                        { value: 'header', label: 'Authorization header' },
+                                        { value: 'sense-session', label: 'Sense session (XRF key)' },
+                                        { value: 'custom', label: 'Custom headers' },
+                                    ],
+                                    show: (item) => item.action === 'feedback',
+                                },
+                                feedbackAuthToken: {
+                                    ref: 'feedback.authToken',
+                                    label: 'Bearer token',
+                                    type: 'string',
+                                    defaultValue: '',
+                                    show: (item) =>
+                                        item.action === 'feedback' &&
+                                        item.feedback?.authStrategy === 'header',
+                                },
+                                feedbackEnableRating: {
+                                    ref: 'feedback.enableRating',
+                                    label: 'Show star rating (1-5)',
+                                    type: 'boolean',
+                                    component: 'switch',
+                                    defaultValue: true,
+                                    options: [
+                                        { value: true, label: 'On' },
+                                        { value: false, label: 'Off' },
+                                    ],
+                                    show: (item) => item.action === 'feedback',
+                                },
+                                feedbackEnableComment: {
+                                    ref: 'feedback.enableComment',
+                                    label: 'Show free-text comment field',
+                                    type: 'boolean',
+                                    component: 'switch',
+                                    defaultValue: true,
+                                    options: [
+                                        { value: true, label: 'On' },
+                                        { value: false, label: 'Off' },
+                                    ],
+                                    show: (item) => item.action === 'feedback',
+                                },
+                                feedbackCommentMaxLength: {
+                                    ref: 'feedback.commentMaxLength',
+                                    label: 'Max comment length (characters)',
+                                    type: 'number',
+                                    defaultValue: 500,
+                                    show: (item) =>
+                                        item.action === 'feedback' &&
+                                        item.feedback?.enableComment !== false,
+                                },
+                                feedbackCollectFields: {
+                                    ref: 'feedback.collectFields',
+                                    label: 'Context fields (comma-separated)',
+                                    type: 'string',
+                                    defaultValue:
+                                        'userName,appId,sheetId,urlPath,platform,timestamp',
+                                    show: (item) => item.action === 'feedback',
+                                },
+                                feedbackDialogTitle: {
+                                    ref: 'feedback.dialogStrings.title',
+                                    label: 'Dialog title (empty = auto)',
+                                    type: 'string',
+                                    defaultValue: '',
+                                    show: (item) => item.action === 'feedback',
                                 },
 
                                 // -- Per-item colors --

@@ -14,9 +14,9 @@ import logger from '../util/logger';
  * @typedef {object} MenuItem
  * @property {string} label - Display text.
  * @property {string} [url] - Link URL (supports {{template}} fields).
- * @property {string} [icon] - Icon name (help, bug, info, mail, link).
+ * @property {string} [icon] - Icon name (help, bug, info, mail, link, star).
  * @property {string} [target] - Link target (_blank, _self).
- * @property {string} [action] - Special action ('bugReport').
+ * @property {string} [action] - Special action ('bugReport', 'feedback').
  * @property {string} [iconColor] - Icon color.
  * @property {string} [bgColor] - Background color.
  * @property {string} [bgColorHover] - Hover background color.
@@ -30,6 +30,7 @@ import logger from '../util/logger';
  * @property {object} popupStyle - Style overrides.
  * @property {object} buttonStyle - Button style (for icon color reference).
  * @property {function} [onBugReport] - Callback when a bugReport action item is clicked.
+ * @property {function} [onFeedback] - Callback when a feedback action item is clicked.
  */
 
 /**
@@ -40,7 +41,7 @@ import logger from '../util/logger';
  * @returns {{ popup: HTMLElement, close: function, destroy: function }} Popup controls.
  */
 export function createPopupMenu(triggerButton, config) {
-    const { popupTitle, menuItems = [], popupStyle = {}, onBugReport } = config;
+    const { popupTitle, menuItems = [], popupStyle = {}, onBugReport, onFeedback } = config;
 
     // Remove any existing popup
     const existingPopup = document.getElementById('hbqs-popup');
@@ -110,6 +111,14 @@ export function createPopupMenu(triggerButton, config) {
                 e.stopPropagation();
                 closePopup();
                 onBugReport();
+            });
+        } else if (item.action === 'feedback' && typeof onFeedback === 'function') {
+            menuItem.href = '#';
+            menuItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                closePopup();
+                onFeedback();
             });
         } else {
             const itemUrl = item.url || '#';

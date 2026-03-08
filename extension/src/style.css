@@ -707,3 +707,52 @@
 .hbqs-no-hover-menu [class*='ActionsToolbar'] {
     display: none !important;
 }
+
+/* -------------------------------------------------------------------------
+ * Feedback dialog — star rating
+ * ------------------------------------------------------------------------- */
+.hbqs-feedback-stars {
+    display: flex;
+    gap: 4px;
+    padding: 6px 0;
+}
+
+.hbqs-feedback-star {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition:
+        transform 0.12s,
+        background 0.12s;
+    outline: none;
+}
+
+.hbqs-feedback-star:hover {
+    transform: scale(1.15);
+    background: rgba(245, 158, 11, 0.08);
+}
+
+.hbqs-feedback-star:focus-visible {
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.4);
+}
+
+.hbqs-feedback-star-active {
+    transform: scale(1.05);
+}
+
+/* Feedback dialog — character counter */
+.hbqs-feedback-char-counter {
+    text-align: right;
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+.hbqs-feedback-char-counter-exceeded {
+    color: #ef4444;
+    font-weight: 600;
+}

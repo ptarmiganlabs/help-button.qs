@@ -153,6 +153,103 @@ const translations = {
         es: 'Recopilando información del entorno…',
     },
 
+    // Feedback dialog
+    feedbackTitle: {
+        en: 'Send Feedback',
+        sv: 'Skicka feedback',
+        no: 'Send tilbakemelding',
+        da: 'Send feedback',
+        fi: 'Lähetä palautetta',
+        de: 'Feedback senden',
+        fr: 'Envoyer un retour',
+        pl: 'Wyślij opinię',
+        es: 'Enviar comentarios',
+    },
+
+    feedbackRatingLabel: {
+        en: 'How would you rate this app?',
+        sv: 'Hur skulle du betygsätta denna app?',
+        no: 'Hvordan vil du vurdere denne appen?',
+        da: 'Hvordan vil du vurdere denne app?',
+        fi: 'Miten arvioisit tämän sovelluksen?',
+        de: 'Wie bewerten Sie diese App?',
+        fr: 'Comment évaluez-vous cette application\u00a0?',
+        pl: 'Jak oceniasz tę aplikację?',
+        es: '¿Cómo calificarías esta aplicación?',
+    },
+
+    feedbackCommentLabel: {
+        en: 'Comments',
+        sv: 'Kommentarer',
+        no: 'Kommentarer',
+        da: 'Kommentarer',
+        fi: 'Kommentit',
+        de: 'Kommentare',
+        fr: 'Commentaires',
+        pl: 'Komentarze',
+        es: 'Comentarios',
+    },
+
+    feedbackCommentPlaceholder: {
+        en: 'Share your thoughts about this app…',
+        sv: 'Dela dina tankar om denna app…',
+        no: 'Del dine tanker om denne appen…',
+        da: 'Del dine tanker om denne app…',
+        fi: 'Jaa ajatuksesi tästä sovelluksesta…',
+        de: 'Teilen Sie Ihre Meinung zu dieser App…',
+        fr: 'Partagez vos impressions sur cette application…',
+        pl: 'Podziel się swoimi przemyśleniami o tej aplikacji…',
+        es: 'Comparte tus opiniones sobre esta aplicación…',
+    },
+
+    feedbackSubmit: {
+        en: 'Submit Feedback',
+        sv: 'Skicka feedback',
+        no: 'Send tilbakemelding',
+        da: 'Send feedback',
+        fi: 'Lähetä palaute',
+        de: 'Feedback absenden',
+        fr: 'Envoyer le retour',
+        pl: 'Wyślij opinię',
+        es: 'Enviar comentarios',
+    },
+
+    feedbackCancel: {
+        en: 'Cancel',
+        sv: 'Avbryt',
+        no: 'Avbryt',
+        da: 'Annuller',
+        fi: 'Peruuta',
+        de: 'Abbrechen',
+        fr: 'Annuler',
+        pl: 'Anuluj',
+        es: 'Cancelar',
+    },
+
+    feedbackSuccessMessage: {
+        en: 'Feedback submitted successfully!',
+        sv: 'Feedbacken har skickats!',
+        no: 'Tilbakemeldingen ble sendt!',
+        da: 'Feedbacken er indsendt!',
+        fi: 'Palaute lähetetty onnistuneesti!',
+        de: 'Feedback erfolgreich gesendet!',
+        fr: 'Retour envoyé avec succès\u00a0!',
+        pl: 'Opinia wysłana pomyślnie!',
+        es: '¡Comentarios enviados correctamente!',
+    },
+
+    feedbackErrorMessage: {
+        en: 'Failed to submit feedback. Please try again.',
+        sv: 'Det gick inte att skicka feedbacken. Försök igen.',
+        no: 'Kunne ikke sende tilbakemeldingen. Prøv igjen.',
+        da: 'Feedbacken kunne ikke indsendes. Prøv igen.',
+        fi: 'Palautteen lähettäminen epäonnistui. Yritä uudelleen.',
+        de: 'Feedback konnte nicht gesendet werden. Bitte versuchen Sie es erneut.',
+        fr: "Échec de l'envoi du retour. Veuillez réessayer.",
+        pl: 'Nie udało się wysłać opinii. Spróbuj ponownie.',
+        es: 'No se pudieron enviar los comentarios. Inténtalo de nuevo.',
+    },
+
     // Edit mode placeholder
     editPlaceholderTitle: {
         en: 'HelpButton.qs',
