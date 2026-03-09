@@ -125,10 +125,57 @@ All configuration is done in `helpbutton-qs.config.js`. See the config file in y
 
 | Property | Type | Default (English) | Description |
 |---|---|---|---|
+| `theme` | string | *(none)* | Theme preset name (see [Theming](#theming) below) |
 | `buttonLabel` | string | `'Help'` | Text displayed on the toolbar button |
 | `buttonTooltip` | string | `'Open help menu'` | Native tooltip shown on hover |
 | `popupTitle` | string | `'Need assistance?'` | Heading inside the dropdown popup |
 | `menuItems` | array | *(see config file)* | Links shown in the popup |
+| `menuItemDefaults` | object | *(blue tint)* | Default colors for menu items without explicit colors |
+
+### Theming
+
+The help button ships with **four predefined themes** that set a complete color palette with a single config property. Themes control the toolbar button, popup panel, menu item defaults, and bug-report dialog colors.
+
+#### Available themes
+
+| Theme name | Description |
+|---|---|
+| `'default'` | Neutral, minimal grey palette |
+| `'leanGreen'` | Full-spectrum Qlik green |
+| `'corporateBlue'` | Authoritative blue with gold accents (matches the built-in defaults) |
+| `'corporateGold'` | Warm gold with blue accents |
+
+#### Usage
+
+Set the `theme` property in your config file:
+
+```js
+window.helpButtonQsConfig = {
+  theme: 'leanGreen',
+  // ... other options
+};
+```
+
+#### Overriding individual properties
+
+All properties set by the theme can still be overridden individually. The resolution order is:
+
+1. **Built-in defaults** — hardcoded in the script
+2. **Theme preset** — applied on top if `theme` is set
+3. **Your config overrides** — always take precedence
+
+For example, to use the `leanGreen` theme but change only the dialog header color:
+
+```js
+window.helpButtonQsConfig = {
+  theme: 'leanGreen',
+  bugReport: {
+    dialogStyle: {
+      headerBackgroundColor: '#333333',  // overrides the theme
+    },
+  },
+};
+```
 
 ### Bug Report dialog texts
 
@@ -187,6 +234,7 @@ The [`shared/demo-server/`](../../shared/demo-server/) folder (at the repository
 - **Auto-populated context** — user ID, Sense version, app ID, sheet ID, etc.
 - **Webhook submission** — bug reports POSTed as JSON to any endpoint
 - **Flexible authentication** — no auth, Bearer token, Sense session, or custom headers
+- **Theme presets** — four predefined color palettes with full individual override support
 - **Multi-language support** — self-contained language folders with translated configs
 - **Zero dependencies** — pure vanilla JavaScript, no build step
 - **Fully configurable** — all text, colors, and behaviour customisable

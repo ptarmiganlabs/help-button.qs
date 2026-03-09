@@ -114,12 +114,59 @@ Key configurable properties:
 
 | Property | Type | Default (English) | Description |
 |---|---|---|---|
+| `theme` | string | *(none)* | Theme preset name (see [Theming](#theming) below) |
 | `buttonLabel` | string | `'Help'` | Text displayed on the toolbar button |
 | `buttonTooltip` | string | `'Open help menu'` | Native tooltip shown on hover |
 | `popupTitle` | string | `'Need assistance?'` | Heading inside the dropdown popup |
 | `menuItems` | array | *(see config file)* | Links shown in the popup |
 | `buttonStyle` | object | *(blue palette)* | Toolbar button colors |
 | `popupStyle` | object | *(dark navy + yellow)* | Popup panel colors |
+| `menuItemDefaults` | object | *(blue tint)* | Default colors for menu items without explicit colors |
+
+---
+
+## Theming
+
+The help button ships with **four predefined themes** that set a complete color palette with a single config property. Themes control the toolbar button, popup panel, and menu item default colors.
+
+### Available themes
+
+| Theme name | Description |
+|---|---|
+| `'default'` | Neutral, minimal grey palette |
+| `'leanGreen'` | Full-spectrum Qlik green |
+| `'corporateBlue'` | Authoritative blue with gold accents (matches the built-in defaults) |
+| `'corporateGold'` | Warm gold with blue accents |
+
+### Usage
+
+Set the `theme` property in your config file:
+
+```js
+window.helpButtonQsConfig = {
+  theme: 'leanGreen',
+  // ... other options
+};
+```
+
+### Overriding individual properties
+
+All properties set by the theme can still be overridden individually. The resolution order is:
+
+1. **Built-in defaults** — hardcoded in the script
+2. **Theme preset** — applied on top if `theme` is set
+3. **Your config overrides** — always take precedence
+
+For example, to use the `leanGreen` theme but change only the button border radius:
+
+```js
+window.helpButtonQsConfig = {
+  theme: 'leanGreen',
+  buttonStyle: {
+    borderRadius: '20px',  // pill-shaped button — overrides the theme
+  },
+};
+```
 
 ---
 
@@ -136,6 +183,7 @@ Key configurable properties:
 
 - **Single-line deployment** — only one snippet added to `client.html`
 - **Zero dependencies** — pure vanilla JavaScript, no build step
+- **Theme presets** — four predefined color palettes with full individual override support
 - **Multi-language support** — self-contained language folders with translated configs
 - **Fully configurable** — button labels, popup title, menu items, icons, URLs, and colors
 - **Template fields** — `{{appId}}`, `{{sheetId}}`, `{{userId}}`, `{{userDirectory}}` in URLs
