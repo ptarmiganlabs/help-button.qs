@@ -1,6 +1,6 @@
 # Investigation: Help Button Not Visible Until Host Sheet Is Visited
 
-> **Issue:** [#Help Emmy does not appear until sheet containing the HelpButton.js object has been visited](https://github.com/ptarmiganlabs/help-button.qs/issues)
+> **Issue:** [HelpButton.qs does not appear until sheet containing the extension object has been visited](https://github.com/ptarmiganlabs/help-button.qs/issues/71)
 >
 > **Scope:** Extension variant only (not HTML injection variants).
 
