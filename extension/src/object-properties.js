@@ -16,8 +16,8 @@ export default {
     subtitle: '',
     footnote: '',
 
-    // -- Theme preset (empty = custom / no preset) --
-    themePreset: '',
+    // -- Theme preset (default = neutral grey) --
+    themePreset: 'default',
 
     // -- Language override ('auto' = detect from UI) --
     language: 'auto',
@@ -94,6 +94,62 @@ export default {
             bgColor: toPickerObj('#f0f6fc'),
             bgColorHover: toPickerObj('#dbeafe'),
             textColor: toPickerObj('#0c3256'),
+            bugReport: {
+                webhookUrl: '',
+                authStrategy: 'none',
+                authToken: '',
+                collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                dialogStrings: { title: '' },
+            },
+            feedback: {
+                webhookUrl: '',
+                authStrategy: 'none',
+                authToken: '',
+                enableRating: true,
+                enableComment: true,
+                commentMaxLength: 500,
+                collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                dialogStrings: { title: '' },
+            },
+        },
+        {
+            label: 'Report a bug',
+            url: '',
+            icon: 'bug',
+            target: '_blank',
+            action: 'bugReport',
+            iconColor: toPickerObj('#dc2626'),
+            bgColor: toPickerObj('#fef2f2'),
+            bgColorHover: toPickerObj('#fee2e2'),
+            textColor: toPickerObj('#7f1d1d'),
+            bugReport: {
+                webhookUrl: '',
+                authStrategy: 'none',
+                authToken: '',
+                collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                dialogStrings: { title: '' },
+            },
+            feedback: {
+                webhookUrl: '',
+                authStrategy: 'none',
+                authToken: '',
+                enableRating: true,
+                enableComment: true,
+                commentMaxLength: 500,
+                collectFields: 'userName,appId,sheetId,urlPath,platform,timestamp',
+                dialogStrings: { title: '' },
+            },
+        },
+        {
+            label: 'Give feedback',
+            url: '',
+            icon: 'star',
+            target: '_blank',
+            action: 'feedback',
+            iconColor: toPickerObj('#7c3aed'),
+            bgColor: toPickerObj('#f5f3ff'),
+            bgColorHover: toPickerObj('#ede9fe'),
+            textColor: toPickerObj('#4c1d95'),
             bugReport: {
                 webhookUrl: '',
                 authStrategy: 'none',
