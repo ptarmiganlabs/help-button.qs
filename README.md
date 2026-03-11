@@ -2,6 +2,8 @@
 
 This repository provides different solutions for adding a customized help button into the Qlik Sense application toolbar. The help button gives users quick access to context-aware support resources, documentation, or bug reporting tools directly within the Qlik Sense interface.
 
+![Qlik Sense Help Button Demo](./variants/bug-report/docs/screenshot-animated.gif)
+
 Qlik's native help button takes the user to Qlik's online help resources. This is great, but may not be ideal for organizations that want to provide their own custom documentation, corporate wikis, or specific support links. This project provides multiple ways to create a more tailored help and user feedback experience.
 
 ## Two Installation Methods
@@ -45,8 +47,6 @@ Current available variants for HTML injection variant:
   * Everything in Basic, plus a built-in **Bug Report** dialog.
   * Clicking "Report a bug" opens a modal pre-populated with Qlik Sense context (user ID, name, Sense version, app ID, sheet ID, URL).
   * The user adds a free-text description and submits — the report is POSTed as JSON to a configurable webhook endpoint.
-
-![Qlik Sense Help Button Demo](./variants/bug-report/docs/screenshot-animated.gif)
 
 ## Shared Features
 

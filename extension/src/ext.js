@@ -10,6 +10,7 @@
 import { PACKAGE_VERSION } from './util/logger';
 import { toPickerObj } from './util/color';
 import translations from './i18n/translations';
+import { PRESET_LABELS, applyPreset } from './theme/presets';
 
 export default function ext(_galaxy) {
     return {
@@ -17,6 +18,39 @@ export default function ext(_galaxy) {
             type: 'items',
             component: 'accordion',
             items: {
+                // ---------------------------------------------------------------
+                // Theme preset
+                // ---------------------------------------------------------------
+                themeSection: {
+                    type: 'items',
+                    label: 'Theme',
+                    items: {
+                        themeInfo: {
+                            component: 'text',
+                            label: 'Select a theme preset to apply a complete color palette. You can still tweak individual colors in the sections below.',
+                        },
+                        themePreset: {
+                            ref: 'themePreset',
+                            label: 'Theme preset',
+                            type: 'string',
+                            component: 'dropdown',
+                            defaultValue: '',
+                            options: [
+                                { value: '', label: '(No preset — custom colors)' },
+                                ...Object.entries(PRESET_LABELS).map(([key, label]) => ({
+                                    value: key,
+                                    label,
+                                })),
+                            ],
+                            change: (data) => {
+                                if (data.themePreset) {
+                                    applyPreset(data, data.themePreset);
+                                }
+                            },
+                        },
+                    },
+                },
+
                 // ---------------------------------------------------------------
                 // Language override
                 // ---------------------------------------------------------------
