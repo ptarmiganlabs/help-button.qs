@@ -144,6 +144,33 @@ Global dialog strings are stored as two root-level objects in the extension prop
 }
 ```
 
+Other properties like `buttonLabel`, `buttonTooltip`, `popupTitle`, and `editPlaceholderTitle` are stored at the root level of the extension properties object.
+
+```json
+{
+  "bugReportStrings": {
+    "title": "",
+    "descriptionLabel": "",
+    "descriptionPlaceholder": "",
+    "submitButton": "",
+    "cancelButton": "",
+    "successMessage": "",
+    "errorMessage": "",
+    "loadingMessage": ""
+  },
+  "feedbackStrings": {
+    "title": "",
+    "ratingLabel": "",
+    "commentLabel": "",
+    "commentPlaceholder": "",
+    "submitButton": "",
+    "cancelButton": "",
+    "successMessage": "",
+    "errorMessage": ""
+  }
+}
+```
+
 At runtime, the toolbar injector merges global strings with any per-item `dialogStrings` before passing the config to the dialog renderer. Per-item values (when non-empty) win over global values.
 
 ---

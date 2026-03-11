@@ -10,6 +10,7 @@
 - **Extensive Customization**: Configure colors, icons, languages, and menu actions directly from the Qlik Sense property panel.
 - **Theme Presets**: Apply one of four predefined color palettes (Default, Lean Green, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, and menu items to your corporate brand.
 - **Context-Aware Links**: Dynamically pass application context (such as App ID, Sheet ID, and user details) to outbound links using template tags.
+- **Built-in Translations**: Supports automatic UI translation into multiple languages based on Qlik Sense locale, with full override capabilities via an expandable "Language & Translations" section in the property panel (see [language & translations docs](docs/language-and-translations.md) for details).
 
 ## Audience
 
