@@ -16,6 +16,9 @@ export default {
     subtitle: '',
     footnote: '',
 
+    // -- Theme preset (empty = custom / no preset) --
+    themePreset: '',
+
     // -- Language override ('auto' = detect from UI) --
     language: 'auto',
 
