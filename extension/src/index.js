@@ -20,7 +20,7 @@ import {
 import ext from './ext';
 import definition from './object-properties';
 import { detectPlatform, getPlatformAdapter } from './platform/index';
-import { injectHelpButton, destroyHelpButton } from './ui/toolbar-injector';
+import { injectHelpButton } from './ui/toolbar-injector';
 import { makeSvg } from './ui/icons';
 import { fetchTemplateContext } from './util/template-fields';
 import { resolveText, setForceLocale } from './i18n/index';
@@ -128,8 +128,8 @@ export default function supernova(galaxy) {
                         aboutBtn.addEventListener('click', () => openAboutModal());
                     }
 
-                    // Remove toolbar button while editing (clear config so watcher won't re-inject)
-                    destroyHelpButton({ clearConfig: true });
+                    // Keep toolbar button visible while editing
+                    injectHelpButton(layout, adapter, platform);
 
                     return () => {
                         if (resizeObserver) resizeObserver.disconnect();
