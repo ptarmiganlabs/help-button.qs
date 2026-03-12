@@ -707,20 +707,65 @@ export default function ext(_galaxy) {
                                         item.action === 'feedback' &&
                                         item.feedback?.enableComment !== false,
                                 },
-                                feedbackCollectFields: {
-                                    ref: 'feedback.collectFields',
-                                    label: 'Context fields (comma-separated)',
-                                    type: 'string',
-                                    defaultValue:
-                                        'userName,appId,sheetId,urlPath,platform,timestamp',
-                                    show: (item) => item.action === 'feedback',
-                                },
                                 feedbackDialogTitle: {
                                     ref: 'feedback.dialogStrings.title',
                                     label: 'Dialog title override (overrides global)',
                                     type: 'string',
                                     defaultValue: '',
                                     show: (item) => item.action === 'feedback',
+                                },
+
+                                // -- Context field toggles (expandable) --
+                                feedbackContextFields: {
+                                    component: 'expandable-items',
+                                    label: 'Context Fields',
+                                    show: (item) => item.action === 'feedback',
+                                    items: {
+                                        dialogFieldsSection: {
+                                            type: 'items',
+                                            label: 'Show in Dialog',
+                                            items: {
+                                                dfInfo: { component: 'text', label: 'Fields visible to the user in the feedback dialog.' },
+                                                dfUserName:   { ref: 'feedback.dialogFields.userName',   label: 'User Name',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfPlatform:   { ref: 'feedback.dialogFields.platform',   label: 'Platform',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfAppId:      { ref: 'feedback.dialogFields.appId',      label: 'App ID',      type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfSheetId:    { ref: 'feedback.dialogFields.sheetId',    label: 'Sheet ID',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfUrlPath:    { ref: 'feedback.dialogFields.urlPath',    label: 'URL Path',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfTimestamp:  { ref: 'feedback.dialogFields.timestamp',  label: 'Timestamp',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfUserId:     { ref: 'feedback.dialogFields.userId',     label: 'User ID',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfUserDir:    { ref: 'feedback.dialogFields.userDirectory', label: 'User Directory', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfSenseVer:   { ref: 'feedback.dialogFields.senseVersion', label: 'Qlik Sense Version', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfBrowser:    { ref: 'feedback.dialogFields.browser',    label: 'Browser',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfTenantId:   { ref: 'feedback.dialogFields.tenantId',   label: 'Tenant ID',   type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfStatus:     { ref: 'feedback.dialogFields.status',     label: 'Status',      type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfPicture:    { ref: 'feedback.dialogFields.picture',    label: 'Picture',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfZoneinfo:   { ref: 'feedback.dialogFields.preferredZoneinfo', label: 'Preferred Zone Info', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                dfRoles:      { ref: 'feedback.dialogFields.roles',      label: 'Roles',       type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                            },
+                                        },
+                                        payloadFieldsSection: {
+                                            type: 'items',
+                                            label: 'Include in Payload',
+                                            items: {
+                                                pfInfo: { component: 'text', label: 'Fields included in the webhook POST payload (may differ from dialog).' },
+                                                pfUserName:   { ref: 'feedback.payloadFields.userName',   label: 'User Name',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfPlatform:   { ref: 'feedback.payloadFields.platform',   label: 'Platform',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfAppId:      { ref: 'feedback.payloadFields.appId',      label: 'App ID',      type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfSheetId:    { ref: 'feedback.payloadFields.sheetId',    label: 'Sheet ID',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfUrlPath:    { ref: 'feedback.payloadFields.urlPath',    label: 'URL Path',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfTimestamp:  { ref: 'feedback.payloadFields.timestamp',  label: 'Timestamp',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfUserId:     { ref: 'feedback.payloadFields.userId',     label: 'User ID',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfUserDir:    { ref: 'feedback.payloadFields.userDirectory', label: 'User Directory', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfSenseVer:   { ref: 'feedback.payloadFields.senseVersion', label: 'Qlik Sense Version', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfBrowser:    { ref: 'feedback.payloadFields.browser',    label: 'Browser',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfTenantId:   { ref: 'feedback.payloadFields.tenantId',   label: 'Tenant ID',   type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfStatus:     { ref: 'feedback.payloadFields.status',     label: 'Status',      type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfPicture:    { ref: 'feedback.payloadFields.picture',    label: 'Picture',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfZoneinfo:   { ref: 'feedback.payloadFields.preferredZoneinfo', label: 'Preferred Zone Info', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                pfRoles:      { ref: 'feedback.payloadFields.roles',      label: 'Roles',       type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                            },
+                                        },
+                                    },
                                 },
 
                                 // -- Per-item colors --

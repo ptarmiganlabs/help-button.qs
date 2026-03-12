@@ -36,8 +36,21 @@ const DEFAULT_FIELD_LABELS = {
     roles: 'Roles',
 };
 
-// Fields that should render side-by-side in a paired row.
-const PAIRED_FIELDS = { userDirectory: 'userId' };
+// Canonical display order for context fields.
+const FIELD_ORDER = [
+    'userName', 'platform', 'appId', 'sheetId', 'urlPath', 'timestamp',
+    'userId', 'userDirectory', 'senseVersion', 'browser',
+    'tenantId', 'status', 'picture', 'preferredZoneinfo', 'roles',
+];
+
+// Pairs of fields that should render side-by-side in a single row.
+// Each entry maps left → right.  When the left field is rendered the right
+// field is pulled alongside it (if both are enabled).
+const PAIRED_FIELDS = {
+    userName: 'platform',
+    appId: 'sheetId',
+    userDirectory: 'userId',
+};
 
 /**
  * @typedef {object} FeedbackConfig
@@ -75,13 +88,33 @@ export function openFeedbackDialog(config, platformType) {
         dialogStrings = {},
     } = config;
 
-    // collectFields can be a comma-separated string or an array
-    let collectFields;
-    if (typeof config.collectFields === 'string') {
-        collectFields = config.collectFields.split(',').map((s) => s.trim()).filter(Boolean);
+    // Derive which fields to show in the dialog and which to send in the payload.
+    // New config uses dialogFields / payloadFields objects; fall back to legacy
+    // comma-separated collectFields string for backward compatibility.
+    let dialogFields;
+    let payloadFields;
+
+    const defaultOnFields = ['userName', 'appId', 'sheetId', 'urlPath', 'platform', 'timestamp'];
+
+    if (config.dialogFields && typeof config.dialogFields === 'object') {
+        dialogFields = FIELD_ORDER.filter((f) => config.dialogFields[f]);
+    } else if (typeof config.collectFields === 'string') {
+        dialogFields = config.collectFields.split(',').map((s) => s.trim()).filter(Boolean);
+    } else if (Array.isArray(config.collectFields)) {
+        dialogFields = config.collectFields;
     } else {
-        collectFields = config.collectFields || ['userName', 'appId', 'sheetId', 'urlPath'];
+        dialogFields = defaultOnFields;
     }
+
+    if (config.payloadFields && typeof config.payloadFields === 'object') {
+        payloadFields = FIELD_ORDER.filter((f) => config.payloadFields[f]);
+    } else {
+        // Legacy: payload mirrors dialog fields
+        payloadFields = dialogFields;
+    }
+
+    // Union of both sets — we need to gather data for all of them.
+    const allFields = [...new Set([...dialogFields, ...payloadFields])];
 
     // Remove any existing dialog
     const existing = document.getElementById('hbqs-feedback-overlay');
@@ -166,19 +199,18 @@ export function openFeedbackDialog(config, platformType) {
     let commentTextarea = null;
 
     // Build the form once context is gathered
-    gatherContextData(collectFields, platformType).then((context) => {
+    gatherContextData(allFields, platformType).then((context) => {
         // --- Context fields (read-only) ---
-        const skipFields = {};
-        for (const pf of Object.keys(PAIRED_FIELDS)) {
-            skipFields[PAIRED_FIELDS[pf]] = true;
-        }
+        // Track fields already rendered as the right side of a pair.
+        const rendered = new Set();
 
-        for (const field of collectFields) {
+        for (const field of dialogFields) {
+            if (rendered.has(field)) continue;
             if (context[field] === undefined) continue;
-            if (skipFields[field]) continue;
 
-            if (PAIRED_FIELDS[field]) {
-                const pairField = PAIRED_FIELDS[field];
+            const pairRight = PAIRED_FIELDS[field];
+            if (pairRight && dialogFields.includes(pairRight) && context[pairRight] !== undefined) {
+                // Render both fields side-by-side
                 const row = document.createElement('div');
                 row.className = 'hbqs-bug-report-field-row';
 
@@ -187,17 +219,17 @@ export function openFeedbackDialog(config, platformType) {
                 leftWrap.appendChild(makeReadonlyField(field, context[field]));
                 row.appendChild(leftWrap);
 
-                if (context[pairField] !== undefined) {
-                    const rightWrap = document.createElement('div');
-                    rightWrap.className = 'hbqs-bug-report-field-row-item';
-                    rightWrap.appendChild(makeReadonlyField(pairField, context[pairField]));
-                    row.appendChild(rightWrap);
-                }
+                const rightWrap = document.createElement('div');
+                rightWrap.className = 'hbqs-bug-report-field-row-item';
+                rightWrap.appendChild(makeReadonlyField(pairRight, context[pairRight]));
+                row.appendChild(rightWrap);
 
                 body.appendChild(row);
+                rendered.add(pairRight);
             } else {
                 body.appendChild(makeReadonlyField(field, context[field]));
             }
+            rendered.add(field);
         }
 
         // --- Star rating ---
@@ -289,6 +321,8 @@ export function openFeedbackDialog(config, platformType) {
                     updateSubmitState();
                 });
             }
+
+            body.appendChild(commentGroup);
         }
 
         // --- Footer buttons ---
@@ -335,9 +369,17 @@ export function openFeedbackDialog(config, platformType) {
                 '<span>' + escapeHtml(submitText) + '</span>';
 
             try {
+                // Build payload context using only payloadFields.
+                const payloadContext = {};
+                for (const f of payloadFields) {
+                    if (context[f] !== undefined) {
+                        payloadContext[f] = context[f];
+                    }
+                }
+
                 const payload = {
                     timestamp: new Date().toISOString(),
-                    context,
+                    context: payloadContext,
                 };
 
                 if (enableRating) {
