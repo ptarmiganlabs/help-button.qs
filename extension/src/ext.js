@@ -586,141 +586,138 @@ export default function ext(_galaxy) {
                                     ],
                                 },
 
-                                // -- Bug Report inline fields --
-                                bugReportDivider: {
-                                    component: 'text',
-                                    label: '── Bug Report Settings ──',
-                                    show: (item) => item.action === 'bugReport',
-                                },
-                                webhookUrl: {
-                                    ref: 'bugReport.webhookUrl',
-                                    label: 'Webhook URL (POST endpoint)',
-                                    type: 'string',
-                                    defaultValue: '',
-                                    show: (item) => item.action === 'bugReport',
-                                },
-                                authStrategy: {
-                                    ref: 'bugReport.authStrategy',
-                                    label: 'Authentication',
-                                    type: 'string',
-                                    component: 'dropdown',
-                                    defaultValue: 'none',
-                                    options: [
-                                        { value: 'none', label: 'None' },
-                                        { value: 'header', label: 'Authorization header' },
-                                        { value: 'sense-session', label: 'Sense session (XRF key)' },
-                                        { value: 'custom', label: 'Custom headers' },
-                                    ],
-                                    show: (item) => item.action === 'bugReport',
-                                },
-                                authToken: {
-                                    ref: 'bugReport.authToken',
-                                    label: 'Bearer token',
-                                    type: 'string',
-                                    defaultValue: '',
-                                    show: (item) =>
-                                        item.action === 'bugReport' &&
-                                        item.bugReport?.authStrategy === 'header',
-                                },
-                                collectFields: {
-                                    ref: 'bugReport.collectFields',
-                                    label: 'Context fields (comma-separated)',
-                                    type: 'string',
-                                    defaultValue:
-                                        'userDirectory,userId,senseVersion,appId,sheetId,urlPath',
-                                    show: (item) => item.action === 'bugReport',
-                                },
-                                dialogTitle: {
-                                    ref: 'bugReport.dialogStrings.title',
-                                    label: 'Dialog title override (overrides global)',
-                                    type: 'string',
-                                    defaultValue: '',
-                                    show: (item) => item.action === 'bugReport',
-                                },
-
-                                // -- Feedback inline fields --
-                                feedbackDivider: {
-                                    component: 'text',
-                                    label: '── Feedback Settings ──',
-                                    show: (item) => item.action === 'feedback',
-                                },
-                                feedbackWebhookUrl: {
-                                    ref: 'feedback.webhookUrl',
-                                    label: 'Webhook URL (POST endpoint)',
-                                    type: 'string',
-                                    defaultValue: '',
-                                    show: (item) => item.action === 'feedback',
-                                },
-                                feedbackAuthStrategy: {
-                                    ref: 'feedback.authStrategy',
-                                    label: 'Authentication',
-                                    type: 'string',
-                                    component: 'dropdown',
-                                    defaultValue: 'none',
-                                    options: [
-                                        { value: 'none', label: 'None' },
-                                        { value: 'header', label: 'Authorization header' },
-                                        { value: 'sense-session', label: 'Sense session (XRF key)' },
-                                        { value: 'custom', label: 'Custom headers' },
-                                    ],
-                                    show: (item) => item.action === 'feedback',
-                                },
-                                feedbackAuthToken: {
-                                    ref: 'feedback.authToken',
-                                    label: 'Bearer token',
-                                    type: 'string',
-                                    defaultValue: '',
-                                    show: (item) =>
-                                        item.action === 'feedback' &&
-                                        item.feedback?.authStrategy === 'header',
-                                },
-                                feedbackEnableRating: {
-                                    ref: 'feedback.enableRating',
-                                    label: 'Show star rating (1-5)',
-                                    type: 'boolean',
-                                    component: 'switch',
-                                    defaultValue: true,
-                                    options: [
-                                        { value: true, label: 'On' },
-                                        { value: false, label: 'Off' },
-                                    ],
-                                    show: (item) => item.action === 'feedback',
-                                },
-                                feedbackEnableComment: {
-                                    ref: 'feedback.enableComment',
-                                    label: 'Show free-text comment field',
-                                    type: 'boolean',
-                                    component: 'switch',
-                                    defaultValue: true,
-                                    options: [
-                                        { value: true, label: 'On' },
-                                        { value: false, label: 'Off' },
-                                    ],
-                                    show: (item) => item.action === 'feedback',
-                                },
-                                feedbackCommentMaxLength: {
-                                    ref: 'feedback.commentMaxLength',
-                                    label: 'Max comment length (characters)',
-                                    type: 'number',
-                                    defaultValue: 500,
-                                    show: (item) =>
-                                        item.action === 'feedback' &&
-                                        item.feedback?.enableComment !== false,
-                                },
-                                feedbackDialogTitle: {
-                                    ref: 'feedback.dialogStrings.title',
-                                    label: 'Dialog title override (overrides global)',
-                                    type: 'string',
-                                    defaultValue: '',
-                                    show: (item) => item.action === 'feedback',
-                                },
-
-                                // -- Context field toggles (expandable) --
-                                feedbackContextFields: {
+                                // -- Bug Report Settings (expandable) --
+                                bugReportSettings: {
                                     component: 'expandable-items',
-                                    label: 'Context Fields',
+                                    label: 'Bug Report Settings',
+                                    show: (item) => item.action === 'bugReport',
+                                    items: {
+                                        bugReportMain: {
+                                            type: 'items',
+                                            label: 'Webhook & Auth',
+                                            items: {
+                                                webhookUrl: {
+                                                    ref: 'bugReport.webhookUrl',
+                                                    label: 'Webhook URL (POST endpoint)',
+                                                    type: 'string',
+                                                    defaultValue: '',
+                                                },
+                                                authStrategy: {
+                                                    ref: 'bugReport.authStrategy',
+                                                    label: 'Authentication',
+                                                    type: 'string',
+                                                    component: 'dropdown',
+                                                    defaultValue: 'none',
+                                                    options: [
+                                                        { value: 'none', label: 'None' },
+                                                        { value: 'header', label: 'Authorization header' },
+                                                        { value: 'sense-session', label: 'Sense session (XRF key)' },
+                                                        { value: 'custom', label: 'Custom headers' },
+                                                    ],
+                                                },
+                                                authToken: {
+                                                    ref: 'bugReport.authToken',
+                                                    label: 'Bearer token',
+                                                    type: 'string',
+                                                    defaultValue: '',
+                                                    show: (item) => item.bugReport?.authStrategy === 'header',
+                                                },
+                                                collectFields: {
+                                                    ref: 'bugReport.collectFields',
+                                                    label: 'Context fields (comma-separated)',
+                                                    type: 'string',
+                                                    defaultValue: 'userDirectory,userId,senseVersion,appId,sheetId,urlPath',
+                                                },
+                                                dialogTitle: {
+                                                    ref: 'bugReport.dialogStrings.title',
+                                                    label: 'Dialog title override (overrides global)',
+                                                    type: 'string',
+                                                    defaultValue: '',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+
+                                // -- Feedback Settings (expandable) --
+                                feedbackSettings: {
+                                    component: 'expandable-items',
+                                    label: 'Feedback Settings',
                                     show: (item) => item.action === 'feedback',
                                     items: {
+                                        feedbackMain: {
+                                            type: 'items',
+                                            label: 'Webhook & Auth',
+                                            items: {
+                                                feedbackWebhookUrl: {
+                                                    ref: 'feedback.webhookUrl',
+                                                    label: 'Webhook URL (POST endpoint)',
+                                                    type: 'string',
+                                                    defaultValue: '',
+                                                },
+                                                feedbackAuthStrategy: {
+                                                    ref: 'feedback.authStrategy',
+                                                    label: 'Authentication',
+                                                    type: 'string',
+                                                    component: 'dropdown',
+                                                    defaultValue: 'none',
+                                                    options: [
+                                                        { value: 'none', label: 'None' },
+                                                        { value: 'header', label: 'Authorization header' },
+                                                        { value: 'sense-session', label: 'Sense session (XRF key)' },
+                                                        { value: 'custom', label: 'Custom headers' },
+                                                    ],
+                                                },
+                                                feedbackAuthToken: {
+                                                    ref: 'feedback.authToken',
+                                                    label: 'Bearer token',
+                                                    type: 'string',
+                                                    defaultValue: '',
+                                                    show: (item) => item.feedback?.authStrategy === 'header',
+                                                },
+                                            },
+                                        },
+                                        feedbackDialog: {
+                                            type: 'items',
+                                            label: 'Dialog Options',
+                                            items: {
+                                                feedbackEnableRating: {
+                                                    ref: 'feedback.enableRating',
+                                                    label: 'Show star rating (1-5)',
+                                                    type: 'boolean',
+                                                    component: 'switch',
+                                                    defaultValue: true,
+                                                    options: [
+                                                        { value: true, label: 'On' },
+                                                        { value: false, label: 'Off' },
+                                                    ],
+                                                },
+                                                feedbackEnableComment: {
+                                                    ref: 'feedback.enableComment',
+                                                    label: 'Show free-text comment field',
+                                                    type: 'boolean',
+                                                    component: 'switch',
+                                                    defaultValue: true,
+                                                    options: [
+                                                        { value: true, label: 'On' },
+                                                        { value: false, label: 'Off' },
+                                                    ],
+                                                },
+                                                feedbackCommentMaxLength: {
+                                                    ref: 'feedback.commentMaxLength',
+                                                    label: 'Max comment length (characters)',
+                                                    type: 'number',
+                                                    defaultValue: 500,
+                                                    show: (item) => item.feedback?.enableComment !== false,
+                                                },
+                                                feedbackDialogTitle: {
+                                                    ref: 'feedback.dialogStrings.title',
+                                                    label: 'Dialog title override (overrides global)',
+                                                    type: 'string',
+                                                    defaultValue: '',
+                                                },
+                                            },
+                                        },
                                         dialogFieldsSection: {
                                             type: 'items',
                                             label: 'Show in Dialog',
@@ -768,38 +765,46 @@ export default function ext(_galaxy) {
                                     },
                                 },
 
-                                // -- Per-item colors --
-                                itemColorsHeader: {
-                                    component: 'text',
-                                    label: '── Item Colors ──',
-                                },
-                                iconColor: {
-                                    ref: 'iconColor',
-                                    label: 'Icon',
-                                    type: 'object',
-                                    component: 'color-picker',
-                                    defaultValue: toPickerObj('#165a9b'),
-                                },
-                                bgColor: {
-                                    ref: 'bgColor',
-                                    label: 'Background',
-                                    type: 'object',
-                                    component: 'color-picker',
-                                    defaultValue: toPickerObj('#f0f6fc'),
-                                },
-                                bgColorHover: {
-                                    ref: 'bgColorHover',
-                                    label: 'Hover background',
-                                    type: 'object',
-                                    component: 'color-picker',
-                                    defaultValue: toPickerObj('#dbeafe'),
-                                },
-                                textColor: {
-                                    ref: 'textColor',
-                                    label: 'Text',
-                                    type: 'object',
-                                    component: 'color-picker',
-                                    defaultValue: toPickerObj('#0c3256'),
+                                // -- Per-item colors (expandable) --
+                                itemColors: {
+                                    component: 'expandable-items',
+                                    label: 'Item Colors',
+                                    items: {
+                                        itemColorsMain: {
+                                            type: 'items',
+                                            label: 'Colors',
+                                            items: {
+                                                iconColor: {
+                                                    ref: 'iconColor',
+                                                    label: 'Icon',
+                                                    type: 'object',
+                                                    component: 'color-picker',
+                                                    defaultValue: toPickerObj('#165a9b'),
+                                                },
+                                                bgColor: {
+                                                    ref: 'bgColor',
+                                                    label: 'Background',
+                                                    type: 'object',
+                                                    component: 'color-picker',
+                                                    defaultValue: toPickerObj('#f0f6fc'),
+                                                },
+                                                bgColorHover: {
+                                                    ref: 'bgColorHover',
+                                                    label: 'Hover background',
+                                                    type: 'object',
+                                                    component: 'color-picker',
+                                                    defaultValue: toPickerObj('#dbeafe'),
+                                                },
+                                                textColor: {
+                                                    ref: 'textColor',
+                                                    label: 'Text',
+                                                    type: 'object',
+                                                    component: 'color-picker',
+                                                    defaultValue: toPickerObj('#0c3256'),
+                                                },
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },

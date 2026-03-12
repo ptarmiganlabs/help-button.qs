@@ -50,6 +50,125 @@ const logger = winston.createLogger({
 });
 
 // ---------------------------------------------------------------------------
+// In-memory store for received submissions (most-recent-first, capped)
+// ---------------------------------------------------------------------------
+const MAX_STORED = 50;
+const bugReports = [];
+const feedbackEntries = [];
+
+function storeEntry(list, entry) {
+  list.unshift(entry);
+  if (list.length > MAX_STORED) list.length = MAX_STORED;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers — format context fields for console output
+// ---------------------------------------------------------------------------
+
+/**
+ * Pretty-print all context fields in a key: value format.
+ * Adapts to whatever fields are present rather than hard-coding.
+ */
+function formatContextFields(context) {
+  if (!context || typeof context !== 'object') return '  (no context)';
+  const lines = [];
+  for (const [key, value] of Object.entries(context)) {
+    // Pad key for alignment (right-align keys in a 20-char column)
+    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+    lines.push(`  ${label.padStart(22)}: ${value}`);
+  }
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
+// HTML helpers — build a dashboard page from stored entries
+// ---------------------------------------------------------------------------
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderContextTable(context) {
+  if (!context || typeof context !== 'object' || Object.keys(context).length === 0) {
+    return '<p class="empty">No context fields</p>';
+  }
+  let html = '<table class="ctx">';
+  for (const [key, value] of Object.entries(context)) {
+    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+    html += `<tr><td class="ctx-key">${escapeHtml(label)}</td><td class="ctx-val">${escapeHtml(String(value))}</td></tr>`;
+  }
+  html += '</table>';
+  return html;
+}
+
+function renderStars(rating) {
+  if (typeof rating !== 'number') return '';
+  return '<span class="stars">' + '★'.repeat(rating) + '☆'.repeat(5 - rating) + ` (${rating}/5)</span>`;
+}
+
+function renderDashboard() {
+  const bugRows = bugReports.map((b) => {
+    const desc = b.description
+      ? `<div class="desc">${escapeHtml(b.description.length > 200 ? b.description.substring(0, 200) + '…' : b.description)}</div>`
+      : '';
+    return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span><span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${desc}</div>`;
+  }).join('');
+
+  const fbRows = feedbackEntries.map((f) => {
+    const rating = f.rating ? `<div class="rating">${renderStars(f.rating)}</div>` : '';
+    const comment = f.comment
+      ? `<div class="desc">${escapeHtml(f.comment.length > 200 ? f.comment.substring(0, 200) + '…' : f.comment)}</div>`
+      : '';
+    return `<div class="card fb"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span><span class="ts">${escapeHtml(f.receivedAt)}</span></div>${renderContextTable(f.context)}${rating}${comment}</div>`;
+  }).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HelpButton.qs Demo Server</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Source Sans Pro',system-ui,sans-serif;background:#f0f2f5;color:#1a1a1a;padding:24px}
+h1{font-size:22px;margin-bottom:4px;color:#0c3256}
+.subtitle{color:#6b7280;font-size:13px;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.col h2{font-size:16px;margin-bottom:12px;color:#374151;border-bottom:2px solid #d1d5db;padding-bottom:6px}
+.card{background:#fff;border-radius:8px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.badge{font-size:11px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;letter-spacing:.04em}
+.bug-badge{background:#fef2f2;color:#dc2626}
+.fb-badge{background:#f5f3ff;color:#7c3aed}
+.ts{font-size:11px;color:#9ca3af}
+.ctx{width:100%;border-collapse:collapse;margin-bottom:6px}
+.ctx td{padding:3px 6px;font-size:12px;border-bottom:1px solid #f3f4f6}
+.ctx-key{font-weight:600;color:#4b5563;white-space:nowrap;width:1%;padding-right:12px}
+.ctx-val{color:#6b7280;word-break:break-all}
+.desc{font-size:13px;color:#374151;background:#f9fafb;padding:8px;border-radius:4px;margin-top:6px;white-space:pre-wrap}
+.rating{margin-top:4px}
+.stars{font-size:16px;color:#f59e0b}
+.empty{font-size:12px;color:#9ca3af;font-style:italic}
+.no-data{text-align:center;padding:32px;color:#9ca3af;font-size:13px}
+</style>
+</head>
+<body>
+<h1>HelpButton.qs Demo Server</h1>
+<p class="subtitle">Received submissions (last ${MAX_STORED} of each type, most recent first). Refresh to update.</p>
+<div class="grid">
+<div class="col"><h2>Bug Reports (${bugReports.length})</h2>${bugRows || '<div class="no-data">No bug reports received yet</div>'}</div>
+<div class="col"><h2>Feedback (${feedbackEntries.length})</h2>${fbRows || '<div class="no-data">No feedback received yet</div>'}</div>
+</div>
+</body>
+</html>`;
+}
+
+// ---------------------------------------------------------------------------
 // Express app
 // ---------------------------------------------------------------------------
 const app = express();
@@ -71,6 +190,14 @@ app.use((req, res, next) => {
 // ---------------------------------------------------------------------------
 
 /**
+ * Dashboard — HTML view of received submissions.
+ * GET /
+ */
+app.get('/', (_req, res) => {
+  res.type('html').send(renderDashboard());
+});
+
+/**
  * Health check endpoint.
  * GET /health
  */
@@ -82,20 +209,8 @@ app.get('/health', (req, res) => {
  * Bug report endpoint.
  * POST /api/bug-reports
  *
- * Expected payload:
- * {
- *   "timestamp": "2026-02-14T10:30:45.123Z",
- *   "context": {
- *     "userName": "Göran Sander",
- *     "userDirectory": "LAB",
- *     "userId": "goran",
- *     "senseVersion": "November 2025 (v14.254.6)",
- *     "appId": "4634fbc8-65eb-4aff-a686-34e75326e534",
- *     "sheetId": "tAyTET",
- *     "urlPath": "/sense/app/4634fbc8-.../sheet/tAyTET/state/analysis"
- *   },
- *   "description": "Free-text description of the issue"
- * }
+ * Accepts any JSON payload with { timestamp, context, description }.
+ * Context fields are displayed adaptively — whatever is sent is shown.
  */
 app.post('/api/bug-reports', (req, res) => {
   const { timestamp, context, description } = req.body;
@@ -113,26 +228,24 @@ app.post('/api/bug-reports', (req, res) => {
     return res.status(400).json({ status: 'error', errors });
   }
 
-  // --- Log the bug report ---
-  const user = context.userName || context.userId || '(unknown user)';
-  const userDir = context.userDirectory ? `${context.userDirectory}\\` : '';
-  const userId = context.userId || '';
-  const app = context.appId || '(no app)';
-  const sheet = context.sheetId || '(no sheet)';
-  const version = context.senseVersion || '(unknown version)';
+  // --- Store ---
+  const entry = {
+    id: `br-${Date.now()}`,
+    receivedAt: new Date().toISOString(),
+    context,
+    description,
+  };
+  storeEntry(bugReports, entry);
 
-  // Truncate description for the summary line (max 80 chars)
+  // --- Log (adaptive — shows whatever context fields are present) ---
   const descExcerpt = description.length > 80
     ? description.substring(0, 80) + '…'
     : description;
 
   logger.info('─'.repeat(72));
   logger.info(`BUG REPORT received at ${timestamp}`);
-  logger.info(`  User:      ${user} (${userDir}${userId})`);
-  logger.info(`  Version:   ${version}`);
-  logger.info(`  App:       ${app}`);
-  logger.info(`  Sheet:     ${sheet}`);
-  logger.info(`  Description: ${descExcerpt}`);
+  logger.info(formatContextFields(context));
+  logger.info(`        Description: ${descExcerpt}`);
   logger.info('─'.repeat(72));
 
   // Full payload at verbose level for debugging
@@ -141,7 +254,7 @@ app.post('/api/bug-reports', (req, res) => {
   res.json({
     status: 'ok',
     message: 'Bug report received',
-    id: `br-${Date.now()}`,
+    id: entry.id,
   });
 });
 
@@ -149,20 +262,8 @@ app.post('/api/bug-reports', (req, res) => {
  * User feedback endpoint.
  * POST /api/feedback
  *
- * Expected payload:
- * {
- *   "timestamp": "2026-02-14T10:30:45.123Z",
- *   "context": {
- *     "userName": "Göran Sander",
- *     "appId": "4634fbc8-65eb-4aff-a686-34e75326e534",
- *     "sheetId": "tAyTET",
- *     "urlPath": "/sense/app/4634fbc8-.../sheet/tAyTET/state/analysis",
- *     "platform": "client-managed",
- *     "timestamp": "3/8/2026, 12:00:00 PM"
- *   },
- *   "rating": 4,
- *   "comment": "Great app, very useful dashboards!"
- * }
+ * Accepts any JSON payload with { timestamp, context, rating?, comment? }.
+ * Context fields are displayed adaptively — whatever is sent is shown.
  */
 app.post('/api/feedback', (req, res) => {
   const { timestamp, context, rating, comment } = req.body;
@@ -189,24 +290,28 @@ app.post('/api/feedback', (req, res) => {
     return res.status(400).json({ status: 'error', errors });
   }
 
-  // --- Log the feedback ---
-  const user = context.userName || context.userId || '(unknown user)';
-  const appId = context.appId || '(no app)';
-  const sheet = context.sheetId || '(no sheet)';
+  // --- Store ---
+  const entry = {
+    id: `fb-${Date.now()}`,
+    receivedAt: new Date().toISOString(),
+    context,
+    rating: hasRating ? rating : null,
+    comment: hasComment ? comment : null,
+  };
+  storeEntry(feedbackEntries, entry);
 
+  // --- Log (adaptive — shows whatever context fields are present) ---
   const commentExcerpt = hasComment
     ? (comment.length > 80 ? comment.substring(0, 80) + '…' : comment)
     : '(no comment)';
 
   logger.info('─'.repeat(72));
   logger.info(`FEEDBACK received at ${timestamp}`);
-  logger.info(`  User:      ${user}`);
-  logger.info(`  App:       ${appId}`);
-  logger.info(`  Sheet:     ${sheet}`);
+  logger.info(formatContextFields(context));
   if (hasRating) {
-    logger.info(`  Rating:    ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5)`);
+    logger.info(`                Rating: ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5)`);
   }
-  logger.info(`  Comment:   ${commentExcerpt}`);
+  logger.info(`               Comment: ${commentExcerpt}`);
   logger.info('─'.repeat(72));
 
   // Full payload at verbose level for debugging
@@ -215,7 +320,7 @@ app.post('/api/feedback', (req, res) => {
   res.json({
     status: 'ok',
     message: 'Feedback received',
-    id: `fb-${Date.now()}`,
+    id: entry.id,
   });
 });
 

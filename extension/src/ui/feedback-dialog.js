@@ -96,8 +96,19 @@ export function openFeedbackDialog(config, platformType) {
 
     const defaultOnFields = ['userName', 'appId', 'sheetId', 'urlPath', 'platform', 'timestamp'];
 
+    // Helper: resolve a field-toggle object where missing keys fall back to
+    // their default values. This handles existing extension instances that were
+    // saved before these toggle properties were added — the property panel
+    // displays defaultValue but the stored data may not contain the key yet.
+    function resolveFieldToggle(obj) {
+        return FIELD_ORDER.filter((f) => {
+            if (f in obj) return obj[f];
+            return defaultOnFields.includes(f);
+        });
+    }
+
     if (config.dialogFields && typeof config.dialogFields === 'object') {
-        dialogFields = FIELD_ORDER.filter((f) => config.dialogFields[f]);
+        dialogFields = resolveFieldToggle(config.dialogFields);
     } else if (typeof config.collectFields === 'string') {
         dialogFields = config.collectFields.split(',').map((s) => s.trim()).filter(Boolean);
     } else if (Array.isArray(config.collectFields)) {
@@ -107,7 +118,7 @@ export function openFeedbackDialog(config, platformType) {
     }
 
     if (config.payloadFields && typeof config.payloadFields === 'object') {
-        payloadFields = FIELD_ORDER.filter((f) => config.payloadFields[f]);
+        payloadFields = resolveFieldToggle(config.payloadFields);
     } else {
         // Legacy: payload mirrors dialog fields
         payloadFields = dialogFields;
