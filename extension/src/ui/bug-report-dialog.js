@@ -37,7 +37,18 @@ const DEFAULT_FIELD_LABELS = {
 
 // Fields that should render side-by-side in a paired row.
 // Key = first field, value = second field.
-const PAIRED_FIELDS = { userDirectory: 'userId' };
+const PAIRED_FIELDS = {
+    userName: 'platform',
+    appId: 'sheetId',
+    userDirectory: 'userId',
+};
+
+// Canonical display order for context fields.
+const FIELD_ORDER = [
+    'userName', 'platform', 'appId', 'sheetId', 'urlPath', 'timestamp',
+    'userId', 'userDirectory', 'senseVersion', 'browser',
+    'tenantId', 'status', 'picture', 'preferredZoneinfo', 'roles',
+];
 
 /**
  * @typedef {object} BugReportConfig
@@ -67,17 +78,47 @@ export function openBugReportDialog(config, platformType) {
         authHeaderName = 'Authorization',
         authHeaderValue = '',
         customHeaders = {},
+        enableSeverity = true,
+        descriptionMaxLength = 1000,
         dialogStrings = {},
     } = config;
 
-    // collectFields can be a comma-separated string (from property panel)
-    // or an array (legacy). Normalise to an array.
-    let collectFields;
-    if (typeof config.collectFields === 'string') {
-        collectFields = config.collectFields.split(',').map((s) => s.trim()).filter(Boolean);
-    } else {
-        collectFields = config.collectFields || ['userName', 'appId', 'sheetId', 'urlPath'];
+    // Derive which fields to show in the dialog and which to send in the payload.
+    // New config uses dialogFields / payloadFields objects; fall back to legacy
+    // comma-separated collectFields string for backward compatibility.
+    let dialogFields;
+    let payloadFields;
+
+    const defaultOnFields = ['userName', 'appId', 'sheetId', 'urlPath', 'platform', 'timestamp'];
+
+    // Helper: resolve a field-toggle object where missing keys fall back to
+    // their default values (handles instances saved before toggles existed).
+    function resolveFieldToggle(obj) {
+        return FIELD_ORDER.filter((f) => {
+            if (f in obj) return obj[f];
+            return defaultOnFields.includes(f);
+        });
     }
+
+    if (config.dialogFields && typeof config.dialogFields === 'object') {
+        dialogFields = resolveFieldToggle(config.dialogFields);
+    } else if (typeof config.collectFields === 'string') {
+        dialogFields = config.collectFields.split(',').map((s) => s.trim()).filter(Boolean);
+    } else if (Array.isArray(config.collectFields)) {
+        dialogFields = config.collectFields;
+    } else {
+        dialogFields = defaultOnFields;
+    }
+
+    if (config.payloadFields && typeof config.payloadFields === 'object') {
+        payloadFields = resolveFieldToggle(config.payloadFields);
+    } else {
+        // Legacy: payload mirrors dialog fields
+        payloadFields = dialogFields;
+    }
+
+    // Union of both sets — we need to gather data for all of them.
+    const allFields = [...new Set([...dialogFields, ...payloadFields])];
 
     // Remove any existing dialog
     const existing = document.getElementById('hbqs-bug-report-overlay');
@@ -165,30 +206,27 @@ export function openBugReportDialog(config, platformType) {
     dialog.setAttribute('tabindex', '-1');
     dialog.focus();
 
-    // -- Gather context asynchronously, then build the form --
-    let resolvedContext = {};
+    // Track form state
+    let selectedSeverity = null; // 'low' | 'medium' | 'high' | null
+    let descriptionTextarea = null;
 
-    gatherContextData(collectFields, platformType).then((context) => {
-        resolvedContext = context;
+    // -- Gather context asynchronously, then build the form --
+    gatherContextData(allFields, platformType).then((context) => {
         logger.debug('Context gathered:', JSON.stringify(context, null, 2));
 
         // Remove loading indicator
         body.removeChild(loadingEl);
 
         // --- Context fields (read-only inputs) ---
-        // Build a set of "skip" fields (second items in pairs, rendered inline)
-        const skipFields = {};
-        for (const pf of Object.keys(PAIRED_FIELDS)) {
-            skipFields[PAIRED_FIELDS[pf]] = true;
-        }
+        const rendered = new Set();
 
-        for (const field of collectFields) {
+        for (const field of dialogFields) {
+            if (rendered.has(field)) continue;
             if (context[field] === undefined) continue;
-            if (skipFields[field]) continue; // rendered as part of a pair
 
-            // Check if this field starts a side-by-side pair
-            if (PAIRED_FIELDS[field]) {
-                const pairField = PAIRED_FIELDS[field];
+            const pairRight = PAIRED_FIELDS[field];
+            if (pairRight && dialogFields.includes(pairRight) && context[pairRight] !== undefined) {
+                // Render both fields side-by-side
                 const row = document.createElement('div');
                 row.className = 'hbqs-bug-report-field-row';
 
@@ -197,17 +235,72 @@ export function openBugReportDialog(config, platformType) {
                 leftWrap.appendChild(makeReadonlyField(field, context[field]));
                 row.appendChild(leftWrap);
 
-                if (context[pairField] !== undefined) {
-                    const rightWrap = document.createElement('div');
-                    rightWrap.className = 'hbqs-bug-report-field-row-item';
-                    rightWrap.appendChild(makeReadonlyField(pairField, context[pairField]));
-                    row.appendChild(rightWrap);
-                }
+                const rightWrap = document.createElement('div');
+                rightWrap.className = 'hbqs-bug-report-field-row-item';
+                rightWrap.appendChild(makeReadonlyField(pairRight, context[pairRight]));
+                row.appendChild(rightWrap);
 
                 body.appendChild(row);
+                rendered.add(pairRight);
             } else {
                 body.appendChild(makeReadonlyField(field, context[field]));
             }
+            rendered.add(field);
+        }
+
+        // --- Severity picker ---
+        if (enableSeverity) {
+            const severityGroup = document.createElement('div');
+            severityGroup.className = 'hbqs-bug-report-field-group';
+
+            const severityLabel = document.createElement('label');
+            severityLabel.className = 'hbqs-bug-report-label';
+            severityLabel.textContent = resolveText(dialogStrings.severityLabel, 'bugReportSeverityLabel') || 'Severity';
+            severityGroup.appendChild(severityLabel);
+
+            const severityBar = document.createElement('div');
+            severityBar.className = 'hbqs-severity-bar';
+            severityBar.setAttribute('role', 'radiogroup');
+            severityBar.setAttribute('aria-label', resolveText(dialogStrings.severityLabel, 'bugReportSeverityLabel') || 'Severity');
+
+            const SEVERITY_OPTIONS = [
+                { value: 'low',    label: resolveText(dialogStrings.severityLowLabel, 'bugReportSeverityLowLabel') || 'Low',    color: '#22c55e' },
+                { value: 'medium', label: resolveText(dialogStrings.severityMediumLabel, 'bugReportSeverityMediumLabel') || 'Medium', color: '#eab308' },
+                { value: 'high',   label: resolveText(dialogStrings.severityHighLabel, 'bugReportSeverityHighLabel') || 'High',   color: '#ef4444' },
+            ];
+
+            for (const opt of SEVERITY_OPTIONS) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'hbqs-severity-btn';
+                btn.dataset.severity = opt.value;
+                btn.setAttribute('role', 'radio');
+                btn.setAttribute('aria-checked', 'false');
+                btn.setAttribute('aria-label', opt.label);
+
+                // Colored circle SVG
+                const circle = `<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">` +
+                    `<circle cx="7" cy="7" r="6" fill="${opt.color}" stroke="${opt.color}" stroke-width="1"/>` +
+                    `</svg>`;
+
+                btn.innerHTML = circle + '<span>' + escapeHtml(opt.label) + '</span>';
+
+                btn.addEventListener('click', () => {
+                    selectedSeverity = opt.value;
+                    // Update all buttons
+                    for (const b of severityBar.querySelectorAll('.hbqs-severity-btn')) {
+                        const isActive = b.dataset.severity === opt.value;
+                        b.classList.toggle('hbqs-severity-btn-active', isActive);
+                        b.setAttribute('aria-checked', isActive ? 'true' : 'false');
+                    }
+                    updateSubmitState();
+                });
+
+                severityBar.appendChild(btn);
+            }
+
+            severityGroup.appendChild(severityBar);
+            body.appendChild(severityGroup);
         }
 
         // --- Description textarea ---
@@ -220,12 +313,39 @@ export function openBugReportDialog(config, platformType) {
         label.htmlFor = 'hbqs-bug-report-description';
         descGroup.appendChild(label);
 
-        const textarea = document.createElement('textarea');
-        textarea.id = 'hbqs-bug-report-description';
-        textarea.className = 'hbqs-bug-report-textarea';
-        textarea.placeholder = descriptionPlaceholder;
-        textarea.rows = 4;
-        descGroup.appendChild(textarea);
+        descriptionTextarea = document.createElement('textarea');
+        descriptionTextarea.id = 'hbqs-bug-report-description';
+        descriptionTextarea.className = 'hbqs-bug-report-textarea';
+        descriptionTextarea.placeholder = descriptionPlaceholder;
+        descriptionTextarea.rows = 4;
+        if (descriptionMaxLength > 0) {
+            descriptionTextarea.maxLength = descriptionMaxLength;
+        }
+        descGroup.appendChild(descriptionTextarea);
+
+        // Character counter
+        if (descriptionMaxLength > 0) {
+            const counter = document.createElement('div');
+            counter.className = 'hbqs-feedback-char-counter';
+            counter.textContent = descriptionMaxLength + ' / ' + descriptionMaxLength;
+
+            descriptionTextarea.addEventListener('input', () => {
+                const remaining = descriptionMaxLength - descriptionTextarea.value.length;
+                counter.textContent = remaining + ' / ' + descriptionMaxLength;
+                if (remaining < 0) {
+                    counter.classList.add('hbqs-feedback-char-counter-exceeded');
+                } else {
+                    counter.classList.remove('hbqs-feedback-char-counter-exceeded');
+                }
+                updateSubmitState();
+            });
+
+            descGroup.appendChild(counter);
+        } else {
+            descriptionTextarea.addEventListener('input', () => {
+                updateSubmitState();
+            });
+        }
 
         body.appendChild(descGroup);
 
@@ -246,20 +366,19 @@ export function openBugReportDialog(config, platformType) {
             makeSvg('send', 14, '#ffffff') +
             '<span>' + escapeHtml(submitText) + '</span>';
         submitBtn.disabled = true;
+        submitBtn.classList.add('hbqs-bug-report-btn-submit-disabled');
         footer.appendChild(submitBtn);
 
-        // Enable/disable submit based on textarea content
-        textarea.addEventListener('input', () => {
-            const hasText = textarea.value.trim().length > 0;
+        // Enable/disable submit — description text is required
+        function updateSubmitState() {
+            const hasText = descriptionTextarea && descriptionTextarea.value.trim().length > 0;
             submitBtn.disabled = !hasText;
             if (hasText) {
                 submitBtn.classList.remove('hbqs-bug-report-btn-submit-disabled');
             } else {
                 submitBtn.classList.add('hbqs-bug-report-btn-submit-disabled');
             }
-        });
-        // Start in disabled visual state
-        submitBtn.classList.add('hbqs-bug-report-btn-submit-disabled');
+        }
 
         // Submit handler
         submitBtn.addEventListener('click', async () => {
@@ -269,11 +388,23 @@ export function openBugReportDialog(config, platformType) {
                 '<span>' + escapeHtml(submitText) + '</span>';
 
             try {
+                // Build payload context using only payloadFields.
+                const payloadContext = {};
+                for (const f of payloadFields) {
+                    if (context[f] !== undefined) {
+                        payloadContext[f] = context[f];
+                    }
+                }
+
                 const payload = {
                     timestamp: new Date().toISOString(),
-                    context: resolvedContext,
-                    description: textarea.value.trim(),
+                    context: payloadContext,
+                    description: descriptionTextarea.value.trim(),
                 };
+
+                if (enableSeverity && selectedSeverity) {
+                    payload.severity = selectedSeverity;
+                }
 
                 const headers = buildAuthHeaders(authStrategy, {
                     authToken,
@@ -309,7 +440,7 @@ export function openBugReportDialog(config, platformType) {
         });
 
         // Focus the textarea once the form is built
-        requestAnimationFrame(() => textarea.focus());
+        requestAnimationFrame(() => descriptionTextarea.focus());
     });
 
     function closeDialog() {

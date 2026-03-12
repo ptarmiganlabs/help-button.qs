@@ -156,6 +156,10 @@ export default function ext(_galaxy) {
                                         data.bugReportStrings.successMessage = '';
                                         data.bugReportStrings.errorMessage = '';
                                         data.bugReportStrings.loadingMessage = '';
+                                        data.bugReportStrings.severityLabel = '';
+                                        data.bugReportStrings.severityLowLabel = '';
+                                        data.bugReportStrings.severityMediumLabel = '';
+                                        data.bugReportStrings.severityHighLabel = '';
                                         // Global feedback strings
                                         if (!data.feedbackStrings) data.feedbackStrings = {};
                                         data.feedbackStrings.title = '';
@@ -196,6 +200,10 @@ export default function ext(_galaxy) {
                                         data.bugReportStrings.successMessage = translations.bugReportSuccessMessage[lang] || '';
                                         data.bugReportStrings.errorMessage = translations.bugReportErrorMessage[lang] || '';
                                         data.bugReportStrings.loadingMessage = translations.bugReportLoadingMessage[lang] || '';
+                                        data.bugReportStrings.severityLabel = translations.bugReportSeverityLabel[lang] || '';
+                                        data.bugReportStrings.severityLowLabel = translations.bugReportSeverityLowLabel[lang] || '';
+                                        data.bugReportStrings.severityMediumLabel = translations.bugReportSeverityMediumLabel[lang] || '';
+                                        data.bugReportStrings.severityHighLabel = translations.bugReportSeverityHighLabel[lang] || '';
                                         // Global feedback strings
                                         if (!data.feedbackStrings) data.feedbackStrings = {};
                                         data.feedbackStrings.title = translations.feedbackTitle[lang] || '';
@@ -323,6 +331,30 @@ export default function ext(_galaxy) {
                                 brLoadingMessage: {
                                     ref: 'bugReportStrings.loadingMessage',
                                     label: 'Loading message',
+                                    type: 'string',
+                                    defaultValue: '',
+                                },
+                                brSeverityLabel: {
+                                    ref: 'bugReportStrings.severityLabel',
+                                    label: 'Severity field label',
+                                    type: 'string',
+                                    defaultValue: '',
+                                },
+                                brSeverityLowLabel: {
+                                    ref: 'bugReportStrings.severityLowLabel',
+                                    label: 'Severity option: Low',
+                                    type: 'string',
+                                    defaultValue: '',
+                                },
+                                brSeverityMediumLabel: {
+                                    ref: 'bugReportStrings.severityMediumLabel',
+                                    label: 'Severity option: Medium',
+                                    type: 'string',
+                                    defaultValue: '',
+                                },
+                                brSeverityHighLabel: {
+                                    ref: 'bugReportStrings.severityHighLabel',
+                                    label: 'Severity option: High',
                                     type: 'string',
                                     defaultValue: '',
                                 },
@@ -622,18 +654,79 @@ export default function ext(_galaxy) {
                                                     defaultValue: '',
                                                     show: (item) => item.bugReport?.authStrategy === 'header',
                                                 },
-                                                collectFields: {
-                                                    ref: 'bugReport.collectFields',
-                                                    label: 'Context fields (comma-separated)',
-                                                    type: 'string',
-                                                    defaultValue: 'userDirectory,userId,senseVersion,appId,sheetId,urlPath',
+                                            },
+                                        },
+                                        bugReportDialog: {
+                                            type: 'items',
+                                            label: 'Dialog Options',
+                                            items: {
+                                                brEnableSeverity: {
+                                                    ref: 'bugReport.enableSeverity',
+                                                    label: 'Show severity picker (Low / Medium / High)',
+                                                    type: 'boolean',
+                                                    component: 'switch',
+                                                    defaultValue: true,
+                                                    options: [
+                                                        { value: true, label: 'On' },
+                                                        { value: false, label: 'Off' },
+                                                    ],
                                                 },
-                                                dialogTitle: {
+                                                brDescriptionMaxLength: {
+                                                    ref: 'bugReport.descriptionMaxLength',
+                                                    label: 'Max description length (characters)',
+                                                    type: 'number',
+                                                    defaultValue: 1000,
+                                                },
+                                                brDialogTitle: {
                                                     ref: 'bugReport.dialogStrings.title',
                                                     label: 'Dialog title override (overrides global)',
                                                     type: 'string',
                                                     defaultValue: '',
                                                 },
+                                            },
+                                        },
+                                        brDialogFieldsSection: {
+                                            type: 'items',
+                                            label: 'Show in Dialog',
+                                            items: {
+                                                brDfInfo: { component: 'text', label: 'Fields visible to the user in the bug report dialog.' },
+                                                brDfUserName:   { ref: 'bugReport.dialogFields.userName',   label: 'User Name',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfPlatform:   { ref: 'bugReport.dialogFields.platform',   label: 'Platform',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfAppId:      { ref: 'bugReport.dialogFields.appId',      label: 'App ID',      type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfSheetId:    { ref: 'bugReport.dialogFields.sheetId',    label: 'Sheet ID',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfUrlPath:    { ref: 'bugReport.dialogFields.urlPath',    label: 'URL Path',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfTimestamp:  { ref: 'bugReport.dialogFields.timestamp',  label: 'Timestamp',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfUserId:     { ref: 'bugReport.dialogFields.userId',     label: 'User ID',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfUserDir:    { ref: 'bugReport.dialogFields.userDirectory', label: 'User Directory', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfSenseVer:   { ref: 'bugReport.dialogFields.senseVersion', label: 'Qlik Sense Version', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfBrowser:    { ref: 'bugReport.dialogFields.browser',    label: 'Browser',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfTenantId:   { ref: 'bugReport.dialogFields.tenantId',   label: 'Tenant ID',   type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfStatus:     { ref: 'bugReport.dialogFields.status',     label: 'Status',      type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfPicture:    { ref: 'bugReport.dialogFields.picture',    label: 'Picture',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfZoneinfo:   { ref: 'bugReport.dialogFields.preferredZoneinfo', label: 'Preferred Zone Info', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brDfRoles:      { ref: 'bugReport.dialogFields.roles',      label: 'Roles',       type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                            },
+                                        },
+                                        brPayloadFieldsSection: {
+                                            type: 'items',
+                                            label: 'Include in Payload',
+                                            items: {
+                                                brPfInfo: { component: 'text', label: 'Fields included in the webhook POST payload (may differ from dialog).' },
+                                                brPfUserName:   { ref: 'bugReport.payloadFields.userName',   label: 'User Name',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfPlatform:   { ref: 'bugReport.payloadFields.platform',   label: 'Platform',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfAppId:      { ref: 'bugReport.payloadFields.appId',      label: 'App ID',      type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfSheetId:    { ref: 'bugReport.payloadFields.sheetId',    label: 'Sheet ID',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfUrlPath:    { ref: 'bugReport.payloadFields.urlPath',    label: 'URL Path',    type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfTimestamp:  { ref: 'bugReport.payloadFields.timestamp',  label: 'Timestamp',   type: 'boolean', component: 'switch', defaultValue: true,  options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfUserId:     { ref: 'bugReport.payloadFields.userId',     label: 'User ID',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfUserDir:    { ref: 'bugReport.payloadFields.userDirectory', label: 'User Directory', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfSenseVer:   { ref: 'bugReport.payloadFields.senseVersion', label: 'Qlik Sense Version', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfBrowser:    { ref: 'bugReport.payloadFields.browser',    label: 'Browser',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfTenantId:   { ref: 'bugReport.payloadFields.tenantId',   label: 'Tenant ID',   type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfStatus:     { ref: 'bugReport.payloadFields.status',     label: 'Status',      type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfPicture:    { ref: 'bugReport.payloadFields.picture',    label: 'Picture',     type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfZoneinfo:   { ref: 'bugReport.payloadFields.preferredZoneinfo', label: 'Preferred Zone Info', type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
+                                                brPfRoles:      { ref: 'bugReport.payloadFields.roles',      label: 'Roles',       type: 'boolean', component: 'switch', defaultValue: false, options: [{ value: true, label: 'On' }, { value: false, label: 'Off' }] },
                                             },
                                         },
                                     },

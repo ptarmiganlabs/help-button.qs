@@ -756,3 +756,38 @@
     color: #ef4444;
     font-weight: 600;
 }
+
+/* Bug report dialog — severity picker */
+.hbqs-severity-bar {
+    display: flex;
+    gap: 8px;
+}
+
+.hbqs-severity-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    color: #374151;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.hbqs-severity-btn:hover {
+    background: #f3f4f6;
+}
+
+.hbqs-severity-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 1px;
+}
+
+.hbqs-severity-btn-active {
+    border-color: #6b7280;
+    background: #f0f0f0;
+    font-weight: 600;
+}

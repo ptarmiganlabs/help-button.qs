@@ -287,6 +287,54 @@ const translations = {
         pl: 'Przycisk pomocy aktywny na pasku narzędzi',
         es: 'Botón de ayuda activo en la barra de herramientas',
     },
+
+    bugReportSeverityLabel: {
+        en: 'Severity',
+        sv: 'Allvarlighetsgrad',
+        no: 'Alvorlighetsgrad',
+        da: 'Alvorlighed',
+        fi: 'Vakavuus',
+        de: 'Schweregrad',
+        fr: 'Gravité',
+        pl: 'Ważność',
+        es: 'Gravedad',
+    },
+
+    bugReportSeverityLowLabel: {
+        en: 'Low',
+        sv: 'Låg',
+        no: 'Lav',
+        da: 'Lav',
+        fi: 'Matala',
+        de: 'Niedrig',
+        fr: 'Faible',
+        pl: 'Niski',
+        es: 'Baja',
+    },
+
+    bugReportSeverityMediumLabel: {
+        en: 'Medium',
+        sv: 'Medium',
+        no: 'Medium',
+        da: 'Medium',
+        fi: 'Keskitaso',
+        de: 'Mittel',
+        fr: 'Moyenne',
+        pl: 'Średni',
+        es: 'Media',
+    },
+
+    bugReportSeverityHighLabel: {
+        en: 'High',
+        sv: 'Hög',
+        no: 'Høy',
+        da: 'Høj',
+        fi: 'Korkea',
+        de: 'Hoch',
+        fr: 'Élevée',
+        pl: 'Wysoki',
+        es: 'Alta',
+    },
 };
 
 export default translations;

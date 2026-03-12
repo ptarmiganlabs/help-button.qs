@@ -111,11 +111,16 @@ function renderStars(rating) {
 }
 
 function renderDashboard() {
+  const severityHtml = { low: '🟢 Low', medium: '🟡 Medium', high: '🔴 High' };
+
   const bugRows = bugReports.map((b) => {
+    const sev = b.severity
+      ? `<div class="severity">${severityHtml[b.severity] || escapeHtml(b.severity)}</div>`
+      : '';
     const desc = b.description
       ? `<div class="desc">${escapeHtml(b.description.length > 200 ? b.description.substring(0, 200) + '…' : b.description)}</div>`
       : '';
-    return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span><span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${desc}</div>`;
+    return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span><span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${sev}${desc}</div>`;
   }).join('');
 
   const fbRows = feedbackEntries.map((f) => {
@@ -152,6 +157,7 @@ h1{font-size:22px;margin-bottom:4px;color:#0c3256}
 .ctx-val{color:#6b7280;word-break:break-all}
 .desc{font-size:13px;color:#374151;background:#f9fafb;padding:8px;border-radius:4px;margin-top:6px;white-space:pre-wrap}
 .rating{margin-top:4px}
+.severity{font-size:13px;font-weight:600;margin-top:4px}
 .stars{font-size:16px;color:#f59e0b}
 .empty{font-size:12px;color:#9ca3af;font-style:italic}
 .no-data{text-align:center;padding:32px;color:#9ca3af;font-size:13px}
@@ -213,7 +219,7 @@ app.get('/health', (req, res) => {
  * Context fields are displayed adaptively — whatever is sent is shown.
  */
 app.post('/api/bug-reports', (req, res) => {
-  const { timestamp, context, description } = req.body;
+  const { timestamp, context, description, severity } = req.body;
 
   // --- Validation ---
   const errors = [];
@@ -234,6 +240,7 @@ app.post('/api/bug-reports', (req, res) => {
     receivedAt: new Date().toISOString(),
     context,
     description,
+    severity: severity || null,
   };
   storeEntry(bugReports, entry);
 
@@ -242,10 +249,15 @@ app.post('/api/bug-reports', (req, res) => {
     ? description.substring(0, 80) + '…'
     : description;
 
+  const severityIcons = { low: '🟢', medium: '🟡', high: '🔴' };
+
   logger.info('─'.repeat(72));
   logger.info(`BUG REPORT received at ${timestamp}`);
   logger.info(formatContextFields(context));
-  logger.info(`        Description: ${descExcerpt}`);
+  if (severity) {
+    logger.info(`              Severity: ${severityIcons[severity] || '?'} ${severity}`);
+  }
+  logger.info(`           Description: ${descExcerpt}`);
   logger.info('─'.repeat(72));
 
   // Full payload at verbose level for debugging
