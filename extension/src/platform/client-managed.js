@@ -193,3 +193,139 @@ export function injectCSS(css, id) {
     document.head.appendChild(style);
     logger.debug('Injected CSS:', id);
 }
+
+// ---------------------------------------------------------------------------
+// Sheet & object utilities (for tooltip targeting)
+// ---------------------------------------------------------------------------
+
+/**
+ * Detect the current sheet ID from the URL or Qlik API.
+ *
+ * @returns {string | null} Sheet ID or null.
+ */
+export function getCurrentSheetId() {
+    const url = window.location.href;
+
+    // Pattern 1: URL /sheet/ID
+    const match = url.match(/\/sheet\/([a-zA-Z0-9-]+)/);
+    if (match) return match[1];
+
+    // Pattern 2: Qlik global API
+    try {
+        if (window.qlik?.navigation?.getCurrentSheetId) {
+            const qlikSheetId = window.qlik.navigation.getCurrentSheetId();
+            const id = typeof qlikSheetId === 'string' ? qlikSheetId : qlikSheetId?.id;
+            if (id) return id;
+        }
+    } catch { /* ignored */ }
+
+    // Pattern 3: DOM fallback
+    try {
+        const sels = getSelectors('client-managed');
+        const sheetEl = document.querySelector(sels.sheetContainer);
+        if (sheetEl) {
+            const domId =
+                sheetEl.getAttribute('data-id') ||
+                sheetEl.getAttribute('data-qid') ||
+                sheetEl.getAttribute('id')?.replace('qv-sheet-', '');
+            if (domId && domId.length > 5) return domId;
+        }
+    } catch { /* ignored */ }
+
+    return null;
+}
+
+/** Object types to exclude from sheet object lists. */
+const EXCLUDE_TYPES = [
+    'sheet', 'story', 'appprops', 'loadmodel',
+    'dimension', 'measure', 'masterobject',
+    'bookmark', 'snapshot', 'variable',
+];
+
+/**
+ * Get the list of objects on the current sheet.
+ *
+ * @param {object} app - Enigma app object.
+ * @returns {Promise<Array<{id: string, title: string, type: string}>>}
+ */
+export async function getSheetObjects(app) {
+    try {
+        let infos = await app.getAllInfos();
+        const sheetId = getCurrentSheetId();
+
+        if (sheetId) {
+            try {
+                const sheetObj = await app.getObject(sheetId);
+                const sheetLayout = await sheetObj.getLayout();
+                let sheetObjectIds = (sheetLayout.cells || []).map((c) => c.name);
+
+                // Add children of objects (e.g. layout containers)
+                for (const id of [...sheetObjectIds]) {
+                    try {
+                        const objHandle = await app.getObject(id);
+                        const layout = await objHandle.getLayout();
+                        if (layout.qChildList?.qItems) {
+                            layout.qChildList.qItems.forEach((item) => {
+                                sheetObjectIds.push(item.qInfo.qId);
+                            });
+                        }
+                    } catch (e) {
+                        logger.warn(`Could not get layout for object ${id}:`, e);
+                    }
+                }
+
+                if (sheetLayout.qChildList?.qItems) {
+                    const childIds = sheetLayout.qChildList.qItems.map((item) => item.qInfo.qId);
+                    sheetObjectIds = [...new Set([...sheetObjectIds, ...childIds])];
+                }
+
+                const filtered = infos.filter((info) => sheetObjectIds.includes(info.qId));
+                if (filtered.length > 0) infos = filtered;
+            } catch (e) {
+                logger.warn('Could not filter by sheet:', e);
+            }
+        }
+
+        const objects = infos
+            .filter((info) => !EXCLUDE_TYPES.includes(info.qType) && !info.qType.includes('system'))
+            .map((info) => ({ id: info.qId, title: info.qTitle || info.qId, type: info.qType }));
+
+        // Enrich titles for objects that only have an ID as title
+        if (objects.length < 100) {
+            const enriched = await Promise.all(
+                objects.map(async (obj) => {
+                    if (obj.title === obj.id) {
+                        try {
+                            const objHandle = await app.getObject(obj.id);
+                            const layout = await objHandle.getLayout();
+                            return {
+                                ...obj,
+                                title: layout.title || layout.qMeta?.title || obj.id,
+                                type: layout.qInfo?.qType || obj.type,
+                            };
+                        } catch { /* ignored */ }
+                    }
+                    return obj;
+                })
+            );
+            return enriched.sort((a, b) => a.title.localeCompare(b.title));
+        }
+
+        return objects.sort((a, b) => a.title.localeCompare(b.title));
+    } catch (err) {
+        logger.error('Failed to get sheet objects:', err);
+        return [];
+    }
+}
+
+/**
+ * Get the CSS selector for a specific Qlik object by ID.
+ *
+ * @param {string} objectId - The Qlik object ID.
+ * @param {string} [codePath] - Code-path name.
+ * @returns {string} CSS selector string.
+ */
+export function getObjectSelector(objectId, codePath) {
+    const sels = getSelectors('client-managed', codePath);
+    return sels.objectById(objectId);
+}

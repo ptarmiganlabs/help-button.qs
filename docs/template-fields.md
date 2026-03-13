@@ -33,17 +33,25 @@ https://help.example.com/apps/4634fbc8-65eb-4aff-a686-34e75326e534/sheets/b8f5e2
 
 ## Supported Fields
 
-| Template field | Description | Source | When available |
+| Template field | Description | Client Managed | Cloud |
 |---|---|---|---|
-| `{{userDirectory}}` | User directory (e.g. `CORP`, `LAB`) | Qlik Sense proxy API (`/qps/user`) | Always (once logged in) |
-| `{{userId}}` | User ID (e.g. `jsmith`, `goran`) | Qlik Sense proxy API (`/qps/user`) | Always (once logged in) |
-| `{{appId}}` | App GUID (e.g. `4634fbc8-65eb-...`) | Parsed from URL path (`/app/<guid>`) | Inside an app |
-| `{{sheetId}}` | Sheet ID (e.g. `tAyTET`, `b8f5e231-...`) | Parsed from URL path (`/sheet/<id>`) | Inside a sheet |
+| `{{appId}}` | App GUID (e.g. `4634fbc8-65eb-...`) | Parsed from URL path | Parsed from URL path |
+| `{{sheetId}}` | Sheet ID (e.g. `tAyTET`, `b8f5e231-...`) | Parsed from URL path | Parsed from URL path |
+| `{{userId}}` | User identity | User ID from proxy API (e.g. `jsmith`) | User email from `/api/v1/users/me` |
+| `{{userDirectory}}` | User directory | Directory name (e.g. `CORP`) | Empty string (not applicable) |
 
 ### Data sources
 
+#### Client Managed
+
 - **User directory** and **user ID** are fetched once at startup from the Qlik Sense proxy API (`GET /qps/user`) and cached for the session. This means they are available instantly when a link is clicked — no loading delay.
 - **App ID** and **sheet ID** are parsed from the browser's current URL at click time. Because Qlik Sense is a Single Page Application (SPA), the URL changes as the user navigates between apps and sheets, so these values are always current.
+
+#### Cloud
+
+- **User ID** is the user's email address, fetched once from the Qlik Cloud REST API (`GET /api/v1/users/me`) and cached for the session.
+- **User directory** is not applicable on Qlik Cloud and resolves to an empty string.
+- **App ID** and **sheet ID** are parsed from the browser's current URL, just like on Client Managed.
 
 ---
 

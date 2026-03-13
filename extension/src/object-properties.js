@@ -82,6 +82,35 @@ export default {
         separatorColor: toPickerObj('#e0e0e0'),
     },
 
+    // -- Tooltips (icon-on-object with hover + click dialog) --
+    tooltips: [
+        {
+            tooltipLabel: 'Sheet title',
+            targetType: 'css',
+            targetCssSelector: '#sheet-title > header',
+            targetObjectId: '',
+            iconName: 'info',
+            iconSize: 20,
+            iconPosition: 'center-right',
+            iconColor: toPickerObj('#ffffff'),
+            iconBackgroundColor: toPickerObj('#165a9b'),
+            hoverContent: 'This is the **sheet name**. Rename it in the sheet properties panel. Click on this icon for more info about navigating between sheets.',
+            dialogEnabled: true,
+            dialogTitle: 'Sheet Navigation',
+            dialogContent:
+                'Use the **left** and **right arrows** next to the sheet title to move between sheets.\n\n' +
+                'You can also click the **sheet navigator** icon (grid) in the toolbar to jump directly to any sheet in the app.',
+            dialogSize: 'medium',
+            hoverBackgroundColor: toPickerObj('#ffffff'),
+            hoverTextColor: toPickerObj('#1f2937'),
+            hoverBorderColor: toPickerObj('#d1d5db'),
+            dialogHeaderBackgroundColor: toPickerObj('#f9fafb'),
+            dialogHeaderTextColor: toPickerObj('#111827'),
+            dialogBodyBackgroundColor: toPickerObj('#ffffff'),
+            dialogBodyTextColor: toPickerObj('#374151'),
+        },
+    ],
+
     // -- Menu items (bug-report and feedback config is inline per-item) --
     menuItems: [
         {

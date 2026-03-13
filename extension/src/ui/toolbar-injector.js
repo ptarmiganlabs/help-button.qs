@@ -53,6 +53,13 @@ let lastConfig = null;
  * @returns {function} Cleanup function to remove the button and listeners.
  */
 export function injectHelpButton(layout, adapter, platform) {
+    // If no menu items are defined, do not render the toolbar button
+    const menuItems = layout.menuItems || [];
+    if (menuItems.length === 0) {
+        destroyHelpButton();
+        return () => {};
+    }
+
     // Persist config so watchForRemoval can re-inject without the component
     lastConfig = { layout, adapter, platform };
 
@@ -77,7 +84,6 @@ export function injectHelpButton(layout, adapter, platform) {
     const buttonStyle = layout.buttonStyle || {};
     const popupTitle = resolveText(layout.popupTitle, 'popupTitle');
     const popupStyle = layout.popupStyle || {};
-    const menuItems = layout.menuItems || [];
 
     // Derive bug-report config from the first menu item with action='bugReport'
     const bugReportItem = menuItems.find((item) => item.action === 'bugReport');

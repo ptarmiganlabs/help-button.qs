@@ -13,6 +13,7 @@ import {
     useElement,
     useLayout,
     useEffect,
+    useModel,
     useRef,
     useState,
     useOptions,
@@ -21,10 +22,12 @@ import ext from './ext';
 import definition from './object-properties';
 import { detectPlatform, getPlatformAdapter } from './platform/index';
 import { injectHelpButton } from './ui/toolbar-injector';
+import { injectTooltips, destroyTooltips } from './ui/tooltip-injector';
 import { makeSvg } from './ui/icons';
 import { fetchTemplateContext } from './util/template-fields';
 import { resolveText, setForceLocale } from './i18n/index';
 import { escapeHtml } from './util/template-fields';
+import { applyPresetToNewTooltips } from './theme/presets';
 import logger, { PACKAGE_VERSION } from './util/logger';
 import './style.css';
 
@@ -43,6 +46,7 @@ export default function supernova(galaxy) {
         component() {
             const layout = useLayout();
             const element = useElement();
+            const model = useModel();
             const options = useOptions();
             const layoutRef = useRef(layout);
             // Platform detection: async, resolved once then cached in state.
@@ -61,6 +65,33 @@ export default function supernova(galaxy) {
                 // Apply language override from property panel
                 setForceLocale(layout.language || 'auto');
             }, [layout]);
+
+            // Apply theme preset colors to newly added tooltips.
+            // The array-level `change` handler in the property panel does not
+            // fire on item addition, so we detect unthemed items here and
+            // persist the theme colors via the engine API.
+            useEffect(() => {
+                if (!model || !layout.themePreset) return;
+                if (!layout.tooltips || !layout.tooltips.length) return;
+
+                // Check if any tooltip needs theming (fast bail-out)
+                const needsTheming = layout.tooltips.some(
+                    (t) => t._themedPreset !== layout.themePreset
+                );
+                if (!needsTheming) return;
+
+                (async () => {
+                    try {
+                        const props = await model.getProperties();
+                        const changed = applyPresetToNewTooltips(props);
+                        if (changed) {
+                            await model.setProperties(props);
+                        }
+                    } catch (err) {
+                        logger.warn('Could not apply theme to new tooltips:', err);
+                    }
+                })();
+            }, [model, layout]);
 
             // One-time async platform detection + adapter loading
             useEffect(() => {
@@ -145,6 +176,9 @@ export default function supernova(galaxy) {
                 // injectHelpButton() handles updates via its double-injection guard.
                 // watchForRemoval() handles re-injection after SPA navigation.
 
+                // Inject tooltip icons onto chart objects / CSS targets
+                injectTooltips(layout, adapter, platform);
+
                 // --- Context menu & hover menu visibility overrides ---
                 const hideContextMenu = layout.widget?.hideContextMenu === true;
                 const hideHoverMenu = layout.widget?.hideHoverMenu === true;
@@ -222,6 +256,7 @@ export default function supernova(galaxy) {
                     if (hoverMenuTarget) {
                         hoverMenuTarget.classList.remove('hbqs-no-hover-menu');
                     }
+                    destroyTooltips();
                 };
             }, [platform, adapter, layout, isEditMode]);
 

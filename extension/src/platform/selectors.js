@@ -25,6 +25,20 @@ const selectors = {
 
             /** Sheet container — used for SPA navigation detection. */
             sheetContainer: '.qv-sheet, .qv-panel-sheet, .qv-panel-content',
+
+            /**
+             * Selector for a Qlik object by its object ID.
+             *
+             * @param {string} objectId - The Qlik object ID.
+             * @returns {string} CSS selector string.
+             */
+            objectById: (objectId) => `.qv-object-${objectId}`,
+
+            /** Selector for all Qlik objects on the sheet. */
+            allObjects: '.qv-object',
+
+            /** Selector for grid cells. */
+            gridCell: '.qv-gridcell',
         },
     },
 
@@ -45,6 +59,20 @@ const selectors = {
 
             /** Sheet container. */
             sheetContainer: '.qvt-sheet.qv-panel-sheet',
+
+            /**
+             * Selector for a Qlik object by its object ID.
+             *
+             * @param {string} objectId - The Qlik object ID.
+             * @returns {string} CSS selector string.
+             */
+            objectById: (objectId) => `.qv-object-${objectId}`,
+
+            /** Selector for all Qlik objects on the sheet. */
+            allObjects: '.qv-object',
+
+            /** Selector for grid cells. */
+            gridCell: '.qv-gridcell',
         },
     },
 };

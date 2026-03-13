@@ -101,3 +101,110 @@ export function injectCSS(css, id) {
     document.head.appendChild(style);
     logger.debug('Injected CSS:', id);
 }
+
+// ---------------------------------------------------------------------------
+// Sheet & object utilities (for tooltip targeting)
+// ---------------------------------------------------------------------------
+
+/**
+ * Detect the current sheet ID from the URL.
+ *
+ * @returns {string | null} Sheet ID or null.
+ */
+export function getCurrentSheetId() {
+    const match = window.location.href.match(/\/sheet\/([a-zA-Z0-9-]+)/);
+    return match ? match[1] : null;
+}
+
+/** Object types to exclude from sheet object lists. */
+const EXCLUDE_TYPES = [
+    'sheet', 'story', 'appprops', 'loadmodel',
+    'dimension', 'measure', 'masterobject',
+    'bookmark', 'snapshot', 'variable',
+];
+
+/**
+ * Get the list of objects on the current sheet.
+ *
+ * @param {object} app - Enigma app object.
+ * @returns {Promise<Array<{id: string, title: string, type: string}>>}
+ */
+export async function getSheetObjects(app) {
+    try {
+        let infos = await app.getAllInfos();
+        const sheetId = getCurrentSheetId();
+
+        if (sheetId) {
+            try {
+                const sheetObj = await app.getObject(sheetId);
+                const sheetLayout = await sheetObj.getLayout();
+                let sheetObjectIds = (sheetLayout.cells || []).map((c) => c.name);
+
+                for (const id of [...sheetObjectIds]) {
+                    try {
+                        const objHandle = await app.getObject(id);
+                        const layout = await objHandle.getLayout();
+                        if (layout.qChildList?.qItems) {
+                            layout.qChildList.qItems.forEach((item) => {
+                                sheetObjectIds.push(item.qInfo.qId);
+                            });
+                        }
+                    } catch (e) {
+                        logger.warn(`Cloud: could not get layout for object ${id}:`, e);
+                    }
+                }
+
+                if (sheetLayout.qChildList?.qItems) {
+                    const childIds = sheetLayout.qChildList.qItems.map((item) => item.qInfo.qId);
+                    sheetObjectIds = [...new Set([...sheetObjectIds, ...childIds])];
+                }
+
+                const filtered = infos.filter((info) => sheetObjectIds.includes(info.qId));
+                if (filtered.length > 0) infos = filtered;
+            } catch (e) {
+                logger.warn('Cloud: could not filter by sheet:', e);
+            }
+        }
+
+        const objects = infos
+            .filter((info) => !EXCLUDE_TYPES.includes(info.qType) && !info.qType.includes('system'))
+            .map((info) => ({ id: info.qId, title: info.qTitle || info.qId, type: info.qType }));
+
+        if (objects.length < 100) {
+            const enriched = await Promise.all(
+                objects.map(async (obj) => {
+                    if (obj.title === obj.id) {
+                        try {
+                            const objHandle = await app.getObject(obj.id);
+                            const layout = await objHandle.getLayout();
+                            return {
+                                ...obj,
+                                title: layout.title || layout.qMeta?.title || obj.id,
+                                type: layout.qInfo?.qType || obj.type,
+                            };
+                        } catch { /* ignored */ }
+                    }
+                    return obj;
+                })
+            );
+            return enriched.sort((a, b) => a.title.localeCompare(b.title));
+        }
+
+        return objects.sort((a, b) => a.title.localeCompare(b.title));
+    } catch (err) {
+        logger.error('Cloud: failed to get sheet objects:', err);
+        return [];
+    }
+}
+
+/**
+ * Get the CSS selector for a specific Qlik object by ID.
+ *
+ * @param {string} objectId - The Qlik object ID.
+ * @param {string} [codePath] - Code-path name.
+ * @returns {string} CSS selector string.
+ */
+export function getObjectSelector(objectId, codePath) {
+    const sels = getSelectors('cloud', codePath);
+    return sels.objectById(objectId);
+}

@@ -791,3 +791,228 @@
     background: #f0f0f0;
     font-weight: 600;
 }
+
+/* ===================================================================
+ * Tooltip icons, hover popups, and detail dialogs
+ * =================================================================== */
+
+/* Target element needs position:relative for absolute icon placement */
+.hbqs-tooltip-target {
+    position: relative !important;
+}
+
+/* -- Trigger icon -- */
+.hbqs-tooltip-trigger {
+    position: absolute;
+    z-index: 1000;
+    width: var(--hbqs-tt-size, 28px);
+    height: var(--hbqs-tt-size, 28px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hbqs-tt-bg-color, #165a9b);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    pointer-events: auto;
+}
+
+.hbqs-tooltip-trigger:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.hbqs-tooltip-trigger:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.hbqs-tooltip-trigger svg {
+    display: block;
+}
+
+/* -- Hover popup -- */
+.hbqs-tooltip-hover {
+    position: fixed;
+    z-index: 10001;
+    max-width: 320px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    font-size: 13px;
+    line-height: 1.5;
+    color: #1f2937;
+    pointer-events: auto;
+}
+
+/* -- Dialog backdrop -- */
+.hbqs-tooltip-dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10002;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* -- Dialog box -- */
+.hbqs-tooltip-dialog {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.hbqs-tooltip-dialog--small  { width: 320px; max-height: 280px; }
+.hbqs-tooltip-dialog--medium { width: 480px; max-height: 400px; }
+.hbqs-tooltip-dialog--large  { width: 640px; max-height: 500px; }
+.hbqs-tooltip-dialog--x-large { width: 800px; max-height: 600px; }
+
+.hbqs-tooltip-dialog__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.hbqs-tooltip-dialog__title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.hbqs-tooltip-dialog__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+}
+
+.hbqs-tooltip-dialog__close:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.hbqs-tooltip-dialog__body {
+    padding: 18px;
+    overflow-y: auto;
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+}
+
+/* -- Markdown content styles (shared by hover + dialog) -- */
+.hbqs-markdown-content h3,
+.hbqs-markdown-content h4,
+.hbqs-markdown-content h5,
+.hbqs-markdown-content h6 {
+    margin: 0.8em 0 0.4em;
+    color: #111827;
+}
+
+.hbqs-markdown-content h3 { font-size: 1.15em; }
+.hbqs-markdown-content h4 { font-size: 1.05em; }
+
+.hbqs-markdown-content p {
+    margin: 0 0 0.6em;
+}
+
+.hbqs-markdown-content ul,
+.hbqs-markdown-content ol {
+    margin: 0.4em 0;
+    padding-left: 1.5em;
+}
+
+.hbqs-markdown-content li {
+    margin-bottom: 0.2em;
+}
+
+.hbqs-markdown-content blockquote {
+    margin: 0.6em 0;
+    padding: 0.4em 0.8em;
+    border-left: 3px solid #d1d5db;
+    background: #f9fafb;
+    color: #4b5563;
+}
+
+.hbqs-markdown-content code {
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    background: #f3f4f6;
+    padding: 0.15em 0.35em;
+    border-radius: 3px;
+}
+
+.hbqs-markdown-content a {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.hbqs-markdown-content a:hover {
+    color: #1d4ed8;
+}
+
+.hbqs-markdown-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.hbqs-markdown-content hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 0.8em 0;
+}
+
+/* Hover popup also gets markdown styles */
+.hbqs-tooltip-hover h3,
+.hbqs-tooltip-hover h4,
+.hbqs-tooltip-hover h5,
+.hbqs-tooltip-hover h6 {
+    margin: 0.4em 0 0.2em;
+    color: #111827;
+}
+
+.hbqs-tooltip-hover p {
+    margin: 0 0 0.4em;
+}
+
+.hbqs-tooltip-hover ul,
+.hbqs-tooltip-hover ol {
+    margin: 0.3em 0;
+    padding-left: 1.3em;
+}
+
+.hbqs-tooltip-hover code {
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.88em;
+    background: #f3f4f6;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}
+
+.hbqs-tooltip-hover a {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.hbqs-tooltip-hover blockquote {
+    margin: 0.3em 0;
+    padding: 0.3em 0.6em;
+    border-left: 3px solid #d1d5db;
+    background: #f9fafb;
+}

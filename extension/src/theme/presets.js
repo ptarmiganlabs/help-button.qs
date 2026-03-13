@@ -33,6 +33,17 @@ export const defaultPreset = {
     headerTextColor: toPickerObj("#ffffff"),
     separatorColor: toPickerObj("#e0e0e0"),
   },
+  tooltipDefaults: {
+    iconColor: toPickerObj("#ffffff"),
+    iconBackgroundColor: toPickerObj("#595959"),
+    hoverBackgroundColor: toPickerObj("#f5f5f5"),
+    hoverTextColor: toPickerObj("#333333"),
+    hoverBorderColor: toPickerObj("#d1d5db"),
+    dialogHeaderBackgroundColor: toPickerObj("#595959"),
+    dialogHeaderTextColor: toPickerObj("#ffffff"),
+    dialogBodyBackgroundColor: toPickerObj("#ffffff"),
+    dialogBodyTextColor: toPickerObj("#333333"),
+  },
   menuItemDefaults: {
     iconColor: toPickerObj("#595959"),
     bgColor: toPickerObj("#f5f5f5"),
@@ -81,6 +92,17 @@ export const leanGreenPreset = {
     headerBackgroundColor: toPickerObj("#006b30"),
     headerTextColor: toPickerObj("#ffffff"),
     separatorColor: toPickerObj("#e0e0e0"),
+  },
+  tooltipDefaults: {
+    iconColor: toPickerObj("#ffffff"),
+    iconBackgroundColor: toPickerObj("#009845"),
+    hoverBackgroundColor: toPickerObj("#e8f5ee"),
+    hoverTextColor: toPickerObj("#004d25"),
+    hoverBorderColor: toPickerObj("#a7d7b8"),
+    dialogHeaderBackgroundColor: toPickerObj("#006b30"),
+    dialogHeaderTextColor: toPickerObj("#ffffff"),
+    dialogBodyBackgroundColor: toPickerObj("#ffffff"),
+    dialogBodyTextColor: toPickerObj("#004d25"),
   },
   menuItemDefaults: {
     iconColor: toPickerObj("#009845"),
@@ -131,6 +153,17 @@ export const corporateBluePreset = {
     headerTextColor: toPickerObj("#ffcc33"),
     separatorColor: toPickerObj("#e0e0e0"),
   },
+  tooltipDefaults: {
+    iconColor: toPickerObj("#ffffff"),
+    iconBackgroundColor: toPickerObj("#165a9b"),
+    hoverBackgroundColor: toPickerObj("#f0f6fc"),
+    hoverTextColor: toPickerObj("#0c3256"),
+    hoverBorderColor: toPickerObj("#93c5fd"),
+    dialogHeaderBackgroundColor: toPickerObj("#0c3256"),
+    dialogHeaderTextColor: toPickerObj("#ffcc33"),
+    dialogBodyBackgroundColor: toPickerObj("#ffffff"),
+    dialogBodyTextColor: toPickerObj("#0c3256"),
+  },
   menuItemDefaults: {
     iconColor: toPickerObj("#165a9b"),
     bgColor: toPickerObj("#f0f6fc"),
@@ -179,6 +212,17 @@ export const corporateGoldPreset = {
     headerBackgroundColor: toPickerObj("#0c3256"),
     headerTextColor: toPickerObj("#ffcc33"),
     separatorColor: toPickerObj("#e0e0e0"),
+  },
+  tooltipDefaults: {
+    iconColor: toPickerObj("#222222"),
+    iconBackgroundColor: toPickerObj("#ffcc33"),
+    hoverBackgroundColor: toPickerObj("#fffae6"),
+    hoverTextColor: toPickerObj("#222222"),
+    hoverBorderColor: toPickerObj("#fbbf24"),
+    dialogHeaderBackgroundColor: toPickerObj("#0c3256"),
+    dialogHeaderTextColor: toPickerObj("#ffcc33"),
+    dialogBodyBackgroundColor: toPickerObj("#ffffff"),
+    dialogBodyTextColor: toPickerObj("#222222"),
   },
   menuItemDefaults: {
     iconColor: toPickerObj("#165a9b"),
@@ -272,4 +316,58 @@ export function applyPreset(data, presetKey) {
       return updates;
     });
   }
+
+  // Tooltip colors — apply preset tooltip defaults to all existing tooltip items
+  if (data.tooltips && Array.isArray(data.tooltips) && preset.tooltipDefaults) {
+    const td = preset.tooltipDefaults;
+    data.tooltips = data.tooltips.map(item => ({
+      ...item,
+      iconColor: td.iconColor,
+      iconBackgroundColor: td.iconBackgroundColor,
+      hoverBackgroundColor: td.hoverBackgroundColor,
+      hoverTextColor: td.hoverTextColor,
+      hoverBorderColor: td.hoverBorderColor,
+      dialogHeaderBackgroundColor: td.dialogHeaderBackgroundColor,
+      dialogHeaderTextColor: td.dialogHeaderTextColor,
+      dialogBodyBackgroundColor: td.dialogBodyBackgroundColor,
+      dialogBodyTextColor: td.dialogBodyTextColor,
+      _themedPreset: presetKey,
+    }));
+  }
+}
+
+/**
+ * Apply the active preset's tooltip colors to any newly added tooltip items.
+ *
+ * Newly added array items get hardcoded `defaultValue` colors from the property
+ * panel definition. This function detects items that haven't been themed yet
+ * (missing `_themedPreset` matching the current preset) and stamps them.
+ *
+ * Call this from a `change` handler on the tooltips array.
+ *
+ * @param {object} data - Extension layout data (mutated in place).
+ */
+export function applyPresetToNewTooltips(data) {
+  const presetKey = data.themePreset;
+  const preset = PRESETS[presetKey];
+  if (!preset || !preset.tooltipDefaults) return;
+  if (!data.tooltips || !Array.isArray(data.tooltips)) return;
+
+  let changed = false;
+  const td = preset.tooltipDefaults;
+  data.tooltips.forEach(item => {
+    if (item._themedPreset === presetKey) return; // already themed
+    item.iconColor = td.iconColor;
+    item.iconBackgroundColor = td.iconBackgroundColor;
+    item.hoverBackgroundColor = td.hoverBackgroundColor;
+    item.hoverTextColor = td.hoverTextColor;
+    item.hoverBorderColor = td.hoverBorderColor;
+    item.dialogHeaderBackgroundColor = td.dialogHeaderBackgroundColor;
+    item.dialogHeaderTextColor = td.dialogHeaderTextColor;
+    item.dialogBodyBackgroundColor = td.dialogBodyBackgroundColor;
+    item.dialogBodyTextColor = td.dialogBodyTextColor;
+    item._themedPreset = presetKey;
+    changed = true;
+  });
+  return changed;
 }

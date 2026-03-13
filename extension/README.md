@@ -4,11 +4,12 @@
 
 ## Features
 
-- **Global Toolbar Integration**: In analysis mode, the extension attaches a help button to the main Qlik Sense native toolbar, rather than rendering inside a grid cell.
+- **Global Toolbar Integration**: In analysis mode, the extension attaches a help button to the main Qlik Sense native toolbar, rather than rendering inside a grid cell. The button is only shown when at least one menu item is configured.
 - **Cross-Platform Support**: Automatically detects and works on both **Qlik Sense SaaS (Cloud)** and **Client-Managed Qlik Sense (Enterprise)** environments, with same features on both platforms.
 - **Invisible Footprint**: The extension cell itself can be configured to be invisible to end-users on the sheet, suppressing default interactive grid cell menus and hover menus.
 - **Extensive Customization**: Configure colors, icons, languages, and menu actions directly from the Qlik Sense property panel.
-- **Theme Presets**: Apply one of four predefined color palettes (Default, Lean Green, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, and menu items to your corporate brand.
+- **Theme Presets**: Apply one of four predefined color palettes (Default, Lean Green, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, menu items, and tooltips to your corporate brand.
+- **Tooltips**: Attach floating help icons to any chart object or page element. Each icon shows a Markdown hover popup and optionally opens a detail dialog on click. Fully themeable with per-tooltip color overrides.
 - **Context-Aware Links**: Dynamically pass application context (such as App ID, Sheet ID, and user details) to outbound links using template tags.
 - **Built-in Translations**: Supports automatic UI translation into multiple languages based on Qlik Sense locale, with full override capabilities via an expandable "Language & Translations" section in the property panel (see [language & translations docs](docs/language-and-translations.md) for details).
 
@@ -72,6 +73,36 @@ flowchart LR
         E[Feedback] --> F[Modal Dialog → POST to Webhook]
     end
 ```
+
+## Tooltips
+
+**Tooltips** let you attach floating help icons to any Qlik Sense chart object or arbitrary page element. Each icon triggers a hover popup (Markdown content) and optionally a click-to-open detail dialog.
+
+### Key Capabilities
+
+- **Two targeting modes**: Select a Qlik Sense object from a dropdown (dynamically populated with all objects on the current sheet), or enter a CSS selector for any page element.
+- **Icon customization**: Choose from 11 built-in icons, configure size, position (8 anchor points), fill color, and background color.
+- **Hover content**: Write content in Markdown — supports headings, bold/italic, lists, links, code, blockquotes, and images.
+- **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body.
+- **Per-tooltip colors**: Customize hover popup colors (background, text, border) and dialog colors (header background/text, body background/text) individually for each tooltip.
+- **Theme preset integration**: When you select a theme preset (Default, Lean Green, Corporate Blue, Corporate Gold), all tooltip colors are automatically updated to match the preset's coordinated palette. Individual overrides still work after applying a preset.
+
+```mermaid
+flowchart TD
+    A[Tooltip Config] --> B{Target Type}
+    B -- Qlik Object --> C[Select from dropdown]
+    B -- CSS Selector --> D[Enter selector string]
+    C --> E[Icon positioned on chart]
+    D --> E
+    E --> F{User interaction}
+    F -- Hover --> G[Markdown popup]
+    F -- Click --> H[Detail dialog modal]
+```
+
+### Documentation
+
+- **App developers**: See [Tooltips — App Developer Guide](../docs/tooltips-app-developer.md) for a complete walkthrough of configuring tooltips from the property panel, including how to find CSS selectors using browser DevTools.
+- **Extension developers**: See [Tooltips — Developer Guide](../docs/tooltips-developer.md) for the technical architecture, data model, theme system internals, and how to extend the feature.
 
 ## Bug Report Context Fields
 
