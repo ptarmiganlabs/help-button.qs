@@ -65,7 +65,8 @@ export function openTooltipDialog({ title, content, size, headerBackgroundColor,
     const closeBtn = document.createElement('button');
     closeBtn.className = 'hbqs-tooltip-dialog__close';
     closeBtn.setAttribute('aria-label', 'Close');
-    closeBtn.innerHTML = makeSvg('close', 16, headerTextColor || undefined);
+    if (headerTextColor) closeBtn.style.color = headerTextColor;
+    closeBtn.innerHTML = makeSvg('close', 16);
     closeBtn.addEventListener('click', closeTooltipDialog);
     header.appendChild(closeBtn);
 
