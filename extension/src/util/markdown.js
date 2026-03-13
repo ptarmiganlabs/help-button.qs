@@ -95,10 +95,10 @@ export function markdownToHtml(md) {
     // Paragraphs
     text = text.replace(/\n{2,}/g, '</p><p>');
 
-    // Single newlines → <br> (skip newlines after block-level closing tags)
+    // Single newlines → <br> (skip newlines after block-level tags)
     text = text.replace(/\n(?!<)/g, (match, offset, str) => {
         const before = str.slice(0, offset);
-        if (/<\/(?:li|ul|ol|blockquote|h[3-6]|hr|p)>$/.test(before)) {
+        if (/<\/(?:li|ul|ol|blockquote|h[3-6]|p)>$/.test(before) || /<hr>$/.test(before)) {
             return '\n';
         }
         return '<br>';
