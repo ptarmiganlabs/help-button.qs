@@ -86,6 +86,10 @@ Both the extension and the HTML Bug Report variant can submit reports to a confi
 
 The demo server supports both HTTP and HTTPS, logs incoming bug reports and feedback to the console, and includes step-by-step instructions for generating self-signed certificates (required when testing with Qlik Sense Enterprise on Windows).
 
+It also provides a nice dashboard showing what bug reports and feedback have been received:
+
+![HelpButton.qs Demo Server Dashboard](./shared/demo-server/docs/helpbutton_demo-server_dashboard-1.png)
+
 ```mermaid
 flowchart LR
     subgraph Qlik Sense
