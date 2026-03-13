@@ -129,7 +129,6 @@ function mountTooltipIcon(item, targetEl, index) {
     const bgColor = resolveColor(item.iconBackgroundColor, '#165a9b');
     const iconSize = item.iconSize || 20;
 
-    iconEl.style.setProperty('--hbqs-tt-icon-color', iconColor);
     iconEl.style.setProperty('--hbqs-tt-bg-color', bgColor);
     iconEl.style.setProperty('--hbqs-tt-size', `${iconSize + 8}px`);
     iconEl.innerHTML = makeSvg(item.iconName || 'info', iconSize, iconColor);
