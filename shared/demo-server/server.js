@@ -9,6 +9,7 @@ const winston = require('winston');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 // ---------------------------------------------------------------------------
 // Configuration via environment variables
@@ -350,14 +351,32 @@ const hasCerts = fs.existsSync(CERT_PATH) && fs.existsSync(KEY_PATH);
 
 if (hasCerts) {
   // ---- HTTPS mode --------------------------------------------------------
+  const certRaw = fs.readFileSync(CERT_PATH);
+  const keyRaw = fs.readFileSync(KEY_PATH);
+
   const tlsOptions = {
-    cert: fs.readFileSync(CERT_PATH),
-    key: fs.readFileSync(KEY_PATH),
+    cert: certRaw,
+    key: keyRaw,
   };
 
   https.createServer(tlsOptions, app).listen(HTTPS_PORT, HOST, () => {
     logger.info('═'.repeat(72));
     logger.info('  HelpButton.qs Demo Server  (HTTPS)');
+    
+    // Parse and log non-sensitive certificate info
+    try {
+      const x509 = new crypto.X509Certificate(certRaw);
+      logger.info('  Certificate Info:');
+      logger.info(`    Subject:          ${x509.subject}`);
+      logger.info(`    Issuer:           ${x509.issuer}`);
+      logger.info(`    Valid to:         ${x509.validTo}`);
+      if (x509.subjectAltName) {
+        logger.info(`    Subject Alt Name: ${x509.subjectAltName}`);
+      }
+    } catch (err) {
+      logger.warn('  (Could not parse certificate details)');
+    }
+
     logger.info(`  Listening on:  https://${HOST}:${HTTPS_PORT}`);
     logger.info(`  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`);
     logger.info(`  Feedback:      POST https://${HOST}:${HTTPS_PORT}/api/feedback`);

@@ -1,8 +1,10 @@
 # Qlik Sense Help Button
 
-This repository provides different solutions for adding a customized help button into the Qlik Sense application toolbar. The help button gives users quick access to context-aware support resources, documentation, or bug reporting tools directly within the Qlik Sense interface.
+This repository provides different solutions for adding a customized help button into the Qlik Sense application toolbar. The help button gives users quick access to context-aware support resources, documentation, bug reporting tools and user feedback forms directly within the Qlik Sense interface.
 
-![Qlik Sense Help Button Demo](./variants/bug-report/docs/screenshot-animated.gif)
+The bug report and feedback features look like this in action:
+
+![Qlik Sense Help Button Demo](./docs/helpbutton-qs_animated-demo-2.gif)
 
 Qlik's native help button takes the user to Qlik's online help resources. This is great, but may not be ideal for organizations that want to provide their own custom documentation, corporate wikis, or specific support links. This project provides multiple ways to create a more tailored help and user feedback experience.
 
@@ -85,6 +87,10 @@ Both methods support localized interfaces so you can provide menus built for you
 Both the extension and the HTML Bug Report variant can submit reports to a configurable webhook endpoint. The extension's Feedback dialog also POSTs data to a webhook. A ready-to-use **Express.js demo server** is included for local testing and development — see the [Demo Server documentation](./shared/demo-server/README.md).
 
 The demo server supports both HTTP and HTTPS, logs incoming bug reports and feedback to the console, and includes step-by-step instructions for generating self-signed certificates (required when testing with Qlik Sense Enterprise on Windows).
+
+It also provides a nice dashboard showing what bug reports and feedback have been received:
+
+![HelpButton.qs Demo Server Dashboard](./shared/demo-server/docs/helpbutton_demo-server_dashboard-1.png)
 
 ```mermaid
 flowchart LR

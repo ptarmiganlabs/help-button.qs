@@ -2,6 +2,10 @@
 
 A minimal Node.js backend that receives bug reports and user feedback from **HelpButton.qs** — both the **Qlik Sense extension** and the **HTML injection Bug Report variant** — and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
 
+The server also provides a nice dashboard showing what bug reports and feedback have been received.
+
+![HelpButton.qs Demo Server Dashboard](./docs/helpbutton_demo-server_dashboard-1.png)
+
 > **Location:** This server lives in `shared/demo-server/` at the repository root and is shared across all HelpButton.qs delivery methods.
 
 ---
