@@ -217,20 +217,15 @@ For targets not yet in the DOM (lazy-loaded charts), a `MutationObserver` watche
 
 ## Platform Adapters
 
-The `getObjectSelector()` function in each platform adapter converts a Qlik object ID into a CSS selector:
+The `getObjectSelector()` function in each platform adapter converts a Qlik object ID into a CSS selector.
 
-### Client-Managed
-
-```javascript
-// selectors.js
-objectById: (id) => `[tid="${id}"]`
-```
-
-### Cloud
+Both the client-managed and cloud adapters currently use the same DOM pattern for objects:
 
 ```javascript
 // selectors.js
-objectById: (id) => `article[data-testid="object-${id}"]`
+objectById: function (id) {
+  return '.qv-object-' + id;
+}
 ```
 
 Both adapters expose the same API:
