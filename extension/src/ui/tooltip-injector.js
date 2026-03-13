@@ -20,6 +20,8 @@ const POSITIONED_CLASS = 'hbqs-tooltip-target';
 
 /** Active MutationObserver for lazy-loaded targets. */
 let retryObserver = null;
+/** Timeout handle for the retry observer safety stop. */
+let retryTimeout = null;
 
 /** Pending tooltip items waiting for their target to appear. */
 let pendingItems = [];
@@ -71,6 +73,10 @@ export function destroyTooltips() {
     });
 
     // Clean up retry observer
+    if (retryTimeout !== null) {
+        clearTimeout(retryTimeout);
+        retryTimeout = null;
+    }
     if (retryObserver) {
         retryObserver.disconnect();
         retryObserver = null;
@@ -258,12 +264,20 @@ function applyPosition(iconEl, position) {
  * @param {object} platform - Platform info.
  */
 function startRetryObserver(adapter, platform) {
-    if (retryObserver) retryObserver.disconnect();
+    // Clean up any previous observer and timeout
+    if (retryTimeout !== null) {
+        clearTimeout(retryTimeout);
+        retryTimeout = null;
+    }
+    if (retryObserver) {
+        retryObserver.disconnect();
+        retryObserver = null;
+    }
 
-    retryObserver = new MutationObserver(() => {
+    const observer = new MutationObserver(() => {
         if (pendingItems.length === 0) {
-            retryObserver.disconnect();
-            retryObserver = null;
+            observer.disconnect();
+            if (retryObserver === observer) retryObserver = null;
             return;
         }
 
@@ -282,18 +296,20 @@ function startRetryObserver(adapter, platform) {
         pendingItems = stillPending;
 
         if (pendingItems.length === 0) {
-            retryObserver.disconnect();
-            retryObserver = null;
+            observer.disconnect();
+            if (retryObserver === observer) retryObserver = null;
         }
     });
 
-    retryObserver.observe(document.body, { childList: true, subtree: true });
+    retryObserver = observer;
+    observer.observe(document.body, { childList: true, subtree: true });
 
     // Safety: stop observing after 30 seconds to avoid leaks
-    setTimeout(() => {
-        if (retryObserver) {
-            retryObserver.disconnect();
+    retryTimeout = setTimeout(() => {
+        if (retryObserver === observer) {
+            observer.disconnect();
             retryObserver = null;
+            retryTimeout = null;
             if (pendingItems.length > 0) {
                 logger.warn(`${pendingItems.length} tooltip target(s) not found after 30s timeout`);
             }
