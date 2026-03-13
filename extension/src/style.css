@@ -874,6 +874,12 @@
 .hbqs-tooltip-dialog--large  { width: 640px; max-height: 500px; }
 .hbqs-tooltip-dialog--x-large { width: 800px; max-height: 600px; }
 
+/* Ensure tooltip dialog stays within viewport on smaller screens */
+.hbqs-tooltip-dialog {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
 .hbqs-tooltip-dialog__header {
     display: flex;
     align-items: center;
