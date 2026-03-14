@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.3.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.2.0...helpbutton-qs-v2.3.0) (2026-03-14)
+
+
+### Features
+
+* add configurable timestamp formats for dialogs and payloads ([9094864](https://github.com/ptarmiganlabs/help-button.qs/commit/9094864f3c2307e10732500b411a300cd678f28d))
+* configurable timestamp formats for dialog display and webhook payloads ([dfb5199](https://github.com/ptarmiganlabs/help-button.qs/commit/dfb519907903e64d75bf793a08dfc22e50e6c68f))
+
+
+### Bug Fixes
+
+* add explicit parentheses around (M + 1) in MM/DD format ([1a7e2bf](https://github.com/ptarmiganlabs/help-button.qs/commit/1a7e2bfd2ba2ff03bc3ca055ea7f1ef1dccd4fbb))
+* change default payload timestamp format from ISO8601Z to ISO8601 ([a6ddaa3](https://github.com/ptarmiganlabs/help-button.qs/commit/a6ddaa37f52b5206838df45a6b064aff3bd2b982))
+* ensure consistent timestamp formatting in feedback dialog payload ([30a909b](https://github.com/ptarmiganlabs/help-button.qs/commit/30a909bca7cb55aa0120f0f6c0a3bbf844b89db9))
+* update default payload timestamp format to ISO8601Z ([74f4af4](https://github.com/ptarmiganlabs/help-button.qs/commit/74f4af4258402e8775f96a35cbc88a24fb6cc22b))
+
 ## [2.2.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.1.0...helpbutton-qs-v2.2.0) (2026-03-14)
 
 
