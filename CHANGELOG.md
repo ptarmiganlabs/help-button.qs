@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.2.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.1.0...helpbutton-qs-v2.2.0) (2026-03-14)
+
+
+### Features
+
+* **demo-server:** Enhance HTTPS server setup to log non-sensitive certificate information ([015af0e](https://github.com/ptarmiganlabs/help-button.qs/commit/015af0e0c05a7b738cbe972ad5e7dc69de0e3cad))
+
+
+### Bug Fixes
+
+* **ci:** Add environment variable to enforce Node.js version for JavaScript actions ([1e1b9d8](https://github.com/ptarmiganlabs/help-button.qs/commit/1e1b9d8572ab72a9f6e248364c2a71d8e751b2b7))
+* **client-managed:** Get rid of product-version warning in browser console ([0a427e3](https://github.com/ptarmiganlabs/help-button.qs/commit/0a427e36df70fe2b05fb851240d1cab529d428b0))
+* **client-managed:** Improve retrieval of Sense version from server ([222f0c0](https://github.com/ptarmiganlabs/help-button.qs/commit/222f0c00d45bba03c0f084af894827c1005da7c6))
+
+
+### Refactoring
+
+* **client-managed:** centralize Qlik Sense version fetching and parsing logic ([43ff489](https://github.com/ptarmiganlabs/help-button.qs/commit/43ff48916a9518efb43e610fa82df8ec7666db1f))
+
+
+### Documentation
+
+* **demo-server:** Add screenshot of demo server's dashboard to README files ([1c54fd7](https://github.com/ptarmiganlabs/help-button.qs/commit/1c54fd76cfc678344cf39d77b0b6035b1a54b5d6))
+* **README:** Update the demo GIF to show latest features ([5d88d13](https://github.com/ptarmiganlabs/help-button.qs/commit/5d88d139debf0ae8a5280ea871aac06d9159a19e))
+
 ## [2.1.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.0.0...helpbutton-qs-v2.1.0) (2026-03-13)
 
 
