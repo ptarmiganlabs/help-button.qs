@@ -45,8 +45,8 @@
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@nebula.js/cli": "^6.6.0",
-        "@nebula.js/cli-build": "^6.6.0",
-        "@nebula.js/cli-sense": "^6.6.0",
+        "@nebula.js/cli-build": "^6.7.0",
+        "@nebula.js/cli-sense": "^6.7.0",
         "@nebula.js/cli-serve": "^6.5.0",
         "@rollup/plugin-replace": "^6.0.2",
         "archiver": "^7.0.1",
