@@ -1,6 +1,6 @@
 {
   "name": "helpbutton-qs",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Configurable help button for Qlik Sense Enterprise (client-managed) toolbar",
   "license": "MIT",
   "private": true,
