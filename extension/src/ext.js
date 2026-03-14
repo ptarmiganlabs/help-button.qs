@@ -852,6 +852,7 @@ export default function ext(_galaxy) {
                                                             type: 'string',
                                                             expression: 'optional',
                                                             defaultValue: '',
+                                                            maxlength: 8192,
                                                         },
                                                     },
                                                 },
