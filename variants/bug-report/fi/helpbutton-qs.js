@@ -837,9 +837,16 @@
 
       case 'custom':
         if (br.auth.customHeaders && typeof br.auth.customHeaders === 'object') {
-          for (var hk in br.auth.customHeaders) {
-            if (br.auth.customHeaders.hasOwnProperty(hk)) {
-              headers[hk] = br.auth.customHeaders[hk];
+          if (Array.isArray(br.auth.customHeaders)) {
+            for (var i = 0; i < br.auth.customHeaders.length; i++) {
+              var h = br.auth.customHeaders[i];
+              if (h && h.name && h.value) headers[h.name] = h.value;
+            }
+          } else {
+            for (var hk in br.auth.customHeaders) {
+              if (br.auth.customHeaders.hasOwnProperty(hk)) {
+                headers[hk] = br.auth.customHeaders[hk];
+              }
             }
           }
         }

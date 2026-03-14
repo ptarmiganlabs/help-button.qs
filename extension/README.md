@@ -141,7 +141,9 @@ The feedback dialog supports these property panel settings:
 | Setting | Type | Default | Description |
 |---|---|---|---|
 | Webhook URL | string | *(empty)* | POST endpoint to receive feedback data |
-| Authentication | dropdown | `None` | Auth strategy (None / Authorization header / Sense session / Custom headers) |
+| Authentication | dropdown | `None` | Auth strategy |
+| &nbsp;&nbsp;↳ *Bearer token* | string | *(empty)* | Token for `Authorization: Bearer <token>` |
+| &nbsp;&nbsp;↳ *Custom headers* | array | `[]` | List of custom `Name: Value` HTTP headers |
 | Show star rating | toggle | On | Whether to display a 1–5 star rating selector |
 | Show free-text comment | toggle | On | Whether to display a comment textarea |
 | Max comment length | number | `500` | Maximum characters allowed in the comment (shown as a live counter) |

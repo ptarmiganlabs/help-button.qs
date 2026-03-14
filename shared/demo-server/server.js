@@ -18,6 +18,7 @@ const HOST = process.env.HOST || 'localhost';
 const HTTP_PORT = process.env.PORT || 3000;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const DEBUG_LOG_AUTH = process.env.DEBUG_LOG_AUTH === 'true';
 
 // ---------------------------------------------------------------------------
 // TLS certificate paths
@@ -57,7 +58,52 @@ const MAX_STORED = 50;
 const bugReports = [];
 const feedbackEntries = [];
 
-function storeEntry(list, entry) {
+function storeEntry(list, entry, req) {
+  // Detect authentication strategy from request headers
+  let authType = 'none';
+  let authDetails = '';
+
+  const authHeader = req.get('Authorization');
+  const xrfKey = req.get('X-Qlik-Xrfkey');
+
+  if (xrfKey) {
+    authType = 'sense-session';
+    authDetails = `XRF Key: ${xrfKey}`;
+  } else if (authHeader) {
+    if (authHeader.startsWith('Bearer ')) {
+      authType = 'header';
+      if (DEBUG_LOG_AUTH) {
+        // Mask token but show first/last bits for debugging (only when explicitly enabled)
+        const token = authHeader.substring(7);
+        const masked = token.length > 12
+          ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}`
+          : '***';
+        authDetails = `Bearer token: ${masked}`;
+      } else {
+        // Do not store or log any token-derived data by default
+        authDetails = 'Bearer token present';
+      }
+    } else {
+      authType = 'custom';
+      authDetails = 'Authorization header (non-Bearer)';
+    }
+  } else {
+    // Check for other headers with a custom/vendor prefix to
+    // distinguish 'custom' from 'none', without relying on a
+    // brittle allowlist of standard browser headers.
+    const customHeaders = Object.keys(req.headers).filter(function (h) {
+      const name = h.toLowerCase();
+      return name.indexOf('x-') === 0;
+    });
+
+    if (customHeaders.length > 0) {
+      authType = 'custom';
+      authDetails = `${customHeaders.length} custom header(s): ${customHeaders.join(', ')}`;
+    }
+  }
+
+  entry.auth = { type: authType, details: authDetails };
+  
   list.unshift(entry);
   if (list.length > MAX_STORED) list.length = MAX_STORED;
 }
@@ -112,6 +158,16 @@ function renderStars(rating) {
 }
 
 function renderDashboard() {
+  const authHtml = (a) => {
+    if (!a || a.type === 'none') return '<span class="ts">None</span>';
+    const typeLabel = {
+      header: '🛡️ Authorization (Bearer)',
+      'sense-session': '🔑 Sense Session (XRF)',
+      custom: '⚙️ Custom Headers'
+    };
+    return `<span class="ts" title="${escapeHtml(a.details || '')}">${typeLabel[a.type] || escapeHtml(a.type)}${a.details ? ' ℹ️' : ''}</span>`;
+  };
+
   const severityHtml = { low: '🟢 Low', medium: '🟡 Medium', high: '🔴 High' };
 
   const bugRows = bugReports.map((b) => {
@@ -122,7 +178,8 @@ function renderDashboard() {
       ? `<div class="desc">${escapeHtml(b.description.length > 200 ? b.description.substring(0, 200) + '…' : b.description)}</div>`
       : '';
     const clientTs = b.clientTimestamp ? `<span class="ts" title="Client timestamp">${escapeHtml(b.clientTimestamp)}</span>` : '';
-    return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTs}<span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${sev}${desc}</div>`;
+    const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(b.auth)}</span></div>`;
+    return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTs}<span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${sev}${desc}${auth}</div>`;
   }).join('');
 
   const fbRows = feedbackEntries.map((f) => {
@@ -131,7 +188,8 @@ function renderDashboard() {
       ? `<div class="desc">${escapeHtml(f.comment.length > 200 ? f.comment.substring(0, 200) + '…' : f.comment)}</div>`
       : '';
     const clientTs = f.clientTimestamp ? `<span class="ts" title="Client timestamp">${escapeHtml(f.clientTimestamp)}</span>` : '';
-    return `<div class="card fb"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTs}<span class="ts">${escapeHtml(f.receivedAt)}</span></div>${renderContextTable(f.context)}${rating}${comment}</div>`;
+    const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(f.auth)}</span></div>`;
+    return `<div class="card fb"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTs}<span class="ts">${escapeHtml(f.receivedAt)}</span></div>${renderContextTable(f.context)}${rating}${comment}${auth}</div>`;
   }).join('');
 
   return `<!DOCTYPE html>
@@ -153,6 +211,8 @@ h1{font-size:22px;margin-bottom:4px;color:#0c3256}
 .badge{font-size:11px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;letter-spacing:.04em}
 .bug-badge{background:#fef2f2;color:#dc2626}
 .fb-badge{background:#f5f3ff;color:#7c3aed}
+.auth-badge{background:#fefcf2;color:#854d0e;margin-left:auto}
+.card-footer{display:flex;justify-content:flex-end;align-items:center;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:4px}
 .ts{font-size:11px;color:#9ca3af}
 .ctx{width:100%;border-collapse:collapse;margin-bottom:6px}
 .ctx td{padding:3px 6px;font-size:12px;border-bottom:1px solid #f3f4f6}
@@ -249,7 +309,7 @@ app.post('/api/bug-reports', (req, res) => {
     description,
     severity: severity || null,
   };
-  storeEntry(bugReports, entry);
+  storeEntry(bugReports, entry, req);
 
   // --- Log (adaptive — shows whatever context fields are present) ---
   const descExcerpt = description.length > 80
@@ -260,6 +320,7 @@ app.post('/api/bug-reports', (req, res) => {
 
   logger.info('─'.repeat(72));
   logger.info(`BUG REPORT received at ${timestamp}`);
+  logger.info(`                Auth: ${entry.auth.type} (${entry.auth.details || 'no details'})`);
   logger.info(formatContextFields(context));
   if (severity) {
     logger.info(`              Severity: ${severityIcons[severity] || '?'} ${severity}`);
@@ -321,7 +382,7 @@ app.post('/api/feedback', (req, res) => {
     rating: hasRating ? rating : null,
     comment: hasComment ? comment : null,
   };
-  storeEntry(feedbackEntries, entry);
+  storeEntry(feedbackEntries, entry, req);
 
   // --- Log (adaptive — shows whatever context fields are present) ---
   const commentExcerpt = hasComment
@@ -330,6 +391,7 @@ app.post('/api/feedback', (req, res) => {
 
   logger.info('─'.repeat(72));
   logger.info(`FEEDBACK received at ${timestamp}`);
+  logger.info(`                Auth: ${entry.auth.type} (${entry.auth.details || 'no details'})`);
   logger.info(formatContextFields(context));
   if (hasRating) {
     logger.info(`                Rating: ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5)`);
