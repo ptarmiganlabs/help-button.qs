@@ -209,8 +209,7 @@ export function formatTimestamp(date, formatKey) {
     // 3/14/2026, 10:47:55 AM
     case "MM/DD/YYYY, hh:mm:ss A":
       return (
-        M +
-        1 +
+        (M + 1) +
         "/" +
         D +
         "/" +
