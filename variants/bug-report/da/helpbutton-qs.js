@@ -840,7 +840,7 @@
           if (Array.isArray(br.auth.customHeaders)) {
             for (var i = 0; i < br.auth.customHeaders.length; i++) {
               var h = br.auth.customHeaders[i];
-              if (h.name && h.value) headers[h.name] = h.value;
+              if (h && h.name && h.value) headers[h.name] = h.value;
             }
           } else {
             for (var hk in br.auth.customHeaders) {
