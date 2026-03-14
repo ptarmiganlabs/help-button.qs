@@ -67,7 +67,7 @@ Each tooltip is stored as an item in the `layout.tooltips` array. The full prope
     targetCssSelector: '',                    // CSS selector (when targetType === 'css')
 
     // Visibility
-    showCondition: '',                        // expression: 'optional' — evaluated; 0 hides the tooltip
+    showCondition: '',                        // expression: 'optional' — evaluated; 0 or 'False' hides the tooltip
 
     // Icon appearance
     iconName: 'info',                         // Icon key from ICONS map
@@ -178,6 +178,8 @@ injectTooltips(layout, adapter, platform)
 destroyTooltips()  ← clean up previous render
     ↓
 for each item in layout.tooltips:
+    ↓
+    isTooltipHidden(item)  ← skip if showCondition is 0, '0', or 'False'
     ↓
     resolveTarget(item, adapter, platform)
         ├─ targetType 'css' → document.querySelector(item.targetCssSelector)
