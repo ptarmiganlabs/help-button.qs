@@ -82,10 +82,14 @@ function storeEntry(list, entry, req) {
       authDetails = 'Authorization header (non-Bearer)';
     }
   } else {
-    // Check for other headers to distinguish 'custom' from 'none'
-    const standardHeaders = ['host', 'connection', 'content-length', 'user-agent', 'content-type', 'accept', 'origin', 'sec-fetch-site', 'sec-fetch-mode', 'sec-fetch-dest', 'referer', 'accept-encoding', 'accept-language', 'cookie'];
-    const customHeaders = Object.keys(req.headers).filter(h => !standardHeaders.includes(h.toLowerCase()));
-    
+    // Check for other headers with a custom/vendor prefix to
+    // distinguish 'custom' from 'none', without relying on a
+    // brittle allowlist of standard browser headers.
+    const customHeaders = Object.keys(req.headers).filter(function (h) {
+      const name = h.toLowerCase();
+      return name.indexOf('x-') === 0;
+    });
+
     if (customHeaders.length > 0) {
       authType = 'custom';
       authDetails = `${customHeaders.length} custom header(s): ${customHeaders.join(', ')}`;
