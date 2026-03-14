@@ -8,7 +8,7 @@
 
 import logger from './logger';
 
-/** @type {{ version: string, releaseLabel: string } | null} */
+/** @type {{ version: string | null, releaseLabel: string } | null} */
 let cached = null;
 
 /**
@@ -19,7 +19,7 @@ let cached = null;
  *   2. `define([], / ** @owner ... * / { ... });`
  *
  * @param {string} text - Raw response body.
- * @returns {{ version: string, releaseLabel: string } | null}
+ * @returns {{ version: string | null, releaseLabel: string } | null}
  */
 export function parseProductInfoText(text) {
     let jsonStr;
@@ -37,7 +37,13 @@ export function parseProductInfoText(text) {
 
     if (!jsonStr) return null;
 
-    const info = JSON.parse(jsonStr);
+    let info;
+    try {
+        info = JSON.parse(jsonStr);
+    } catch (err) {
+        logger.warn('product-info.js JSON parse failed:', err);
+        return null;
+    }
     const comp = info?.composition ?? {};
     return {
         version: comp.version ?? null,
