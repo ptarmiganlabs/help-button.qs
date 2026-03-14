@@ -606,10 +606,27 @@ function getSenseVersion() {
             return resp.text();
         })
         .then((text) => {
-            const json = text
-                .replace(/^define\(\[],\s*\/\*\*.*?\*\/\s*/s, '')
-                .replace(/\s*\);?\s*$/, '');
-            const info = JSON.parse(json);
+            // Strip AMD wrapper: define([], function() { return <JSON>; });
+            // Or newer format:   define([], /** @owner Release Readiness */ { <JSON> });
+            let jsonStr;
+            const jsonMatch = text.match(/return\s*(\{[\s\S]*\})\s*;?\s*\}\s*\)\s*;?\s*$/);
+            
+            if (jsonMatch) {
+                jsonStr = jsonMatch[1];
+            } else {
+                // New format: extract from the first '{' to the last '}'
+                const firstBrace = text.indexOf('{');
+                const lastBrace = text.lastIndexOf('}');
+                if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < lastBrace) {
+                    jsonStr = text.substring(firstBrace, lastBrace + 1);
+                }
+            }
+
+            if (!jsonStr) {
+                throw new Error('Could not parse product-info.js — unexpected format');
+            }
+
+            const info = JSON.parse(jsonStr);
             const comp = info.composition || {};
             return (comp.releaseLabel || 'Unknown') + ' (v' + (comp.version || '?') + ')';
         })

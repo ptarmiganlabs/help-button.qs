@@ -206,6 +206,9 @@ export default function ext(_galaxy) {
                 // Language & Translations
                 // ---------------------------------------------------------------
                 languageSection: {
+                    // not necessary to define the type, component "expandable-items" will automatically
+                    // default to "items"
+                    // type: "items"                    
                     component: 'expandable-items',
                     label: 'Language & Translations',
                     items: {
