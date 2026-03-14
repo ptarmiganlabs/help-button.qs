@@ -18,6 +18,7 @@ const HOST = process.env.HOST || 'localhost';
 const HTTP_PORT = process.env.PORT || 3000;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const DEBUG_LOG_AUTH = process.env.DEBUG_LOG_AUTH === 'true';
 
 // ---------------------------------------------------------------------------
 // TLS certificate paths
@@ -71,12 +72,17 @@ function storeEntry(list, entry, req) {
   } else if (authHeader) {
     if (authHeader.startsWith('Bearer ')) {
       authType = 'header';
-      // Mask token but show first/last bits for debugging
-      const token = authHeader.substring(7);
-      const masked = token.length > 12 
-        ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}`
-        : '***';
-      authDetails = `Bearer token: ${masked}`;
+      if (DEBUG_LOG_AUTH) {
+        // Mask token but show first/last bits for debugging (only when explicitly enabled)
+        const token = authHeader.substring(7);
+        const masked = token.length > 12
+          ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}`
+          : '***';
+        authDetails = `Bearer token: ${masked}`;
+      } else {
+        // Do not store or log any token-derived data by default
+        authDetails = 'Bearer token present';
+      }
     } else {
       authType = 'custom';
       authDetails = 'Authorization header (non-Bearer)';
