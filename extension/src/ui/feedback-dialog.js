@@ -384,6 +384,9 @@ export function openFeedbackDialog(config, platformType) {
                 '<span>' + escapeHtml(submitText) + '</span>';
 
             try {
+                // Capture a single instant so all payload timestamps are consistent.
+                const now = new Date();
+
                 // Build payload context using only payloadFields.
                 const payloadContext = {};
                 for (const f of payloadFields) {
@@ -395,11 +398,11 @@ export function openFeedbackDialog(config, platformType) {
                 // Re-format payload context timestamp using the payload format
                 // (dialog context may use a different format for display).
                 if (payloadContext.timestamp !== undefined) {
-                    payloadContext.timestamp = formatTimestamp(new Date(), payloadTimestampFormat);
+                    payloadContext.timestamp = formatTimestamp(now, payloadTimestampFormat);
                 }
 
                 const payload = {
-                    timestamp: formatTimestamp(new Date(), payloadTimestampFormat),
+                    timestamp: formatTimestamp(now, payloadTimestampFormat),
                     context: payloadContext,
                 };
 
