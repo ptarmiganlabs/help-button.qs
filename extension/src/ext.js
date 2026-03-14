@@ -771,6 +771,13 @@ export default function ext(_galaxy) {
                                     ],
                                     show: (item) => !['bugReport', 'feedback'].includes(item.action),
                                 },
+                                showCondition: {
+                                    ref: 'showCondition',
+                                    label: 'Show condition',
+                                    type: 'string',
+                                    expression: 'optional',
+                                    defaultValue: '',
+                                },
                                 icon: {
                                     ref: 'icon',
                                     label: 'Icon',

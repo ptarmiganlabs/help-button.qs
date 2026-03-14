@@ -97,28 +97,22 @@ export function destroyTooltips() {
  * Determine whether a tooltip should be hidden based on its show condition.
  *
  * An empty or undefined condition means the tooltip is always visible.
- * A condition that evaluates to 0 hides the tooltip.
- *
- * With `expression: 'optional'`, Qlik resolves the value as a
- * qStringExpression, so `=False()` arrives as the string `"False"`
- * (not the numeric 0). We therefore check both the numeric coercion
- * and the string representation of Qlik's False() dual value.
+ * Hide ONLY if explicitly "0" or "false".
  *
  * @param {object} item - Tooltip configuration item.
  * @returns {boolean} True if the tooltip should be hidden.
  */
 function isTooltipHidden(item) {
-    let condition = item.showCondition;
-    if (condition === undefined || condition === null) return false;
-    if (typeof condition === 'string') {
-        condition = condition.trim();
-        if (condition === '') return false;
+    // If showCondition is undefined or placeholder, show the item.
+    // If it's an expression, the engine replaces it in the layout with the result string.
+    if (item.showCondition === undefined || item.showCondition === null || item.showCondition === '') {
+        return false;
     }
-    // Numeric 0 or string "0" — hidden
-    if (Number(condition) === 0) return true;
-    // =False() with expression:'optional' returns the string "False"
-    if (typeof condition === 'string' && condition.toLowerCase() === 'false') return true;
-    return false;
+
+    // Qlik expressions returning false/0 often result in the string "0".
+    // Hide ONLY if explicitly "0" or "false".
+    const condition = String(item.showCondition).trim();
+    return condition === '0' || condition.toLowerCase() === 'false';
 }
 
 /**
