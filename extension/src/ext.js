@@ -844,6 +844,7 @@ export default function ext(_galaxy) {
                                                             type: 'string',
                                                             expression: 'optional',
                                                             defaultValue: '',
+                                                            maxlength: 256,
                                                         },
                                                         value: {
                                                             ref: 'value',
