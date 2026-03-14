@@ -346,6 +346,8 @@ All text and number fields in the property panel enforce hard limits. String fie
 |---|---|---|
 | Webhook URL | string | 2 048 chars |
 | Bearer token | string | 8 192 chars |
+| Custom header name | string | 512 chars |
+| Custom header value | string | 8 192 chars |
 | Max description length | number | 1 – 16 384 |
 | Dialog title | string | 128 chars |
 
@@ -355,6 +357,8 @@ All text and number fields in the property panel enforce hard limits. String fie
 |---|---|---|
 | Webhook URL | string | 2 048 chars |
 | Bearer token | string | 8 192 chars |
+| Custom header name | string | 512 chars |
+| Custom header value | string | 8 192 chars |
 | Max comment length | number | 1 – 16 384 |
 | Dialog title | string | 128 chars |
 

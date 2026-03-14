@@ -714,7 +714,13 @@ function buildAuthHeaders(strategy, options) {
         }
 
         case 'custom':
-            if (options.customHeaders && typeof options.customHeaders === 'object') {
+            if (Array.isArray(options.customHeaders)) {
+                options.customHeaders.forEach((header) => {
+                    if (header.name && header.value) {
+                        headers[header.name] = header.value;
+                    }
+                });
+            } else if (options.customHeaders && typeof options.customHeaders === 'object') {
                 Object.assign(headers, options.customHeaders);
             }
             break;
