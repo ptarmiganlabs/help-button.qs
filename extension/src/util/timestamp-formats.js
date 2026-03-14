@@ -38,7 +38,7 @@ export const DEFAULT_DIALOG_FORMAT = "YYYY-MM-DD HH:mm:ss";
 /**
  * Default timestamp format for webhook payloads.
  */
-export const DEFAULT_PAYLOAD_FORMAT = "ISO8601";
+export const DEFAULT_PAYLOAD_FORMAT = "ISO8601Z";
 
 // ---------------------------------------------------------------------------
 // Internal helpers
