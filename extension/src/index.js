@@ -282,11 +282,13 @@ function renderEditPlaceholder(element, layout) {
     const menuCount = (layout.menuItems || []).length;
     const hasBugReport = (layout.menuItems || []).some((item) => item.action === 'bugReport');
     const hasFeedback = (layout.menuItems || []).some((item) => item.action === 'feedback');
+    const tooltipCount = (layout.tooltips || []).length;
 
     const statsText =
         `${menuCount} menu item${menuCount !== 1 ? 's' : ''}` +
         (hasBugReport ? ' · Bug report: On' : '') +
-        (hasFeedback ? ' · Feedback: On' : '');
+        (hasFeedback ? ' · Feedback: On' : '') +
+        (tooltipCount > 0 ? ` · ${tooltipCount} tooltip${tooltipCount !== 1 ? 's' : ''}` : '');
 
     const placeholderTitle = escapeHtml(resolveText('', 'editPlaceholderTitle'));
 
