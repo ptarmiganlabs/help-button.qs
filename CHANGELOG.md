@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.3.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.2.0...helpbutton-qs-v2.3.0) (2026-03-15)
+
+
+### Features
+
+* add conditional showing of menu items via new property ([bd384c1](https://github.com/ptarmiganlabs/help-button.qs/commit/bd384c1a0f4dc542e787c825338b5a5ddf01df81))
+* add configurable timestamp formats for dialogs and payloads ([9094864](https://github.com/ptarmiganlabs/help-button.qs/commit/9094864f3c2307e10732500b411a300cd678f28d))
+* add show condition visibility property to tooltips ([fc6b35e](https://github.com/ptarmiganlabs/help-button.qs/commit/fc6b35e6a40f6436ebb920144f0069bd539a5c07))
+* add support for custom headers in bug report and feedback dialogs ([71cee31](https://github.com/ptarmiganlabs/help-button.qs/commit/71cee315c5f74bbff814b274ecebdf3c5542a568))
+* add tooltip count to extension placeholder text in edit mode ([84f6e16](https://github.com/ptarmiganlabs/help-button.qs/commit/84f6e165d74b73561cb7ea79d69edcdc2097bce4))
+* configurable timestamp formats for dialog display and webhook payloads ([dfb5199](https://github.com/ptarmiganlabs/help-button.qs/commit/dfb519907903e64d75bf793a08dfc22e50e6c68f))
+* enhance authentication logging in demo server ([74911b5](https://github.com/ptarmiganlabs/help-button.qs/commit/74911b5c16d1473a2cd68deb28ccb8df98cda08c))
+* make string type properties in the property panel evaluate as expressions ([0eb3e7d](https://github.com/ptarmiganlabs/help-button.qs/commit/0eb3e7d459e4b548b7345d482f237e079e5616f0))
+* mark additional string properties as optional expressions ([8133f9e](https://github.com/ptarmiganlabs/help-button.qs/commit/8133f9ef2cb40b0791f6ca4340e3a53e90119429))
+* update custom headers handling of HelpButton HTML variants ([6cd34ce](https://github.com/ptarmiganlabs/help-button.qs/commit/6cd34ceb8b75b800cebe1b3f7b050eee915cb9eb))
+
+
+### Bug Fixes
+
+* add explicit parentheses around (M + 1) in MM/DD format ([1a7e2bf](https://github.com/ptarmiganlabs/help-button.qs/commit/1a7e2bfd2ba2ff03bc3ca055ea7f1ef1dccd4fbb))
+* change default payload timestamp format from ISO8601Z to ISO8601 ([a6ddaa3](https://github.com/ptarmiganlabs/help-button.qs/commit/a6ddaa37f52b5206838df45a6b064aff3bd2b982))
+* ensure consistent timestamp formatting in feedback dialog payload ([30a909b](https://github.com/ptarmiganlabs/help-button.qs/commit/30a909bca7cb55aa0120f0f6c0a3bbf844b89db9))
+* update default payload timestamp format to ISO8601Z ([74f4af4](https://github.com/ptarmiganlabs/help-button.qs/commit/74f4af4258402e8775f96a35cbc88a24fb6cc22b))
+
+
+### Refactoring
+
+* split ext.js into property-panel modules for better maintainability ([7ed00a1](https://github.com/ptarmiganlabs/help-button.qs/commit/7ed00a1a97e2bfdb444be5d3c7567a53026ce146))
+
+
+### Documentation
+
+* fix number formatting in tooltip visibility example ([f5f81f6](https://github.com/ptarmiganlabs/help-button.qs/commit/f5f81f6be948cf6d21ac7cd83b6cb9e0483ec67c))
+
 ## [2.2.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.1.0...helpbutton-qs-v2.2.0) (2026-03-14)
 
 
