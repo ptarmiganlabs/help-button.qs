@@ -60,6 +60,8 @@ You can add as many tooltips as you need per HelpButton.qs instance. They are co
 4. Click **Add Tooltip**.
 5. Configure the tooltip using the fields described below.
 
+> **💡 Note on Qlik Sense Expressions:** Nearly all string properties in the tooltip configuration (such as Dialog title, Markdown content, CSS selectors) support Qlik Sense expressions. By clicking the **fx** button or starting with `=`, you can make these fields fully dynamic.
+
 Each tooltip item has a **Label** that identifies it in the property panel list. This label is also used as the default dialog title and the icon's accessibility label.
 
 ---

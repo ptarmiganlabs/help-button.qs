@@ -21,7 +21,7 @@ This extension is designed to be added by **Qlik Sense Administrators and Develo
 
 When you drag and drop the extension onto a sheet:
 
-1. In **Edit Mode**: It displays a placeholder within the grid cell indicating the current active features (e.g. `4 menu items · Bug report: On · Feedback: On` where "On" implies at least one active menu item is configured with that corresponding action type). The help button itself also remains visible down in the grid cell, allowing developers to immediately test menu items while configuring them via the standard Qlik Sense Property Panel.
+1. In **Edit Mode**: It displays a placeholder within the grid cell indicating the current active features (e.g. `4 menu items · 2 tooltips · Bug report: On · Feedback: On` where "On" implies at least one active menu item is configured with that corresponding action type). The help button itself also remains visible down in the grid cell, allowing developers to immediately test menu items while configuring them via the standard Qlik Sense Property Panel.
 2. In **Analysis Mode**: The extension dynamically removes itself from the sheet's visual flow and injects the actual button into the top application toolbar.
 
 ```mermaid
@@ -48,9 +48,11 @@ flowchart TD
 3. Configure the appearance, links, and behavior in the Property Panel on the right.
 4. Switch to Analysis Mode to see the button appear in the top toolbar.
 
+> **💡 Note on Qlik Sense Expressions:** Almost all string properties in the property panel support Qlik Sense expressions (using the **fx** button or prefixing with `=`). This allows you to dynamically configure text, titles, labels, URLs, timestamp formats, and conditions based on sheet state, data selections, or the current user.
+
 ## Menu Item Types
 
-When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. The help button supports three types of menu actions:
+When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. Each menu item can be conditionally shown or hidden based on a Qlik expression using the optional **Show Condition** property. The help button supports three types of menu actions:
 
 1. **Outbound Link (`link`)**: 
    - Opens a specified URL (can be configured to open in a new tab or the same window).
@@ -58,12 +60,15 @@ When configuring the **Menu Items** in the Property Panel, you can add multiple 
    - Supports [template fields](../docs/template-fields.md) in the URL (e.g. `https://help.example.com/sys/{{appId}}`), allowing for context-sensitive deep links that adapt to the user's current app or sheet.
 2. **Bug Report Dialog (`bugReport`)**: 
    - Opens an interactive modal directly inside Qlik Sense where users can write a detailed text description of an issue.
-   - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request. 
+   - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request.
+   - Supports custom HTTP headers for webhook authentication or routing.
+   - Timestamps in the payload are fully configurable (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.). 
 3. **Feedback Dialog (`feedback`)**:
    - Opens a modal dialog where users can rate the current app (1–5 stars) and/or leave a free-text comment.
    - Star rating and comment fields can each be independently enabled or disabled via the property panel.
    - When the comment field is enabled, a configurable maximum character length is enforced, with a live remaining-characters counter shown in the dialog.
    - Automatically gathers environment context (same fields as the bug report) and POSTs the feedback data as JSON to a configured webhook endpoint.
+   - Like bug reports, supports custom HTTP headers and customizable timestamp formatting.
 
 ```mermaid
 flowchart LR
@@ -128,7 +133,9 @@ The following fields are available:
 | `senseVersion` | Qlik Sense product version (client-managed only) | `November 2023 (v14.187.4)` |
 | `platform` | Auto-detected platform type | `client-managed` or `cloud` |
 | `browser` | Browser user-agent string | `Mozilla/5.0...` |
-| `timestamp` | Local time the report dialog was opened | `3/6/2026, 8:51:57 AM` |
+| `timestamp` | Local time the report dialog was opened (format is configurable) | `3/6/2026, 8:51:57 AM` (default) or `2026-03-06T08:51:57Z` |
+
+*Note: The `timestamp` field format can be customized via the property panel (e.g. ISO8601, ISO8601Z, MM/DD/YYYY, etc.) to match your exact backend requirements.*
 
 ## Feedback Context Fields
 

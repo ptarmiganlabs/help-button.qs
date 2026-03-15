@@ -35,6 +35,7 @@ flowchart TD
 * Works on **both Qlik Sense SaaS (Cloud)** and **Client-Managed Qlik Sense (Enterprise)**.
 * Easily configured by developers from within the Qlik Sense Property Panel (custom colors, icons, menus).
 * Supports three menu item types: **outbound links**, **bug report dialogs**, and **user feedback dialogs** (with star rating and free-text comments).
+* Includes a robust **Tooltip** feature that attaches hover-over information icons and detail dialogs to any Qlik Sense chart object.
 * To use, simply drop the extension on a sheet, and it will dynamically inject the button into the global toolbar when the user switches to Analysis mode.
 
 ### 2. HTML Injection (Client-Managed only)
