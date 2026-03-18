@@ -842,6 +842,18 @@
     display: block;
 }
 
+/* Floating (drag-to-move) variant */
+.hbqs-tooltip-trigger--floating {
+    cursor: grab;
+    touch-action: none;
+}
+
+.hbqs-tooltip-trigger--dragging {
+    cursor: grabbing;
+    transition: none;
+    opacity: 0.85;
+}
+
 /* -- Hover popup -- */
 .hbqs-tooltip-hover {
     position: fixed;

@@ -123,6 +123,10 @@ export default function tooltipsSection(getObjectList) {
                       { value: "bottom-left", label: "Bottom left" },
                       { value: "bottom-center", label: "Bottom center" },
                       { value: "bottom-right", label: "Bottom right" },
+                      {
+                        value: "floating",
+                        label: "Floating (drag to move)",
+                      },
                     ],
                   },
                   iconColor: {

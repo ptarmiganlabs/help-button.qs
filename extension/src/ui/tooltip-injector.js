@@ -18,6 +18,9 @@ const ID_PREFIX = 'hbqs-tooltip-';
 /** CSS class applied to targets to ensure position:relative. */
 const POSITIONED_CLASS = 'hbqs-tooltip-target';
 
+/** Minimum pointer movement (px) before a click becomes a drag. */
+const DRAG_THRESHOLD = 5;
+
 /** Active MutationObserver for lazy-loaded targets. */
 let retryObserver = null;
 /** Timeout handle for the retry observer safety stop. */
@@ -170,6 +173,12 @@ function mountTooltipIcon(item, targetEl, index) {
     // Position
     applyPosition(iconEl, item.iconPosition || 'top-right');
 
+    // Enable drag-to-move when position is 'floating'
+    if (item.iconPosition === 'floating') {
+        iconEl.classList.add('hbqs-tooltip-trigger--floating');
+        enableDrag(iconEl, targetEl);
+    }
+
     // Resolve hover/dialog theme colors
     const hoverColors = {
         backgroundColor: resolveColor(item.hoverBackgroundColor, '#ffffff'),
@@ -228,6 +237,103 @@ function mountTooltipIcon(item, targetEl, index) {
 }
 
 /**
+ * Enable drag-to-move on a tooltip icon constrained within its parent.
+ *
+ * A click is distinguished from a drag by a movement threshold:
+ * if the pointer moves less than {@link DRAG_THRESHOLD} pixels the
+ * interaction is treated as a normal click.
+ *
+ * @param {HTMLElement} iconEl - The tooltip icon element.
+ * @param {Element} parentEl - The parent element that constrains movement.
+ */
+function enableDrag(iconEl, parentEl) {
+    let startX, startY;
+    let origLeft, origTop;
+    let dragging = false;
+    let didDrag = false;
+
+    function toAbsoluteLeftTop() {
+        // Convert whatever positioning the icon currently has into explicit
+        // left / top values so we can manipulate them during drag.
+        const parentRect = parentEl.getBoundingClientRect();
+        const iconRect = iconEl.getBoundingClientRect();
+
+        iconEl.style.left = `${iconRect.left - parentRect.left}px`;
+        iconEl.style.top = `${iconRect.top - parentRect.top}px`;
+        iconEl.style.right = '';
+        iconEl.style.bottom = '';
+        iconEl.style.removeProperty('--hbqs-tt-translate');
+    }
+
+    function onPointerDown(e) {
+        // Only handle primary button
+        if (e.button !== 0) return;
+        e.preventDefault();
+
+        toAbsoluteLeftTop();
+
+        startX = e.clientX;
+        startY = e.clientY;
+        origLeft = parseFloat(iconEl.style.left);
+        origTop = parseFloat(iconEl.style.top);
+        dragging = false;
+        didDrag = false;
+
+        iconEl.setPointerCapture(e.pointerId);
+        iconEl.addEventListener('pointermove', onPointerMove);
+        iconEl.addEventListener('pointerup', onPointerUp);
+    }
+
+    function onPointerMove(e) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if (!dragging) {
+            if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+            dragging = true;
+            didDrag = true;
+            iconEl.classList.add('hbqs-tooltip-trigger--dragging');
+            hideHover();
+        }
+
+        const parentRect = parentEl.getBoundingClientRect();
+        const iconSize = iconEl.offsetWidth;
+
+        let newLeft = origLeft + dx;
+        let newTop = origTop + dy;
+
+        // Constrain within parent bounds
+        newLeft = Math.max(0, Math.min(newLeft, parentRect.width - iconSize));
+        newTop = Math.max(0, Math.min(newTop, parentRect.height - iconSize));
+
+        iconEl.style.left = `${newLeft}px`;
+        iconEl.style.top = `${newTop}px`;
+    }
+
+    function onPointerUp(e) {
+        iconEl.releasePointerCapture(e.pointerId);
+        iconEl.removeEventListener('pointermove', onPointerMove);
+        iconEl.removeEventListener('pointerup', onPointerUp);
+        iconEl.classList.remove('hbqs-tooltip-trigger--dragging');
+        dragging = false;
+    }
+
+    iconEl.addEventListener('pointerdown', onPointerDown);
+
+    // Suppress click when the interaction was a drag
+    iconEl.addEventListener(
+        'click',
+        (e) => {
+            if (didDrag) {
+                e.stopImmediatePropagation();
+                didDrag = false;
+            }
+        },
+        true, // capture phase so it fires before the dialog-opening click handler
+    );
+}
+
+/**
  * Apply CSS position offsets for the icon based on the position name.
  *
  * @param {HTMLElement} iconEl - The tooltip icon element.
@@ -276,6 +382,11 @@ function applyPosition(iconEl, position) {
             break;
         case 'bottom-right':
             iconEl.style.bottom = '4px';
+            iconEl.style.right = '4px';
+            break;
+        case 'floating':
+            // Start at top-right; the user can drag to reposition
+            iconEl.style.top = '4px';
             iconEl.style.right = '4px';
             break;
         default:

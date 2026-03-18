@@ -205,11 +205,15 @@ Expand the **Icon Appearance** section within each tooltip item to configure:
 |---|---|---|
 | **Icon** | Choose from: Help, Bug, Info, Mail, Link, Star, Lightbulb, Bookmark, Eye, Pin, Chart bar | Info |
 | **Icon size** | Icon dimensions in pixels | 20 |
-| **Position on target** | Where the icon is placed: top-left, top-center, top-right, center-left, center-right, bottom-left, bottom-center, bottom-right | Top right |
+| **Position on target** | Where the icon is placed: top-left, top-center, top-right, center-left, center-right, bottom-left, bottom-center, bottom-right, or **floating** (drag to move) | Top right |
 | **Icon color** | Fill color of the SVG icon | White (`#ffffff`) |
 | **Background color** | Circle background behind the icon | Blue (`#165a9b`) |
 
 The icon is rendered as a circle with a subtle shadow. It scales up slightly on hover to provide visual feedback.
+
+### Floating Position
+
+When **Position on target** is set to **Floating (drag to move)**, the icon starts at the top-right corner but can be repositioned by click-dragging it anywhere within the target element. A short click (without dragging) still opens the detail dialog as usual.
 
 ---
 

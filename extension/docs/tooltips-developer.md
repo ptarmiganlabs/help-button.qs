@@ -196,12 +196,21 @@ for each item in layout.tooltips:
 3. Applies icon color, background, size via CSS custom properties
 4. Renders SVG via `makeSvg(iconName, size, color)`
 5. Positions icon via `applyPosition()` (absolute offsets)
-6. Resolves all 9 theme colors via `resolveColor()`
-7. Attaches event listeners:
+6. If position is `'floating'`, adds the `--floating` modifier class and calls `enableDrag()` for pointer-based drag-to-move constrained within the parent
+7. Resolves all 9 theme colors via `resolveColor()`
+8. Attaches event listeners:
    - `mouseenter` → `showHover(iconEl, content, hoverColors)`
    - `mouseleave` → `scheduleHide()`
    - `click` → `openTooltipDialog({...options, ...dialogColors})`
    - `keydown` (Enter/Space) → same as click
+
+### enableDrag()
+
+When `iconPosition` is `'floating'`, pointer events make the icon draggable within its parent element:
+
+1. `pointerdown` converts any `right`/`bottom` positioning into explicit `left`/`top` values, captures the pointer, and records the starting coordinates.
+2. `pointermove` updates `left`/`top`, clamped to the parent bounds. A 5 px dead-zone prevents accidental drags from triggering.
+3. `pointerup` releases the capture. If the pointer moved past the threshold, a capture-phase `click` listener suppresses the dialog-opening click so the two actions don't conflict.
 
 ### Cleanup Phase
 
@@ -315,6 +324,13 @@ Tooltip trigger icons use CSS custom properties for runtime theming:
 | `--hbqs-tt-size` | Circle width/height | `28px` |
 
 These are set as inline styles on each `.hbqs-tooltip-trigger` element.
+
+### Modifier Classes
+
+| Class | Description |
+|---|---|
+| `.hbqs-tooltip-trigger--floating` | Applied when `iconPosition` is `'floating'`. Sets `cursor: grab` and `touch-action: none`. |
+| `.hbqs-tooltip-trigger--dragging` | Applied during an active drag. Disables transitions and sets `cursor: grabbing`. |
 
 Hover popup and dialog colors are applied as **inline styles** (not CSS custom properties) because each popup/dialog is created dynamically per-tooltip and may have different colors.
 
