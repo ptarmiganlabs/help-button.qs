@@ -16,7 +16,7 @@ import logger from '../util/logger';
  * @property {string} [url] - Link URL (supports {{template}} fields).
  * @property {string} [icon] - Icon name (help, bug, info, mail, link, star).
  * @property {string} [target] - Link target (_blank, _self).
- * @property {string} [action] - Special action ('bugReport', 'feedback').
+ * @property {string} [action] - Special action ('bugReport', 'feedback', 'setVariable').
  * @property {string} [iconColor] - Icon color.
  * @property {string} [bgColor] - Background color.
  * @property {string} [bgColorHover] - Hover background color.
@@ -31,6 +31,7 @@ import logger from '../util/logger';
  * @property {object} buttonStyle - Button style (for icon color reference).
  * @property {function} [onBugReport] - Callback when a bugReport action item is clicked.
  * @property {function} [onFeedback] - Callback when a feedback action item is clicked.
+ * @property {function} [onSetVariable] - Callback when a setVariable action item is clicked.
  */
 
 /**
@@ -41,7 +42,7 @@ import logger from '../util/logger';
  * @returns {{ popup: HTMLElement, close: function, destroy: function }} Popup controls.
  */
 export function createPopupMenu(triggerButton, config) {
-    const { popupTitle, menuItems = [], popupStyle = {}, onBugReport, onFeedback } = config;
+    const { popupTitle, menuItems = [], popupStyle = {}, onBugReport, onFeedback, onSetVariable } = config;
 
     // Remove any existing popup
     const existingPopup = document.getElementById('hbqs-popup');
@@ -133,6 +134,14 @@ export function createPopupMenu(triggerButton, config) {
                 e.stopPropagation();
                 closePopup();
                 onFeedback();
+            });
+        } else if (item.action === 'setVariable' && typeof onSetVariable === 'function') {
+            menuItem.href = '#';
+            menuItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                closePopup();
+                onSetVariable(item.variableAction || {});
             });
         } else {
             const itemUrl = item.url || '#';

@@ -9,6 +9,7 @@ import { makeSvg } from './icons';
 import { createPopupMenu } from './popup-menu';
 import { openBugReportDialog } from './bug-report-dialog';
 import { openFeedbackDialog } from './feedback-dialog';
+import { executeVariableAction } from './variable-action';
 import { escapeHtml } from '../util/template-fields';
 import { resolveColor } from '../util/color';
 import { resolveText } from '../i18n/index';
@@ -40,7 +41,7 @@ let removalObserver = null;
  * re-inject the button after SPA navigation even when the
  * Supernova component is no longer mounted.
  *
- * @type {{ layout: object, adapter: object, platform: object } | null}
+ * @type {{ layout: object, adapter: object, platform: object, app: object } | null}
  */
 let lastConfig = null;
 
@@ -50,9 +51,10 @@ let lastConfig = null;
  * @param {object} layout - The extension layout (from useLayout).
  * @param {object} adapter - Platform adapter module.
  * @param {{ type: string, codePath: string }} platform - Platform detection result.
+ * @param {object} [app] - Enigma.js Doc/App object (from useApp), used for variable actions.
  * @returns {function} Cleanup function to remove the button and listeners.
  */
-export function injectHelpButton(layout, adapter, platform) {
+export function injectHelpButton(layout, adapter, platform, app) {
     // If no menu items are defined, do not render the toolbar button
     const menuItems = layout.menuItems || [];
     if (menuItems.length === 0) {
@@ -61,7 +63,7 @@ export function injectHelpButton(layout, adapter, platform) {
     }
 
     // Persist config so watchForRemoval can re-inject without the component
-    lastConfig = { layout, adapter, platform };
+    lastConfig = { layout, adapter, platform, app };
 
     // Guard against double-injection
     if (document.getElementById(CONTAINER_ID)) {
@@ -72,7 +74,7 @@ export function injectHelpButton(layout, adapter, platform) {
     const anchor = adapter.getToolbarAnchor(platform.codePath);
     if (!anchor) {
         logger.debug('Toolbar anchor not found, will retry via observer');
-        return waitAndInject(layout, adapter, platform);
+        return waitAndInject(layout, adapter, platform, app);
     }
 
     logger.debug('Toolbar anchor found. Injecting help button…');
@@ -177,6 +179,9 @@ export function injectHelpButton(layout, adapter, platform) {
         onFeedback: feedbackConfig
             ? () => openFeedbackDialog(feedbackConfig, platform.type)
             : undefined,
+        onSetVariable: app
+            ? (variableConfig) => executeVariableAction(app, variableConfig)
+            : undefined,
     });
     activePopup = popupControls;
 
@@ -198,9 +203,10 @@ export function injectHelpButton(layout, adapter, platform) {
  * @param {object} layout - Extension layout.
  * @param {object} adapter - Platform adapter module.
  * @param {object} platform - Platform detection result.
+ * @param {object} [app] - Enigma.js Doc/App object.
  * @returns {function} Cleanup function.
  */
-function waitAndInject(layout, adapter, platform) {
+function waitAndInject(layout, adapter, platform, app) {
     const startTime = Date.now();
     const timeout = 30000;
     const pollInterval = 500;
@@ -213,7 +219,7 @@ function waitAndInject(layout, adapter, platform) {
         const anchor = adapter.getToolbarAnchor(platform.codePath);
         if (anchor) {
             cleanup();
-            injectHelpButton(layout, adapter, platform);
+            injectHelpButton(layout, adapter, platform, app);
             return true;
         }
         return false;
@@ -274,7 +280,7 @@ function watchForRemoval() {
             logger.debug('Help button removed from DOM (SPA navigation?). Re-injecting…');
             setTimeout(() => {
                 if (lastConfig) {
-                    injectHelpButton(lastConfig.layout, lastConfig.adapter, lastConfig.platform);
+                    injectHelpButton(lastConfig.layout, lastConfig.adapter, lastConfig.platform, lastConfig.app);
                 }
             }, 300);
         }

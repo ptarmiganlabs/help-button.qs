@@ -45,6 +45,7 @@ const menuItemsSection = {
             { value: "", label: "Open URL" },
             { value: "bugReport", label: "Open Bug Report dialog" },
             { value: "feedback", label: "Open Feedback dialog" },
+            { value: "setVariable", label: "Set/Toggle variable" },
           ],
         },
         url: {
@@ -54,7 +55,7 @@ const menuItemsSection = {
           expression: "optional",
           defaultValue: "https://example.com",
           maxlength: 2048,
-          show: (item) => !["bugReport", "feedback"].includes(item.action),
+          show: (item) => !["bugReport", "feedback", "setVariable"].includes(item.action),
         },
         target: {
           ref: "target",
@@ -66,7 +67,7 @@ const menuItemsSection = {
             { value: "_blank", label: "New tab" },
             { value: "_self", label: "Same tab" },
           ],
-          show: (item) => !["bugReport", "feedback"].includes(item.action),
+          show: (item) => !["bugReport", "feedback", "setVariable"].includes(item.action),
         },
         showCondition: {
           ref: "showCondition",
@@ -88,6 +89,7 @@ const menuItemsSection = {
             { value: "mail", label: "Mail" },
             { value: "link", label: "Link" },
             { value: "star", label: "Star" },
+            { value: "toggle", label: "Toggle" },
           ],
         },
 
@@ -1050,6 +1052,108 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+              },
+            },
+          },
+        },
+
+        // -- Variable Settings (expandable) --
+        variableSettings: {
+          component: "expandable-items",
+          label: "Variable Settings",
+          show: (item) => item.action === "setVariable",
+          items: {
+            variableMain: {
+              type: "items",
+              label: "Mode & Variables",
+              items: {
+                variableMode: {
+                  ref: "variableAction.mode",
+                  label: "Mode",
+                  type: "string",
+                  component: "dropdown",
+                  defaultValue: "set",
+                  options: [
+                    { value: "set", label: "Set variable(s)" },
+                    { value: "toggle", label: "Toggle variable" },
+                  ],
+                },
+                // -- Set mode: array of variable assignments --
+                variableAssignments: {
+                  ref: "variableAction.variableAssignments",
+                  label: "Variable Assignments",
+                  type: "array",
+                  allowAdd: true,
+                  allowRemove: true,
+                  allowMove: true,
+                  addTranslation: "Add Assignment",
+                  itemTitleRef: "variableName",
+                  show: (item) =>
+                    !item.variableAction ||
+                    !item.variableAction.mode ||
+                    item.variableAction.mode === "set",
+                  items: {
+                    variableName: {
+                      ref: "variableName",
+                      label: "Variable name",
+                      type: "string",
+                      defaultValue: "",
+                      maxlength: 256,
+                    },
+                    variableValue: {
+                      ref: "variableValue",
+                      label: "Value",
+                      type: "string",
+                      expression: "optional",
+                      defaultValue: "",
+                      maxlength: 4096,
+                    },
+                  },
+                },
+                // -- Toggle mode: single variable with two values --
+                toggleVariableName: {
+                  ref: "variableAction.variableName",
+                  label: "Variable name",
+                  type: "string",
+                  defaultValue: "",
+                  maxlength: 256,
+                  show: (item) =>
+                    item.variableAction &&
+                    item.variableAction.mode === "toggle",
+                },
+                toggleValue1: {
+                  ref: "variableAction.toggleValue1",
+                  label: "Value A",
+                  type: "string",
+                  expression: "optional",
+                  defaultValue: "",
+                  maxlength: 4096,
+                  show: (item) =>
+                    item.variableAction &&
+                    item.variableAction.mode === "toggle",
+                },
+                toggleValue2: {
+                  ref: "variableAction.toggleValue2",
+                  label: "Value B",
+                  type: "string",
+                  expression: "optional",
+                  defaultValue: "",
+                  maxlength: 4096,
+                  show: (item) =>
+                    item.variableAction &&
+                    item.variableAction.mode === "toggle",
+                },
+                toggleDefault: {
+                  ref: "variableAction.toggleDefault",
+                  label: "Default value (safety net)",
+                  type: "string",
+                  expression: "optional",
+                  defaultValue: "",
+                  maxlength: 4096,
+                  show: (item) =>
+                    item.variableAction &&
+                    item.variableAction.mode === "toggle",
                 },
               },
             },
