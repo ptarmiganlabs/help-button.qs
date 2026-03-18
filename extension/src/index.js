@@ -162,7 +162,9 @@ export default function supernova(galaxy) {
                     }
 
                     // Keep toolbar button visible while editing
-                    injectHelpButton(layout, adapter, platform, app);
+                    if (app) {
+                        injectHelpButton(layout, adapter, platform, app);
+                    }
 
                     return () => {
                         if (resizeObserver) resizeObserver.disconnect();
@@ -172,7 +174,9 @@ export default function supernova(galaxy) {
                 // Analysis mode: inject toolbar button + show placeholder in cell
                 renderAnalysisPlaceholder(element, layout);
 
-                injectHelpButton(layout, adapter, platform, app);
+                if (app) {
+                    injectHelpButton(layout, adapter, platform, app);
+                }
                 // No cleanup returned — the button is a page-level singleton
                 // that must survive component unmount on sheet navigation.
                 // injectHelpButton() handles updates via its double-injection guard.
@@ -260,7 +264,7 @@ export default function supernova(galaxy) {
                     }
                     destroyTooltips();
                 };
-            }, [platform, adapter, layout, isEditMode]);
+            }, [platform, adapter, layout, isEditMode, app]);
 
             // NOTE: We intentionally do NOT destroy the toolbar button
             // on unmount. The button is a page-level singleton that must
