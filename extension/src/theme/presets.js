@@ -339,7 +339,7 @@ export function applyPreset(data, presetKey) {
         textColor: style.textColor,
       };
       // Set icon for bug-report, feedback and setVariable items; preserve user-chosen icon for URL items
-      if ((item.action === 'bugReport' || item.action === 'feedback' || item.action === 'setVariable') && style.icon) {
+      if (['bugReport', 'feedback', 'setVariable'].includes(item.action) && style.icon) {
         updates.icon = style.icon;
       }
       return updates;
