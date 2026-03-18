@@ -8,7 +8,7 @@
  *  - **toggle** – flip a variable between two values (with a safety-net default).
  */
 
-import logger from "../util/logger";
+import logger from '../util/logger';
 
 /**
  * Execute a variable action (set or toggle).
@@ -24,26 +24,26 @@ import logger from "../util/logger";
  * @returns {Promise<void>}
  */
 export async function executeVariableAction(app, config) {
-  if (!app) {
-    logger.warn("Variable action: no app object available");
-    return;
-  }
-  if (!config) {
-    logger.warn("Variable action: no config provided");
-    return;
-  }
-
-  const mode = config.mode || "set";
-
-  try {
-    if (mode === "toggle") {
-      await toggleVariable(app, config);
-    } else {
-      await setVariables(app, config);
+    if (!app) {
+        logger.warn('Variable action: no app object available');
+        return;
     }
-  } catch (err) {
-    logger.error("Variable action failed:", err);
-  }
+    if (!config) {
+        logger.warn('Variable action: no config provided');
+        return;
+    }
+
+    const mode = config.mode || 'set';
+
+    try {
+        if (mode === 'toggle') {
+            await toggleVariable(app, config);
+        } else {
+            await setVariables(app, config);
+        }
+    } catch (err) {
+        logger.error('Variable action failed:', err);
+    }
 }
 
 // ── Set mode ────────────────────────────────────────────────────────
@@ -54,20 +54,22 @@ export async function executeVariableAction(app, config) {
  * @param {object} config - Variable action configuration.
  */
 async function setVariables(app, config) {
-  const assignments = config.variableAssignments || [];
-  if (assignments.length === 0) {
-    logger.debug("Variable action (set): no assignments defined");
-    return;
-  }
+    const assignments = config.variableAssignments || [];
+    if (assignments.length === 0) {
+        logger.debug('Variable action (set): no assignments defined');
+        return;
+    }
 
-  for (const assignment of assignments) {
-    const name = (assignment.variableName || "").trim();
-    const value =
-      assignment.variableValue != null ? String(assignment.variableValue) : "";
-    if (!name) continue;
+    for (const assignment of assignments) {
+        const name = (assignment.variableName || '').trim();
+        const value =
+            assignment.variableValue != null ? String(assignment.variableValue) : '';
+        if (!name) {
+            continue;
+        }
 
-    await setVariableValue(app, name, value);
-  }
+        await setVariableValue(app, name, value);
+    }
 }
 
 // ── Toggle mode ─────────────────────────────────────────────────────
