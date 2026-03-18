@@ -52,7 +52,7 @@ flowchart TD
 
 ## Menu Item Types
 
-When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. Each menu item can be conditionally shown or hidden based on a Qlik expression using the optional **Show Condition** property. The help button supports three types of menu actions:
+When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. Each menu item can be conditionally shown or hidden based on a Qlik expression using the optional **Show Condition** property. The help button supports four types of menu actions:
 
 1. **Outbound Link (`link`)**: 
    - Opens a specified URL (can be configured to open in a new tab or the same window).
@@ -69,6 +69,13 @@ When configuring the **Menu Items** in the Property Panel, you can add multiple 
    - When the comment field is enabled, a configurable maximum character length is enforced, with a live remaining-characters counter shown in the dialog.
    - Automatically gathers environment context (same fields as the bug report) and POSTs the feedback data as JSON to a configured webhook endpoint.
    - Like bug reports, supports custom HTTP headers and customizable timestamp formatting.
+4. **Set/Toggle Variable (`setVariable`)**:
+   - Directly control Qlik Sense app variable values from the help menu, without leaving the app or opening an external page.
+   - Two sub-modes, selected via the **Variable Settings** section in the property panel:
+     - **Set**: Assign one or more variables to specific values simultaneously. Define an array of `{variableName, variableValue}` pairs — all are applied when the user clicks the menu item.
+     - **Toggle**: Flip a single variable between two values (Value A and Value B). A configurable safety-net default is applied automatically if the variable's current value matches neither.
+   - Useful for controlling sheet-level UI state, such as showing/hiding tooltip icons, switching between view modes, or triggering conditional display logic declared in Qlik expressions.
+   - When `setVariable` is selected, URL and link-target fields are hidden and replaced by the expandable **Variable Settings** section in the property panel.
 
 ```mermaid
 flowchart LR
@@ -76,6 +83,8 @@ flowchart LR
         A[Open URL] --> B[External Link]
         C[Bug Report] --> D[Modal Dialog → POST to Webhook]
         E[Feedback] --> F[Modal Dialog → POST to Webhook]
+        G[Set/Toggle Variable] --> H[Set one or more variables]
+        G --> I[Toggle variable between two values]
     end
 ```
 

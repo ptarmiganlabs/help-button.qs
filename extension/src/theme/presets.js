@@ -72,6 +72,13 @@ export const defaultPreset = {
       textColor: toPickerObj("#4c1d95"),
       icon: "star",
     },
+    setVariable: {
+      iconColor: toPickerObj("#0891b2"),
+      bgColor: toPickerObj("#ecfeff"),
+      bgColorHover: toPickerObj("#cffafe"),
+      textColor: toPickerObj("#164e63"),
+      icon: "toggle",
+    },
   },
 };
 
@@ -131,6 +138,13 @@ export const leanGreenPreset = {
       bgColorHover: toPickerObj("#cffafe"),
       textColor: toPickerObj("#164e63"),
       icon: "star",
+    },
+    setVariable: {
+      iconColor: toPickerObj("#059669"),
+      bgColor: toPickerObj("#ecfdf5"),
+      bgColorHover: toPickerObj("#d1fae5"),
+      textColor: toPickerObj("#064e3b"),
+      icon: "toggle",
     },
   },
 };
@@ -192,6 +206,13 @@ export const corporateBluePreset = {
       textColor: toPickerObj("#4c1d95"),
       icon: "star",
     },
+    setVariable: {
+      iconColor: toPickerObj("#0891b2"),
+      bgColor: toPickerObj("#ecfeff"),
+      bgColorHover: toPickerObj("#cffafe"),
+      textColor: toPickerObj("#164e63"),
+      icon: "toggle",
+    },
   },
 };
 
@@ -252,6 +273,13 @@ export const corporateGoldPreset = {
       textColor: toPickerObj("#581c87"),
       icon: "star",
     },
+    setVariable: {
+      iconColor: toPickerObj("#0891b2"),
+      bgColor: toPickerObj("#ecfeff"),
+      bgColorHover: toPickerObj("#cffafe"),
+      textColor: toPickerObj("#164e63"),
+      icon: "toggle",
+    },
   },
 };
 
@@ -301,6 +329,7 @@ export function applyPreset(data, presetKey) {
       let styleKey = 'url';
       if (item.action === 'bugReport') styleKey = 'bugReport';
       else if (item.action === 'feedback') styleKey = 'feedback';
+      else if (item.action === 'setVariable') styleKey = 'setVariable';
       const style = (typeStyles && typeStyles[styleKey]) || preset.menuItemDefaults;
       const updates = {
         ...item,
@@ -309,8 +338,8 @@ export function applyPreset(data, presetKey) {
         bgColorHover: style.bgColorHover,
         textColor: style.textColor,
       };
-      // Set icon for bug-report and feedback items; preserve user-chosen icon for URL items
-      if ((item.action === 'bugReport' || item.action === 'feedback') && style.icon) {
+      // Set icon for bug-report, feedback and setVariable items; preserve user-chosen icon for URL items
+      if (['bugReport', 'feedback', 'setVariable'].includes(item.action) && style.icon) {
         updates.icon = style.icon;
       }
       return updates;

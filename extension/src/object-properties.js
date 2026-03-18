@@ -125,6 +125,14 @@ export default {
             bgColor: toPickerObj('#f0f6fc'),
             bgColorHover: toPickerObj('#dbeafe'),
             textColor: toPickerObj('#0c3256'),
+            variableAction: {
+                mode: 'set',
+                variableAssignments: [],
+                variableName: '',
+                toggleValue1: '',
+                toggleValue2: '',
+                toggleDefault: '',
+            },
             bugReport: {
                 webhookUrl: '',
                 authStrategy: 'none',
@@ -187,6 +195,14 @@ export default {
             bgColor: toPickerObj('#f0f6fc'),
             bgColorHover: toPickerObj('#dbeafe'),
             textColor: toPickerObj('#0c3256'),
+            variableAction: {
+                mode: 'set',
+                variableAssignments: [],
+                variableName: '',
+                toggleValue1: '',
+                toggleValue2: '',
+                toggleDefault: '',
+            },
             bugReport: {
                 webhookUrl: '',
                 authStrategy: 'none',
@@ -249,6 +265,14 @@ export default {
             bgColor: toPickerObj('#fef2f2'),
             bgColorHover: toPickerObj('#fee2e2'),
             textColor: toPickerObj('#7f1d1d'),
+            variableAction: {
+                mode: 'set',
+                variableAssignments: [],
+                variableName: '',
+                toggleValue1: '',
+                toggleValue2: '',
+                toggleDefault: '',
+            },
             bugReport: {
                 webhookUrl: '',
                 authStrategy: 'none',
@@ -311,6 +335,14 @@ export default {
             bgColor: toPickerObj('#f5f3ff'),
             bgColorHover: toPickerObj('#ede9fe'),
             textColor: toPickerObj('#4c1d95'),
+            variableAction: {
+                mode: 'set',
+                variableAssignments: [],
+                variableName: '',
+                toggleValue1: '',
+                toggleValue2: '',
+                toggleDefault: '',
+            },
             bugReport: {
                 webhookUrl: '',
                 authStrategy: 'none',
