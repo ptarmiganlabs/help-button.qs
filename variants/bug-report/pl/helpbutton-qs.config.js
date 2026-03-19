@@ -174,20 +174,6 @@ window.helpButtonQsConfig = {
       sheetId: 'ID arkusza',
       urlPath: 'Ścieżka URL',
     },
-
-    /** Custom key names for the webhook JSON payload.
-     *  By default each context field uses its camelCase name (e.g. appId).
-     *  Override individual keys here to rename them in the outgoing payload
-     *  (e.g. to lowercase for database compatibility). */
-    // payloadKeyNames: {
-    //   userId: 'userid',
-    //   userName: 'username',
-    //   userDirectory: 'userdirectory',
-    //   senseVersion: 'senseversion',
-    //   appId: 'appid',
-    //   sheetId: 'sheetid',
-    //   urlPath: 'urlpath',
-    // },
   },
 
   // --------------------------------------------------------------------------
