@@ -27,6 +27,7 @@ export default {
     widget: {
         hideHoverMenu: false,
         hideContextMenu: false,
+        hideWidget: false,
         showAnalysisPlaceholder: true,
         analysisPlaceholderText: '',
     },

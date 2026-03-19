@@ -6,7 +6,7 @@
 
 - **Global Toolbar Integration**: In analysis mode, the extension attaches a help button to the main Qlik Sense native toolbar, rather than rendering inside a grid cell. The button is only shown when at least one menu item is configured.
 - **Cross-Platform Support**: Automatically detects and works on both **Qlik Sense SaaS (Cloud)** and **Client-Managed Qlik Sense (Enterprise)** environments, with same features on both platforms.
-- **Invisible Footprint**: The extension cell itself can be configured to be invisible to end-users on the sheet, suppressing default interactive grid cell menus and hover menus.
+- **Invisible Footprint**: The extension cell itself can be configured to be invisible to end-users on the sheet. You can suppress the default interactive hover menus and context menus, and go even further by enabling **"Hide widget on sheet in analysis mode"** to make the grid cell completely invisible — no visible border, background, or shadow — so the extension leaves zero visual trace on the sheet.
 - **Extensive Customization**: Configure colors, icons, languages, and menu actions directly from the Qlik Sense property panel.
 - **Theme Presets**: Apply one of four predefined color palettes (Default, Lean Green, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, menu items, and tooltips to your corporate brand.
 - **Tooltips**: Attach floating help icons to any chart object or page element. Each icon shows a Markdown hover popup and optionally opens a detail dialog on click. Fully themeable with per-tooltip color overrides.
@@ -22,15 +22,18 @@ This extension is designed to be added by **Qlik Sense Administrators and Develo
 When you drag and drop the extension onto a sheet:
 
 1. In **Edit Mode**: It displays a placeholder within the grid cell indicating the current active features (e.g. `4 menu items · 2 tooltips · Bug report: On · Feedback: On` where "On" implies at least one active menu item is configured with that corresponding action type). The help button itself also remains visible down in the grid cell, allowing developers to immediately test menu items while configuring them via the standard Qlik Sense Property Panel.
-2. In **Analysis Mode**: The extension dynamically removes itself from the sheet's visual flow and injects the actual button into the top application toolbar.
+2. In **Analysis Mode**: The extension dynamically removes itself from the sheet's visual flow and injects the actual button into the top application toolbar. If the **"Hide widget on sheet in analysis mode"** toggle is enabled, the grid cell is made completely invisible (no border, background, or shadow) so it leaves zero visual trace on the sheet.
 
 ```mermaid
 flowchart TD
     A[Extension Added to Sheet] --> B{Mode?}
     B -- Edit Mode --> C[Show Placeholder in Cell]
     C --> D[Configure via Property Panel]
-    B -- Analysis Mode --> E[Hide/Show Minimal Grid Cell]
-    E --> F[Inject Button to Global Toolbar]
+    B -- Analysis Mode --> E{Hide widget toggle?}
+    E -- Enabled --> E1[Fully hide grid cell]
+    E -- Disabled --> E2[Show minimal grid cell]
+    E1 --> F[Inject Button to Global Toolbar]
+    E2 --> F
     F --> G[User clicks Help Button]
     G --> H[Open Links/Bug Report/Feedback with App Context]
 ```

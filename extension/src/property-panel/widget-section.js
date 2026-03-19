@@ -30,6 +30,17 @@ const widgetSection = {
         { value: false, label: "Visible" },
       ],
     },
+    hideWidget: {
+      ref: "widget.hideWidget",
+      label: "Hide widget on sheet in analysis mode",
+      type: "boolean",
+      defaultValue: false,
+      component: "switch",
+      options: [
+        { value: true, label: "Hidden" },
+        { value: false, label: "Visible" },
+      ],
+    },
     showAnalysisPlaceholder: {
       ref: "widget.showAnalysisPlaceholder",
       label: "Show placeholder text in analysis mode",

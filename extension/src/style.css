@@ -718,6 +718,18 @@
 }
 
 /* -------------------------------------------------------------------------
+ * Hidden widget — completely hides the extension grid cell in analysis mode
+ * ------------------------------------------------------------------------- */
+.hbqs-hidden-widget {
+    visibility: hidden !important;
+    pointer-events: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: hidden !important;
+}
+
+/* -------------------------------------------------------------------------
  * Feedback dialog — star rating
  * ------------------------------------------------------------------------- */
 .hbqs-feedback-stars {
