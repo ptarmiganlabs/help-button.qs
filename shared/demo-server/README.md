@@ -420,6 +420,28 @@ When a bug report is received, the server logs a formatted summary:
 
 Set `LOG_LEVEL=verbose` to also see the full JSON payload.
 
+### Custom Payload Key Names
+
+The HelpButton.qs extension allows users to override the default camelCase context field names (e.g. `appId` → `appid`). When the demo server detects that one or more incoming context keys differ from the built-in defaults, it automatically logs the **entire JSON payload** at `info` level so you can verify the remapped key names without having to switch to `verbose` logging.
+
+Example output when custom keys are detected:
+
+```text
+2026-02-14T14:22:33.456Z info: BUG REPORT: Custom payload key names detected — full payload:
+2026-02-14T14:22:33.456Z info: {
+  "timestamp": "2026-02-14T14:22:33.123Z",
+  "context": {
+    "username": "Göran Sander",
+    "appid": "4634fbc8-65eb-4aff-a686-34e75326e534",
+    "sheetid": "tAyTET",
+    "platform": "client-managed"
+  },
+  "description": "The bar chart shows incorrect values for Q4"
+}
+```
+
+When all keys use the default camelCase names, the full payload is only logged at `verbose` level (the default behaviour).
+
 ---
 
 ## Troubleshooting

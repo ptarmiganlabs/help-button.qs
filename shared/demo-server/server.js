@@ -109,6 +109,17 @@ function storeEntry(list, entry, req) {
 }
 
 // ---------------------------------------------------------------------------
+// Default context key names — used to detect custom payload key mappings.
+// These match the camelCase defaults defined in the extension's
+// object-properties.js → payloadKeyNames.
+// ---------------------------------------------------------------------------
+const DEFAULT_CONTEXT_KEYS = new Set([
+  'userName', 'platform', 'appId', 'sheetId', 'urlPath', 'timestamp',
+  'userId', 'userDirectory', 'senseVersion', 'browser',
+  'tenantId', 'status', 'picture', 'preferredZoneinfo', 'roles',
+]);
+
+// ---------------------------------------------------------------------------
 // Helpers — format context fields for console output
 // ---------------------------------------------------------------------------
 
@@ -125,6 +136,15 @@ function formatContextFields(context) {
     lines.push(`  ${label.padStart(22)}: ${value}`);
   }
   return lines.join('\n');
+}
+
+/**
+ * Return true if the context object contains any key that is NOT in the
+ * default camelCase set (i.e. the user has customised payload key names).
+ */
+function hasCustomKeyNames(context) {
+  if (!context || typeof context !== 'object') return false;
+  return Object.keys(context).some((k) => !DEFAULT_CONTEXT_KEYS.has(k));
 }
 
 // ---------------------------------------------------------------------------
@@ -328,6 +348,13 @@ app.post('/api/bug-reports', (req, res) => {
   logger.info(`           Description: ${descExcerpt}`);
   logger.info('─'.repeat(72));
 
+  // When custom payload key names are detected, log the full payload at info
+  // level so operators can see the remapped keys without switching to verbose.
+  if (hasCustomKeyNames(context)) {
+    logger.info('BUG REPORT: Custom payload key names detected — full payload:');
+    logger.info(JSON.stringify(req.body, null, 2));
+  }
+
   // Full payload at verbose level for debugging
   logger.verbose(`BUG REPORT: Full payload:\n${JSON.stringify(req.body, null, 2)}`);
 
@@ -398,6 +425,13 @@ app.post('/api/feedback', (req, res) => {
   }
   logger.info(`               Comment: ${commentExcerpt}`);
   logger.info('─'.repeat(72));
+
+  // When custom payload key names are detected, log the full payload at info
+  // level so operators can see the remapped keys without switching to verbose.
+  if (hasCustomKeyNames(context)) {
+    logger.info('FEEDBACK: Custom payload key names detected — full payload:');
+    logger.info(JSON.stringify(req.body, null, 2));
+  }
 
   // Full payload at verbose level for debugging
   logger.verbose(`FEEDBACK: Full payload:\n${JSON.stringify(req.body, null, 2)}`);

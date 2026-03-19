@@ -412,6 +412,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfUserNameKey: {
+                  ref: "bugReport.payloadKeyNames.userName",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "userName",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return !pf || pf.userName !== false;
+                  },
+                },
                 brPfPlatform: {
                   ref: "bugReport.payloadFields.platform",
                   label: "Platform",
@@ -422,6 +432,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                brPfPlatformKey: {
+                  ref: "bugReport.payloadKeyNames.platform",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "platform",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return !pf || pf.platform !== false;
+                  },
                 },
                 brPfAppId: {
                   ref: "bugReport.payloadFields.appId",
@@ -434,6 +454,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfAppIdKey: {
+                  ref: "bugReport.payloadKeyNames.appId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "appId",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return !pf || pf.appId !== false;
+                  },
+                },
                 brPfSheetId: {
                   ref: "bugReport.payloadFields.sheetId",
                   label: "Sheet ID",
@@ -444,6 +474,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                brPfSheetIdKey: {
+                  ref: "bugReport.payloadKeyNames.sheetId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "sheetId",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return !pf || pf.sheetId !== false;
+                  },
                 },
                 brPfUrlPath: {
                   ref: "bugReport.payloadFields.urlPath",
@@ -456,6 +496,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfUrlPathKey: {
+                  ref: "bugReport.payloadKeyNames.urlPath",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "urlPath",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return !pf || pf.urlPath !== false;
+                  },
+                },
                 brPfTimestamp: {
                   ref: "bugReport.payloadFields.timestamp",
                   label: "Timestamp",
@@ -466,6 +516,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                brPfTimestampKey: {
+                  ref: "bugReport.payloadKeyNames.timestamp",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "timestamp",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return !pf || pf.timestamp !== false;
+                  },
                 },
                 brPfUserId: {
                   ref: "bugReport.payloadFields.userId",
@@ -478,6 +538,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfUserIdKey: {
+                  ref: "bugReport.payloadKeyNames.userId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "userId",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.userId === true;
+                  },
+                },
                 brPfUserDir: {
                   ref: "bugReport.payloadFields.userDirectory",
                   label: "User Directory",
@@ -488,6 +558,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                brPfUserDirKey: {
+                  ref: "bugReport.payloadKeyNames.userDirectory",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "userDirectory",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.userDirectory === true;
+                  },
                 },
                 brPfSenseVer: {
                   ref: "bugReport.payloadFields.senseVersion",
@@ -500,6 +580,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfSenseVerKey: {
+                  ref: "bugReport.payloadKeyNames.senseVersion",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "senseVersion",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.senseVersion === true;
+                  },
+                },
                 brPfBrowser: {
                   ref: "bugReport.payloadFields.browser",
                   label: "Browser",
@@ -510,6 +600,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                brPfBrowserKey: {
+                  ref: "bugReport.payloadKeyNames.browser",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "browser",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.browser === true;
+                  },
                 },
                 brPfTenantId: {
                   ref: "bugReport.payloadFields.tenantId",
@@ -522,6 +622,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfTenantIdKey: {
+                  ref: "bugReport.payloadKeyNames.tenantId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "tenantId",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.tenantId === true;
+                  },
+                },
                 brPfStatus: {
                   ref: "bugReport.payloadFields.status",
                   label: "Status",
@@ -532,6 +642,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                brPfStatusKey: {
+                  ref: "bugReport.payloadKeyNames.status",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "status",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.status === true;
+                  },
                 },
                 brPfPicture: {
                   ref: "bugReport.payloadFields.picture",
@@ -544,6 +664,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfPictureKey: {
+                  ref: "bugReport.payloadKeyNames.picture",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "picture",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.picture === true;
+                  },
+                },
                 brPfZoneinfo: {
                   ref: "bugReport.payloadFields.preferredZoneinfo",
                   label: "Preferred Zone Info",
@@ -555,6 +685,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                brPfZoneinfoKey: {
+                  ref: "bugReport.payloadKeyNames.preferredZoneinfo",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "preferredZoneinfo",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.preferredZoneinfo === true;
+                  },
+                },
                 brPfRoles: {
                   ref: "bugReport.payloadFields.roles",
                   label: "Roles",
@@ -565,6 +705,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                brPfRolesKey: {
+                  ref: "bugReport.payloadKeyNames.roles",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "roles",
+                  show: (item) => {
+                    const pf = item.bugReport && item.bugReport.payloadFields;
+                    return pf && pf.roles === true;
+                  },
                 },
               },
             },
@@ -899,6 +1049,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfUserNameKey: {
+                  ref: "feedback.payloadKeyNames.userName",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "userName",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return !pf || pf.userName !== false;
+                  },
+                },
                 pfPlatform: {
                   ref: "feedback.payloadFields.platform",
                   label: "Platform",
@@ -909,6 +1069,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                pfPlatformKey: {
+                  ref: "feedback.payloadKeyNames.platform",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "platform",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return !pf || pf.platform !== false;
+                  },
                 },
                 pfAppId: {
                   ref: "feedback.payloadFields.appId",
@@ -921,6 +1091,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfAppIdKey: {
+                  ref: "feedback.payloadKeyNames.appId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "appId",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return !pf || pf.appId !== false;
+                  },
+                },
                 pfSheetId: {
                   ref: "feedback.payloadFields.sheetId",
                   label: "Sheet ID",
@@ -931,6 +1111,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                pfSheetIdKey: {
+                  ref: "feedback.payloadKeyNames.sheetId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "sheetId",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return !pf || pf.sheetId !== false;
+                  },
                 },
                 pfUrlPath: {
                   ref: "feedback.payloadFields.urlPath",
@@ -943,6 +1133,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfUrlPathKey: {
+                  ref: "feedback.payloadKeyNames.urlPath",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "urlPath",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return !pf || pf.urlPath !== false;
+                  },
+                },
                 pfTimestamp: {
                   ref: "feedback.payloadFields.timestamp",
                   label: "Timestamp",
@@ -953,6 +1153,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                pfTimestampKey: {
+                  ref: "feedback.payloadKeyNames.timestamp",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "timestamp",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return !pf || pf.timestamp !== false;
+                  },
                 },
                 pfUserId: {
                   ref: "feedback.payloadFields.userId",
@@ -965,6 +1175,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfUserIdKey: {
+                  ref: "feedback.payloadKeyNames.userId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "userId",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.userId === true;
+                  },
+                },
                 pfUserDir: {
                   ref: "feedback.payloadFields.userDirectory",
                   label: "User Directory",
@@ -975,6 +1195,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                pfUserDirKey: {
+                  ref: "feedback.payloadKeyNames.userDirectory",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "userDirectory",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.userDirectory === true;
+                  },
                 },
                 pfSenseVer: {
                   ref: "feedback.payloadFields.senseVersion",
@@ -987,6 +1217,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfSenseVerKey: {
+                  ref: "feedback.payloadKeyNames.senseVersion",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "senseVersion",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.senseVersion === true;
+                  },
+                },
                 pfBrowser: {
                   ref: "feedback.payloadFields.browser",
                   label: "Browser",
@@ -997,6 +1237,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                pfBrowserKey: {
+                  ref: "feedback.payloadKeyNames.browser",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "browser",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.browser === true;
+                  },
                 },
                 pfTenantId: {
                   ref: "feedback.payloadFields.tenantId",
@@ -1009,6 +1259,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfTenantIdKey: {
+                  ref: "feedback.payloadKeyNames.tenantId",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "tenantId",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.tenantId === true;
+                  },
+                },
                 pfStatus: {
                   ref: "feedback.payloadFields.status",
                   label: "Status",
@@ -1019,6 +1279,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                pfStatusKey: {
+                  ref: "feedback.payloadKeyNames.status",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "status",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.status === true;
+                  },
                 },
                 pfPicture: {
                   ref: "feedback.payloadFields.picture",
@@ -1031,6 +1301,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfPictureKey: {
+                  ref: "feedback.payloadKeyNames.picture",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "picture",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.picture === true;
+                  },
+                },
                 pfZoneinfo: {
                   ref: "feedback.payloadFields.preferredZoneinfo",
                   label: "Preferred Zone Info",
@@ -1042,6 +1322,16 @@ const menuItemsSection = {
                     { value: false, label: "Off" },
                   ],
                 },
+                pfZoneinfoKey: {
+                  ref: "feedback.payloadKeyNames.preferredZoneinfo",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "preferredZoneinfo",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.preferredZoneinfo === true;
+                  },
+                },
                 pfRoles: {
                   ref: "feedback.payloadFields.roles",
                   label: "Roles",
@@ -1052,6 +1342,16 @@ const menuItemsSection = {
                     { value: true, label: "On" },
                     { value: false, label: "Off" },
                   ],
+                },
+                pfRolesKey: {
+                  ref: "feedback.payloadKeyNames.roles",
+                  label: "Payload key name",
+                  type: "string",
+                  defaultValue: "roles",
+                  show: (item) => {
+                    const pf = item.feedback && item.feedback.payloadFields;
+                    return pf && pf.roles === true;
+                  },
                 },
               },
             },

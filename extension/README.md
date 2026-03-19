@@ -149,6 +149,40 @@ The following fields are available:
 
 *Note: The `timestamp` field format can be customized via the property panel (e.g. ISO8601, ISO8601Z, MM/DD/YYYY, etc.) to match your exact backend requirements.*
 
+## Custom Payload Key Names
+
+By default, the webhook JSON payload uses **camelCase** key names (e.g. `appId`, `userName`, `sheetId`). Some backends — such as databases that require lowercase column names — cannot directly ingest these keys.
+
+The extension allows you to **override the key name** for each context field individually. When a payload field is toggled ON in the **"Include in Payload"** section of the property panel, a **"Payload key name"** text input appears below the toggle. The default value matches the original camelCase name, but you can change it to any string (e.g. `appid`, `user_name`, `sheet_id`).
+
+This applies independently to both **Bug Report** and **Feedback** menu items.
+
+### Example
+
+To send all-lowercase keys, change the key names in the property panel:
+
+| Field | Default Key | Custom Key |
+|---|---|---|
+| App ID | `appId` | `appid` |
+| User Name | `userName` | `username` |
+| Sheet ID | `sheetId` | `sheetid` |
+| Platform | `platform` | `platform` |
+
+The resulting payload `context` object would then look like:
+
+```json
+{
+  "context": {
+    "username": "John Doe",
+    "appid": "df68e14d-...",
+    "sheetid": "850cffb0-...",
+    "platform": "client-managed"
+  }
+}
+```
+
+> **Backward compatible:** If you don't change any key names, the payload is identical to previous versions.
+
 ## Feedback Context Fields
 
 The **Feedback** dialog uses the same context fields as the bug report dialog. You can configure which fields to collect via the **"Context fields (comma-separated)"** setting under the Feedback Settings section in the property panel.
