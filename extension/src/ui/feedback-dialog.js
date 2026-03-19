@@ -387,18 +387,22 @@ export function openFeedbackDialog(config, platformType) {
                 // Capture a single instant so all payload timestamps are consistent.
                 const now = new Date();
 
-                // Build payload context using only payloadFields.
+                // Build payload context using only payloadFields, remapping
+                // keys via payloadKeyNames so users can choose lowercase etc.
+                const keyNames = config.payloadKeyNames || {};
                 const payloadContext = {};
                 for (const f of payloadFields) {
                     if (context[f] !== undefined) {
-                        payloadContext[f] = context[f];
+                        const key = (keyNames[f] && keyNames[f].trim()) || f;
+                        payloadContext[key] = context[f];
                     }
                 }
 
                 // Re-format payload context timestamp using the payload format
                 // (dialog context may use a different format for display).
-                if (payloadContext.timestamp !== undefined) {
-                    payloadContext.timestamp = formatTimestamp(now, payloadTimestampFormat);
+                if (payloadFields.includes('timestamp')) {
+                    const tsKey = (keyNames.timestamp && keyNames.timestamp.trim()) || 'timestamp';
+                    payloadContext[tsKey] = formatTimestamp(now, payloadTimestampFormat);
                 }
 
                 const payload = {

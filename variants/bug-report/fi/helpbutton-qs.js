@@ -806,9 +806,19 @@
       return Promise.reject(new Error('No webhook URL configured.'));
     }
 
+    // Remap context keys using payloadKeyNames (if configured).
+    var keyNames = br.payloadKeyNames || {};
+    var remapped = {};
+    for (var k in contextData) {
+      if (contextData.hasOwnProperty(k)) {
+        var newKey = (keyNames[k] && keyNames[k].trim()) || k;
+        remapped[newKey] = contextData[k];
+      }
+    }
+
     var payload = {
       timestamp: new Date().toISOString(),
-      context: contextData,
+      context: remapped,
       description: description,
     };
 
