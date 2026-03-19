@@ -18,6 +18,9 @@ const ID_PREFIX = 'hbqs-tooltip-';
 /** CSS class applied to targets to ensure position:relative. */
 const POSITIONED_CLASS = 'hbqs-tooltip-target';
 
+/** Minimum pointer movement (px) before a click becomes a drag. */
+const DRAG_THRESHOLD = 5;
+
 /** Active MutationObserver for lazy-loaded targets. */
 let retryObserver = null;
 /** Timeout handle for the retry observer safety stop. */
@@ -25,6 +28,13 @@ let retryTimeout = null;
 
 /** Pending tooltip items waiting for their target to appear. */
 let pendingItems = [];
+
+/**
+ * Stores dragged icon positions so they survive hide/show (destroy/inject) cycles.
+ * Key: tooltip index, Value: { left: string, top: string }.
+ * Intentionally NOT cleared in destroyTooltips() so positions persist.
+ */
+const draggedPositions = new Map();
 
 /**
  * Inject all tooltip icons defined in the layout.
@@ -168,7 +178,23 @@ function mountTooltipIcon(item, targetEl, index) {
     iconEl.innerHTML = makeSvg(item.iconName || 'info', iconSize, iconColor);
 
     // Position
-    applyPosition(iconEl, item.iconPosition || 'top-right');
+    applyPosition(iconEl, item);
+
+    // Enable drag-to-move when floating toggle is on
+    if (item.iconFloating) {
+        iconEl.classList.add('hbqs-tooltip-trigger--floating');
+        enableDrag(iconEl, targetEl, index);
+
+        // Restore previously dragged position if available
+        const saved = draggedPositions.get(index);
+        if (saved) {
+            iconEl.style.left = saved.left;
+            iconEl.style.top = saved.top;
+            iconEl.style.right = '';
+            iconEl.style.bottom = '';
+            iconEl.style.removeProperty('--hbqs-tt-translate');
+        }
+    }
 
     // Resolve hover/dialog theme colors
     const hoverColors = {
@@ -224,16 +250,142 @@ function mountTooltipIcon(item, targetEl, index) {
     }
 
     targetEl.appendChild(iconEl);
-    logger.debug(`Tooltip "${item.tooltipLabel}" mounted on target (position: ${item.iconPosition})`);
+    logger.debug(`Tooltip "${item.tooltipLabel}" mounted on target (position: ${item.iconPosition}${item.iconFloating ? ', floating' : ''})`);
 }
 
 /**
- * Apply CSS position offsets for the icon based on the position name.
+ * Enable drag-to-move on a tooltip icon constrained within its parent.
+ *
+ * A click is distinguished from a drag by a movement threshold:
+ * if the pointer moves less than {@link DRAG_THRESHOLD} pixels the
+ * interaction is treated as a normal click.
  *
  * @param {HTMLElement} iconEl - The tooltip icon element.
- * @param {string} position - Position name (e.g. 'top-right', 'center-left').
+ * @param {Element} parentEl - The parent element that constrains movement.
+ * @param {number} tooltipIndex - The tooltip's index, used to persist position.
  */
-function applyPosition(iconEl, position) {
+function enableDrag(iconEl, parentEl, tooltipIndex) {
+    let startX, startY;
+    let origLeft, origTop;
+    let dragging = false;
+    let didDrag = false;
+
+    function toAbsoluteLeftTop() {
+        // Convert whatever positioning the icon currently has into explicit
+        // left / top values so we can manipulate them during drag.
+        const parentRect = parentEl.getBoundingClientRect();
+        const iconRect = iconEl.getBoundingClientRect();
+
+        iconEl.style.left = `${iconRect.left - parentRect.left}px`;
+        iconEl.style.top = `${iconRect.top - parentRect.top}px`;
+        iconEl.style.right = '';
+        iconEl.style.bottom = '';
+        iconEl.style.removeProperty('--hbqs-tt-translate');
+    }
+
+    function onPointerDown(e) {
+        // Only handle primary button
+        if (e.button !== 0) return;
+        // Do NOT preventDefault here — it would suppress focus-on-click for the
+        // focusable icon element (tabindex="0"), breaking :focus-visible behaviour.
+        // Text-selection during drag is prevented by setPointerCapture() below.
+
+        toAbsoluteLeftTop();
+
+        startX = e.clientX;
+        startY = e.clientY;
+        origLeft = parseFloat(iconEl.style.left);
+        origTop = parseFloat(iconEl.style.top);
+        dragging = false;
+        didDrag = false;
+
+        iconEl.setPointerCapture(e.pointerId);
+        iconEl.addEventListener('pointermove', onPointerMove);
+        iconEl.addEventListener('pointerup', onPointerUp);
+        iconEl.addEventListener('pointercancel', onPointerCancel);
+    }
+
+    function onPointerMove(e) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if (!dragging) {
+            if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+            // Drag confirmed — prevent text selection from this point onward.
+            e.preventDefault();
+            dragging = true;
+            didDrag = true;
+            iconEl.classList.add('hbqs-tooltip-trigger--dragging');
+            hideHover();
+        }
+
+        const parentRect = parentEl.getBoundingClientRect();
+        const iconSize = iconEl.offsetWidth;
+
+        let newLeft = origLeft + dx;
+        let newTop = origTop + dy;
+
+        // Constrain within parent bounds
+        newLeft = Math.max(0, Math.min(newLeft, parentRect.width - iconSize));
+        newTop = Math.max(0, Math.min(newTop, parentRect.height - iconSize));
+
+        iconEl.style.left = `${newLeft}px`;
+        iconEl.style.top = `${newTop}px`;
+    }
+
+    function cleanupDrag(e) {
+        iconEl.releasePointerCapture(e.pointerId);
+        iconEl.removeEventListener('pointermove', onPointerMove);
+        iconEl.removeEventListener('pointerup', onPointerUp);
+        iconEl.removeEventListener('pointercancel', onPointerCancel);
+        iconEl.classList.remove('hbqs-tooltip-trigger--dragging');
+        dragging = false;
+    }
+
+    function onPointerUp(e) {
+        cleanupDrag(e);
+        // Persist position so it survives hide/show cycles
+        if (didDrag) {
+            draggedPositions.set(tooltipIndex, {
+                left: iconEl.style.left,
+                top: iconEl.style.top,
+            });
+        }
+        // didDrag intentionally left true — the click handler clears it once it
+        // fires (capture phase), so the dialog-open click is suppressed correctly.
+    }
+
+    function onPointerCancel(e) {
+        cleanupDrag(e);
+        // No click will follow a pointercancel, so reset didDrag explicitly to
+        // avoid permanently suppressing the next real click.
+        didDrag = false;
+    }
+
+    iconEl.addEventListener('pointerdown', onPointerDown);
+
+    // Suppress click when the interaction was a drag
+    iconEl.addEventListener(
+        'click',
+        (e) => {
+            if (didDrag) {
+                e.stopImmediatePropagation();
+                didDrag = false;
+            }
+        },
+        true, // capture phase so it fires before the dialog-opening click handler
+    );
+}
+
+/**
+ * Apply CSS position offsets for the icon based on the position config.
+ *
+ * @param {HTMLElement} iconEl - The tooltip icon element.
+ * @param {object} item - Tooltip configuration item.
+ */
+function applyPosition(iconEl, item) {
+    const position = item.iconPosition || 'top-right';
+
     // Reset
     iconEl.style.top = '';
     iconEl.style.bottom = '';
@@ -278,6 +430,17 @@ function applyPosition(iconEl, position) {
             iconEl.style.bottom = '4px';
             iconEl.style.right = '4px';
             break;
+        case 'percentage': {
+            const rawX = item.iconPositionX;
+            const rawY = item.iconPositionY;
+            logger.debug(`Percentage position — raw iconPositionX: ${rawX} (${typeof rawX}), iconPositionY: ${rawY} (${typeof rawY})`);
+            const x = Math.max(0, Math.min(100, Number(rawX) || 50));
+            const y = Math.max(0, Math.min(100, Number(rawY) || 50));
+            iconEl.style.left = `${x}%`;
+            iconEl.style.top = `${y}%`;
+            iconEl.style.setProperty('--hbqs-tt-translate', 'translate(-50%, -50%)');
+            break;
+        }
         default:
             iconEl.style.top = '4px';
             iconEl.style.right = '4px';

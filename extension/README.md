@@ -95,7 +95,7 @@ flowchart LR
 ### Key Capabilities
 
 - **Two targeting modes**: Select a Qlik Sense object from a dropdown (dynamically populated with all objects on the current sheet), or enter a CSS selector for any page element.
-- **Icon customization**: Choose from 11 built-in icons, configure size, position (8 anchor points), fill color, and background color.
+- **Icon customization**: Choose from 11 built-in icons, configure size, position (8 named anchor points or a percentage-based custom position), fill color, and background color. An optional **Floating** toggle lets users reposition the icon within the target element by click-dragging.
 - **Hover content**: Write content in Markdown — supports headings, bold/italic, lists, links, code, blockquotes, and images.
 - **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body.
 - **Per-tooltip colors**: Customize hover popup colors (background, text, border) and dialog colors (header background/text, body background/text) individually for each tooltip.

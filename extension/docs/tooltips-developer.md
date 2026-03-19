@@ -195,13 +195,40 @@ for each item in layout.tooltips:
 2. Creates a `<div>` with class `.hbqs-tooltip-trigger`, unique ID, ARIA attributes
 3. Applies icon color, background, size via CSS custom properties
 4. Renders SVG via `makeSvg(iconName, size, color)`
-5. Positions icon via `applyPosition()` (absolute offsets)
-6. Resolves all 9 theme colors via `resolveColor()`
-7. Attaches event listeners:
+5. Positions icon via `applyPosition(iconEl, item)` — sets absolute CSS offsets; for `'percentage'` uses `iconPositionX`/`iconPositionY` with `translate(-50%, -50%)` so the icon's *center* lands at the given percentages
+6. If `iconFloating` is `true`, adds the `--floating` modifier class and calls `enableDrag()` for pointer-based drag-to-move constrained within the parent
+7. Resolves all 9 theme colors via `resolveColor()`
+8. Attaches event listeners:
    - `mouseenter` → `showHover(iconEl, content, hoverColors)`
    - `mouseleave` → `scheduleHide()`
    - `click` → `openTooltipDialog({...options, ...dialogColors})`
    - `keydown` (Enter/Space) → same as click
+
+### applyPosition()
+
+`applyPosition(iconEl, item)` resets all positioning styles then applies the correct offsets for the chosen position:
+
+| `item.iconPosition` | Positioning applied |
+|---|---|
+| `top-left` | `top: 4px; left: 4px` |
+| `top-center` | `top: 4px; left: 50%; translateX(-50%)` |
+| `top-right` | `top: 4px; right: 4px` |
+| `center-left` | `top: 50%; left: 4px; translateY(-50%)` |
+| `center-right` | `top: 50%; right: 4px; translateY(-50%)` |
+| `bottom-left` | `bottom: 4px; left: 4px` |
+| `bottom-center` | `bottom: 4px; left: 50%; translateX(-50%)` |
+| `bottom-right` | `bottom: 4px; right: 4px` |
+| `percentage` | `left: X%; top: Y%; translate(-50%, -50%)` |
+
+Translate values are set via the `--hbqs-tt-translate` CSS custom property, which is consumed by the `.hbqs-tooltip-trigger` rule.
+
+### enableDrag()
+
+When `iconFloating` is `true`, pointer events make the icon draggable within its parent element:
+
+1. `pointerdown` converts any `right`/`bottom` positioning into explicit `left`/`top` values, captures the pointer, and records the starting coordinates.
+2. `pointermove` updates `left`/`top`, clamped to the parent bounds. A 5 px dead-zone prevents accidental drags from triggering.
+3. `pointerup` releases the capture. If the pointer moved past the threshold, a capture-phase `click` listener suppresses the dialog-opening click so the two actions don't conflict.
 
 ### Cleanup Phase
 
@@ -315,6 +342,13 @@ Tooltip trigger icons use CSS custom properties for runtime theming:
 | `--hbqs-tt-size` | Circle width/height | `28px` |
 
 These are set as inline styles on each `.hbqs-tooltip-trigger` element.
+
+### Modifier Classes
+
+| Class | Description |
+|---|---|
+| `.hbqs-tooltip-trigger--floating` | Applied when `iconFloating` is `true`. Sets `cursor: grab` and `touch-action: none`. |
+| `.hbqs-tooltip-trigger--dragging` | Applied during an active drag. Disables transitions and sets `cursor: grabbing`. |
 
 Hover popup and dialog colors are applied as **inline styles** (not CSS custom properties) because each popup/dialog is created dynamically per-tooltip and may have different colors.
 

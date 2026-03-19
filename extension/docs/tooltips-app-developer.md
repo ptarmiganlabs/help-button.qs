@@ -205,11 +205,27 @@ Expand the **Icon Appearance** section within each tooltip item to configure:
 |---|---|---|
 | **Icon** | Choose from: Help, Bug, Info, Mail, Link, Star, Lightbulb, Bookmark, Eye, Pin, Chart bar | Info |
 | **Icon size** | Icon dimensions in pixels | 20 |
-| **Position on target** | Where the icon is placed: top-left, top-center, top-right, center-left, center-right, bottom-left, bottom-center, bottom-right | Top right |
+| **Position on target** | Where the icon is placed: top-left, top-center, top-right, center-left, center-right, bottom-left, bottom-center, bottom-right, or **percentage** (custom position) | Top right |
+| **Horizontal position (%)** | Horizontal offset from the left edge (0–100%). The icon's center is placed at this percentage. Visible when position is **Percentage** | 80 |
+| **Vertical position (%)** | Vertical offset from the top edge (0–100%). The icon's center is placed at this percentage. Visible when position is **Percentage** | 10 |
+| **Floating (drag to move)** | Toggle that enables click-drag repositioning. Works with any initial placement | Off |
 | **Icon color** | Fill color of the SVG icon | White (`#ffffff`) |
 | **Background color** | Circle background behind the icon | Blue (`#165a9b`) |
 
 The icon is rendered as a circle with a subtle shadow. It scales up slightly on hover to provide visual feedback.
+
+### Percentage Position
+
+When **Position on target** is set to **Percentage**, two additional fields appear:
+
+- **Horizontal position (%)** — places the icon's center at the given percentage from the left edge of the target element.
+- **Vertical position (%)** — places the icon's center at the given percentage from the top edge of the target element.
+
+This allows pixel-precise placement independent of the predefined corner/center positions.
+
+### Floating (Drag to Move)
+
+The **Floating** toggle can be enabled for *any* initial placement (including percentage). When turned on, the icon can be repositioned by click-dragging it anywhere within the target element. A short click (without dragging) still opens the detail dialog as usual.
 
 ---
 
