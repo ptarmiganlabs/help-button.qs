@@ -30,6 +30,13 @@ let retryTimeout = null;
 let pendingItems = [];
 
 /**
+ * Stores dragged icon positions so they survive hide/show (destroy/inject) cycles.
+ * Key: tooltip index, Value: { left: string, top: string }.
+ * Intentionally NOT cleared in destroyTooltips() so positions persist.
+ */
+const draggedPositions = new Map();
+
+/**
  * Inject all tooltip icons defined in the layout.
  *
  * @param {object} layout - Extension layout containing `tooltips[]`.
@@ -176,7 +183,17 @@ function mountTooltipIcon(item, targetEl, index) {
     // Enable drag-to-move when floating toggle is on
     if (item.iconFloating) {
         iconEl.classList.add('hbqs-tooltip-trigger--floating');
-        enableDrag(iconEl, targetEl);
+        enableDrag(iconEl, targetEl, index);
+
+        // Restore previously dragged position if available
+        const saved = draggedPositions.get(index);
+        if (saved) {
+            iconEl.style.left = saved.left;
+            iconEl.style.top = saved.top;
+            iconEl.style.right = '';
+            iconEl.style.bottom = '';
+            iconEl.style.removeProperty('--hbqs-tt-translate');
+        }
     }
 
     // Resolve hover/dialog theme colors
@@ -245,8 +262,9 @@ function mountTooltipIcon(item, targetEl, index) {
  *
  * @param {HTMLElement} iconEl - The tooltip icon element.
  * @param {Element} parentEl - The parent element that constrains movement.
+ * @param {number} tooltipIndex - The tooltip's index, used to persist position.
  */
-function enableDrag(iconEl, parentEl) {
+function enableDrag(iconEl, parentEl, tooltipIndex) {
     let startX, startY;
     let origLeft, origTop;
     let dragging = false;
@@ -326,6 +344,13 @@ function enableDrag(iconEl, parentEl) {
 
     function onPointerUp(e) {
         cleanupDrag(e);
+        // Persist position so it survives hide/show cycles
+        if (didDrag) {
+            draggedPositions.set(tooltipIndex, {
+                left: iconEl.style.left,
+                top: iconEl.style.top,
+            });
+        }
         // didDrag intentionally left true — the click handler clears it once it
         // fires (capture phase), so the dialog-open click is suppressed correctly.
     }
