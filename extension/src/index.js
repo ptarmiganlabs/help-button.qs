@@ -255,6 +255,7 @@ export default function supernova(galaxy) {
                 const hideWidget = layout.widget?.hideWidget === true;
                 if (hideWidget) {
                     qlikWrapper.classList.add('hbqs-hidden-widget');
+                    qlikWrapper.setAttribute('aria-hidden', 'true');
                 }
 
                 return () => {
@@ -269,6 +270,7 @@ export default function supernova(galaxy) {
                         hoverMenuTarget.classList.remove('hbqs-no-hover-menu');
                     }
                     qlikWrapper.classList.remove('hbqs-hidden-widget');
+                    qlikWrapper.removeAttribute('aria-hidden');
                     destroyTooltips();
                 };
             }, [platform, adapter, layout, isEditMode, app]);

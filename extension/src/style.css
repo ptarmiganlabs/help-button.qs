@@ -721,7 +721,7 @@
  * Hidden widget — completely hides the extension grid cell in analysis mode
  * ------------------------------------------------------------------------- */
 .hbqs-hidden-widget {
-    opacity: 0 !important;
+    visibility: hidden !important;
     pointer-events: none !important;
     border: none !important;
     box-shadow: none !important;
