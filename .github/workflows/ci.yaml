@@ -142,10 +142,12 @@ jobs:
           mmdc -i README.md -o README-processed.md --puppeteerConfigFile /tmp/mmdc-puppeteer.json
 
           # Step 2: render the processed markdown (with inline SVG refs) to PDF
-          PUPPETEER_EXECUTABLE_PATH="$CHROME" md-to-pdf README-processed.md --output README.pdf
+          # md-to-pdf always names the output after the input (README-processed.pdf)
+          PUPPETEER_EXECUTABLE_PATH="$CHROME" md-to-pdf README-processed.md
 
-          # Clean up intermediate artefacts
+          # Clean up intermediate artefacts and give the PDF its final name
           rm -f README-processed.md README-processed-*.svg
+          mv README-processed.pdf README.pdf
           echo "PDF size: $(du -sh README.pdf)"
 
       - name: Create extension release zip
