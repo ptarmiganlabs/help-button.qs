@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.4.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.3.0...helpbutton-qs-v2.4.0) (2026-03-20)
+
+
+### Features
+
+* add build date + time to About section and About dialog ([c3cadac](https://github.com/ptarmiganlabs/help-button.qs/commit/c3cadac6632d9cdf13eb0afee75cf453b12f70e5))
+* add configurable payload key names for webhook JSON fields ([672be29](https://github.com/ptarmiganlabs/help-button.qs/commit/672be2956650bc8b370109b637d44f146652439b))
+* add custom payload key names for webhook JSON fields ([a3d0c28](https://github.com/ptarmiganlabs/help-button.qs/commit/a3d0c2893e4a8a6c393f2783fb1796e50713941b))
+* add floating (drag-to-move) position option for tooltip icons ([dccb4dd](https://github.com/ptarmiganlabs/help-button.qs/commit/dccb4dd96f19e1e91428651f393400964dc32d9e))
+* add inline code, ordered/unordered list, and blockquote shortcuts ([29c48a6](https://github.com/ptarmiganlabs/help-button.qs/commit/29c48a6e16ac37d24e8118faa6f94c042c82c64b))
+* add Markdown keyboard shortcuts (Ctrl+B/I/K) to dialog textareas ([5e37a9c](https://github.com/ptarmiganlabs/help-button.qs/commit/5e37a9c15c05d49ef1edae478b01aa0d9f777ae7))
+* add Markdown keyboard shortcuts and modal Markdown editor dialog ([3128bdd](https://github.com/ptarmiganlabs/help-button.qs/commit/3128bdd75f67875e984236c8745ea36256ee7a29))
+* add modal Markdown editor dialog for property panel textareas ([f6d56ae](https://github.com/ptarmiganlabs/help-button.qs/commit/f6d56ae9afc0622704022fdfd8700bafd38b96e2))
+* add option to completely hide extension widget on sheet in analysis mode ([958efa6](https://github.com/ptarmiganlabs/help-button.qs/commit/958efa6ca5825b1d56b84d38e7f117940d188311))
+* add option to completely hide extension widget on sheet in analysis mode ([ba9e39d](https://github.com/ptarmiganlabs/help-button.qs/commit/ba9e39de4040d7c49b8622ecbcfdd7636729c303))
+* add payload key name text inputs to property panel ([f8c55f8](https://github.com/ptarmiganlabs/help-button.qs/commit/f8c55f8a932a92b5f68a8709299ab04e7693dd05))
+* add PDF generation for extension README and include in release ZIP ([ea9200b](https://github.com/ptarmiganlabs/help-button.qs/commit/ea9200b03aab2112146c5c9956a221298d6e2d50))
+* add setVariable action type for menu items ([9cad0d2](https://github.com/ptarmiganlabs/help-button.qs/commit/9cad0d2cdf6cacd41e04f5051825342f8f6c9c4f))
+* **demo-server:** log full payload when custom key names are detected ([cc0c8fd](https://github.com/ptarmiganlabs/help-button.qs/commit/cc0c8fd5e0972327bd96deb78548fd71c4b8d7cc))
+* implement tabbed Markdown editor for enhanced editing experience in dialogs ([08303f6](https://github.com/ptarmiganlabs/help-button.qs/commit/08303f6fdde7235137da16cad12c7107b37baa00))
+
+
+### Bug Fixes
+
+* address code review feedback for SVG spacing and includes() pattern ([a66e1dc](https://github.com/ptarmiganlabs/help-button.qs/commit/a66e1dc704e045ffd3f34da0554ec66bb7bcbad6))
+* md-to-pdf has no --output flag, rename output file instead ([b649c9d](https://github.com/ptarmiganlabs/help-button.qs/commit/b649c9de299f60fb2f5d9beee8082d52c80d7857))
+* pin PDF tools, add mmdc Mermaid pre-processing, use pre-installed Chrome ([e66ffcb](https://github.com/ptarmiganlabs/help-button.qs/commit/e66ffcbb2df2a8e3bd971b21d214028b9ed0eb64))
+* render Mermaid diagrams in PDF, pin tool versions, use pre-installed Chrome ([739041c](https://github.com/ptarmiganlabs/help-button.qs/commit/739041c032df4174ae2109ac832d98b9de290245))
+
+
+### Miscellaneous
+
+* add temporary PDF generation test workflow ([2ae156a](https://github.com/ptarmiganlabs/help-button.qs/commit/2ae156a0ed8e93f19f8c53486703a85ef09efcff))
+* **deps-dev:** bump flatted ([801bf5e](https://github.com/ptarmiganlabs/help-button.qs/commit/801bf5e4fa1e1919a841288c31ea4627091583a9))
+* **deps-dev:** bump flatted from 3.3.4 to 3.4.2 in /extension in the npm_and_yarn group across 1 directory ([d0041d5](https://github.com/ptarmiganlabs/help-button.qs/commit/d0041d51bcf0a7410d9caaac29110cf7c798de11))
+* **deps:** bump serialize-javascript from 6.0.2 to 7.0.4 in /extension in the npm_and_yarn group across 1 directory ([87da7b6](https://github.com/ptarmiganlabs/help-button.qs/commit/87da7b6d77abf06c5a3cfc230733f99a44cc4e04))
+
+
+### Documentation
+
+* Add set/toggle variable action type to menu items ([c25293b](https://github.com/ptarmiganlabs/help-button.qs/commit/c25293b00ac7c03dcec625a6511cc708dca7482b))
+
 ## [2.3.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.2.0...helpbutton-qs-v2.3.0) (2026-03-15)
 
 
