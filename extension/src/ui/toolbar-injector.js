@@ -3,6 +3,13 @@
  *
  * Handles finding the toolbar anchor, creating the help button element,
  * injecting it, and watching for SPA navigation/removal.
+ *
+ * Multi-instance support: when several HelpButton.qs extension objects
+ * live on the same sheet, each registers its config via
+ * `registerHelpConfig()`.  The module uses the first registered config
+ * to build a single toolbar button (singleton).  When an object is
+ * removed or its settings change, it unregisters and the button rebuilds
+ * from the remaining registrations — or is destroyed if none remain.
  */
 
 import { makeSvg } from './icons';
@@ -41,9 +48,100 @@ let removalObserver = null;
  * re-inject the button after SPA navigation even when the
  * Supernova component is no longer mounted.
  *
- * @type {{ layout: object, adapter: object, platform: object, app: object } | null}
+ * @type {{ adapter: object, platform: object } | null}
  */
 let lastConfig = null;
+
+// ---------------------------------------------------------------------------
+// Multi-instance config registry
+// ---------------------------------------------------------------------------
+
+/**
+ * Registry of configs contributed by each HelpButton.qs extension object.
+ * Key = object ID (layout.qInfo.qId), value = { layout, app }.
+ *
+ * @type {Map<string, { layout: object, app: object }>}
+ */
+const configRegistry = new Map();
+
+/**
+ * Register config from one HelpButton.qs extension object and rebuild
+ * the toolbar button.
+ *
+ * @param {string} objectId - Unique object ID (layout.qInfo.qId).
+ * @param {object} layout - Extension layout from useLayout().
+ * @param {object} adapter - Platform adapter module.
+ * @param {{ type: string, codePath: string }} platform - Platform detection result.
+ * @param {object} [app] - Enigma.js Doc/App object.
+ */
+export function registerHelpConfig(objectId, layout, adapter, platform, app) {
+    const menuItems = layout.menuItems || [];
+    if (menuItems.length === 0) {
+        unregisterHelpConfig(objectId);
+        return;
+    }
+
+    configRegistry.set(objectId, { layout, app });
+    lastConfig = { adapter, platform };
+
+    rebuildHelpButton();
+}
+
+/**
+ * Unregister config for a specific HelpButton.qs object and rebuild
+ * (or remove) the toolbar button.
+ *
+ * @param {string} objectId - Unique object ID.
+ * @param {{ clearConfig?: boolean }} [options] - When clearConfig is true,
+ *   also wipe stored config so watchForRemoval will NOT re-inject.
+ */
+export function unregisterHelpConfig(objectId, { clearConfig = false } = {}) {
+    configRegistry.delete(objectId);
+
+    if (clearConfig && configRegistry.size === 0) {
+        lastConfig = null;
+    }
+
+    if (configRegistry.size === 0) {
+        destroyHelpButton({ clearConfig });
+    } else {
+        rebuildHelpButton();
+    }
+}
+
+/**
+ * Rebuild the help button by merging menu items from all registered configs.
+ * Button appearance (label, icon, colours, popup title) comes from the first
+ * registered config; menu items are concatenated from all configs.
+ */
+function rebuildHelpButton() {
+    if (!lastConfig || configRegistry.size === 0) return;
+    const { adapter, platform } = lastConfig;
+
+    // Build a merged layout: first config provides appearance, all provide menuItems.
+    // Deep-clone before passing to injectHelpButton() because it mutates nested
+    // menu-item config (bugReport.dialogStrings, feedback.dialogStrings).
+    const entries = [...configRegistry.values()];
+    const baseLayout = entries[0].layout;
+    const app = entries[0].app;
+
+    if (entries.length === 1) {
+        // Single config — clone to protect the stored layout from mutation
+        injectHelpButton(structuredClone(baseLayout), adapter, platform, app);
+        return;
+    }
+
+    // Merge menuItems from all configs
+    const mergedMenuItems = [];
+    for (const { layout } of entries) {
+        const items = layout.menuItems || [];
+        mergedMenuItems.push(...items);
+    }
+
+    // Deep-clone so injectHelpButton() cannot mutate stored registry entries
+    const mergedLayout = structuredClone({ ...baseLayout, menuItems: mergedMenuItems });
+    injectHelpButton(mergedLayout, adapter, platform, app);
+}
 
 /**
  * Inject the help button into the toolbar.
@@ -63,7 +161,7 @@ export function injectHelpButton(layout, adapter, platform, app) {
     }
 
     // Persist config so watchForRemoval can re-inject without the component
-    lastConfig = { layout, adapter, platform, app };
+    lastConfig = { adapter, platform };
 
     // Guard against double-injection
     if (document.getElementById(CONTAINER_ID)) {
@@ -279,8 +377,8 @@ function watchForRemoval() {
         if (!document.getElementById(CONTAINER_ID) && lastConfig) {
             logger.debug('Help button removed from DOM (SPA navigation?). Re-injecting…');
             setTimeout(() => {
-                if (lastConfig) {
-                    injectHelpButton(lastConfig.layout, lastConfig.adapter, lastConfig.platform, lastConfig.app);
+                if (lastConfig && configRegistry.size > 0) {
+                    rebuildHelpButton();
                 }
             }, 300);
         }
@@ -311,6 +409,7 @@ export function destroyHelpButton({ clearConfig = false } = {}) {
 
     if (clearConfig) {
         lastConfig = null;
+        configRegistry.clear();
     }
 
     if (removalObserver) {

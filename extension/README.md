@@ -38,6 +38,23 @@ flowchart TD
     G --> H[Open Links/Bug Report/Feedback with App Context]
 ```
 
+## Toolbar Coexistence with Onboard.qs
+
+HelpButton.qs is designed to work alongside [Onboard.qs](https://github.com/ptarmiganlabs/onboard.qs) when both extensions inject buttons into the Qlik Sense app toolbar.
+
+### Button ordering
+
+When both extensions are present on a sheet:
+
+1. **HelpButton.qs** always occupies the **leftmost** position (inserted as `firstChild` of the toolbar anchor, `#top-bar-right-side`).
+2. **Onboard.qs** detects the Help button container (`#hbqs-container`) and positions its "Start Tour" button immediately **after** it.
+
+This ordering is stable regardless of which extension was added to the sheet first.
+
+### Multiple instances on the same sheet
+
+It is valid to place several HelpButton.qs extension objects on the same sheet. Each object registers its config in a shared registry. The toolbar button is rendered from the first registered config. When an object is removed or has no menu items, it unregisters and the button rebuilds from the remaining objects — or is removed entirely if none remain.
+
 ## Installation
 
 1. Download the latest compiled extension `.zip` file from the releases page (or build it from source). Unzip that file to get the `helpbutton-qs.zip` package, which is the actual extension to be imported into Qlik Sense.

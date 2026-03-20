@@ -4,6 +4,12 @@
  * Renders tooltip trigger icons on Qlik Sense chart objects or arbitrary
  * CSS-selected elements. Each icon shows a hover popup and optionally
  * opens a detail dialog on click.
+ *
+ * Multi-instance support: when several HelpButton.qs extension objects
+ * live on the same sheet, each registers its tooltips via
+ * `registerTooltips()`.  The module merges all registered tooltip arrays
+ * and injects them together so all tooltip icons appear regardless of
+ * the number of extension objects.
  */
 
 import { makeSvg } from './icons';
@@ -36,6 +42,74 @@ let pendingItems = [];
  */
 const draggedPositions = new Map();
 
+// ---------------------------------------------------------------------------
+// Multi-instance tooltip registry
+// ---------------------------------------------------------------------------
+
+/**
+ * Registry of tooltips contributed by each HelpButton.qs extension object.
+ * Key = object ID (layout.qInfo.qId), value = { layout, adapter, platform }.
+ *
+ * @type {Map<string, { layout: object, adapter: object, platform: object }>}
+ */
+const tooltipRegistry = new Map();
+
+/**
+ * Register tooltips from one HelpButton.qs extension object and re-inject
+ * the merged tooltip set.
+ *
+ * @param {string} objectId - Unique object ID (layout.qInfo.qId).
+ * @param {object} layout - Extension layout containing `tooltips[]`.
+ * @param {object} adapter - Platform adapter module.
+ * @param {{ type: string, codePath: string }} platform - Platform detection result.
+ */
+export function registerTooltips(objectId, layout, adapter, platform) {
+    tooltipRegistry.set(objectId, { layout, adapter, platform });
+    rebuildTooltips();
+}
+
+/**
+ * Unregister tooltips for a specific HelpButton.qs object and re-inject
+ * (or clear) the remaining tooltips.
+ *
+ * @param {string} objectId - Unique object ID.
+ */
+export function unregisterTooltips(objectId) {
+    tooltipRegistry.delete(objectId);
+    if (tooltipRegistry.size === 0) {
+        destroyTooltips();
+    } else {
+        rebuildTooltips();
+    }
+}
+
+/**
+ * Rebuild tooltips by merging tooltip arrays from all registered objects
+ * and calling the core `injectTooltips` function with a merged layout.
+ */
+function rebuildTooltips() {
+    if (tooltipRegistry.size === 0) return;
+
+    const entries = [...tooltipRegistry.values()];
+    // Use the first entry's adapter and platform
+    const { adapter, platform } = entries[0];
+
+    // Merge all tooltip arrays, tagging each with a stable key so that
+    // element IDs and persisted drag positions survive index shifts when
+    // objects are added/removed.
+    const mergedTooltips = [];
+    for (const [objectId, { layout }] of tooltipRegistry) {
+        const items = layout.tooltips || [];
+        items.forEach((item, localIdx) => {
+            mergedTooltips.push({ ...item, _stableKey: `${objectId}:${localIdx}` });
+        });
+    }
+
+    // Build a merged layout for the core injector
+    const mergedLayout = { ...entries[0].layout, tooltips: mergedTooltips };
+    injectTooltips(mergedLayout, adapter, platform);
+}
+
 /**
  * Inject all tooltip icons defined in the layout.
  *
@@ -60,12 +134,16 @@ export function injectTooltips(layout, adapter, platform) {
             return;
         }
 
+        // Use a stable key when available (multi-instance merge) so that
+        // element IDs and drag positions survive index shifts.
+        const key = item._stableKey || String(index);
+
         const targetEl = resolveTarget(item, adapter, platform);
         if (targetEl) {
-            mountTooltipIcon(item, targetEl, index);
+            mountTooltipIcon(item, targetEl, key);
         } else {
             // Target not yet in DOM — queue for retry
-            pendingItems.push({ item, index });
+            pendingItems.push({ item, key });
             logger.debug(`Tooltip "${item.tooltipLabel}" target not found, queued for retry`);
         }
     });
@@ -152,9 +230,9 @@ function resolveTarget(item, adapter, platform) {
  *
  * @param {object} item - Tooltip configuration.
  * @param {Element} targetEl - Target DOM element.
- * @param {number} index - Tooltip index (for unique ID).
+ * @param {string} key - Stable key for unique ID and drag-position persistence.
  */
-function mountTooltipIcon(item, targetEl, index) {
+function mountTooltipIcon(item, targetEl, key) {
     // Ensure target is a positioning context
     const computed = getComputedStyle(targetEl);
     if (computed.position === 'static') {
@@ -162,7 +240,7 @@ function mountTooltipIcon(item, targetEl, index) {
     }
 
     const iconEl = document.createElement('div');
-    iconEl.id = `${ID_PREFIX}${index}`;
+    iconEl.id = `${ID_PREFIX}${key}`;
     iconEl.className = 'hbqs-tooltip-trigger';
     iconEl.setAttribute('role', 'button');
     iconEl.setAttribute('tabindex', '0');
@@ -183,10 +261,10 @@ function mountTooltipIcon(item, targetEl, index) {
     // Enable drag-to-move when floating toggle is on
     if (item.iconFloating) {
         iconEl.classList.add('hbqs-tooltip-trigger--floating');
-        enableDrag(iconEl, targetEl, index);
+        enableDrag(iconEl, targetEl, key);
 
         // Restore previously dragged position if available
-        const saved = draggedPositions.get(index);
+        const saved = draggedPositions.get(key);
         if (saved) {
             iconEl.style.left = saved.left;
             iconEl.style.top = saved.top;
@@ -262,9 +340,9 @@ function mountTooltipIcon(item, targetEl, index) {
  *
  * @param {HTMLElement} iconEl - The tooltip icon element.
  * @param {Element} parentEl - The parent element that constrains movement.
- * @param {number} tooltipIndex - The tooltip's index, used to persist position.
+ * @param {string} tooltipKey - Stable key used to persist drag position.
  */
-function enableDrag(iconEl, parentEl, tooltipIndex) {
+function enableDrag(iconEl, parentEl, tooltipKey) {
     let startX, startY;
     let origLeft, origTop;
     let dragging = false;
@@ -346,7 +424,7 @@ function enableDrag(iconEl, parentEl, tooltipIndex) {
         cleanupDrag(e);
         // Persist position so it survives hide/show cycles
         if (didDrag) {
-            draggedPositions.set(tooltipIndex, {
+            draggedPositions.set(tooltipKey, {
                 left: iconEl.style.left,
                 top: iconEl.style.top,
             });
@@ -473,15 +551,15 @@ function startRetryObserver(adapter, platform) {
         }
 
         const stillPending = [];
-        for (const { item, index } of pendingItems) {
+        for (const { item, key } of pendingItems) {
             // Skip if already mounted (e.g. by a previous mutation batch)
-            if (document.getElementById(`${ID_PREFIX}${index}`)) continue;
+            if (document.getElementById(`${ID_PREFIX}${key}`)) continue;
 
             const targetEl = resolveTarget(item, adapter, platform);
             if (targetEl) {
-                mountTooltipIcon(item, targetEl, index);
+                mountTooltipIcon(item, targetEl, key);
             } else {
-                stillPending.push({ item, index });
+                stillPending.push({ item, key });
             }
         }
         pendingItems = stillPending;

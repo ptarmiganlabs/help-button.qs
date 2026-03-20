@@ -32,7 +32,7 @@
 .hbqs-container {
     display: flex;
     align-items: center;
-    margin-right: 8px;
+    margin: 0 4px;
     position: relative;
     z-index: 100;
 }
