@@ -118,14 +118,16 @@ function rebuildHelpButton() {
     if (!lastConfig || configRegistry.size === 0) return;
     const { adapter, platform } = lastConfig;
 
-    // Build a merged layout: first config provides appearance, all provide menuItems
+    // Build a merged layout: first config provides appearance, all provide menuItems.
+    // Deep-clone before passing to injectHelpButton() because it mutates nested
+    // menu-item config (bugReport.dialogStrings, feedback.dialogStrings).
     const entries = [...configRegistry.values()];
     const baseLayout = entries[0].layout;
     const app = entries[0].app;
 
     if (entries.length === 1) {
-        // Single config — no merging needed
-        injectHelpButton(baseLayout, adapter, platform, app);
+        // Single config — clone to protect the stored layout from mutation
+        injectHelpButton(structuredClone(baseLayout), adapter, platform, app);
         return;
     }
 
@@ -136,8 +138,8 @@ function rebuildHelpButton() {
         mergedMenuItems.push(...items);
     }
 
-    // Create a shallow copy of the base layout with merged menuItems
-    const mergedLayout = { ...baseLayout, menuItems: mergedMenuItems };
+    // Deep-clone so injectHelpButton() cannot mutate stored registry entries
+    const mergedLayout = structuredClone({ ...baseLayout, menuItems: mergedMenuItems });
     injectHelpButton(mergedLayout, adapter, platform, app);
 }
 

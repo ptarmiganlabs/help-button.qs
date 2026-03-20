@@ -180,8 +180,10 @@ export default function supernova(galaxy) {
                 if (app) {
                     registerHelpConfig(layout.qInfo.qId, layout, adapter, platform, app);
                 }
-                // No cleanup returned — the button is a page-level singleton
-                // that must survive component unmount on sheet navigation.
+                // The toolbar button is a page-level singleton that must
+                // survive component unmount on sheet navigation.
+                // Cleanup only unregisters tooltips (sheet-specific); the help
+                // config is deliberately kept so the button persists.
                 // registerHelpConfig() handles updates via the config registry.
                 // watchForRemoval() handles re-injection after SPA navigation.
 
@@ -274,8 +276,9 @@ export default function supernova(galaxy) {
                     }
                     qlikWrapper.classList.remove('hbqs-hidden-widget');
                     qlikWrapper.removeAttribute('aria-hidden');
+                    // Clean up per-instance tooltips, but keep the global help config
+                    // so the toolbar button can persist across sheet navigation.
                     unregisterTooltips(layout.qInfo.qId);
-                    unregisterHelpConfig(layout.qInfo.qId);
                 };
             }, [platform, adapter, layout, isEditMode, app]);
 
