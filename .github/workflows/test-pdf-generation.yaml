@@ -1,0 +1,44 @@
+# TEMPORARY — delete after PDF output has been verified.
+name: test-pdf-generation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-pdf:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install Chromium
+        run: sudo apt-get install -y chromium-browser
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: Install md-to-pdf
+        run: npm install -g md-to-pdf
+
+      - name: Generate README PDF
+        run: |
+          cd extension
+          PUPPETEER_EXECUTABLE_PATH=$(which chromium-browser 2>/dev/null || which chromium) \
+            md-to-pdf README.md
+          echo "PDF size: $(du -sh README.pdf)"
+
+      - name: Create draft release with PDF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="pdf-test-$(date +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" \
+            extension/README.pdf \
+            --draft \
+            --title "[TEST] README PDF output — $TAG" \
+            --notes "Temporary test release for verifying README PDF generation. Delete after review."
+          echo "Draft release created with tag: $TAG"
