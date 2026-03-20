@@ -16,7 +16,7 @@ import { resolveText } from '../i18n/index';
 import logger from '../util/logger';
 import { fetchSenseVersionLabel } from '../util/product-info';
 import { formatTimestamp, DEFAULT_DIALOG_FORMAT, DEFAULT_PAYLOAD_FORMAT } from '../util/timestamp-formats';
-import { attachMarkdownShortcuts } from '../util/markdown-shortcuts';
+import { createTabbedMarkdownEditor } from './markdown-toolbar';
 
 // ---------------------------------------------------------------------------
 // Field labels — maps internal field keys to user-visible labels.
@@ -305,16 +305,16 @@ export function openFeedbackDialog(config, platformType) {
             commentLabelEl.htmlFor = 'hbqs-feedback-comment';
             commentGroup.appendChild(commentLabelEl);
 
-            commentTextarea = document.createElement('textarea');
-            commentTextarea.id = 'hbqs-feedback-comment';
-            commentTextarea.className = 'hbqs-bug-report-textarea';
-            commentTextarea.placeholder = commentPlaceholder;
-            commentTextarea.rows = 4;
-            if (commentMaxLength > 0) {
-                commentTextarea.maxLength = commentMaxLength;
-            }
-            commentGroup.appendChild(commentTextarea);
-            attachMarkdownShortcuts(commentTextarea);
+            // Tabbed Write/Preview Markdown editor
+            const { container: tabbedEditor, textarea: tabbedTextarea } = createTabbedMarkdownEditor({
+                id: 'hbqs-feedback-comment',
+                placeholder: commentPlaceholder,
+                rows: 4,
+                maxLength: commentMaxLength > 0 ? commentMaxLength : 0,
+                className: 'hbqs-bug-report-textarea',
+            });
+            commentTextarea = tabbedTextarea;
+            commentGroup.appendChild(tabbedEditor);
 
             // Character counter
             if (commentMaxLength > 0) {

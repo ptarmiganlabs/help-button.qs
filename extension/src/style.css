@@ -1062,3 +1062,256 @@
     border-left: 3px solid #d1d5db;
     background: #f9fafb;
 }
+
+/* =========================================================================
+ *  Tabbed Markdown editor (Write / Preview) — shared by all dialogs
+ * ========================================================================= */
+
+.hbqs-md-tabbed {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* -- Header: tabs + toolbar buttons -- */
+
+.hbqs-md-tabbed-header {
+    display: flex;
+    align-items: center;
+    background: #f6f8fa;
+    border-bottom: 1px solid #d1d5db;
+    padding: 0 6px;
+    gap: 0;
+}
+
+.hbqs-md-tabbed-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #57606a;
+    transition: color 0.12s, border-color 0.12s;
+}
+
+.hbqs-md-tabbed-tab:hover {
+    color: #24292f;
+}
+
+.hbqs-md-tabbed-tab--active {
+    color: #24292f;
+    border-bottom-color: #fd8c73;
+}
+
+/* Toolbar buttons inline after tabs */
+
+.hbqs-md-tabbed-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    margin-left: auto;
+    padding: 0 4px;
+}
+
+.hbqs-md-tabbed-toolbar-btn {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 2px 6px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: #57606a;
+    min-width: 22px;
+    text-align: center;
+}
+
+.hbqs-md-tabbed-toolbar-btn:hover {
+    background: #e1e4e8;
+    color: #24292f;
+}
+
+.hbqs-md-tabbed-toolbar-sep {
+    width: 1px;
+    height: 16px;
+    background: #d1d5db;
+    margin: 0 4px;
+}
+
+/* -- Panels -- */
+
+.hbqs-md-tabbed-panel--write {
+    display: block;
+}
+
+.hbqs-md-tabbed-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+    color: #1f2937;
+    background: #ffffff;
+}
+
+.hbqs-md-tabbed-textarea::placeholder {
+    color: #9ca3af;
+}
+
+.hbqs-md-tabbed-panel--preview {
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+    min-height: 100px;
+    overflow-y: auto;
+}
+
+/* Inside the modal editor dialog, let the tabbed editor fill space */
+.hbqs-md-editor-dialog .hbqs-md-tabbed-panel--write {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.hbqs-md-editor-dialog .hbqs-md-tabbed-textarea {
+    flex: 1;
+    resize: none;
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    min-height: 0;
+}
+
+.hbqs-md-editor-dialog .hbqs-md-tabbed-panel--preview {
+    flex: 1;
+    min-height: 0;
+}
+
+/* =========================================================================
+ *  Markdown editor dialog (property-panel "Edit Markdown" button)
+ * ========================================================================= */
+
+.hbqs-md-editor-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10010;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hbqs-md-editor-dialog {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    width: 860px;
+    max-width: 92vw;
+    height: 560px;
+    max-height: 88vh;
+    overflow: hidden;
+}
+
+.hbqs-md-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    flex-shrink: 0;
+}
+
+.hbqs-md-editor-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.hbqs-md-editor-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+}
+
+.hbqs-md-editor-close:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* -- Formatting toolbar is now provided by .hbqs-md-tabbed-* above -- */
+
+/* -- Textarea and preview are now inside .hbqs-md-tabbed-* -- */
+
+/* -- Counter -- */
+
+.hbqs-md-editor-counter {
+    padding: 4px 16px;
+    font-size: 11px;
+    color: #6b7280;
+    text-align: right;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    flex-shrink: 0;
+}
+
+.hbqs-md-editor-counter--exceeded {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+/* -- Footer -- */
+
+.hbqs-md-editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 18px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    flex-shrink: 0;
+}
+
+.hbqs-md-editor-btn {
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #d1d5db;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.hbqs-md-editor-btn--cancel {
+    background: #ffffff;
+    color: #374151;
+}
+
+.hbqs-md-editor-btn--cancel:hover {
+    background: #f3f4f6;
+}
+
+.hbqs-md-editor-btn--save {
+    background: #165a9b;
+    color: #ffffff;
+    border-color: #0e3b65;
+}
+
+.hbqs-md-editor-btn--save:hover {
+    background: #12487c;
+}

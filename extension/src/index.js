@@ -30,6 +30,7 @@ import { resolveText, setForceLocale } from './i18n/index';
 import { escapeHtml } from './util/template-fields';
 import { applyPresetToNewTooltips } from './theme/presets';
 import logger, { PACKAGE_VERSION, BUILD_DATE } from './util/logger';
+import { extensionState } from './util/extension-state';
 import './style.css';
 
 export default function supernova(galaxy) {
@@ -48,6 +49,7 @@ export default function supernova(galaxy) {
             const layout = useLayout();
             const element = useElement();
             const model = useModel();
+            extensionState.model = model;
             const options = useOptions();
             const app = useApp();
             const layoutRef = useRef(layout);

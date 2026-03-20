@@ -9,6 +9,9 @@
 
 import { toPickerObj } from "../util/color";
 import { ICON_NAMES } from "../ui/icons";
+import { openMarkdownEditorDialog } from "../ui/markdown-editor-dialog";
+import { extensionState } from "../util/extension-state";
+import logger from "../util/logger";
 
 export default function tooltipsSection(getObjectList) {
   return {
@@ -257,6 +260,21 @@ export default function tooltipsSection(getObjectList) {
                     defaultValue: "",
                     maxlength: 256,
                   },
+                  editHoverContentBtn: {
+                    label: "Edit in Markdown editor",
+                    component: "button",
+                    action(item) {
+                      const itemCId = item.cId;
+                      openMarkdownEditorDialog({
+                        title: "Edit Tooltip Text",
+                        value: item.hoverContent || "",
+                        maxLength: 256,
+                        async onSave(text) {
+                          await persistTooltipProperty(itemCId, "hoverContent", text);
+                        },
+                      });
+                    },
+                  },
                 },
               },
             },
@@ -301,6 +319,22 @@ export default function tooltipsSection(getObjectList) {
                     maxlength: 16384,
                     show: (item) => item.dialogEnabled !== false,
                   },
+                  editDialogContentBtn: {
+                    label: "Edit in Markdown editor",
+                    component: "button",
+                    show: (item) => item.dialogEnabled !== false,
+                    action(item) {
+                      const itemCId = item.cId;
+                      openMarkdownEditorDialog({
+                        title: "Edit Dialog Content",
+                        value: item.dialogContent || "",
+                        maxLength: 16384,
+                        async onSave(text) {
+                          await persistTooltipProperty(itemCId, "dialogContent", text);
+                        },
+                      });
+                    },
+                  },
                   dialogSize: {
                     ref: "dialogSize",
                     label: "Dialog size",
@@ -323,4 +357,29 @@ export default function tooltipsSection(getObjectList) {
       },
     },
   };
+}
+
+// ---------------------------------------------------------------------------
+// Helper — persist a single tooltip property via the engine API
+// ---------------------------------------------------------------------------
+
+async function persistTooltipProperty(cId, property, value) {
+  const { model } = extensionState;
+  if (!model) {
+    logger.warn('Cannot persist property change — model not available');
+    return;
+  }
+
+  try {
+    const props = await model.getProperties();
+    const tooltip = props.tooltips?.find((t) => t.cId === cId);
+    if (tooltip) {
+      tooltip[property] = value;
+      await model.setProperties(props);
+    } else {
+      logger.warn('Tooltip not found for cId:', cId);
+    }
+  } catch (err) {
+    logger.warn('Failed to persist Markdown editor change:', err);
+  }
 }

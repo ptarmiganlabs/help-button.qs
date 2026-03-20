@@ -14,7 +14,7 @@ import { resolveText } from '../i18n/index';
 import logger from '../util/logger';
 import { fetchSenseVersionLabel } from '../util/product-info';
 import { formatTimestamp, DEFAULT_DIALOG_FORMAT, DEFAULT_PAYLOAD_FORMAT } from '../util/timestamp-formats';
-import { attachMarkdownShortcuts } from '../util/markdown-shortcuts';
+import { createTabbedMarkdownEditor } from './markdown-toolbar';
 
 // ---------------------------------------------------------------------------
 // Field labels — maps internal field keys to user-visible labels.
@@ -318,16 +318,16 @@ export function openBugReportDialog(config, platformType) {
         label.htmlFor = 'hbqs-bug-report-description';
         descGroup.appendChild(label);
 
-        descriptionTextarea = document.createElement('textarea');
-        descriptionTextarea.id = 'hbqs-bug-report-description';
-        descriptionTextarea.className = 'hbqs-bug-report-textarea';
-        descriptionTextarea.placeholder = descriptionPlaceholder;
-        descriptionTextarea.rows = 4;
-        if (descriptionMaxLength > 0) {
-            descriptionTextarea.maxLength = descriptionMaxLength;
-        }
-        descGroup.appendChild(descriptionTextarea);
-        attachMarkdownShortcuts(descriptionTextarea);
+        // Tabbed Write/Preview Markdown editor
+        const { container: tabbedEditor, textarea: tabbedTextarea } = createTabbedMarkdownEditor({
+            id: 'hbqs-bug-report-description',
+            placeholder: descriptionPlaceholder,
+            rows: 4,
+            maxLength: descriptionMaxLength > 0 ? descriptionMaxLength : 0,
+            className: 'hbqs-bug-report-textarea',
+        });
+        descriptionTextarea = tabbedTextarea;
+        descGroup.appendChild(tabbedEditor);
 
         // Character counter
         if (descriptionMaxLength > 0) {

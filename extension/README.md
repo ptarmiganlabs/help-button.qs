@@ -121,6 +121,60 @@ flowchart TD
 - **App developers**: See [Tooltips — App Developer Guide](docs/tooltips-app-developer.md) for a complete walkthrough of configuring tooltips from the property panel, including how to find CSS selectors using browser DevTools.
 - **Extension developers**: See [Tooltips — Developer Guide](docs/tooltips-developer.md) for the technical architecture, data model, theme system internals, and how to extend the feature.
 
+## Markdown Editing
+
+Several text fields in the extension support rich **Markdown** content. All Markdown editing surfaces share the same GitHub-style editor experience:
+
+### Write / Preview Tabs
+
+Every Markdown-enabled text field in the extension's dialogs has two tabs:
+
+- **Write** — A plain-text editor with a formatting toolbar above it.
+- **Preview** — A rendered HTML preview of the Markdown you have typed, shown inline inside the same dialog before you save.
+
+Click the **Preview** tab to verify how the Markdown will render, then click **Write** to continue editing.
+
+### Formatting Toolbar
+
+When on the **Write** tab, a toolbar appears at the top-right of the editor with one-click buttons for common Markdown formatting:
+
+| Button | Action | Keyboard shortcut |
+|--------|--------|-------------------|
+| **B** | Bold (`**text**`) | Cmd/Ctrl+B |
+| *I* | Italic (`*text*`) | Cmd/Ctrl+I |
+| `<>` | Inline code (`` `text` ``) | Cmd/Ctrl+E |
+| 🔗 | Link (`[text](url)`) | Cmd/Ctrl+K |
+| H3 | Heading 3 (`### text`) | — |
+| H4 | Heading 4 (`#### text`) | — |
+| • | Bullet list (`- text`) | — |
+| 1. | Numbered list (`1. text`) | — |
+| ❝ | Blockquote (`> text`) | — |
+| — | Horizontal rule (`---`) | — |
+
+When text is selected before clicking a toolbar button (or pressing a shortcut), the formatting wraps the selection. For list and heading buttons, the prefix is toggled on the affected lines.
+
+### Where Markdown Editing Is Available
+
+#### Bug Report Dialog
+
+The **description** field in the bug report dialog uses the tabbed Markdown editor. This lets reporters use formatting, code snippets, and lists to describe an issue clearly before submitting.
+
+#### Feedback Dialog
+
+The free-text **comment** field in the feedback dialog uses the same tabbed Markdown editor (when the comment field is enabled in the property panel).
+
+#### Tooltip Content (Property Panel)
+
+The tooltip **Hover Content** and **Details Dialog Content** textareas in the property panel are standard Qlik Sense platform controls and do not themselves have the toolbar or shortcut support. To work around this, each textarea is accompanied by an **"Edit in Markdown editor"** button directly below it in the property panel:
+
+1. Click the **"Edit in Markdown editor"** button under the tooltip textarea you want to edit.
+2. A modal editor dialog opens with the full Write / Preview tabbed experience.
+3. Edit, preview, then click **Save** — the new content is written back to the property panel field and persisted to the Qlik engine automatically.
+
+This workflow gives you the same rich Markdown editing experience for tooltip content as for the bug report and feedback dialogs.
+
+---
+
 ## Bug Report Context Fields
 
 When the extension is configured to use the **Report a Bug** action, it will automatically gather and submit relevant context metadata about the user's environment alongside their bug description. 
