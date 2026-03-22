@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.2](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.1...helpbutton-qs-v2.5.2) (2026-03-22)
+
+
+### Bug Fixes
+
+* **ci:** enhance logging and pre-release name handling in CI workflow ([106971a](https://github.com/ptarmiganlabs/help-button.qs/commit/106971a463cada1aa9435543217b10fb323d580d))
+
 ## [2.5.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.0...helpbutton-qs-v2.5.1) (2026-03-22)
 
 
