@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.0...helpbutton-qs-v2.5.1) (2026-03-22)
+
+
+### Bug Fixes
+
+* **ci:** enhance pre-release configuration for alpha, beta, and rc branches ([ccf0c02](https://github.com/ptarmiganlabs/help-button.qs/commit/ccf0c02f047bd60a71354c87fc2b09d30ffe467d))
+
 ## [2.5.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.4.0...helpbutton-qs-v2.5.0) (2026-03-22)
 
 
