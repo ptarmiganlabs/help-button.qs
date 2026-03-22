@@ -1,6 +1,6 @@
 # Pre-release Process
 
-This document describes how to create pre-releases (alpha, beta, release candidates) for helpbutton.qs.
+This document describes how to create pre-releases for helpbutton.qs.
 
 ## Overview
 
@@ -40,7 +40,7 @@ git push origin pre-release/rc
 
 ### Step 3: Trigger the Workflow
 
-The CI workflow will automatically detect the pre-release branch and:
+The CI workflow will automatically detect the pre-release branch (any branch starting with `pre-release/`) and:
 
 1. Create a pre-release PR using release-please
 2. Generate a pre-release tag (e.g., `v2.5.0-alpha.1`)
@@ -57,7 +57,12 @@ The CI workflow will automatically detect the pre-release branch and:
 
 ## Versioning Strategy
 
-Pre-releases use the format: `MAJOR.MINOR.PATCH-pre_release_identifier.N`
+Pre-releases use the format: `MAJOR.MINOR.PATCH-alpha.N`, `MAJOR.MINOR.PATCH-beta.N`, or `MAJOR.MINOR.PATCH-rc.N`
+
+The pre-release identifier is automatically determined by release-please based on the branch name:
+- `pre-release/alpha` → `-alpha.N`
+- `pre-release/beta` → `-beta.N`
+- `pre-release/rc` → `-rc.N`
 
 Examples:
 

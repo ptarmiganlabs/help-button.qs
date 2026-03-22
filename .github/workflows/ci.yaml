@@ -32,7 +32,7 @@ jobs:
         run: |
           if [ "$IS_PRERELEASE_BRANCH" = "true" ]; then
             echo "config_file=release-please-prerelease.json" >> $GITHUB_OUTPUT
-            echo "target_branch=main" >> $GITHUB_OUTPUT
+            echo "target_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
           else
             echo "config_file=release-please-config.json" >> $GITHUB_OUTPUT
             echo "target_branch=main" >> $GITHUB_OUTPUT
@@ -76,7 +76,7 @@ jobs:
       contents: write
     env:
       DIST_FILE_NAME: helpbutton-qs
-      IS_PRERELEASE: ${{ needs.release-please.outputs.is_prerelease == 'true' }}
+      IS_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/pre-release/') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
