@@ -1,0 +1,152 @@
+{
+    "release-type": "node",
+    "prerelease": true,
+    "draft": true,
+    "release-search-depth": 10,
+    "commit-search-depth": 200,
+    "changelog-sections": [
+        {
+            "type": "feat",
+            "section": "Features",
+            "hidden": false
+        },
+        {
+            "type": "fix",
+            "section": "Bug Fixes",
+            "hidden": false
+        },
+        {
+            "type": "chore",
+            "section": "Miscellaneous",
+            "hidden": false
+        },
+        {
+            "type": "refactor",
+            "section": "Refactoring",
+            "hidden": false
+        },
+        {
+            "type": "docs",
+            "section": "Documentation",
+            "hidden": false
+        },
+        {
+            "type": "build",
+            "section": "Miscellaneous",
+            "hidden": false
+        },
+        {
+            "type": "test",
+            "section": "Miscellaneous",
+            "hidden": false
+        }
+    ],
+    "extra-files": [
+        {
+            "type": "generic",
+            "path": "variants/basic/en/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/sv/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/en/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/sv/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/no/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/da/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/fi/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/de/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/fr/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/pl/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/basic/es/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/no/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/da/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/fi/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/de/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/fr/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/pl/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "generic",
+            "path": "variants/bug-report/es/helpbutton-qs.js",
+            "glob": false
+        },
+        {
+            "type": "json",
+            "path": "extension/package.json",
+            "jsonpath": "$.version"
+        },
+        {
+            "type": "json",
+            "path": "extension/src/meta.json",
+            "jsonpath": "$.version"
+        }
+    ],
+    "packages": {
+        ".": {
+            "package-name": "helpbutton-qs"
+        }
+    },
+    "prerelease-type": "rc"
+}

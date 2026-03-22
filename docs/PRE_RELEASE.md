@@ -59,17 +59,24 @@ The CI workflow will automatically detect the pre-release branch (any branch sta
 
 Pre-releases use the format: `MAJOR.MINOR.PATCH-alpha.N`, `MAJOR.MINOR.PATCH-beta.N`, or `MAJOR.MINOR.PATCH-rc.N`
 
-The pre-release identifier is automatically determined by release-please based on the branch name:
-- `pre-release/alpha` → `-alpha.N`
-- `pre-release/beta` → `-beta.N`
-- `pre-release/rc` → `-rc.N`
+The version suffix is driven by the branch name suffix, which maps to a dedicated release-please config file:
+
+| Branch | Config file | Version format |
+|--------|-------------|----------------|
+| `pre-release/alpha` | `release-please-prerelease-alpha.json` | `2.5.0-alpha.0` |
+| `pre-release/beta` | `release-please-prerelease-beta.json` | `2.5.0-beta.0` |
+| `pre-release/rc` | `release-please-prerelease-rc.json` | `2.5.0-rc.0` |
+| `pre-release/<other>` | `release-please-prerelease.json` | `2.5.0` (no suffix) |
+
+> [!IMPORTANT]
+> Only the branch names `pre-release/alpha`, `pre-release/beta`, and `pre-release/rc` produce versioned suffixes (e.g. `-rc.0`). Any other `pre-release/*` branch falls back to the generic prerelease config and will produce a plain version number.
 
 Examples:
 
-- `2.5.0-alpha.1` - First alpha release
-- `2.5.0-alpha.2` - Second alpha release
-- `2.5.0-beta.1` - First beta release
-- `2.5.0-rc.1` - First release candidate
+- `2.5.0-alpha.0` - First alpha release
+- `2.5.0-alpha.1` - Second alpha release (after another commit merged)
+- `2.5.0-beta.0` - First beta release
+- `2.5.0-rc.0` - First release candidate
 
 ## Promoting to Stable
 
@@ -97,5 +104,8 @@ When the pre-release is ready for general availability:
 
 - `.github/workflows/ci.yaml` - CI workflow with pre-release support
 - `release-please-config.json` - Stable release configuration
-- `release-please-prerelease.json` - Pre-release configuration
+- `release-please-prerelease.json` - Generic pre-release configuration (no version suffix, used as fallback)
+- `release-please-prerelease-alpha.json` - Alpha pre-release configuration (`-alpha.N` suffix)
+- `release-please-prerelease-beta.json` - Beta pre-release configuration (`-beta.N` suffix)
+- `release-please-prerelease-rc.json` - RC pre-release configuration (`-rc.N` suffix)
 - `.release-please-manifest.json` - Version manifest (auto-updated)

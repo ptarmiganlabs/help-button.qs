@@ -31,7 +31,15 @@ jobs:
         id: config
         run: |
           if [ "$IS_PRERELEASE_BRANCH" = "true" ]; then
-            echo "config_file=release-please-prerelease.json" >> $GITHUB_OUTPUT
+            PRERELEASE_TYPE="${GITHUB_REF#refs/heads/pre-release/}"
+            case "$PRERELEASE_TYPE" in
+              alpha|beta|rc)
+                echo "config_file=release-please-prerelease-${PRERELEASE_TYPE}.json" >> $GITHUB_OUTPUT
+                ;;
+              *)
+                echo "config_file=release-please-prerelease.json" >> $GITHUB_OUTPUT
+                ;;
+            esac
             echo "target_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
           else
             echo "config_file=release-please-config.json" >> $GITHUB_OUTPUT
