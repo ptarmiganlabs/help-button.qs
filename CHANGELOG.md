@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.6](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.5...helpbutton-qs-v2.5.6) (2026-03-24)
+
+
+### Documentation
+
+* enhance decision tree in pre-release process with color-coded classes ([7cf3698](https://github.com/ptarmiganlabs/help-button.qs/commit/7cf3698ca46f03c2a9dcb06a0d223e05d5e88140))
+
 ## [2.5.5](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.4...helpbutton-qs-v2.5.5) (2026-03-24)
 
 
