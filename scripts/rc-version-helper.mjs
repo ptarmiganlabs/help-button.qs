@@ -139,7 +139,12 @@ async function main() {
   return;
 }
 
-main().catch(err => {
-  console.error(err);
-  console.log('action=run_release_please');
-});
+// Export internals for testing
+export { parseSemver, semverToString, bumpVersion, highestChangeTypeFromCommits };
+
+if (process.env.NODE_ENV !== 'test') {
+  main().catch(err => {
+    console.error(err);
+    console.log('action=run_release_please');
+  });
+}

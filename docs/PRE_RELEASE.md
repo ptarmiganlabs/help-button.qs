@@ -47,6 +47,14 @@ The CI workflow will automatically detect the pre-release branch (any branch sta
 3. Create a draft GitHub release marked as "This is a pre-release"
 4. Build and upload release artifacts
 
+### Artifact filenames and CI behavior
+
+The CI embeds the prerelease suffix into artifact filenames so uploaded release assets include the `-alpha.N`, `-beta.N` or `-rc.N` suffix. For example:
+
+- `helpbutton-qs-v2.5.2-rc.0.zip`
+
+This is driven by a small helper used by the workflow (`scripts/rc-version-helper.mjs`) which decides whether to run `release-please` to create a new prerelease tag or to increment an existing prerelease counter. The helper emits CI-friendly outputs (for example `action=increment_rc` and `release_version=2.5.2-rc.1`) that the workflow uses when naming artifacts.
+
 ### Step 4: Review and Publish
 
 1. Review the auto-generated PR
@@ -93,6 +101,24 @@ When the pre-release is ready for general availability:
 - Ensure the branch name starts with `pre-release/`
 - Check the workflow runs tab for errors
 - Verify the `RELEASE_PLEASE_PAT` secret is configured
+
+### Local testing notes
+
+You can run the helper locally (it uses your local git tags and the `gh` CLI):
+
+```bash
+export GITHUB_REPOSITORY=ptarmiganlabs/help-button.qs
+export GITHUB_REF=refs/heads/pre-release/rc
+node scripts/rc-version-helper.mjs
+```
+
+A small test harness for the helper internals is included at `scripts/test/rc-version-helper.test.mjs`. Run it with:
+
+```bash
+NODE_ENV=test node scripts/test/rc-version-helper.test.mjs
+```
+
+This test file exercises the semver parsing, bumping and commit-message parsing logic used by the helper.
 
 ### Version Number Issues
 
