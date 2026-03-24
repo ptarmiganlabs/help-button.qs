@@ -63,6 +63,9 @@ jobs:
           echo "=== Release-please config ==="
           cat $GITHUB_OUTPUT
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Decide release action and next RC
         id: decide
         env:
