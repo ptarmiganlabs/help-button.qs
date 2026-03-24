@@ -43,7 +43,10 @@ jobs:
         id: config
         run: |
           if [ "$IS_PRERELEASE_BRANCH" = "true" ]; then
-            PRERELEASE_TYPE="${GITHUB_REF#refs/heads/pre-release/}"
+            PRERELEASE_TYPE_RAW="${GITHUB_REF#refs/heads/pre-release/}"
+            # Normalize to primary type (alpha|beta|rc) by taking the leading alpha segment
+            PRERELEASE_TYPE=$(echo "$PRERELEASE_TYPE_RAW" | sed -E 's/^([A-Za-z]+).*/\1/')
+            echo "PRERELEASE_TYPE_RAW: $PRERELEASE_TYPE_RAW"
             echo "PRERELEASE_TYPE    : $PRERELEASE_TYPE"
             case "$PRERELEASE_TYPE" in
               alpha|beta|rc)
@@ -158,7 +161,8 @@ jobs:
         id: prerelease
         run: |
           if [ "$IS_PRERELEASE" = "true" ]; then
-            PRERELEASE_TYPE="${GITHUB_REF#refs/heads/pre-release/}"
+            PRERELEASE_TYPE_RAW="${GITHUB_REF#refs/heads/pre-release/}"
+            PRERELEASE_TYPE=$(echo "$PRERELEASE_TYPE_RAW" | sed -E 's/^([A-Za-z]+).*/\1/')
             # Prefer to derive suffix from the release tag name (set by release-please or decide)
             TAG_NAME="${{ needs.release-please.outputs.release_tag_name }}"
             # Strip leading v if present
@@ -176,6 +180,7 @@ jobs:
               RELEASE_VERSION="${{ needs.release-please.outputs.release_version }}"
             fi
 
+            echo "PRERELEASE_TYPE_RAW: $PRERELEASE_TYPE_RAW"
             echo "PRERELEASE_TYPE: $PRERELEASE_TYPE"
             echo "PRERELEASE_SUFFIX: $PRERELEASE_SUFFIX"
             echo "release_version=$RELEASE_VERSION" >> $GITHUB_OUTPUT
