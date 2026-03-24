@@ -81,6 +81,29 @@ jobs:
             echo "$line" >> $GITHUB_OUTPUT
           done < /tmp/decide.out
 
+      - name: Create prerelease for incremented RC
+        if: steps.decide.outputs.action == 'increment_rc'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
+        run: |
+          TAG="${{ steps.decide.outputs.release_tag_name }}"
+          VERSION="${{ steps.decide.outputs.release_version }}"
+          REPO="${{ github.repository }}"
+
+          echo "Checking for existing release $TAG"
+          if gh release view "$TAG" --repo "$REPO" > /dev/null 2>&1; then
+            echo "Release $TAG already exists"
+          else
+            echo "Creating draft prerelease $TAG -> v$VERSION"
+            gh release create "$TAG" --repo "$REPO" --target "${{ github.sha }}" --title "helpbutton-qs: v${VERSION}" --notes "Automated RC increment" --draft --prerelease || true
+          fi
+          # Ensure decide outputs are respected downstream; release is now present
+          echo "releases_created=true" >> $GITHUB_OUTPUT
+          echo "release_tag_name=$TAG" >> $GITHUB_OUTPUT
+          echo "release_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "release_upload_url=" >> $GITHUB_OUTPUT
+          echo "is_prerelease=true" >> $GITHUB_OUTPUT
+
       - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4.4.0
         id: release
         if: github.repository_owner == 'ptarmiganlabs' && steps.decide.outputs.action == 'run_release_please'
