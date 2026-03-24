@@ -10,7 +10,10 @@ function run(cmd) {
 }
 
 function parseSemver(tag) {
-  const t = String(tag || '').replace(/^v/, '');
+  // Strip both component prefix and 'v' prefix
+  let t = String(tag || '').replace(/^helpbutton-qs-v/, '').replace(/^v/, '');
+  // Ignore parts after -
+  t = t.split('-')[0];
   const parts = t.split('.').map((p) => parseInt(p, 10));
   return {
     major: parts[0] || 0,
@@ -61,8 +64,14 @@ async function main() {
     return;
   }
 
-  const prereleaseType = ref.replace('refs/heads/pre-release/', '');
-  if (!['alpha', 'beta', 'rc'].includes(prereleaseType)) {
+  const prereleaseTypeRaw = ref.replace('refs/heads/pre-release/', '');
+  // Normalize prereleaseType (treat rc, rc-*, alpha, beta as their base type)
+  let basePrereleaseType = prereleaseTypeRaw;
+  if (prereleaseTypeRaw.startsWith('rc')) basePrereleaseType = 'rc';
+  if (prereleaseTypeRaw.startsWith('alpha')) basePrereleaseType = 'alpha';
+  if (prereleaseTypeRaw.startsWith('beta')) basePrereleaseType = 'beta';
+
+  if (!['alpha', 'beta', 'rc'].includes(basePrereleaseType)) {
     console.log('action=run_release_please');
     return;
   }
@@ -74,8 +83,9 @@ async function main() {
   const tags = tagListRaw ? tagListRaw.split('\n').filter(Boolean) : [];
 
   // Find latest stable tag (no prerelease suffix)
-  const stableTags = tags.filter(t => /^v?\d+\.\d+\.\d+$/.test(t));
-  let latestStable = 'v0.0.0';
+  // Support helpbutton-qs-vX.Y.Z and vX.Y.Z formats
+  const stableTags = tags.filter(t => /^helpbutton-qs-v\d+\.\d+\.\d+$/.test(t) || /^v?\d+\.\d+\.\d+$/.test(t));
+  let latestStable = '';
   if (stableTags.length) {
     // sort semver
     stableTags.sort((a, b) => {
@@ -86,6 +96,8 @@ async function main() {
       return pa.patch - pb.patch;
     });
     latestStable = stableTags[stableTags.length - 1];
+  } else {
+    latestStable = 'v0.0.0';
   }
 
   // Get commits since latestStable
@@ -96,11 +108,12 @@ async function main() {
   const change = highestChangeTypeFromCommits(commits);
 
   // Compute desired base version
-  const baseNoV = String(latestStable).replace(/^v/, '');
-  const desiredBase = bumpVersion(baseNoV, change === 'none' ? 'patch' : change);
+  const baseV = parseSemver(latestStable);
+  const desiredBase = bumpVersion(semverToString(baseV), change === 'none' ? 'patch' : change);
 
-  // Query GitHub releases for existing prerelease for this base
-  const releasesRaw = run(`gh api repos/${repo}/releases`);
+  // Use GitHub API to find existing releases (which have body/titles)
+  const ghQuery = repo ? `gh api repos/${repo}/releases` : `gh api repos/ptarmiganlabs/help-button.qs/releases`;
+  const releasesRaw = run(ghQuery);
   let releases = [];
   try {
     releases = releasesRaw ? JSON.parse(releasesRaw) : [];
@@ -108,25 +121,26 @@ async function main() {
     releases = [];
   }
 
-  // Find prereleases that match desiredBase and prereleaseType
-  const prefix = `v${desiredBase}-${prereleaseType}.`;
-  const matching = releases.filter(r => r.tag_name && r.tag_name.startsWith(prefix));
+  // Find prereleases for this desiredBase and basePrereleaseType
+  // Tags could be helpbutton-qs-vX.Y.Z-rc.N or vX.Y.Z-rc.N
+  const prefixMatch = new RegExp(`v${desiredBase}-${basePrereleaseType}\\.\\d+`);
+  const matching = releases.filter(r => r.tag_name && prefixMatch.test(r.tag_name));
 
   if (matching.length > 0) {
     // Find highest N and propose next
     let maxN = -1;
     for (const r of matching) {
-      const m = String(r.tag_name).match(new RegExp(`-${prereleaseType}\\.(\\d+)$`));
+      const m = String(r.tag_name).match(new RegExp(`-${basePrereleaseType}\\.(\\d+)$`));
       if (m) {
         const n = parseInt(m[1], 10);
         if (!Number.isNaN(n) && n > maxN) maxN = n;
       }
     }
     const nextN = maxN + 1;
-    const releaseVersion = `${desiredBase}-${prereleaseType}.${nextN}`;
+    const releaseVersion = `${desiredBase}-${basePrereleaseType}.${nextN}`;
     console.log('action=increment_rc');
     console.log(`releases_created=true`);
-    console.log(`release_tag_name=v${releaseVersion}`);
+    console.log(`release_tag_name=helpbutton-qs-v${releaseVersion}`); // Use component prefix
     console.log(`release_version=${releaseVersion}`);
     console.log(`is_prerelease=true`);
     // release_upload_url left empty; uploader can create/update by tag
