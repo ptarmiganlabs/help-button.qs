@@ -14,11 +14,11 @@ jobs:
       contents: write
       pull-requests: write
     outputs:
-      releases_created: ${{ steps.release.outputs.releases_created }}
-      release_tag_name: ${{ steps.release.outputs['tag_name'] }}
-      release_version: ${{ steps.release.outputs['version'] }}
-      release_upload_url: ${{ steps.release.outputs['upload_url'] }}
-      is_prerelease: ${{ steps.release.outputs['prerelease'] }}
+      releases_created: ${{ steps.provide.outputs.releases_created }}
+      release_tag_name: ${{ steps.provide.outputs['release_tag_name'] }}
+      release_version: ${{ steps.provide.outputs['release_version'] }}
+      release_upload_url: ${{ steps.provide.outputs['release_upload_url'] }}
+      is_prerelease: ${{ steps.provide.outputs['is_prerelease'] }}
     env:
       GITHUB_REF: ${{ github.ref }}
       GITHUB_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
@@ -63,14 +63,44 @@ jobs:
           echo "=== Release-please config ==="
           cat $GITHUB_OUTPUT
 
+      - name: Decide release action and next RC
+        id: decide
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
+        run: |
+          # Run helper which emits key=value lines to stdout
+          node scripts/rc-version-helper.mjs > /tmp/decide.out || true
+          cat /tmp/decide.out
+          while read -r line; do
+            echo "$line" >> $GITHUB_OUTPUT
+          done < /tmp/decide.out
+
       - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4.4.0
         id: release
-        if: github.repository_owner == 'ptarmiganlabs'
+        if: github.repository_owner == 'ptarmiganlabs' && steps.decide.outputs.action == 'run_release_please'
         with:
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
           config-file: ${{ steps.config.outputs.config_file }}
           manifest-file: .release-please-manifest.json
           target-branch: ${{ steps.config.outputs.target_branch }}
+
+      - name: Provide release outputs
+        id: provide
+        run: |
+          # If release-please ran and produced outputs, use them; otherwise use the decide outputs
+          if [ -n "${{ steps.release.outputs.tag_name }}" ]; then
+            echo "releases_created=${{ steps.release.outputs.releases_created }}" >> $GITHUB_OUTPUT
+            echo "release_tag_name=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT
+            echo "release_version=${{ steps.release.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "release_upload_url=${{ steps.release.outputs.upload_url }}" >> $GITHUB_OUTPUT
+            echo "is_prerelease=${{ steps.release.outputs.prerelease }}" >> $GITHUB_OUTPUT
+          else
+            echo "releases_created=${{ steps.decide.outputs.releases_created || 'true' }}" >> $GITHUB_OUTPUT
+            echo "release_tag_name=${{ steps.decide.outputs.release_tag_name }}" >> $GITHUB_OUTPUT
+            echo "release_version=${{ steps.decide.outputs.release_version }}" >> $GITHUB_OUTPUT
+            echo "release_upload_url=${{ steps.decide.outputs.release_upload_url }}" >> $GITHUB_OUTPUT
+            echo "is_prerelease=${{ steps.decide.outputs.is_prerelease }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Show output from Release-Please
         if: always()
@@ -258,8 +288,11 @@ jobs:
           sed "s/__VERSION__/${VERSION}/g" release-config/extension-readme-template.txt > readme.txt
 
           # Create outer zip containing the extension zip + readme + license
+          # Ensure the internal extension zip includes version/suffix
+          (cd extension && PRERELEASE_SUFFIX="${PRERELEASE_SUFFIX}" RELEASE_VERSION="${VERSION}" npm run zip)
+
           zip -j "${DIST_FILE_NAME}-extension-v${VERSION}${PRERELEASE_SUFFIX}.zip" \
-            extension/helpbutton-qs.zip \
+            extension/${{ env.DIST_FILE_NAME }}${VERSION:+-v${VERSION}}${PRERELEASE_SUFFIX}.zip \
             README-EXTENSION.pdf \
             README.pdf \
             readme.txt \
