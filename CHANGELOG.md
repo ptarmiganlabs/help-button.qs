@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.3](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.2...helpbutton-qs-v2.5.3) (2026-03-24)
+
+
+### Documentation
+
+* Include both extension specific, and repo general, PDFs in the distribution ZIP ([f73d4f0](https://github.com/ptarmiganlabs/help-button.qs/commit/f73d4f0c51a1f65b92114edb1563d92e362271b7))
+
 ## [2.5.2](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.1...helpbutton-qs-v2.5.2) (2026-03-22)
 
 
