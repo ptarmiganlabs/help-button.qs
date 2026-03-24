@@ -14,11 +14,11 @@ jobs:
       contents: write
       pull-requests: write
     outputs:
-      releases_created: ${{ steps.release.outputs.releases_created }}
-      release_tag_name: ${{ steps.release.outputs['tag_name'] }}
-      release_version: ${{ steps.release.outputs['version'] }}
-      release_upload_url: ${{ steps.release.outputs['upload_url'] }}
-      is_prerelease: ${{ steps.release.outputs['prerelease'] }}
+      releases_created: ${{ steps.provide.outputs.releases_created }}
+      release_tag_name: ${{ steps.provide.outputs['release_tag_name'] }}
+      release_version: ${{ steps.provide.outputs['release_version'] }}
+      release_upload_url: ${{ steps.provide.outputs['release_upload_url'] }}
+      is_prerelease: ${{ steps.provide.outputs['is_prerelease'] }}
     env:
       GITHUB_REF: ${{ github.ref }}
       GITHUB_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
@@ -27,25 +27,80 @@ jobs:
       - name: Show github.ref
         run: echo "$GITHUB_REF"
 
+      - name: Show release-please job variables
+        run: |
+          echo "=== Trigger ==="
+          echo "github.ref         : ${{ github.ref }}"
+          echo "github.ref_name    : ${{ github.ref_name }}"
+          echo "github.event_name  : ${{ github.event_name }}"
+          echo "github.repository  : ${{ github.repository }}"
+          echo "github.sha         : ${{ github.sha }}"
+          echo ""
+          echo "=== Pre-release detection ==="
+          echo "IS_PRERELEASE_BRANCH: $IS_PRERELEASE_BRANCH"
+
       - name: Determine config file
         id: config
         run: |
           if [ "$IS_PRERELEASE_BRANCH" = "true" ]; then
-            echo "config_file=release-please-prerelease.json" >> $GITHUB_OUTPUT
+            PRERELEASE_TYPE="${GITHUB_REF#refs/heads/pre-release/}"
+            echo "PRERELEASE_TYPE    : $PRERELEASE_TYPE"
+            case "$PRERELEASE_TYPE" in
+              alpha|beta|rc)
+                echo "config_file=release-please-prerelease-${PRERELEASE_TYPE}.json" >> $GITHUB_OUTPUT
+                ;;
+              *)
+                echo "config_file=release-please-prerelease.json" >> $GITHUB_OUTPUT
+                ;;
+            esac
             echo "target_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
           else
             echo "config_file=release-please-config.json" >> $GITHUB_OUTPUT
             echo "target_branch=main" >> $GITHUB_OUTPUT
           fi
 
+          echo ""
+          echo "=== Release-please config ==="
+          cat $GITHUB_OUTPUT
+
+      - name: Decide release action and next RC
+        id: decide
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
+        run: |
+          # Run helper which emits key=value lines to stdout
+          node scripts/rc-version-helper.mjs > /tmp/decide.out || true
+          cat /tmp/decide.out
+          while read -r line; do
+            echo "$line" >> $GITHUB_OUTPUT
+          done < /tmp/decide.out
+
       - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4.4.0
         id: release
-        if: github.repository_owner == 'ptarmiganlabs'
+        if: github.repository_owner == 'ptarmiganlabs' && steps.decide.outputs.action == 'run_release_please'
         with:
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
           config-file: ${{ steps.config.outputs.config_file }}
           manifest-file: .release-please-manifest.json
           target-branch: ${{ steps.config.outputs.target_branch }}
+
+      - name: Provide release outputs
+        id: provide
+        run: |
+          # If release-please ran and produced outputs, use them; otherwise use the decide outputs
+          if [ -n "${{ steps.release.outputs.tag_name }}" ]; then
+            echo "releases_created=${{ steps.release.outputs.releases_created }}" >> $GITHUB_OUTPUT
+            echo "release_tag_name=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT
+            echo "release_version=${{ steps.release.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "release_upload_url=${{ steps.release.outputs.upload_url }}" >> $GITHUB_OUTPUT
+            echo "is_prerelease=${{ steps.release.outputs.prerelease }}" >> $GITHUB_OUTPUT
+          else
+            echo "releases_created=${{ steps.decide.outputs.releases_created }}" >> $GITHUB_OUTPUT
+            echo "release_tag_name=${{ steps.decide.outputs.release_tag_name }}" >> $GITHUB_OUTPUT
+            echo "release_version=${{ steps.decide.outputs.release_version }}" >> $GITHUB_OUTPUT
+            echo "release_upload_url=${{ steps.decide.outputs.release_upload_url }}" >> $GITHUB_OUTPUT
+            echo "is_prerelease=${{ steps.decide.outputs.is_prerelease }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Show output from Release-Please
         if: always()
@@ -78,15 +133,52 @@ jobs:
       DIST_FILE_NAME: helpbutton-qs
       IS_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/pre-release/') }}
     steps:
+      - name: Show build-release job variables
+        run: |
+          echo "=== Trigger ==="
+          echo "github.ref         : ${{ github.ref }}"
+          echo "github.ref_name    : ${{ github.ref_name }}"
+          echo "github.sha         : ${{ github.sha }}"
+          echo ""
+          echo "=== Build flags ==="
+          echo "DIST_FILE_NAME     : $DIST_FILE_NAME"
+          echo "IS_PRERELEASE      : $IS_PRERELEASE"
+          echo ""
+          echo "=== Release-please outputs ==="
+          echo "releases_created   : ${{ needs.release-please.outputs.releases_created }}"
+          echo "release_tag_name   : ${{ needs.release-please.outputs.release_tag_name }}"
+          echo "release_version    : ${{ needs.release-please.outputs.release_version }}"
+          echo "release_upload_url : ${{ needs.release-please.outputs.release_upload_url }}"
+          echo "is_prerelease      : ${{ needs.release-please.outputs.is_prerelease }}"
+
+      - name: Determine pre-release suffix
+        id: prerelease
+        run: |
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            PRERELEASE_TYPE="${GITHUB_REF#refs/heads/pre-release/}"
+            # Extract the prerelease counter from the version if present
+            if [[ "${{ needs.release-please.outputs.release_version }}" =~ -${PRERELEASE_TYPE}\.([0-9]+) ]]; then
+              PRERELEASE_SUFFIX="-${PRERELEASE_TYPE}.${BASH_REMATCH[1]}"
+            else
+              PRERELEASE_SUFFIX="-${PRERELEASE_TYPE}.0"
+            fi
+            echo "PRERELEASE_TYPE: $PRERELEASE_TYPE"
+            echo "PRERELEASE_SUFFIX: $PRERELEASE_SUFFIX"
+            echo "prerelease_suffix=${PRERELEASE_SUFFIX}" >> $GITHUB_OUTPUT
+          else
+            echo "prerelease_suffix=" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Create basic variant zip
         run: |
           VERSION=${{ needs.release-please.outputs.release_version }}
+          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
           sed "s/__VERSION__/${VERSION}/g" release-config/html-variant-readme-template.txt > readme.txt
           cd variants/basic
-          zip -r "../../${DIST_FILE_NAME}-basic-v${VERSION}.zip" \
+          zip -r "../../${DIST_FILE_NAME}-basic-v${VERSION}${PRERELEASE_SUFFIX}.zip" \
             README.md \
             da \
             de \
@@ -99,13 +191,14 @@ jobs:
             sv \
             -x "*/node_modules/*"
           cd ../..
-          zip -j "${DIST_FILE_NAME}-basic-v${VERSION}.zip" LICENSE readme.txt
+          zip -j "${DIST_FILE_NAME}-basic-v${VERSION}${PRERELEASE_SUFFIX}.zip" LICENSE readme.txt
 
       - name: Create bug-report variant zip
         run: |
           VERSION=${{ needs.release-please.outputs.release_version }}
+          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
           cd variants/bug-report
-          zip -r "../../${DIST_FILE_NAME}-bug-report-v${VERSION}.zip" \
+          zip -r "../../${DIST_FILE_NAME}-bug-report-v${VERSION}${PRERELEASE_SUFFIX}.zip" \
             README.md \
             da \
             de \
@@ -118,15 +211,16 @@ jobs:
             sv \
             -x "*/node_modules/*"
           cd ../..
-          zip -j "${DIST_FILE_NAME}-bug-report-v${VERSION}.zip" LICENSE readme.txt
+          zip -j "${DIST_FILE_NAME}-bug-report-v${VERSION}${PRERELEASE_SUFFIX}.zip" LICENSE readme.txt
 
       - name: List zip contents (debug)
         run: |
+          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
           echo "=== Basic variant ==="
-          zipinfo "${DIST_FILE_NAME}-basic-v${{ needs.release-please.outputs.release_version }}.zip"
+          zipinfo "${DIST_FILE_NAME}-basic-v${{ needs.release-please.outputs.release_version }}${PRERELEASE_SUFFIX}.zip"
           echo ""
           echo "=== Bug-report variant ==="
-          zipinfo "${DIST_FILE_NAME}-bug-report-v${{ needs.release-please.outputs.release_version }}.zip"
+          zipinfo "${DIST_FILE_NAME}-bug-report-v${{ needs.release-please.outputs.release_version }}${PRERELEASE_SUFFIX}.zip"
 
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -142,7 +236,7 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD=true npm ci
           npm run pack:prod
 
-      - name: Generate README PDF
+      - name: Generate README-EXTENSION PDF
         run: |
           # ubuntu-latest ships google-chrome-stable; use it for both mmdc and md-to-pdf
           CHROME=$(which google-chrome-stable 2>/dev/null || which chromium-browser 2>/dev/null || which chromium)
@@ -162,27 +256,51 @@ jobs:
 
           # Clean up intermediate artefacts and give the PDF its final name
           rm -f README-processed.md README-processed-*.svg
+          mv README-processed.pdf README-EXTENSION.pdf
+          echo "PDF size: $(du -sh README-EXTENSION.pdf)"
+
+      - name: Generate Main README PDF
+        run: |
+          # ubuntu-latest ships google-chrome-stable; use it for both mmdc and md-to-pdf
+          CHROME=$(which google-chrome-stable 2>/dev/null || which chromium-browser 2>/dev/null || which chromium)
+          echo "Chrome executable: $CHROME"
+
+          # Write puppeteer config for mmdc
+          echo "{\"executablePath\":\"$CHROME\",\"args\":[\"--no-sandbox\",\"--disable-setuid-sandbox\"]}" > /tmp/mmdc-puppeteer.json
+
+          # Step 1: convert Mermaid code blocks to SVG images
+          mmdc -i README.md -o README-processed.md --puppeteerConfigFile /tmp/mmdc-puppeteer.json
+
+          # Step 2: render the processed markdown (with inline SVG refs) to PDF
+          PUPPETEER_EXECUTABLE_PATH="$CHROME" md-to-pdf README-processed.md
+
+          # Clean up intermediate artefacts and give the PDF its final name
+          rm -f README-processed.md README-processed-*.svg
           mv README-processed.pdf README.pdf
           echo "PDF size: $(du -sh README.pdf)"
 
       - name: Create extension release zip
         run: |
           VERSION=${{ needs.release-please.outputs.release_version }}
+          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
 
           # Create readme.txt from template
           sed "s/__VERSION__/${VERSION}/g" release-config/extension-readme-template.txt > readme.txt
 
           # Create outer zip containing the extension zip + readme + license
-          zip -j "${DIST_FILE_NAME}-extension-v${VERSION}.zip" \
-            extension/helpbutton-qs.zip \
-            extension/README.md \
-            extension/README.pdf \
+          # Ensure the internal extension zip includes version/suffix
+          (cd extension && PRERELEASE_SUFFIX="${PRERELEASE_SUFFIX}" RELEASE_VERSION="${VERSION}" npm run zip)
+
+          zip -j "${DIST_FILE_NAME}-extension-v${VERSION}${PRERELEASE_SUFFIX}.zip" \
+            extension/${{ env.DIST_FILE_NAME }}${VERSION:+-v${VERSION}}${PRERELEASE_SUFFIX}.zip \
+            README-EXTENSION.pdf \
+            README.pdf \
             readme.txt \
             LICENSE
 
           echo ""
           echo "=== Extension variant ==="
-          zipinfo "${DIST_FILE_NAME}-extension-v${VERSION}.zip"
+          zipinfo "${DIST_FILE_NAME}-extension-v${VERSION}${PRERELEASE_SUFFIX}.zip"
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
@@ -194,7 +312,38 @@ jobs:
           tag: ${{ needs.release-please.outputs.release_tag_name }}
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
           artifacts: |
-            ${{ env.DIST_FILE_NAME }}-basic-v${{ needs.release-please.outputs.release_version }}.zip
-            ${{ env.DIST_FILE_NAME }}-bug-report-v${{ needs.release-please.outputs.release_version }}.zip
-            ${{ env.DIST_FILE_NAME }}-extension-v${{ needs.release-please.outputs.release_version }}.zip
+            ${{ env.DIST_FILE_NAME }}-basic-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
+            ${{ env.DIST_FILE_NAME }}-bug-report-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
+            ${{ env.DIST_FILE_NAME }}-extension-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
           prerelease: ${{ env.IS_PRERELEASE }}
+
+      - name: Fix pre-release name to include type suffix
+        if: env.IS_PRERELEASE == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
+          VERSION: ${{ needs.release-please.outputs.release_version }}
+          TAG: ${{ needs.release-please.outputs.release_tag_name }}
+        run: |
+          PRERELEASE_TYPE="${GITHUB_REF#refs/heads/pre-release/}"
+          case "$PRERELEASE_TYPE" in
+            alpha|beta|rc) ;;
+            *) echo "Unknown prerelease type '$PRERELEASE_TYPE', skipping rename"; exit 0 ;;
+          esac
+
+          # If release-please already added the suffix (e.g. 2.5.1-rc.0), nothing to do
+          if [[ "$VERSION" == *"-${PRERELEASE_TYPE}."* ]]; then
+            echo "Version $VERSION already has correct -${PRERELEASE_TYPE}.N suffix, no rename needed"
+            exit 0
+          fi
+
+          # Derive the prerelease counter from the existing release name, defaulting to 0
+          CURRENT_NAME=$(gh release view "$TAG" --json name -q .name)
+          if [[ "$CURRENT_NAME" =~ -${PRERELEASE_TYPE}\.([0-9]+)$ ]]; then
+            N="${BASH_REMATCH[1]}"
+          else
+            N=0
+          fi
+
+          NEW_NAME="helpbutton-qs: v${VERSION}-${PRERELEASE_TYPE}.${N}"
+          echo "Renaming release '$CURRENT_NAME' → '$NEW_NAME'"
+          gh release edit "$TAG" --title "$NEW_NAME"

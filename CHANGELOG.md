@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.5.3](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.2...helpbutton-qs-v2.5.3) (2026-03-24)
+
+
+### Documentation
+
+* Include both extension specific, and repo general, PDFs in the distribution ZIP ([f73d4f0](https://github.com/ptarmiganlabs/help-button.qs/commit/f73d4f0c51a1f65b92114edb1563d92e362271b7))
+
+## [2.5.2](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.1...helpbutton-qs-v2.5.2) (2026-03-22)
+
+
+### Bug Fixes
+
+* **ci:** enhance logging and pre-release name handling in CI workflow ([106971a](https://github.com/ptarmiganlabs/help-button.qs/commit/106971a463cada1aa9435543217b10fb323d580d))
+
+## [2.5.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.0...helpbutton-qs-v2.5.1) (2026-03-22)
+
+
+### Bug Fixes
+
+* **ci:** enhance pre-release configuration for alpha, beta, and rc branches ([ccf0c02](https://github.com/ptarmiganlabs/help-button.qs/commit/ccf0c02f047bd60a71354c87fc2b09d30ffe467d))
+
 ## [2.5.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.4.0...helpbutton-qs-v2.5.0) (2026-03-22)
 
 

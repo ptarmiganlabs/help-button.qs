@@ -9,7 +9,9 @@ import archiver from 'archiver';
  */
 async function main() {
     const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
-    const zipName = `${pkg.name}.zip`;
+    const prerelease = process.env.PRERELEASE_SUFFIX || '';
+    const versionTag = (process.env.RELEASE_VERSION && `-v${process.env.RELEASE_VERSION}`) || '';
+    const zipName = `${pkg.name}${versionTag}${prerelease}.zip`;
     const output = createWriteStream(zipName);
     const archive = archiver('zip', {
         zlib: { level: 9 },
