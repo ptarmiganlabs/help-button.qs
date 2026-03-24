@@ -95,7 +95,7 @@ jobs:
             echo "release_upload_url=${{ steps.release.outputs.upload_url }}" >> $GITHUB_OUTPUT
             echo "is_prerelease=${{ steps.release.outputs.prerelease }}" >> $GITHUB_OUTPUT
           else
-            echo "releases_created=${{ steps.decide.outputs.releases_created || 'true' }}" >> $GITHUB_OUTPUT
+            echo "releases_created=${{ steps.decide.outputs.releases_created }}" >> $GITHUB_OUTPUT
             echo "release_tag_name=${{ steps.decide.outputs.release_tag_name }}" >> $GITHUB_OUTPUT
             echo "release_version=${{ steps.decide.outputs.release_version }}" >> $GITHUB_OUTPUT
             echo "release_upload_url=${{ steps.decide.outputs.release_upload_url }}" >> $GITHUB_OUTPUT
