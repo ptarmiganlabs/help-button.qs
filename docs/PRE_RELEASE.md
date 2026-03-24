@@ -2,6 +2,41 @@
 
 This document describes how to create pre-releases for helpbutton.qs.
 
+## Decision Tree: Choosing Your Workflow
+
+Use the following diagram to determine the correct path based on your current goal:
+
+```mermaid
+graph TD
+    Start((I have code changes)) --> Goal{What is the goal?}
+    
+    Goal -- "Ongoing dev (not done)" --> PathA[Push to feature/ fix/ docs branch]
+    PathA --> FeatureFinish{Feature complete?}
+    FeatureFinish -- No --> PathA
+    FeatureFinish -- Yes --> MergeMain[Merge to main]
+
+    Goal -- "Stabilize for release" --> IsBranch{Pre-release branch exists?}
+    
+    IsBranch -- No --> StartRC[Create branch: 'pre-release/rc']
+    StartRC --> PushRC[Push to origin]
+    PushRC --> PR_RC[Merge Release PR #106 style into 'pre-release/rc']
+    PR_RC --> Draft0[CI creates Draft vX.Y.Z-rc.0]
+
+    IsBranch -- Yes --> FoundBug{Found a bug in RC?}
+    FoundBug -- Yes --> FixRC[Push fix to 'pre-release/rc']
+    FixRC --> CI_Inc[CI auto-increments to rc.1, rc.2, etc.]
+    CI_Inc --> DraftN[New Draft release created]
+    
+    FoundBug -- No --> FinalReady{Ready for public?}
+    FinalReady -- Yes --> MergeToMain[Merge 'pre-release/rc' to 'main']
+    MergeToMain --> StableRelease[Release-Please creates stable vX.Y.Z PR]
+    StableRelease --> Publish[Merge & Publish]
+    
+    Goal -- "Promotion (e.g. beta -> rc)" --> PromoteBranch[Create 'pre-release/rc' from 'pre-release/beta']
+    PromoteBranch --> ManUpdate[Update manifest to vX.Y.Z-rc.0]
+    ManUpdate --> PushRCBranch[Push and follow RC workflow]
+```
+
 ## Overview
 
 Pre-releases allow testing new features and fixes before general availability. They follow semantic versioning with pre-release identifiers (e.g., `2.5.0-alpha.1`, `2.5.0-beta.2`, `2.5.0-rc.1`).
@@ -54,6 +89,16 @@ The CI workflow will automatically detect the pre-release branch (any branch sta
 3. The workflow will create a draft release
 4. Go to GitHub Releases and publish the draft
 5. Make sure the "This is a pre-release" checkbox is checked
+
+### Step 5: Iterating (Subsequent RCs)
+
+Once the first pre-release (e.g. `rc.0`) exists as a draft:
+
+1. **Push code directly** to the pre-release branch (e.g. `pre-release/rc`).
+2. The CI will automatically:
+   - Identify the existing draft.
+   - Increment the suffix (e.g., `rc.0` -> `rc.1`).
+   - Update the draft with the new tag and updated assets.
 
 ## Versioning Strategy
 
