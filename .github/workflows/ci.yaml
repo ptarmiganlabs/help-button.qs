@@ -39,6 +39,10 @@ jobs:
           echo "=== Pre-release detection ==="
           echo "IS_PRERELEASE_BRANCH: $IS_PRERELEASE_BRANCH"
 
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Determine config file
         id: config
         run: |
