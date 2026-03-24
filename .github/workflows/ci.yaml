@@ -185,7 +185,7 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD=true npm ci
           npm run pack:prod
 
-      - name: Generate README PDF
+      - name: Generate README-EXTENSION PDF
         run: |
           # ubuntu-latest ships google-chrome-stable; use it for both mmdc and md-to-pdf
           CHROME=$(which google-chrome-stable 2>/dev/null || which chromium-browser 2>/dev/null || which chromium)
@@ -205,6 +205,26 @@ jobs:
 
           # Clean up intermediate artefacts and give the PDF its final name
           rm -f README-processed.md README-processed-*.svg
+          mv README-processed.pdf README-EXTENSION.pdf
+          echo "PDF size: $(du -sh README-EXTENSION.pdf)"
+
+      - name: Generate Main README PDF
+        run: |
+          # ubuntu-latest ships google-chrome-stable; use it for both mmdc and md-to-pdf
+          CHROME=$(which google-chrome-stable 2>/dev/null || which chromium-browser 2>/dev/null || which chromium)
+          echo "Chrome executable: $CHROME"
+
+          # Write puppeteer config for mmdc
+          echo "{\"executablePath\":\"$CHROME\",\"args\":[\"--no-sandbox\",\"--disable-setuid-sandbox\"]}" > /tmp/mmdc-puppeteer.json
+
+          # Step 1: convert Mermaid code blocks to SVG images
+          mmdc -i README.md -o README-processed.md --puppeteerConfigFile /tmp/mmdc-puppeteer.json
+
+          # Step 2: render the processed markdown (with inline SVG refs) to PDF
+          PUPPETEER_EXECUTABLE_PATH="$CHROME" md-to-pdf README-processed.md
+
+          # Clean up intermediate artefacts and give the PDF its final name
+          rm -f README-processed.md README-processed-*.svg
           mv README-processed.pdf README.pdf
           echo "PDF size: $(du -sh README.pdf)"
 
@@ -218,8 +238,8 @@ jobs:
           # Create outer zip containing the extension zip + readme + license
           zip -j "${DIST_FILE_NAME}-extension-v${VERSION}.zip" \
             extension/helpbutton-qs.zip \
-            extension/README.md \
-            extension/README.pdf \
+            README-EXTENSION.pdf \
+            README.pdf \
             readme.txt \
             LICENSE
 

@@ -2,6 +2,21 @@
 
 **helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Sensse application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
 
+## ❤️ Support the project
+
+If you find this project helpful and use it in your Qlik Sense environment, please consider supporting it financially! Your sponsorship helps ensure the project's long-term sustainability and allows me to continue maintaining it, fixing bugs, and adding new features.
+
+**👉 [Sponsor the project on GitHub](https://github.com/sponsors/ptarmiganlabs)** - Click the "Sponsor" button at the repository page to become a sponsor.
+
+* ⭐ **Star the repository** on GitHub - it helps others discover the project
+* 🍴 **Fork and contribute** - pull requests are welcome!
+* 💬 **Share your feedback** - let me know how you're using it
+* 🐛 **Report issues** - help improve stability and functionality
+
+*This project is maintained by [Göran Sander](https://github.com/mountaindude) and supported by [Ptarmigan Labs](https://ptarmiganlabs.com).*
+
+---
+
 ## Features
 
 - **Global Toolbar Integration**: In analysis mode, the extension attaches a help button to the main Qlik Sense native toolbar, rather than rendering inside a grid cell. The button is only shown when at least one menu item is configured.
