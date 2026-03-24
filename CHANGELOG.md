@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.5.5](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.4...helpbutton-qs-v2.5.5) (2026-03-24)
+
+
+### Miscellaneous
+
+* reset release-please manifest baseline ([c3c99c0](https://github.com/ptarmiganlabs/help-button.qs/commit/c3c99c0e16657021d7582a44de12db807aef13e2))
+
+
+### Documentation
+
+* enhance pre-release workflow with decision tree and iteration steps ([87fdb31](https://github.com/ptarmiganlabs/help-button.qs/commit/87fdb31806a51ecf79ac956e3b241aa2eeff8cbd))
+
 ## [2.5.4](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.3...helpbutton-qs-v2.5.4) (2026-03-24)
 
 
