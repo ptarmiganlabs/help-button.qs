@@ -8,6 +8,11 @@ Use the following diagram to determine the correct path based on your current go
 
 ```mermaid
 graph TD
+    classDef yellow fill:#ffff00,stroke:#333,stroke-width:2px;
+    classDef green fill:#9f9,stroke:#333,stroke-width:2px;
+    classDef blue fill:#9ff,stroke:#333,stroke-width:2px;
+    classDef orange fill:#fb9,stroke:#333,stroke-width:2px;
+
     Start((I have code changes)) --> Goal{What is the goal?}
     
     Goal -- "Ongoing dev (not done)" --> PathA[Push to feature/ fix/ docs branch]
@@ -35,7 +40,18 @@ graph TD
     Goal -- "Promotion (e.g. beta -> rc)" --> PromoteBranch[Create 'pre-release/rc' from 'pre-release/beta']
     PromoteBranch --> ManUpdate[Update manifest to vX.Y.Z-rc.0]
     ManUpdate --> PushRCBranch[Push and follow RC workflow]
+
+    class PathA,FeatureFinish,MergeMain blue;
+    class StartRC,PushRC,PR_RC,Draft0 orange;
+    class FixRC,CI_Inc,DraftN green;
+    class MergeToMain,StableRelease,Publish yellow;
 ```
+
+### Legend
+- <span style="color:#9ff">**Blue**</span>: Standard Development (feature branches).
+- <span style="color:#fb9">**Orange**</span>: Initializing a Pre-release (creating the `rc` branch).
+- <span style="color:#9f9">**Green**</span>: Iteration Mode (fixing bugs in RC, auto-incrementing `rc.N`).
+- <span style="color:#ffff00">**Yellow**</span>: Promotion to Production (merging to `main` for stable release).
 
 ## Overview
 
