@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.5.4](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.3...helpbutton-qs-v2.5.4) (2026-03-24)
+
+
+### Bug Fixes
+
+* Add pre-release suffix to release asset ZIP files. ([1554ec4](https://github.com/ptarmiganlabs/help-button.qs/commit/1554ec421d1a9bc2897cd24b924bf376f8e88a6d))
+* **baseline:** trigger release-please with correct tag ([978b919](https://github.com/ptarmiganlabs/help-button.qs/commit/978b919143cd3a4c8f9eaa2ba482a24c0ca9313e))
+* **helper:** correct prefix handling and semver parsing ([5ee50e1](https://github.com/ptarmiganlabs/help-button.qs/commit/5ee50e19964a721530c113cbcf3862d5c480d228))
+* **rc:** increment rc to test auto-draft ([2486c33](https://github.com/ptarmiganlabs/help-button.qs/commit/2486c337202d28069b7ff586b20f80b27e0be3cd))
+* **rc:** trigger increment from rc.0 to rc.1 ([29101eb](https://github.com/ptarmiganlabs/help-button.qs/commit/29101ebc2897ccae0462a5d4ac1997eecc92560e))
+
+
+### Miscellaneous
+
+* **pre-release/rc:** release helpbutton-qs 2.5.3 ([303cde5](https://github.com/ptarmiganlabs/help-button.qs/commit/303cde5b33bcb605e5f69766e26573eb6fd34ce4))
+* save progress before rebase ([659b902](https://github.com/ptarmiganlabs/help-button.qs/commit/659b902f1338067e5a59d0816b321da71b02f74b))
+
 ## [2.5.3](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.2...helpbutton-qs-v2.5.3) (2026-03-24)
 
 
