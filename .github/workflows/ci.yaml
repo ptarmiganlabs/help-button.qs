@@ -166,10 +166,12 @@ jobs:
             TAG_NO_V="${TAG_NAME#v}"
 
             if [[ "$TAG_NO_V" =~ -${PRERELEASE_TYPE}\.([0-9]+)$ ]]; then
-              PRERELEASE_SUFFIX="-${PRERELEASE_TYPE}.${BASH_REMATCH[1]}"
+              # Suffix already embedded in tag name; leave PRERELEASE_SUFFIX empty to avoid duplication
+              PRERELEASE_SUFFIX=""
               RELEASE_VERSION="$TAG_NO_V"
             elif [[ "${{ needs.release-please.outputs.release_version }}" =~ -${PRERELEASE_TYPE}\.([0-9]+) ]]; then
-              PRERELEASE_SUFFIX="-${PRERELEASE_TYPE}.${BASH_REMATCH[1]}"
+              # Suffix already embedded in release_version; leave PRERELEASE_SUFFIX empty to avoid duplication
+              PRERELEASE_SUFFIX=""
               RELEASE_VERSION="${{ needs.release-please.outputs.release_version }}"
             else
               PRERELEASE_SUFFIX="-${PRERELEASE_TYPE}.0"
