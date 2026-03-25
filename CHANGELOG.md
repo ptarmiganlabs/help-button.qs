@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.5.7](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.6...helpbutton-qs-v2.5.7) (2026-03-25)
+
+
+### Bug Fixes
+
+* **ci:** extract semver from tag by stripping package prefix (e.g. helpbutton-qs-v) ([c67925a](https://github.com/ptarmiganlabs/help-button.qs/commit/c67925ab8f3946563f621066deb58493f14ec3f0))
+* **ci:** prevent duplicate pre-release suffix in artifact names ([e1b7ab8](https://github.com/ptarmiganlabs/help-button.qs/commit/e1b7ab87efa1e0cffb76b43fe05e87c0f7d82744))
+* **ci:** prevent duplicate pre-release suffix in artifact names ([4225293](https://github.com/ptarmiganlabs/help-button.qs/commit/42252936c10a404860e96eca7d0957041b9be658))
+* **ci:** strip package prefix from release tag to extract clean semver ([2e15e45](https://github.com/ptarmiganlabs/help-button.qs/commit/2e15e4567bbb4af9fb5c1a112795944a0a9060bc))
+
+
+### Documentation
+
+* add release process documentation ([9f681d0](https://github.com/ptarmiganlabs/help-button.qs/commit/9f681d0c76fc29ca5ad4b9ad966274cb8f0b684f))
+
 ## [2.5.6](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.5...helpbutton-qs-v2.5.6) (2026-03-24)
 
 
