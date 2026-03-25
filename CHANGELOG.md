@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.5.6](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.5...helpbutton-qs-v2.5.6) (2026-03-24)
+
+
+### Documentation
+
+* enhance decision tree in pre-release process with color-coded classes ([7cf3698](https://github.com/ptarmiganlabs/help-button.qs/commit/7cf3698ca46f03c2a9dcb06a0d223e05d5e88140))
+
+## [2.5.5](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.4...helpbutton-qs-v2.5.5) (2026-03-24)
+
+
+### Miscellaneous
+
+* reset release-please manifest baseline ([c3c99c0](https://github.com/ptarmiganlabs/help-button.qs/commit/c3c99c0e16657021d7582a44de12db807aef13e2))
+
+
+### Documentation
+
+* enhance pre-release workflow with decision tree and iteration steps ([87fdb31](https://github.com/ptarmiganlabs/help-button.qs/commit/87fdb31806a51ecf79ac956e3b241aa2eeff8cbd))
+
+## [2.5.4](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.3...helpbutton-qs-v2.5.4) (2026-03-24)
+
+
+### Bug Fixes
+
+* Add pre-release suffix to release asset ZIP files. ([1554ec4](https://github.com/ptarmiganlabs/help-button.qs/commit/1554ec421d1a9bc2897cd24b924bf376f8e88a6d))
+* **ci:** add checkout step to release-please job ([98918ac](https://github.com/ptarmiganlabs/help-button.qs/commit/98918ac9bca026f172d51304121900042af1b1ed))
+* **ci:** pin checkout action to SHA ([7c12eb8](https://github.com/ptarmiganlabs/help-button.qs/commit/7c12eb810b2b552f1abe44ee29b241303c7dbbd9))
+
+
+### Miscellaneous
+
+* **pre-release/rc:** release helpbutton-qs 2.5.3 ([303cde5](https://github.com/ptarmiganlabs/help-button.qs/commit/303cde5b33bcb605e5f69766e26573eb6fd34ce4))
+
 ## [2.5.3](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.2...helpbutton-qs-v2.5.3) (2026-03-24)
 
 
