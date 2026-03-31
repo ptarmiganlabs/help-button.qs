@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.6.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.7...helpbutton-qs-v2.6.0) (2026-03-31)
+
+
+### Features
+
+* enable duplicate command for menu items and tooltips in property panel ([55fc89b](https://github.com/ptarmiganlabs/help-button.qs/commit/55fc89b98b836649d9e16b552a2d89e1bedf9f7f))
+* enable duplicate command for menu items and tooltips in property panel ([5d18ba3](https://github.com/ptarmiganlabs/help-button.qs/commit/5d18ba3392261e05a57409b833ac4aa8f0f4a20c))
+
+
+### Bug Fixes
+
+* keep focus on confirmation dialog when already open, update stale comment ([a3e5c50](https://github.com/ptarmiganlabs/help-button.qs/commit/a3e5c50465d2e2b1ad1b862ca1595f42c659fd4c))
+* update express dependency to version 5.2.1 in demo server ([cc3d348](https://github.com/ptarmiganlabs/help-button.qs/commit/cc3d348e867962ac134bcd3bc956c2cb29bd824d))
+* update express dependency to version 5.2.1 in demo server ([394bac4](https://github.com/ptarmiganlabs/help-button.qs/commit/394bac44b2cc09a33abc0596d5280b4d4da70de7))
+* use factory functions for menu item defaults and improve dirty-tracking reliability ([1236654](https://github.com/ptarmiganlabs/help-button.qs/commit/12366541ee4525495f96950f54bee190f588935b))
+* warn before discarding unsaved changes in Markdown editor dialog ([9e733d3](https://github.com/ptarmiganlabs/help-button.qs/commit/9e733d3b6bbe6201c461156f9f78623135f2d90e))
+
+
+### Miscellaneous
+
+* **ci:** update Node.js version to 24 in workflows ([97654f4](https://github.com/ptarmiganlabs/help-button.qs/commit/97654f4412bc79d79c8202fe249c43d949cdda62))
+* update nebula.js dependencies and eslint version in package.json ([6600fba](https://github.com/ptarmiganlabs/help-button.qs/commit/6600fbacdcb04eaf8f96e957d53cd3c3d56f4a24))
+
+
+### Refactoring
+
+* refactor menu item configurations to use shared templates for bug reports and feedback ([288b054](https://github.com/ptarmiganlabs/help-button.qs/commit/288b054f01ac393a562be6f8b83eabbc4da22fc0))
+
 ## [2.5.7](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.6...helpbutton-qs-v2.5.7) (2026-03-25)
 
 
