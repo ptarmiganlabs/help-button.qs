@@ -1315,3 +1315,49 @@
 .hbqs-md-editor-btn--save:hover {
     background: #12487c;
 }
+
+.hbqs-md-editor-btn--discard {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #b91c1c;
+}
+
+.hbqs-md-editor-btn--discard:hover {
+    background: #b91c1c;
+}
+
+/* =========================================================================
+ *  Unsaved-changes confirmation dialog
+ * ========================================================================= */
+
+.hbqs-md-confirm-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10020;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hbqs-md-confirm-dialog {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    padding: 20px 24px;
+    max-width: 420px;
+    width: 90vw;
+}
+
+.hbqs-md-confirm-msg {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #1f2937;
+}
+
+.hbqs-md-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
