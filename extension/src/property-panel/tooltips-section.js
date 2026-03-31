@@ -30,6 +30,7 @@ export default function tooltipsSection(getObjectList) {
         allowAdd: true,
         allowRemove: true,
         allowMove: true,
+        allowDuplicate: true,
         addTranslation: "Add Tooltip",
         itemTitleRef: "tooltipLabel",
         items: {
