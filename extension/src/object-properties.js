@@ -189,7 +189,7 @@ export default {
         },
     ],
 
-    // -- Menu items (shared config is spread from templates above) --
+    // -- Menu items (nested config created via createDefault*() factories; no shared object trees) --
     menuItems: [
         {
             label: 'Help documentation',

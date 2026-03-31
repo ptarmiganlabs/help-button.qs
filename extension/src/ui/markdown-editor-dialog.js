@@ -29,9 +29,11 @@ let activeBackdrop = null;
  */
 function confirmDiscardChanges() {
     return new Promise((resolve) => {
-        // Prevent stacking
+        // Prevent stacking – keep focus inside the existing confirmation
         const existing = document.querySelector('.hbqs-md-confirm-backdrop');
         if (existing) {
+            const existingKeepBtn = existing.querySelector('.hbqs-md-confirm-btn--keep');
+            if (existingKeepBtn) existingKeepBtn.focus();
             resolve(false);
             return;
         }
@@ -186,7 +188,11 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
         if (hasPendingChanges()) {
             const discard = await confirmDiscardChanges();
             if (!discard) {
-                textarea.focus();
+                // Only refocus the textarea when no confirmation overlay is
+                // still visible (it keeps focus on its own "Keep editing" btn).
+                if (!document.querySelector('.hbqs-md-confirm-backdrop')) {
+                    textarea.focus();
+                }
                 return;
             }
         }
