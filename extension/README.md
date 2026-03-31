@@ -87,7 +87,7 @@ It is valid to place several HelpButton.qs extension objects on the same sheet. 
 
 ## Menu Item Types
 
-When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. Each menu item can be conditionally shown or hidden based on a Qlik expression using the optional **Show Condition** property. The help button supports four types of menu actions:
+When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. Each menu item can be conditionally shown or hidden based on a Qlik expression using the optional **Show Condition** property. Right-click any menu item in the property panel to **Duplicate** it — this copies all of its settings into a new item, making it easy to create similar entries with only minor differences. The help button supports four types of menu actions:
 
 1. **Outbound Link (`link`)**: 
    - Opens a specified URL (can be configured to open in a new tab or the same window).
@@ -125,7 +125,7 @@ flowchart LR
 
 ## Tooltips
 
-**Tooltips** let you attach floating help icons to any Qlik Sense chart object or arbitrary page element. Each icon triggers a hover popup (Markdown content) and optionally a click-to-open detail dialog.
+**Tooltips** let you attach floating help icons to any Qlik Sense chart object or arbitrary page element. Each icon triggers a hover popup (Markdown content) and optionally a click-to-open detail dialog. Right-click any tooltip in the property panel to **Duplicate** it — this copies all of its settings into a new tooltip, making it easy to create similar tooltips with only minor differences.
 
 ### Key Capabilities
 

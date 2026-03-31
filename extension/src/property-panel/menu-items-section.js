@@ -24,6 +24,7 @@ const menuItemsSection = {
       allowAdd: true,
       allowRemove: true,
       allowMove: true,
+      allowDuplicate: true,
       addTranslation: "Add Menu Item",
       itemTitleRef: "label",
       items: {
