@@ -326,7 +326,7 @@ export function applyPreset(data, presetKey) {
   if (data.menuItems && Array.isArray(data.menuItems)) {
     const typeStyles = preset.menuItemTypeStyles;
     data.menuItems = data.menuItems.map(item => {
-      let styleKey = 'url';
+      let styleKey = 'url'; // 'link', '' (legacy), and unknown actions all map to 'url'
       if (item.action === 'bugReport') styleKey = 'bugReport';
       else if (item.action === 'feedback') styleKey = 'feedback';
       else if (item.action === 'setVariable') styleKey = 'setVariable';

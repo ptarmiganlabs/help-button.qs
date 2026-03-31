@@ -18,6 +18,88 @@ import logger from '../util/logger';
 let activeBackdrop = null;
 
 // ---------------------------------------------------------------------------
+// Unsaved-changes confirmation
+// ---------------------------------------------------------------------------
+
+/**
+ * Show an inline confirmation dialog asking whether to discard unsaved changes.
+ * Returns a Promise that resolves to `true` (discard) or `false` (stay).
+ *
+ * @returns {Promise<boolean>}
+ */
+function confirmDiscardChanges() {
+    return new Promise((resolve) => {
+        // Prevent stacking – keep focus inside the existing confirmation
+        const existing = document.querySelector('.hbqs-md-confirm-backdrop');
+        if (existing) {
+            const existingKeepBtn = existing.querySelector('.hbqs-md-confirm-btn--keep');
+            if (existingKeepBtn) existingKeepBtn.focus();
+            resolve(false);
+            return;
+        }
+
+        const backdrop = document.createElement('div');
+        backdrop.className = 'hbqs-md-confirm-backdrop';
+
+        const box = document.createElement('div');
+        box.className = 'hbqs-md-confirm-dialog';
+        box.setAttribute('role', 'alertdialog');
+        box.setAttribute('aria-modal', 'true');
+        box.setAttribute('aria-label', 'Unsaved changes');
+        box.addEventListener('click', (e) => e.stopPropagation());
+
+        const msg = document.createElement('p');
+        msg.className = 'hbqs-md-confirm-msg';
+        msg.textContent = 'You have unsaved changes. Are you sure you want to discard them?';
+        box.appendChild(msg);
+
+        const actions = document.createElement('div');
+        actions.className = 'hbqs-md-confirm-actions';
+
+        const keepBtn = document.createElement('button');
+        keepBtn.className = 'hbqs-md-editor-btn hbqs-md-editor-btn--cancel';
+        keepBtn.type = 'button';
+        keepBtn.textContent = 'Keep editing';
+
+        const discardBtn = document.createElement('button');
+        discardBtn.className = 'hbqs-md-editor-btn hbqs-md-editor-btn--discard';
+        discardBtn.type = 'button';
+        discardBtn.textContent = 'Discard changes';
+
+        actions.appendChild(keepBtn);
+        actions.appendChild(discardBtn);
+        box.appendChild(actions);
+        backdrop.appendChild(box);
+        document.body.appendChild(backdrop);
+
+        const cleanup = (result) => {
+            document.removeEventListener('keydown', onKey, true);
+            backdrop.remove();
+            resolve(result);
+        };
+
+        keepBtn.addEventListener('click', () => cleanup(false));
+        discardBtn.addEventListener('click', () => cleanup(true));
+        backdrop.addEventListener('click', (e) => {
+            if (e.target === backdrop) cleanup(false);
+        });
+
+        // Capture-phase handler so the confirmation Escape is consumed
+        // before the editor's own keydown listener fires.
+        const onKey = (e) => {
+            if (e.key === 'Escape') {
+                e.stopPropagation();
+                cleanup(false);
+            }
+        };
+        document.addEventListener('keydown', onKey, true);
+
+        // Focus the safe option to prevent accidental data loss
+        keepBtn.focus();
+    });
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -59,7 +141,6 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
     closeBtn.className = 'hbqs-md-editor-close';
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.innerHTML = makeSvg('close', 16);
-    closeBtn.addEventListener('click', closeMarkdownEditorDialog);
     header.appendChild(closeBtn);
 
     dialog.appendChild(header);
@@ -70,6 +151,10 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
         maxLength: maxLength || 0,
         rows: 16,
     });
+
+    // Capture baseline from the actual textarea after creation so that any
+    // normalisation performed by createTabbedMarkdownEditor is accounted for.
+    const initialValue = textarea.value;
     // Give the tabbed editor flex growth inside the dialog
     editorContainer.style.flex = '1';
     editorContainer.style.minHeight = '0';
@@ -92,6 +177,31 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
         dialog.appendChild(counter);
     }
 
+    // -- Dirty check helper --
+    const hasPendingChanges = () => textarea.value !== initialValue;
+
+    /**
+     * Attempt to close the editor dialog.
+     * If there are unsaved changes, show a confirmation dialog first.
+     */
+    const guardedClose = async () => {
+        if (hasPendingChanges()) {
+            const discard = await confirmDiscardChanges();
+            if (!discard) {
+                // Only refocus the textarea when no confirmation overlay is
+                // still visible (it keeps focus on its own "Keep editing" btn).
+                if (!document.querySelector('.hbqs-md-confirm-backdrop')) {
+                    textarea.focus();
+                }
+                return;
+            }
+        }
+        closeMarkdownEditorDialog();
+    };
+
+    // -- Wire up close button to guarded close --
+    closeBtn.addEventListener('click', guardedClose);
+
     // -- Footer --
     const footer = document.createElement('div');
     footer.className = 'hbqs-md-editor-footer';
@@ -100,7 +210,7 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
     cancelBtn.className = 'hbqs-md-editor-btn hbqs-md-editor-btn--cancel';
     cancelBtn.type = 'button';
     cancelBtn.textContent = 'Cancel';
-    cancelBtn.addEventListener('click', closeMarkdownEditorDialog);
+    cancelBtn.addEventListener('click', guardedClose);
 
     const saveBtn = document.createElement('button');
     saveBtn.className = 'hbqs-md-editor-btn hbqs-md-editor-btn--save';
@@ -119,7 +229,10 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
 
     // -- Keyboard handler --
     const onKeyDown = (e) => {
-        if (e.key === 'Escape') closeMarkdownEditorDialog();
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            guardedClose();
+        }
     };
     document.addEventListener('keydown', onKeyDown);
     backdrop._hbqsKeyHandler = onKeyDown;
