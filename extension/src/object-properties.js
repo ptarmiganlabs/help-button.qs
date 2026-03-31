@@ -12,68 +12,79 @@ import { toPickerObj } from './util/color';
 import { DEFAULT_DIALOG_FORMAT, DEFAULT_PAYLOAD_FORMAT } from './util/timestamp-formats';
 
 // ---------------------------------------------------------------------------
-// Shared template defaults for menu items.
-// Spread into each default menu item to avoid duplicating ~50-line blocks
-// of bugReport / feedback / variableAction configuration.
+// Factory functions for menu-item sub-object defaults.
+// Each call returns a fresh object tree so that no nested arrays/objects
+// (customHeaders, dialogStrings, variableAssignments, etc.) are shared
+// between menu items.
 // ---------------------------------------------------------------------------
-const DEFAULT_FIELDS = {
-    userName: true, appId: true, sheetId: true,
-    urlPath: true, platform: true, timestamp: true,
-    userId: false, userDirectory: false, senseVersion: false,
-    browser: false, tenantId: false, status: false,
-    picture: false, preferredZoneinfo: false, roles: false,
-};
+function createDefaultFields() {
+    return {
+        userName: true, appId: true, sheetId: true,
+        urlPath: true, platform: true, timestamp: true,
+        userId: false, userDirectory: false, senseVersion: false,
+        browser: false, tenantId: false, status: false,
+        picture: false, preferredZoneinfo: false, roles: false,
+    };
+}
 
-const DEFAULT_PAYLOAD_KEY_NAMES = {
-    userName: 'userName', platform: 'platform',
-    appId: 'appId', sheetId: 'sheetId',
-    urlPath: 'urlPath', timestamp: 'timestamp',
-    userId: 'userId', userDirectory: 'userDirectory',
-    senseVersion: 'senseVersion', browser: 'browser',
-    tenantId: 'tenantId', status: 'status',
-    picture: 'picture', preferredZoneinfo: 'preferredZoneinfo',
-    roles: 'roles',
-};
+function createDefaultPayloadKeyNames() {
+    return {
+        userName: 'userName', platform: 'platform',
+        appId: 'appId', sheetId: 'sheetId',
+        urlPath: 'urlPath', timestamp: 'timestamp',
+        userId: 'userId', userDirectory: 'userDirectory',
+        senseVersion: 'senseVersion', browser: 'browser',
+        tenantId: 'tenantId', status: 'status',
+        picture: 'picture', preferredZoneinfo: 'preferredZoneinfo',
+        roles: 'roles',
+    };
+}
 
-const DEFAULT_BUG_REPORT = {
-    webhookUrl: '',
-    authStrategy: 'none',
-    authToken: '',
-    customHeaders: [],
-    enableSeverity: true,
-    descriptionMaxLength: 1000,
-    dialogTimestampFormat: DEFAULT_DIALOG_FORMAT,
-    payloadTimestampFormat: DEFAULT_PAYLOAD_FORMAT,
-    dialogFields: { ...DEFAULT_FIELDS },
-    payloadFields: { ...DEFAULT_FIELDS },
-    payloadKeyNames: { ...DEFAULT_PAYLOAD_KEY_NAMES },
-    dialogStrings: { title: '' },
-};
+function createDefaultBugReport() {
+    return {
+        webhookUrl: '',
+        authStrategy: 'none',
+        authToken: '',
+        customHeaders: [],
+        enableSeverity: true,
+        descriptionMaxLength: 1000,
+        dialogTimestampFormat: DEFAULT_DIALOG_FORMAT,
+        payloadTimestampFormat: DEFAULT_PAYLOAD_FORMAT,
+        dialogFields: createDefaultFields(),
+        payloadFields: createDefaultFields(),
+        payloadKeyNames: createDefaultPayloadKeyNames(),
+        dialogStrings: { title: '' },
+    };
+}
 
-const DEFAULT_FEEDBACK = {
-    webhookUrl: '',
-    authStrategy: 'none',
-    authToken: '',
-    customHeaders: [],
-    enableRating: true,
-    enableComment: true,
-    commentMaxLength: 500,
-    dialogTimestampFormat: DEFAULT_DIALOG_FORMAT,
-    payloadTimestampFormat: DEFAULT_PAYLOAD_FORMAT,
-    dialogFields: { ...DEFAULT_FIELDS },
-    payloadFields: { ...DEFAULT_FIELDS },
-    payloadKeyNames: { ...DEFAULT_PAYLOAD_KEY_NAMES },
-    dialogStrings: { title: '' },
-};
+function createDefaultFeedback() {
+    return {
+        webhookUrl: '',
+        authStrategy: 'none',
+        authToken: '',
+        customHeaders: [],
+        enableRating: true,
+        enableComment: true,
+        commentMaxLength: 500,
+        dialogTimestampFormat: DEFAULT_DIALOG_FORMAT,
+        payloadTimestampFormat: DEFAULT_PAYLOAD_FORMAT,
+        dialogFields: createDefaultFields(),
+        payloadFields: createDefaultFields(),
+        payloadKeyNames: createDefaultPayloadKeyNames(),
+        dialogStrings: { title: '' },
+    };
+}
 
-const DEFAULT_VARIABLE_ACTION = {
-    mode: 'set',
-    variableAssignments: [],
-    variableName: '',
-    toggleValue1: '',
-    toggleValue2: '',
-    toggleDefault: '',
-};
+function createDefaultVariableAction() {
+    return {
+        mode: 'set',
+        variableAssignments: [],
+        variableName: '',
+        toggleValue1: '',
+        toggleValue2: '',
+        toggleDefault: '',
+    };
+}
 
 export default {
     showTitles: false,
@@ -190,9 +201,9 @@ export default {
             bgColor: toPickerObj('#f0f6fc'),
             bgColorHover: toPickerObj('#dbeafe'),
             textColor: toPickerObj('#0c3256'),
-            variableAction: { ...DEFAULT_VARIABLE_ACTION },
-            bugReport: { ...DEFAULT_BUG_REPORT },
-            feedback: { ...DEFAULT_FEEDBACK },
+            variableAction: createDefaultVariableAction(),
+            bugReport: createDefaultBugReport(),
+            feedback: createDefaultFeedback(),
         },
         {
             label: 'Ptarmigan Labs',
@@ -204,9 +215,9 @@ export default {
             bgColor: toPickerObj('#f0f6fc'),
             bgColorHover: toPickerObj('#dbeafe'),
             textColor: toPickerObj('#0c3256'),
-            variableAction: { ...DEFAULT_VARIABLE_ACTION },
-            bugReport: { ...DEFAULT_BUG_REPORT },
-            feedback: { ...DEFAULT_FEEDBACK },
+            variableAction: createDefaultVariableAction(),
+            bugReport: createDefaultBugReport(),
+            feedback: createDefaultFeedback(),
         },
         {
             label: 'Sponsor us on GitHub',
@@ -218,9 +229,9 @@ export default {
             bgColor: toPickerObj('#fff0f6'),
             bgColorHover: toPickerObj('#ffe0ec'),
             textColor: toPickerObj('#6e3050'),
-            variableAction: { ...DEFAULT_VARIABLE_ACTION },
-            bugReport: { ...DEFAULT_BUG_REPORT },
-            feedback: { ...DEFAULT_FEEDBACK },
+            variableAction: createDefaultVariableAction(),
+            bugReport: createDefaultBugReport(),
+            feedback: createDefaultFeedback(),
         },
         {
             label: 'Report a bug',
@@ -232,9 +243,9 @@ export default {
             bgColor: toPickerObj('#fef2f2'),
             bgColorHover: toPickerObj('#fee2e2'),
             textColor: toPickerObj('#7f1d1d'),
-            variableAction: { ...DEFAULT_VARIABLE_ACTION },
-            bugReport: { ...DEFAULT_BUG_REPORT },
-            feedback: { ...DEFAULT_FEEDBACK },
+            variableAction: createDefaultVariableAction(),
+            bugReport: createDefaultBugReport(),
+            feedback: createDefaultFeedback(),
         },
         {
             label: 'Give feedback',
@@ -246,9 +257,9 @@ export default {
             bgColor: toPickerObj('#f5f3ff'),
             bgColorHover: toPickerObj('#ede9fe'),
             textColor: toPickerObj('#4c1d95'),
-            variableAction: { ...DEFAULT_VARIABLE_ACTION },
-            bugReport: { ...DEFAULT_BUG_REPORT },
-            feedback: { ...DEFAULT_FEEDBACK },
+            variableAction: createDefaultVariableAction(),
+            bugReport: createDefaultBugReport(),
+            feedback: createDefaultFeedback(),
         },
     ],
 };

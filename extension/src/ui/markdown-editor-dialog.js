@@ -113,8 +113,6 @@ function confirmDiscardChanges() {
 export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
     closeMarkdownEditorDialog();
 
-    const initialValue = value || '';
-
     // -- Backdrop --
     const backdrop = document.createElement('div');
     backdrop.className = 'hbqs-md-editor-backdrop';
@@ -147,10 +145,14 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
 
     // -- Tabbed Markdown editor --
     const { container: editorContainer, textarea } = createTabbedMarkdownEditor({
-        value: initialValue,
+        value: value || '',
         maxLength: maxLength || 0,
         rows: 16,
     });
+
+    // Capture baseline from the actual textarea after creation so that any
+    // normalisation performed by createTabbedMarkdownEditor is accounted for.
+    const initialValue = textarea.value;
     // Give the tabbed editor flex growth inside the dialog
     editorContainer.style.flex = '1';
     editorContainer.style.minHeight = '0';
@@ -183,7 +185,10 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
     const guardedClose = async () => {
         if (hasPendingChanges()) {
             const discard = await confirmDiscardChanges();
-            if (!discard) return;
+            if (!discard) {
+                textarea.focus();
+                return;
+            }
         }
         closeMarkdownEditorDialog();
     };
