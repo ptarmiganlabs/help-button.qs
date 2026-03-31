@@ -44,14 +44,14 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
-        "@nebula.js/cli": "^6.6.0",
-        "@nebula.js/cli-build": "^6.7.0",
-        "@nebula.js/cli-sense": "^6.7.0",
+        "@nebula.js/cli": "^6.8.0",
+        "@nebula.js/cli-build": "^6.8.0",
+        "@nebula.js/cli-sense": "^6.8.0",
         "@nebula.js/cli-serve": "^6.5.0",
         "@rollup/plugin-replace": "^6.0.2",
         "archiver": "^7.0.1",
         "cross-env": "^10.1.0",
-        "eslint": "^10.0.3",
+        "eslint": "^10.1.0",
         "eslint-config-prettier": "^10.1.8",
         "globals": "^17.4.0",
         "prettier": "^3.8.1"
