@@ -33,6 +33,7 @@ const TOOLBAR_BUTTONS = [
     { label: '❝', title: 'Blockquote', action: 'blockquote' },
     { type: 'separator' },
     { label: '—', title: 'Horizontal rule', action: 'hr' },
+    { label: '▶', title: 'Video embed', action: 'video' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -117,6 +118,23 @@ function applyAction(textarea, action) {
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
             break;
         }
+        case 'video': {
+            if (selected) {
+                const rep = '@[video](' + selected + ')';
+                textarea.value = value.slice(0, start) + rep + value.slice(end);
+                textarea.selectionStart = start;
+                textarea.selectionEnd = start + rep.length;
+            } else {
+                const rep = '@[title](https://youtube.com/embed/ID)';
+                textarea.value = value.slice(0, start) + rep + value.slice(end);
+                const urlStart = start + 9;
+                textarea.selectionStart = urlStart;
+                textarea.selectionEnd = start + rep.length - 1;
+            }
+            textarea.focus();
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            break;
+        }
     }
 }
 
@@ -137,6 +155,8 @@ function applyAction(textarea, action) {
  * @param {number} [options.maxLength=0] - Max characters (0 = unlimited).
  * @param {string} [options.value='']    - Initial Markdown text.
  * @param {string} [options.className=''] - Extra CSS class for the textarea.
+ * @param {string} [options.allowedUriPatterns=''] - Comma-separated URL prefixes
+ *   for allowed iframe/video src in Preview. Empty = allow all.
  * @returns {{ container: HTMLElement, textarea: HTMLTextAreaElement }}
  */
 export function createTabbedMarkdownEditor({
@@ -146,6 +166,7 @@ export function createTabbedMarkdownEditor({
     maxLength = 0,
     value = '',
     className = '',
+    allowedUriPatterns = '',
 } = {}) {
     // -- Outer container --
     const container = document.createElement('div');
@@ -191,7 +212,7 @@ export function createTabbedMarkdownEditor({
     previewPanel.style.display = 'none';
 
     function updatePreview() {
-        previewPanel.innerHTML = markdownToHtml(textarea.value)
+        previewPanel.innerHTML = markdownToHtml(textarea.value, { allowedUriPatterns })
             || '<p style="color:#9ca3af;font-style:italic">Nothing to preview</p>';
     }
 

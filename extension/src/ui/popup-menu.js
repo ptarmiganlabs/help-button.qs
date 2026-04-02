@@ -11,6 +11,23 @@ import { resolveColor } from '../util/color';
 import logger from '../util/logger';
 
 /**
+ * Check whether a URL uses a safe scheme (http, https, or relative path).
+ *
+ * Blocks dangerous schemes like `javascript:`, `data:`, and `vbscript:`.
+ *
+ * @param {string} url - URL to validate.
+ * @returns {boolean} True if the URL is safe to navigate to.
+ */
+function isSafeUrl(url) {
+    if (!url || url === '#') return true;
+    // Relative paths and protocol-relative URLs are safe
+    if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) return true;
+    // Allow only http(s)
+    if (/^https?:\/\//i.test(url)) return true;
+    return false;
+}
+
+/**
  * @typedef {object} MenuItem
  * @property {string} label - Display text.
  * @property {string} [url] - Link URL (supports {{template}} fields).
@@ -160,13 +177,21 @@ export function createPopupMenu(triggerButton, config) {
             const itemUrl = item.url || '#';
             const itemTarget = item.target || '_blank';
 
-            if (itemUrl.includes('{{')) {
+            if (!isSafeUrl(itemUrl)) {
+                menuItem.href = '#';
+                menuItem.setAttribute('aria-disabled', 'true');
+                logger.warn('HelpButton.qs popup: blocked unsafe URL scheme for menu item:', item.label || '');
+            } else if (itemUrl.includes('{{')) {
                 menuItem.href = '#';
                 menuItem.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     const resolved = resolveTemplateFields(itemUrl);
-                    window.open(resolved, itemTarget, 'noopener,noreferrer');
+                    if (isSafeUrl(resolved)) {
+                        window.open(resolved, itemTarget, 'noopener,noreferrer');
+                    } else {
+                        logger.warn('HelpButton.qs popup: blocked unsafe resolved URL for menu item:', item.label || '');
+                    }
                 });
             } else {
                 menuItem.href = itemUrl;

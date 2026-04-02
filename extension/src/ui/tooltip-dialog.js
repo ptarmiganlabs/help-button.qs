@@ -29,8 +29,10 @@ const SIZE_CLASSES = {
  * @param {string} options.title - Dialog heading.
  * @param {string} options.content - Markdown content for the body.
  * @param {string} [options.size='medium'] - Size preset.
+ * @param {string} [options.allowedUriPatterns] - Comma-separated URL prefixes for
+ *   allowed iframe/video/source src attributes. Empty string = allow all.
  */
-export function openTooltipDialog({ title, content, size, headerBackgroundColor, headerTextColor, bodyBackgroundColor, bodyTextColor }) {
+export function openTooltipDialog({ title, content, size, allowedUriPatterns, headerBackgroundColor, headerTextColor, bodyBackgroundColor, bodyTextColor }) {
     // Remove any existing dialog
     closeTooltipDialog();
 
@@ -75,7 +77,7 @@ export function openTooltipDialog({ title, content, size, headerBackgroundColor,
     // -- Body --
     const body = document.createElement('div');
     body.className = 'hbqs-tooltip-dialog__body hbqs-markdown-content';
-    body.innerHTML = markdownToHtml(content || '');
+    body.innerHTML = markdownToHtml(content || '', { allowedUriPatterns });
     if (bodyBackgroundColor) body.style.background = bodyBackgroundColor;
     if (bodyTextColor) body.style.color = bodyTextColor;
     dialog.appendChild(body);

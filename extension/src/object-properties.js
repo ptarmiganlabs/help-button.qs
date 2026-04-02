@@ -262,4 +262,9 @@ export default {
             feedback: createDefaultFeedback(),
         },
     ],
+
+    // -- Security --
+    security: {
+        allowedUriPatterns: '',
+    },
 };

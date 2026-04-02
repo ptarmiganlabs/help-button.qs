@@ -5,6 +5,8 @@
  * SVG string from any registered icon key.
  */
 
+import { safeCssColor } from '../util/color';
+
 /**
  * Icon path data keyed by icon name.
  *
@@ -154,7 +156,7 @@ const ICONS = {
  */
 export function makeSvg(iconKey, size, color) {
     const paths = ICONS[iconKey] || ICONS.help;
-    const fill = color || 'currentColor';
+    const fill = safeCssColor(color || 'currentColor');
     return (
         `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" ` +
         `width="${size || 16}" height="${size || 16}" ` +

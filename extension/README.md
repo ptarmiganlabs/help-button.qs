@@ -138,6 +138,7 @@ flowchart LR
 - **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body, including video embeds.
 - **Per-tooltip colors**: Customize hover popup colors (background, text, border) and dialog colors (header background/text, body background/text) individually for each tooltip.
 - **Theme preset integration**: When you select a theme preset (Default, The Lean Green Machine, Corporate Blue, Corporate Gold), all tooltip colors are automatically updated to match the preset's coordinated palette. Individual overrides still work after applying a preset.
+- **Security — Allowed URI prefixes**: Optionally restrict embedded video and iframe sources to specific URL prefixes, so only approved domains can be loaded inside tooltip content.
 
 ```mermaid
 flowchart TD
@@ -234,6 +235,28 @@ The tooltip **Hover Content** and **Details Dialog Content** textareas in the pr
 3. Edit, preview, then click **Save** — the new content is written back to the property panel field and persisted to the Qlik engine automatically.
 
 This workflow gives you the same rich Markdown editing experience for tooltip content as for the bug report and feedback dialogs.
+
+### Embedding Videos in Tooltips
+
+Tooltip hover content and dialog content support two ways to embed video:
+
+**Markdown shorthand** — use `@[title](url)` anywhere in the content field:
+
+```
+@[Product walkthrough](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+@[](https://vimeo.com/123456789)
+@[Demo recording](https://example.com/demo.mp4)
+```
+
+YouTube and Vimeo URLs are converted to responsive iframes automatically. Direct `.mp4`, `.webm`, and `.ogg` URLs render as a native `<video>` element with playback controls. The `▶` button in the Markdown editor toolbar inserts the shorthand template with the URL pre-selected for quick editing.
+
+**Raw HTML** — paste an `<iframe>` or `<video>` tag directly:
+
+```html
+<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+```
+
+All content is sanitized by DOMPurify before rendering. To restrict which domains may load embedded content, configure comma-separated URL prefixes in the **Security → Allowed URI prefixes** section of the property panel (empty = allow all).
 
 ---
 

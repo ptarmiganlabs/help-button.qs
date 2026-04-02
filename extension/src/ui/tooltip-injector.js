@@ -36,6 +36,15 @@ let retryTimeout = null;
 let pendingItems = [];
 
 /**
+ * Comma-separated URI prefixes restricting embedded media sources.
+ * Set from layout.security.allowedUriPatterns in injectTooltips().
+ * Empty string = allow all.
+ *
+ * @type {string}
+ */
+let activeAllowedUriPatterns = '';
+
+/**
  * Stores dragged icon positions so they survive hide/show (destroy/inject) cycles.
  * Key: tooltip index, Value: { left: string, top: string }.
  * Intentionally NOT cleared in destroyTooltips() so positions persist.
@@ -124,6 +133,9 @@ export function injectTooltips(layout, adapter, platform) {
     if (tooltips.length === 0) return;
 
     logger.debug(`Injecting ${tooltips.length} tooltip(s)`);
+
+    // Store the allowed URI patterns for use in mountTooltipIcon and the retry observer.
+    activeAllowedUriPatterns = layout.security?.allowedUriPatterns ?? '';
 
     pendingItems = [];
 
@@ -291,7 +303,7 @@ function mountTooltipIcon(item, targetEl, key) {
     iconEl.addEventListener('mouseenter', () => {
         cancelHide();
         if (item.hoverContent) {
-            showHover(iconEl, item.hoverContent, hoverColors);
+            showHover(iconEl, item.hoverContent, hoverColors, activeAllowedUriPatterns);
         }
     });
     iconEl.addEventListener('mouseleave', () => {
@@ -307,6 +319,7 @@ function mountTooltipIcon(item, targetEl, key) {
                 title: item.dialogTitle || item.tooltipLabel || '',
                 content: item.dialogContent || '',
                 size: item.dialogSize || 'medium',
+                allowedUriPatterns: activeAllowedUriPatterns,
                 ...dialogColors,
             });
         });
@@ -321,6 +334,7 @@ function mountTooltipIcon(item, targetEl, key) {
                     title: item.dialogTitle || item.tooltipLabel || '',
                     content: item.dialogContent || '',
                     size: item.dialogSize || 'medium',
+                    allowedUriPatterns: activeAllowedUriPatterns,
                     ...dialogColors,
                 });
             }

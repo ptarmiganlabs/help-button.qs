@@ -8,13 +8,15 @@ Technical reference for developers who want to understand, modify, or extend the
 
 1. [Architecture](#architecture)
 2. [Data Model](#data-model)
-3. [Theme System](#theme-system)
-4. [Injection Lifecycle](#injection-lifecycle)
-5. [Platform Adapters](#platform-adapters)
-6. [Dynamic Object Dropdown](#dynamic-object-dropdown)
-7. [Adding New Icons](#adding-new-icons)
-8. [CSS Custom Properties](#css-custom-properties)
-9. [Extending the Feature](#extending-the-feature)
+3. [Markdown Renderer](#markdown-renderer)
+4. [Security — Allowed URI Prefixes](#security--allowed-uri-prefixes)
+5. [Theme System](#theme-system)
+6. [Injection Lifecycle](#injection-lifecycle)
+7. [Platform Adapters](#platform-adapters)
+8. [Dynamic Object Dropdown](#dynamic-object-dropdown)
+9. [Adding New Icons](#adding-new-icons)
+10. [CSS Custom Properties](#css-custom-properties)
+11. [Extending the Feature](#extending-the-feature)
 
 ---
 
@@ -26,9 +28,12 @@ The tooltip feature spans several files, each with a single responsibility:
 extension/src/
 ├── ext.js                          # Property panel: Tooltips accordion + getObjectList()
 ├── index.js                        # Supernova entry: calls injectTooltips/destroyTooltips
-├── object-properties.js            # Default layout: tooltips: []
+├── object-properties.js            # Default layout: tooltips: [], security: { allowedUriPatterns: '' }
 ├── theme/
 │   └── presets.js                  # tooltipDefaults per preset + applyPreset() tooltip block
+├── property-panel/
+│   ├── tooltips-section.js         # Tooltips accordion content
+│   └── security-section.js         # Security accordion: Allowed URI prefixes
 ├── ui/
 │   ├── icons.js                    # SVG icon library (ICONS map + makeSvg())
 │   ├── tooltip-injector.js         # Main orchestrator: resolve targets, mount icons, wire events
@@ -36,7 +41,7 @@ extension/src/
 │   └── tooltip-dialog.js           # Click dialog: modal with backdrop, Markdown body
 ├── util/
 │   ├── color.js                    # toPickerObj() + resolveColor()
-│   └── markdown.js                 # Markdown-to-HTML converter
+│   └── markdown.js                 # Markdown-to-HTML converter (DOMPurify + filterMediaUris)
 ├── platform/
 │   ├── client-managed.js           # getObjectSelector(), getSheetObjects(), getCurrentSheetId()
 │   ├── cloud.js                    # Same API surface for Qlik Cloud
@@ -101,7 +106,144 @@ Each tooltip is stored as an item in the `layout.tooltips` array. The full prope
 }
 ```
 
+The extension-level security property lives outside the `tooltips` array, at the top level of the layout:
+
+```javascript
+// layout.security
+{
+    allowedUriPatterns: '',   // Comma-separated URL prefixes; empty = allow all
+}
+```
+
+The default value is an empty string, which allows all `https://` sources.
+
 Color properties use the Qlik color-picker object format (`{ color: '#rrggbb', index: '-1' }`), which is the native format for the `color-picker` component in the property panel.
+
+---
+
+## Markdown Renderer
+
+Tooltip hover content and dialog body content are both rendered from Markdown by `util/markdown.js`. The converter is intentionally minimal (zero runtime dependencies beyond DOMPurify) to keep the bundle small.
+
+### HTML escape strategy
+
+Rather than escaping all `<` and `>` characters, the converter uses a **partial escape** that preserves valid HTML tags:
+
+```javascript
+// Escape bare & and < that are NOT part of an existing HTML tag
+text = text.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?![/a-zA-Z!])/g, '&lt;');
+```
+
+This means authors can write raw `<iframe>` or `<video>` elements directly in their content fields and they will pass through to the DOMPurify stage rather than being escaped into visible text.
+
+### Video shorthand: `@[title](url)`
+
+The `@[title](url)` pattern is processed **before** the HTML escape pass. Recognized URLs are converted to safe iframe or video element strings:
+
+| Input URL | Output |
+|---|---|
+| `youtube.com/watch?v=ID` or `youtu.be/ID` | `<iframe src="https://www.youtube.com/embed/ID" ...>` |
+| `vimeo.com/ID` or `player.vimeo.com/video/ID` | `<iframe src="https://player.vimeo.com/video/ID" ...>` |
+| URL ending in `.mp4`, `.webm`, or `.ogg` | `<video controls ...><source src="..."></video>` |
+| Any other host | *(empty — silently ignored for security)* |
+
+The generated iframes are wrapped in a `<div class="hbqs-video-wrapper">` which provides the 16:9 aspect-ratio responsive container via CSS.
+
+### DOMPurify sanitization
+
+After the Markdown rules run, the full HTML is passed through [DOMPurify](https://github.com/cure53/DOMPurify):
+
+```javascript
+DOMPurify.sanitize(html, {
+    ADD_TAGS: ['iframe', 'video', 'source'],
+    ADD_ATTR: [
+        'target', 'rel', 'style', 'frameborder',
+        'controls', 'autoplay', 'muted', 'loop', 'poster',
+        'preload', 'playsinline', 'allowfullscreen', 'allow',
+        'loading', 'referrerpolicy',
+    ],
+});
+```
+
+`iframe`, `video`, and `source` are not in DOMPurify's default safe-tag list, so they must be explicitly added. All other potentially dangerous tags (e.g. `<script>`, `<object>`, `<embed>`) are stripped by default.
+
+### URI filter: `filterMediaUris()`
+
+After DOMPurify runs, an optional URI allowlist filter removes any remaining `iframe`, `video`, or `source` elements whose `src` attribute does not match the configured prefixes:
+
+```javascript
+function filterMediaUris(html, allowedUriPatterns) {
+    if (!allowedUriPatterns) return html;  // empty = allow all
+
+    const prefixes = allowedUriPatterns.split(',').map(p => p.trim()).filter(Boolean);
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    container.querySelectorAll('iframe, video, source').forEach((el) => {
+        const src = el.getAttribute('src') || '';
+        if (!prefixes.some(prefix => src.startsWith(prefix))) el.remove();
+    });
+    return container.innerHTML;
+}
+```
+
+The `allowedUriPatterns` value comes from `layout.security.allowedUriPatterns`, which is read in `injectTooltips()` and stored in the module-level `activeAllowedUriPatterns` variable. It is forwarded to both `showHover()` and `openTooltipDialog()` and ultimately passed as `options.allowedUriPatterns` to `markdownToHtml()`.
+
+### Call signature
+
+```javascript
+markdownToHtml(md, { allowedUriPatterns })
+```
+
+The `options` object is optional. Omitting it (e.g. in the live preview of the Markdown editor toolbar) is equivalent to `allowedUriPatterns = ''`, which allows all sources.
+
+---
+
+## Security — Allowed URI Prefixes
+
+### Property panel
+
+`property-panel/security-section.js` defines the **Security** accordion section. It writes to `layout.security.allowedUriPatterns`:
+
+```javascript
+{
+    ref: 'security.allowedUriPatterns',
+    type: 'string',
+    component: 'textarea',
+    defaultValue: '',
+    placeholder: 'https://www.youtube.com/embed/, https://player.vimeo.com/video/, /content/Default/',
+}
+```
+
+### Data flow
+
+```
+layout.security.allowedUriPatterns          (Qlik layout — set via property panel)
+    ↓
+injectTooltips(layout, adapter, platform)   (tooltip-injector.js)
+    activeAllowedUriPatterns = layout.security?.allowedUriPatterns ?? ''
+    ↓
+mountTooltipIcon()  →  showHover(..., activeAllowedUriPatterns)
+                    →  openTooltipDialog({ ..., allowedUriPatterns: activeAllowedUriPatterns })
+    ↓
+markdownToHtml(content, { allowedUriPatterns })
+    ↓
+DOMPurify.sanitize(html, { ADD_TAGS, ADD_ATTR })
+    ↓
+filterMediaUris(sanitized, allowedUriPatterns)
+```
+
+### Module-level state
+
+The active URI patterns are stored as a module-level variable in `tooltip-injector.js` rather than being threaded through every function signature. This avoids changing the signatures of `mountTooltipIcon` and `startRetryObserver`, which are called from both the initial injection pass and the `MutationObserver` retry path:
+
+```javascript
+// Module-level in tooltip-injector.js
+let activeAllowedUriPatterns = '';
+
+// Set once per inject cycle
+activeAllowedUriPatterns = layout.security?.allowedUriPatterns ?? '';
+```
 
 ---
 
