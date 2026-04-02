@@ -742,13 +742,17 @@ function buildAuthHeaders(strategy, options) {
 /**
  * Generate a 16-character XRF key for Qlik Sense CSRF protection.
  *
+ * Uses crypto.getRandomValues() for cryptographically secure randomness.
+ *
  * @returns {string} 16-character alphanumeric string.
  */
 function generateXrfKey() {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
     let key = '';
     for (let i = 0; i < 16; i++) {
-        key += chars.charAt(Math.floor(Math.random() * chars.length));
+        key += chars.charAt(bytes[i] % chars.length);
     }
     return key;
 }

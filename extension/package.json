@@ -69,5 +69,8 @@
         "scripts/**/*.{js,mjs,cjs}": [
             "eslint --fix"
         ]
+    },
+    "dependencies": {
+        "dompurify": "^3.3.3"
     }
 }

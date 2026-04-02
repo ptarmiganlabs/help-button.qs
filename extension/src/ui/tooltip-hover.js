@@ -27,8 +27,10 @@ let hideTimer = null;
  * @param {string} [colors.backgroundColor] - Popup background color.
  * @param {string} [colors.textColor] - Popup text color.
  * @param {string} [colors.borderColor] - Popup border color.
+ * @param {string} [allowedUriPatterns] - Comma-separated URL prefixes for
+ *   allowed iframe/video/source src attributes. Empty string = allow all.
  */
-export function showHover(iconEl, content, colors) {
+export function showHover(iconEl, content, colors, allowedUriPatterns) {
     // Don't re-create if already showing for this icon
     if (activeHover && activeHover.dataset.hbqsFor === iconEl.id) return;
 
@@ -39,7 +41,7 @@ export function showHover(iconEl, content, colors) {
     const popup = document.createElement('div');
     popup.className = 'hbqs-tooltip-hover hbqs-markdown-content';
     popup.dataset.hbqsFor = iconEl.id;
-    popup.innerHTML = markdownToHtml(content);
+    popup.innerHTML = markdownToHtml(content, { allowedUriPatterns });
 
     // Apply theme colors
     if (colors) {
