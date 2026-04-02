@@ -5,6 +5,7 @@
  *   - **bold** and *italic*
  *   - [links](url)
  *   - ![images](url "optional title")
+ *   - @[videos](url) — YouTube / Vimeo iframes, or .mp4/.webm/.ogg <video>
  *   - `inline code`
  *   - Line breaks (double newline → paragraph, single newline → <br>)
  *   - Unordered lists (- item or * item)
@@ -13,9 +14,90 @@
  *   - > blockquotes
  *   - --- horizontal rules
  *
- * Intentionally minimal (~60 lines) to keep the bundle small.
+ * Intentionally minimal to keep the bundle small.
  * Ported from Onboard.qs.
  */
+
+// ---------------------------------------------------------------------------
+// Video embed helpers
+// ---------------------------------------------------------------------------
+
+/** Pattern for the video embed syntax: @[title](url) */
+const VIDEO_RE = /@\[([^\]]*)\]\(([^)]+)\)/g;
+
+/**
+ * Extract a YouTube video ID from a URL.
+ *
+ * Handles youtube.com/watch?v=ID, youtu.be/ID, and youtube.com/embed/ID.
+ *
+ * @param {string} url
+ * @returns {string|null} Video ID or null.
+ */
+function youtubeId(url) {
+    const m = url.match(
+        /(?:youtube\.com\/(?:watch\?.*v=|embed\/)|youtu\.be\/)([\w-]{11})/i
+    );
+    return m ? m[1] : null;
+}
+
+/**
+ * Extract a Vimeo video ID from a URL.
+ *
+ * Handles vimeo.com/ID and player.vimeo.com/video/ID.
+ *
+ * @param {string} url
+ * @returns {string|null} Video ID or null.
+ */
+function vimeoId(url) {
+    const m = url.match(
+        /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)/i
+    );
+    return m ? m[1] : null;
+}
+
+/** File extensions recognised as direct video sources. */
+const VIDEO_EXT_RE = /\.(?:mp4|webm|ogg)(?:\?[^)]*)?$/i;
+
+/**
+ * Build a responsive iframe wrapper for a video embed URL.
+ *
+ * @param {string} embedUrl - The iframe src URL.
+ * @param {string} title    - Accessible title for the iframe.
+ * @returns {string} HTML string.
+ */
+function iframeHtml(embedUrl, title) {
+    const safeUrl = embedUrl.replace(/"/g, '&quot;');
+    const safeTitle = title.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return (
+        '<div class="hbqs-video-wrapper">' +
+        '<iframe src="' + safeUrl + '"' +
+        ' title="' + safeTitle + '"' +
+        ' frameborder="0"' +
+        ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
+        ' allowfullscreen' +
+        ' referrerpolicy="no-referrer"' +
+        ' sandbox="allow-scripts allow-same-origin allow-popups"' +
+        '></iframe></div>'
+    );
+}
+
+/**
+ * Build a responsive <video> element for direct video file URLs.
+ *
+ * @param {string} src   - Direct URL to a video file.
+ * @param {string} title - Accessible label.
+ * @returns {string} HTML string.
+ */
+function videoTagHtml(src, title) {
+    const safeSrc = src.replace(/"/g, '&quot;');
+    const safeTitle = title.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return (
+        '<div class="hbqs-video-wrapper hbqs-video-wrapper--native">' +
+        '<video controls preload="metadata" title="' + safeTitle + '">' +
+        '<source src="' + safeSrc + '">' +
+        '</video></div>'
+    );
+}
 
 /**
  * Convert a Markdown string to HTML.
@@ -29,8 +111,41 @@ export function markdownToHtml(md) {
     // Normalize line endings
     let text = md.replace(/\r\n?/g, '\n');
 
+    // -------------------------------------------------------------------
+    // Video embeds: @[title](url)
+    // Processed BEFORE the global HTML-escape so that the generated tags
+    // survive.  Only allow-listed sources produce output.
+    // -------------------------------------------------------------------
+    text = text.replace(VIDEO_RE, (_, title, url) => {
+        if (!/^https:\/\//i.test(url)) return '';
+
+        const label = title || 'Video';
+        const ytId = youtubeId(url);
+        if (ytId) return iframeHtml('https://www.youtube-nocookie.com/embed/' + ytId, label);
+
+        const vmId = vimeoId(url);
+        if (vmId) return iframeHtml('https://player.vimeo.com/video/' + vmId, label);
+
+        if (VIDEO_EXT_RE.test(url)) return videoTagHtml(url, label);
+
+        // Unknown host — ignore for security
+        return '';
+    });
+
+    // Protect video embeds already inserted above from the HTML-escape pass.
+    // Replace them with placeholders, then restore after escaping.
+    const videoSlots = [];
+    text = text.replace(/<div class="hbqs-video-wrapper[^"]*">[\s\S]*?<\/div>/g, (m) => {
+        const idx = videoSlots.length;
+        videoSlots.push(m);
+        return 'HBQS_VIDEO_SLOT_' + idx + '_END';
+    });
+
     // Escape ALL HTML to prevent XSS — Markdown rules below produce their own safe tags
     text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    // Restore video embeds
+    text = text.replace(/HBQS_VIDEO_SLOT_(\d+)_END/g, (_, i) => videoSlots[Number(i)]);
 
     // Horizontal rules
     text = text.replace(/^(?:[-*_]){3,}\s*$/gm, '<hr>');
@@ -98,7 +213,7 @@ export function markdownToHtml(md) {
     // Single newlines → <br> (skip newlines after block-level tags)
     text = text.replace(/\n(?!<)/g, (match, offset, str) => {
         const before = str.slice(0, offset);
-        if (/<\/(?:li|ul|ol|blockquote|h[3-6]|p)>$/.test(before) || /<hr>$/.test(before)) {
+        if (/<\/(?:li|ul|ol|blockquote|h[3-6]|p|div)>$/.test(before) || /<hr>$/.test(before)) {
             return '\n';
         }
         return '<br>';
@@ -108,8 +223,8 @@ export function markdownToHtml(md) {
     text = `<p>${text}</p>`;
 
     // Strip <p> wrappers around block-level elements (invalid nesting)
-    text = text.replace(/<p>\s*(<(?:ul|ol|blockquote|h[3-6]|hr)[\s>])/g, '$1');
-    text = text.replace(/(<\/(?:ul|ol|blockquote|h[3-6])>|<hr>)\s*<\/p>/g, '$1');
+    text = text.replace(/<p>\s*(<(?:ul|ol|blockquote|h[3-6]|hr|div)[\s>])/g, '$1');
+    text = text.replace(/(<\/(?:ul|ol|blockquote|h[3-6]|div)>|<hr>)\s*<\/p>/g, '$1');
 
     // Clean up empty paragraphs
     text = text.replace(/<p>\s*<\/p>/g, '');

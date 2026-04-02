@@ -33,6 +33,7 @@ const TOOLBAR_BUTTONS = [
     { label: '❝', title: 'Blockquote', action: 'blockquote' },
     { type: 'separator' },
     { label: '—', title: 'Horizontal rule', action: 'hr' },
+    { label: '▶', title: 'Video embed', action: 'video' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -113,6 +114,23 @@ function applyAction(textarea, action) {
             const rule = '---\n';
             textarea.value = value.slice(0, start) + before + rule + value.slice(end);
             textarea.selectionStart = textarea.selectionEnd = start + before.length + rule.length;
+            textarea.focus();
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            break;
+        }
+        case 'video': {
+            if (selected) {
+                const rep = '@[video](' + selected + ')';
+                textarea.value = value.slice(0, start) + rep + value.slice(end);
+                textarea.selectionStart = start;
+                textarea.selectionEnd = start + rep.length;
+            } else {
+                const rep = '@[title](https://youtube.com/watch?v=ID)';
+                textarea.value = value.slice(0, start) + rep + value.slice(end);
+                const urlStart = start + 9;
+                textarea.selectionStart = urlStart;
+                textarea.selectionEnd = start + rep.length - 1;
+            }
             textarea.focus();
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
             break;

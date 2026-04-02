@@ -254,6 +254,28 @@ Supported Markdown features:
 - Blockquotes (`> text`)
 - Horizontal rules (`---`)
 - Images (`![alt](url)`)
+- Videos (`@[title](url)`) — YouTube, Vimeo, or direct `.mp4`/`.webm`/`.ogg` links
+
+### Embedding videos
+
+Use the `@[title](url)` syntax to embed a video. The title is used as an
+accessible label; if omitted, "Video" is used as a default.
+
+```markdown
+@[Product walkthrough](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+@[](https://vimeo.com/123456789)
+@[Demo recording](https://example.com/demo.mp4)
+```
+
+Supported sources:
+| Source | Example URL |
+|---|---|
+| **YouTube** | `https://www.youtube.com/watch?v=ID`, `https://youtu.be/ID` |
+| **Vimeo** | `https://vimeo.com/ID`, `https://player.vimeo.com/video/ID` |
+| **Direct file** | Any `https://` URL ending in `.mp4`, `.webm`, or `.ogg` |
+
+> **Note:** Only `https://` URLs are accepted. YouTube embeds use the
+> privacy-enhanced `youtube-nocookie.com` domain automatically.
 
 The hover popup appears below the icon (or above if there isn't enough space) and stays visible while the cursor is over it.
 
