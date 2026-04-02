@@ -155,6 +155,8 @@ function applyAction(textarea, action) {
  * @param {number} [options.maxLength=0] - Max characters (0 = unlimited).
  * @param {string} [options.value='']    - Initial Markdown text.
  * @param {string} [options.className=''] - Extra CSS class for the textarea.
+ * @param {string} [options.allowedUriPatterns=''] - Comma-separated URL prefixes
+ *   for allowed iframe/video src in Preview. Empty = allow all.
  * @returns {{ container: HTMLElement, textarea: HTMLTextAreaElement }}
  */
 export function createTabbedMarkdownEditor({
@@ -164,6 +166,7 @@ export function createTabbedMarkdownEditor({
     maxLength = 0,
     value = '',
     className = '',
+    allowedUriPatterns = '',
 } = {}) {
     // -- Outer container --
     const container = document.createElement('div');
@@ -209,7 +212,7 @@ export function createTabbedMarkdownEditor({
     previewPanel.style.display = 'none';
 
     function updatePreview() {
-        previewPanel.innerHTML = markdownToHtml(textarea.value)
+        previewPanel.innerHTML = markdownToHtml(textarea.value, { allowedUriPatterns })
             || '<p style="color:#9ca3af;font-style:italic">Nothing to preview</p>';
     }
 

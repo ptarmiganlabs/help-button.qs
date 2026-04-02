@@ -110,9 +110,11 @@ function confirmDiscardChanges() {
  * @param {string} options.title - Dialog heading.
  * @param {string} options.value - Current Markdown text.
  * @param {number} [options.maxLength] - Max chars (0 = unlimited).
+ * @param {string} [options.allowedUriPatterns=''] - Comma-separated URL prefixes
+ *   for allowed iframe/video src in Preview. Empty = allow all.
  * @param {function(string): void} options.onSave - Called with the new text on save.
  */
-export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
+export function openMarkdownEditorDialog({ title, value, maxLength, allowedUriPatterns, onSave }) {
     closeMarkdownEditorDialog();
 
     // -- Backdrop --
@@ -150,6 +152,7 @@ export function openMarkdownEditorDialog({ title, value, maxLength, onSave }) {
         value: value || '',
         maxLength: maxLength || 0,
         rows: 16,
+        allowedUriPatterns: allowedUriPatterns || '',
     });
 
     // Capture baseline from the actual textarea after creation so that any

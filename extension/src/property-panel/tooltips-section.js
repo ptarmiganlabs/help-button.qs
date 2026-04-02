@@ -264,12 +264,18 @@ export default function tooltipsSection(getObjectList) {
                   editHoverContentBtn: {
                     label: "Edit in Markdown editor",
                     component: "button",
-                    action(item) {
+                    async action(item) {
                       const itemCId = item.cId;
+                      let uriPatterns = '';
+                      try {
+                        const layout = await extensionState.model?.getLayout();
+                        uriPatterns = layout?.security?.allowedUriPatterns || '';
+                      } catch (_) { /* best effort */ }
                       openMarkdownEditorDialog({
                         title: "Edit Tooltip Text",
                         value: item.hoverContent || "",
                         maxLength: 256,
+                        allowedUriPatterns: uriPatterns,
                         async onSave(text) {
                           await persistTooltipProperty(itemCId, "hoverContent", text);
                         },
@@ -324,12 +330,18 @@ export default function tooltipsSection(getObjectList) {
                     label: "Edit in Markdown editor",
                     component: "button",
                     show: (item) => item.dialogEnabled !== false,
-                    action(item) {
+                    async action(item) {
                       const itemCId = item.cId;
+                      let uriPatterns = '';
+                      try {
+                        const layout = await extensionState.model?.getLayout();
+                        uriPatterns = layout?.security?.allowedUriPatterns || '';
+                      } catch (_) { /* best effort */ }
                       openMarkdownEditorDialog({
                         title: "Edit Dialog Content",
                         value: item.dialogContent || "",
                         maxLength: 16384,
+                        allowedUriPatterns: uriPatterns,
                         async onSave(text) {
                           await persistTooltipProperty(itemCId, "dialogContent", text);
                         },
