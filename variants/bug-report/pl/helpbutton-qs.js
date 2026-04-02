@@ -23,7 +23,7 @@
  *
  * Compatible with Qlik Sense Enterprise on Windows (client-managed).
  *
- * @version 2.6.0 // x-release-please-version
+ * @version 2.7.0 // x-release-please-version
  * @license MIT
  * @see https://github.com/ptarmiganlabs/help-button.qs
  */

@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.7.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.6.0...helpbutton-qs-v2.7.0) (2026-04-02)
+
+
+### Features
+
+* add more icon options for help menu items and toolbar button ([ff27d4e](https://github.com/ptarmiganlabs/help-button.qs/commit/ff27d4e2d70971685486a1eca0eb25f4139ef68b))
+* add video embed support in markdown content (@[title](url) syntax) ([7743046](https://github.com/ptarmiganlabs/help-button.qs/commit/774304646ac611124a7e59ee3f71df95ff6beabb))
+* add video embed support in tooltip and dialog markdown content ([2968b03](https://github.com/ptarmiganlabs/help-button.qs/commit/2968b03f06591558869f1942c6127534c5b72dd7))
+* **security:** do security review and take needed actions to mitigate findings ([2e8cf74](https://github.com/ptarmiganlabs/help-button.qs/commit/2e8cf74b8f985d4b120340b1ccf67c0fba8beea3))
+
+
+### Bug Fixes
+
+* address code review - remove autoplay, tighten placeholder regex, improve slot pattern ([18aca01](https://github.com/ptarmiganlabs/help-button.qs/commit/18aca0103f1ba1b3a2f566c302a5a3df48ccc012))
+* remove iframe sandbox attr (YouTube Error 153) and add min-width for hover popup video ([9d9a285](https://github.com/ptarmiganlabs/help-button.qs/commit/9d9a2850889eb02a962767c1fb341d5c47eead10))
+* update video embed URL format for YouTube in markdown toolbar ([8b177fb](https://github.com/ptarmiganlabs/help-button.qs/commit/8b177fbe970e7a9b7d29886532e1d84740348e89))
+
 ## [2.6.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.7...helpbutton-qs-v2.6.0) (2026-03-31)
 
 
