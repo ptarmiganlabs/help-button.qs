@@ -1051,6 +1051,12 @@
     border-radius: 4px;
 }
 
+/* Force a minimum width on video embeds inside hover popups so the
+   shrink-to-fit fixed-position popup doesn't collapse to 0 width. */
+.hbqs-tooltip-hover .hbqs-video-wrapper {
+    min-width: 280px;
+}
+
 .hbqs-markdown-content hr {
     border: none;
     border-top: 1px solid #e5e7eb;

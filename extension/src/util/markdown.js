@@ -76,7 +76,6 @@ function iframeHtml(embedUrl, title) {
         ' allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
         ' allowfullscreen' +
         ' referrerpolicy="no-referrer"' +
-        ' sandbox="allow-scripts allow-same-origin allow-popups"' +
         '></iframe></div>'
     );
 }
