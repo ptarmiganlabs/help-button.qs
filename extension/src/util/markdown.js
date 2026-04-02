@@ -73,7 +73,7 @@ function iframeHtml(embedUrl, title) {
         '<iframe src="' + safeUrl + '"' +
         ' title="' + safeTitle + '"' +
         ' frameborder="0"' +
-        ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
+        ' allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
         ' allowfullscreen' +
         ' referrerpolicy="no-referrer"' +
         ' sandbox="allow-scripts allow-same-origin allow-popups"' +
@@ -135,17 +135,17 @@ export function markdownToHtml(md) {
     // Protect video embeds already inserted above from the HTML-escape pass.
     // Replace them with placeholders, then restore after escaping.
     const videoSlots = [];
-    text = text.replace(/<div class="hbqs-video-wrapper[^"]*">[\s\S]*?<\/div>/g, (m) => {
+    text = text.replace(/<div class="hbqs-video-wrapper[^"]*">(?:<iframe [^>]*><\/iframe>|<video [^>]*><source [^>]*><\/video>)<\/div>/g, (m) => {
         const idx = videoSlots.length;
         videoSlots.push(m);
-        return 'HBQS_VIDEO_SLOT_' + idx + '_END';
+        return '\uFFFC' + idx + '\uFFFC';
     });
 
     // Escape ALL HTML to prevent XSS — Markdown rules below produce their own safe tags
     text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
     // Restore video embeds
-    text = text.replace(/HBQS_VIDEO_SLOT_(\d+)_END/g, (_, i) => videoSlots[Number(i)]);
+    text = text.replace(/\uFFFC(\d+)\uFFFC/g, (_, i) => videoSlots[Number(i)]);
 
     // Horizontal rules
     text = text.replace(/^(?:[-*_]){3,}\s*$/gm, '<hr>');
