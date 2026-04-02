@@ -1,6 +1,6 @@
 # helpbutton.qs
 
-**helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Sensse application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
+**helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
 
 ## ❤️ Support the project
 
@@ -23,7 +23,7 @@ If you find this project helpful and use it in your Qlik Sense environment, plea
 - **Cross-Platform Support**: Automatically detects and works on both **Qlik Sense SaaS (Cloud)** and **Client-Managed Qlik Sense (Enterprise)** environments, with same features on both platforms.
 - **Invisible Footprint**: The extension cell itself can be configured to be invisible to end-users on the sheet. You can suppress the default interactive hover menus and context menus, and go even further by enabling **"Hide widget on sheet in analysis mode"** to make the grid cell completely invisible — no visible border, background, or shadow — so the extension leaves zero visual trace on the sheet.
 - **Extensive Customization**: Configure colors, icons, languages, and menu actions directly from the Qlik Sense property panel.
-- **Theme Presets**: Apply one of four predefined color palettes (Default, Lean Green, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, menu items, and tooltips to your corporate brand.
+- **Theme Presets**: Apply one of four predefined color palettes (Default, The Lean Green Machine, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, menu items, and tooltips to your corporate brand.
 - **Tooltips**: Attach floating help icons to any chart object or page element. Each icon shows a Markdown hover popup and optionally opens a detail dialog on click. Fully themeable with per-tooltip color overrides.
 - **Context-Aware Links**: Dynamically pass application context (such as App ID, Sheet ID, and user details) to outbound links using template tags.
 - **Built-in Translations**: Supports automatic UI translation into multiple languages based on Qlik Sense locale, with full override capabilities via an expandable "Language & Translations" section in the property panel (see [language & translations docs](docs/language-and-translations.md) for details).
@@ -89,21 +89,24 @@ It is valid to place several HelpButton.qs extension objects on the same sheet. 
 
 When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. Each menu item can be conditionally shown or hidden based on a Qlik expression using the optional **Show Condition** property. Right-click any menu item in the property panel to **Duplicate** it — this copies all of its settings into a new item, making it easy to create similar entries with only minor differences. The help button supports four types of menu actions:
 
-1. **Outbound Link (`link`)**: 
+1. **Open URL (`link`)**: 
    - Opens a specified URL (can be configured to open in a new tab or the same window).
    - Useful for pointing users to external documentation, intranet pages, wikis, or company portals.
    - Supports [template fields](../docs/template-fields.md) in the URL (e.g. `https://help.example.com/sys/{{appId}}`), allowing for context-sensitive deep links that adapt to the user's current app or sheet.
-2. **Bug Report Dialog (`bugReport`)**: 
+2. **Bug Report Dialog (`bugReport`)**:
    - Opens an interactive modal directly inside Qlik Sense where users can write a detailed text description of an issue.
+   - An optional **severity picker** (Low / Medium / High) can be enabled or disabled via the property panel.
+   - A configurable **maximum description length** (default 1000 characters) is enforced, with a live remaining-characters counter.
    - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request.
-   - Supports custom HTTP headers for webhook authentication or routing.
-   - Timestamps in the payload are fully configurable (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.). 
+   - Supports four **authentication strategies** for the webhook request: `None`, `Authorization header` (Bearer token), `Sense session (XRF key)`, and `Custom headers`.
+   - Individual **"Show in Dialog"** and **"Include in Payload"** toggles let you control, per field, what the user sees in the dialog versus what is actually sent to the webhook.
+   - Timestamps in the payload are fully configurable (e.g. `ISO8601Z`, `ISO8601`, `MM/DD/YYYY, hh:mm:ss A`, etc.).
 3. **Feedback Dialog (`feedback`)**:
    - Opens a modal dialog where users can rate the current app (1–5 stars) and/or leave a free-text comment.
    - Star rating and comment fields can each be independently enabled or disabled via the property panel.
    - When the comment field is enabled, a configurable maximum character length is enforced, with a live remaining-characters counter shown in the dialog.
    - Automatically gathers environment context (same fields as the bug report) and POSTs the feedback data as JSON to a configured webhook endpoint.
-   - Like bug reports, supports custom HTTP headers and customizable timestamp formatting.
+   - Like bug reports, supports all four authentication strategies and customizable timestamp formatting.
 4. **Set/Toggle Variable (`setVariable`)**:
    - Directly control Qlik Sense app variable values from the help menu, without leaving the app or opening an external page.
    - Two sub-modes, selected via the **Variable Settings** section in the property panel:
@@ -130,11 +133,11 @@ flowchart LR
 ### Key Capabilities
 
 - **Two targeting modes**: Select a Qlik Sense object from a dropdown (dynamically populated with all objects on the current sheet), or enter a CSS selector for any page element.
-- **Icon customization**: Choose from 11 built-in icons, configure size, position (8 named anchor points or a percentage-based custom position), fill color, and background color. An optional **Floating** toggle lets users reposition the icon within the target element by click-dragging.
+- **Icon customization**: Choose from 25 built-in icons, configure size, position (8 named anchor points or a percentage-based custom position), fill color, and background color. An optional **Floating** toggle lets users reposition the icon within the target element by click-dragging.
 - **Hover content**: Write content in Markdown — supports headings, bold/italic, lists, links, code, blockquotes, and images.
 - **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body.
 - **Per-tooltip colors**: Customize hover popup colors (background, text, border) and dialog colors (header background/text, body background/text) individually for each tooltip.
-- **Theme preset integration**: When you select a theme preset (Default, Lean Green, Corporate Blue, Corporate Gold), all tooltip colors are automatically updated to match the preset's coordinated palette. Individual overrides still work after applying a preset.
+- **Theme preset integration**: When you select a theme preset (Default, The Lean Green Machine, Corporate Blue, Corporate Gold), all tooltip colors are automatically updated to match the preset's coordinated palette. Individual overrides still work after applying a preset.
 
 ```mermaid
 flowchart TD
@@ -209,9 +212,51 @@ This workflow gives you the same rich Markdown editing experience for tooltip co
 
 ## Bug Report Context Fields
 
-When the extension is configured to use the **Report a Bug** action, it will automatically gather and submit relevant context metadata about the user's environment alongside their bug description. 
+When the extension is configured to use the **Report a Bug** action, it will automatically gather and submit relevant context metadata about the user's environment alongside their bug description.
 
-You can configure exactly which fields are visible in the bug report dialog—and subsequently sent to your webhook—using the **"Context fields (comma-separated)"** setting in the property panel. 
+You can control which fields appear in the dialog (visible to the user) and which are sent in the webhook payload using the per-field **"Show in Dialog"** and **"Include in Payload"** toggles in the Bug Report Settings section of the property panel.
+
+### Bug Report Configuration
+
+The bug report dialog supports these property panel settings:
+
+| Setting | Type | Default | Description |
+|---|---|---|---|
+| Webhook URL | string | *(empty)* | POST endpoint to receive bug reports |
+| Authentication | dropdown | `None` | Auth strategy: `None`, `Authorization header`, `Sense session (XRF key)`, or `Custom headers` |
+| &nbsp;&nbsp;↳ *Bearer token* | string | *(empty)* | Token for `Authorization: Bearer <token>` (shown when `Authorization header` is selected) |
+| &nbsp;&nbsp;↳ *Custom headers* | array | `[]` | List of custom `Name: Value` HTTP headers (shown when `Custom headers` is selected) |
+| Show severity picker | toggle | On | Enable/disable the Low / Medium / High severity selector |
+| Max description length | number | `1000` | Maximum characters allowed in the description (shown as a live counter) |
+| Dialog title | string | *(auto-translated)* | Custom dialog title (leave empty for auto-translation) |
+| Dialog timestamp format | dropdown | `YYYY-MM-DD HH:mm:ss` | Format for displaying timestamps in the dialog |
+| Payload timestamp format | dropdown | `ISO8601Z` | Format for timestamps in the webhook payload |
+| Show in Dialog | per-field toggles | — | Control which context fields are visible to the user in the dialog |
+| Include in Payload | per-field toggles | — | Control which context fields are sent in the webhook payload (with optional key name overrides) |
+
+### Bug Report Payload
+
+When the user submits a bug report, it is POSTed as JSON to the configured webhook URL:
+
+```json
+{
+  "timestamp": "2026-03-06T08:51:57Z",
+  "context": {
+    "userName": "John Doe",
+    "appId": "df68e14d-...",
+    "sheetId": "850cffb0-...",
+    "urlPath": "/sense/app/.../sheet/.../state/analysis",
+    "platform": "client-managed",
+    "timestamp": "2026-03-06T08:51:57Z"
+  },
+  "description": "The dashboard is not loading after selecting a date filter.",
+  "severity": "High"
+}
+```
+
+> **Note:** The `severity` field is only included when the severity picker is enabled and the user has selected a severity level.
+
+### Available Context Fields
 
 The following fields are available:
 
@@ -231,9 +276,9 @@ The following fields are available:
 | `senseVersion` | Qlik Sense product version (client-managed only) | `November 2023 (v14.187.4)` |
 | `platform` | Auto-detected platform type | `client-managed` or `cloud` |
 | `browser` | Browser user-agent string | `Mozilla/5.0...` |
-| `timestamp` | Local time the report dialog was opened (format is configurable) | `3/6/2026, 8:51:57 AM` (default) or `2026-03-06T08:51:57Z` |
+| `timestamp` | Time when the report dialog was opened (format is configurable) | `2026-03-06 08:51:57` (dialog default) / `2026-03-06T08:51:57Z` (payload default) |
 
-*Note: The `timestamp` field format can be customized via the property panel (e.g. ISO8601, ISO8601Z, MM/DD/YYYY, etc.) to match your exact backend requirements.*
+*Note: The `timestamp` field format can be customized independently for the dialog display and the webhook payload via the property panel. Available formats include `ISO8601Z`, `ISO8601`, `ISO8601Offset`, `YYYY-MM-DD HH:mm:ss`, `DD/MM/YYYY, HH:mm:ss`, `MM/DD/YYYY, hh:mm:ss A`, and others.*
 
 ## Custom Payload Key Names
 
@@ -271,7 +316,7 @@ The resulting payload `context` object would then look like:
 
 ## Feedback Context Fields
 
-The **Feedback** dialog uses the same context fields as the bug report dialog. You can configure which fields to collect via the **"Context fields (comma-separated)"** setting under the Feedback Settings section in the property panel.
+The **Feedback** dialog uses the same context fields as the bug report dialog. You can control which fields appear in the dialog and which are sent in the webhook payload using the per-field **"Show in Dialog"** and **"Include in Payload"** toggles in the Feedback Settings section of the property panel.
 
 ### Feedback Configuration
 
@@ -280,14 +325,17 @@ The feedback dialog supports these property panel settings:
 | Setting | Type | Default | Description |
 |---|---|---|---|
 | Webhook URL | string | *(empty)* | POST endpoint to receive feedback data |
-| Authentication | dropdown | `None` | Auth strategy |
-| &nbsp;&nbsp;↳ *Bearer token* | string | *(empty)* | Token for `Authorization: Bearer <token>` |
-| &nbsp;&nbsp;↳ *Custom headers* | array | `[]` | List of custom `Name: Value` HTTP headers |
+| Authentication | dropdown | `None` | Auth strategy: `None`, `Authorization header`, `Sense session (XRF key)`, or `Custom headers` |
+| &nbsp;&nbsp;↳ *Bearer token* | string | *(empty)* | Token for `Authorization: Bearer <token>` (shown when `Authorization header` is selected) |
+| &nbsp;&nbsp;↳ *Custom headers* | array | `[]` | List of custom `Name: Value` HTTP headers (shown when `Custom headers` is selected) |
 | Show star rating | toggle | On | Whether to display a 1–5 star rating selector |
 | Show free-text comment | toggle | On | Whether to display a comment textarea |
 | Max comment length | number | `500` | Maximum characters allowed in the comment (shown as a live counter) |
-| Context fields | string | `userName,appId,...` | Comma-separated list of context fields to collect |
 | Dialog title | string | *(auto-translated)* | Custom dialog title (leave empty for auto-translation) |
+| Dialog timestamp format | dropdown | `YYYY-MM-DD HH:mm:ss` | Format for displaying timestamps in the dialog |
+| Payload timestamp format | dropdown | `ISO8601Z` | Format for timestamps in the webhook payload |
+| Show in Dialog | per-field toggles | — | Control which context fields are visible to the user in the dialog |
+| Include in Payload | per-field toggles | — | Control which context fields are sent in the webhook payload (with optional key name overrides) |
 
 ### Feedback Payload
 
@@ -295,14 +343,14 @@ When the user submits feedback, it is POSTed as JSON to the configured webhook U
 
 ```json
 {
-  "timestamp": "2026-03-08T12:00:00.000Z",
+  "timestamp": "2026-03-08T12:00:00Z",
   "context": {
     "userName": "John Doe",
     "appId": "df68e14d-...",
     "sheetId": "850cffb0-...",
     "urlPath": "/sense/app/.../sheet/.../state/analysis",
     "platform": "client-managed",
-    "timestamp": "3/8/2026, 12:00:00 PM"
+    "timestamp": "2026-03-08T12:00:00Z"
   },
   "rating": 4,
   "comment": "Great dashboards, very useful for daily reporting."
@@ -333,13 +381,11 @@ Not all context fields are available on every platform. The table below summaris
 | `browser` | ✅ `navigator.userAgent` | ✅ `navigator.userAgent` |
 | `timestamp` | ✅ Local date/time | ✅ Local date/time |
 
-> **Tip:** For Qlik Cloud deployments you may want to remove `userDirectory` and `senseVersion` from the `collectFields` setting since they are not applicable. A recommended Cloud configuration would be:
-> `userId,userName,appId,sheetId,urlPath,platform,browser,timestamp`
+> **Tip:** For Qlik Cloud deployments you may want to **disable** `userDirectory` and `senseVersion` (in both "Show in Dialog" and "Include in Payload" sections) since they are not applicable on that platform. A recommended set of fields to enable for Qlik Cloud would be: `userId`, `userName`, `appId`, `sheetId`, `urlPath`, `platform`, `browser`, `timestamp`.
 
-By default, the property panel has this pre-populated setting:
-`userDirectory,userId,senseVersion,appId,sheetId,urlPath`
+By default, the fields enabled (in both dialog and payload) are: `userName`, `appId`, `sheetId`, `urlPath`, `platform`, `timestamp`.
 
-*Note: You can omit any fields you do not want to show or submit as part of the bug report layout by simply removing them from the comma-separated list.*
+*Note: You can fine-tune each field independently — enabling it in the dialog without sending it to the webhook, or sending it in the payload without showing it to the user.*
 
 ---
 
