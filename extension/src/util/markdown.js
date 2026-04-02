@@ -6,6 +6,7 @@
  *   - [links](url)
  *   - ![images](url "optional title")
  *   - @[videos](url) — YouTube / Vimeo iframes, or .mp4/.webm/.ogg <video>
+ *   - Raw HTML (e.g. <iframe>, <video>) — passed through and sanitized by DOMPurify
  *   - `inline code`
  *   - Line breaks (double newline → paragraph, single newline → <br>)
  *   - Unordered lists (- item or * item)
@@ -17,6 +18,8 @@
  * Intentionally minimal to keep the bundle small.
  * Ported from Onboard.qs.
  */
+
+import DOMPurify from 'dompurify';
 
 // ---------------------------------------------------------------------------
 // Video embed helpers
@@ -75,7 +78,6 @@ function iframeHtml(embedUrl, title) {
         ' frameborder="0"' +
         ' allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
         ' allowfullscreen' +
-        ' referrerpolicy="no-referrer"' +
         '></iframe></div>'
     );
 }
@@ -98,13 +100,68 @@ function videoTagHtml(src, title) {
     );
 }
 
+// ---------------------------------------------------------------------------
+// URI filter
+// ---------------------------------------------------------------------------
+
+/**
+ * Remove iframe, video, and source elements whose src does not match any
+ * of the allowed URI prefixes.
+ *
+ * @param {string} html - Sanitized HTML string.
+ * @param {string} [allowedUriPatterns] - Comma-separated URL prefixes.
+ *   Empty or omitted = allow all.
+ * @returns {string} HTML with non-matching media elements removed.
+ */
+function filterMediaUris(html, allowedUriPatterns) {
+    if (!allowedUriPatterns) return html;
+
+    const prefixes = allowedUriPatterns
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean);
+    if (prefixes.length === 0) return html;
+
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    container.querySelectorAll('iframe, video, source').forEach((el) => {
+        const src = el.getAttribute('src') || '';
+        const allowed = prefixes.some((prefix) => src.startsWith(prefix));
+        if (!allowed) {
+            el.remove();
+        }
+    });
+
+    // Clean up video elements that lost all their source children
+    container.querySelectorAll('video').forEach((video) => {
+        if (!video.querySelector('source') && !video.getAttribute('src')) {
+            video.remove();
+        }
+    });
+
+    return container.innerHTML;
+}
+
+// ---------------------------------------------------------------------------
+// Main converter
+// ---------------------------------------------------------------------------
+
 /**
  * Convert a Markdown string to HTML.
  *
+ * Raw HTML tags in the input are preserved and passed through DOMPurify
+ * sanitization, so authors can embed `<iframe>` and `<video>` blocks directly.
+ * The `@[title](url)` shorthand is also supported and generates iframes
+ * automatically for YouTube/Vimeo URLs.
+ *
  * @param {string} md - Markdown source text.
- * @returns {string} HTML string.
+ * @param {object} [options] - Conversion options.
+ * @param {string} [options.allowedUriPatterns] - Comma-separated URL prefixes
+ *   for allowed iframe/video/source src attributes. Empty string = allow all.
+ * @returns {string} Sanitized HTML string.
  */
-export function markdownToHtml(md) {
+export function markdownToHtml(md, options) {
     if (!md) return '';
 
     // Normalize line endings
@@ -112,7 +169,7 @@ export function markdownToHtml(md) {
 
     // -------------------------------------------------------------------
     // Video embeds: @[title](url)
-    // Processed BEFORE the global HTML-escape so that the generated tags
+    // Processed BEFORE the HTML-escape pass so that the generated tags
     // survive.  Only allow-listed sources produce output.
     // -------------------------------------------------------------------
     text = text.replace(VIDEO_RE, (_, title, url) => {
@@ -120,7 +177,7 @@ export function markdownToHtml(md) {
 
         const label = title || 'Video';
         const ytId = youtubeId(url);
-        if (ytId) return iframeHtml('https://www.youtube-nocookie.com/embed/' + ytId, label);
+        if (ytId) return iframeHtml('https://www.youtube.com/embed/' + ytId, label);
 
         const vmId = vimeoId(url);
         if (vmId) return iframeHtml('https://player.vimeo.com/video/' + vmId, label);
@@ -131,20 +188,16 @@ export function markdownToHtml(md) {
         return '';
     });
 
-    // Protect video embeds already inserted above from the HTML-escape pass.
-    // Replace them with placeholders, then restore after escaping.
-    const videoSlots = [];
-    text = text.replace(/<div class="hbqs-video-wrapper[^"]*">(?:<iframe [^>]*><\/iframe>|<video [^>]*><source [^>]*><\/video>)<\/div>/g, (m) => {
-        const idx = videoSlots.length;
-        videoSlots.push(m);
-        return '\uFFFC' + idx + '\uFFFC';
-    });
+    // -------------------------------------------------------------------
+    // Partial HTML escape: preserve existing HTML tags (raw <iframe>,
+    // <video>, etc.) while still protecting bare & and stray < that are
+    // not part of a tag.  DOMPurify sanitizes the final output.
+    // -------------------------------------------------------------------
+    text = text.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?![/a-zA-Z!])/g, '&lt;');
 
-    // Escape ALL HTML to prevent XSS — Markdown rules below produce their own safe tags
-    text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-    // Restore video embeds
-    text = text.replace(/\uFFFC(\d+)\uFFFC/g, (_, i) => videoSlots[Number(i)]);
+    // Collapse multi-line HTML tags so that the <br> pass later does not
+    // inject <br> inside opening tags and break them.
+    text = text.replace(/<[a-zA-Z][^>]*\n[^>]*>/g, (match) => match.replace(/\n\s*/g, ' '));
 
     // Horizontal rules
     text = text.replace(/^(?:[-*_]){3,}\s*$/gm, '<hr>');
@@ -228,5 +281,28 @@ export function markdownToHtml(md) {
     // Clean up empty paragraphs
     text = text.replace(/<p>\s*<\/p>/g, '');
 
-    return text;
+    // Sanitize with DOMPurify — allows <iframe>, <video>, <source> and their
+    // relevant attributes on top of the default safe-HTML allowlist.
+    const sanitized = DOMPurify.sanitize(text.trim(), {
+        ADD_TAGS: ['iframe', 'video', 'source'],
+        ADD_ATTR: [
+            'target',
+            'rel',
+            'style',
+            'frameborder',
+            'controls',
+            'autoplay',
+            'muted',
+            'loop',
+            'poster',
+            'preload',
+            'playsinline',
+            'allowfullscreen',
+            'allow',
+            'loading',
+            'referrerpolicy',
+        ],
+    });
+
+    return filterMediaUris(sanitized, options?.allowedUriPatterns);
 }

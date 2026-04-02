@@ -131,10 +131,11 @@ flowchart LR
 
 - **Two targeting modes**: Select a Qlik Sense object from a dropdown (dynamically populated with all objects on the current sheet), or enter a CSS selector for any page element.
 - **Icon customization**: Choose from 11 built-in icons, configure size, position (8 named anchor points or a percentage-based custom position), fill color, and background color. An optional **Floating** toggle lets users reposition the icon within the target element by click-dragging.
-- **Hover content**: Write content in Markdown — supports headings, bold/italic, lists, links, code, blockquotes, and images.
-- **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body.
+- **Hover content**: Write content in Markdown — supports headings, bold/italic, lists, links, code, blockquotes, images, and **embedded videos** (YouTube, Vimeo, or direct `.mp4`/`.webm`/`.ogg` files).
+- **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body, including video embedding.
 - **Per-tooltip colors**: Customize hover popup colors (background, text, border) and dialog colors (header background/text, body background/text) individually for each tooltip.
 - **Theme preset integration**: When you select a theme preset (Default, Lean Green, Corporate Blue, Corporate Gold), all tooltip colors are automatically updated to match the preset's coordinated palette. Individual overrides still work after applying a preset.
+- **Security — Allowed URI prefixes**: Optionally restrict embedded video and iframe sources to specific URL prefixes, so only approved domains can be loaded inside tooltip content.
 
 ```mermaid
 flowchart TD
@@ -182,6 +183,7 @@ When on the **Write** tab, a toolbar appears at the top-right of the editor with
 | 1. | Numbered list (`1. text`) | — |
 | ❝ | Blockquote (`> text`) | — |
 | — | Horizontal rule (`---`) | — |
+| ▶ | Video embed (`@[title](url)`) | — |
 
 When text is selected before clicking a toolbar button (or pressing a shortcut), the formatting wraps the selection. For list and heading buttons, the prefix is toggled on the affected lines.
 
@@ -204,6 +206,28 @@ The tooltip **Hover Content** and **Details Dialog Content** textareas in the pr
 3. Edit, preview, then click **Save** — the new content is written back to the property panel field and persisted to the Qlik engine automatically.
 
 This workflow gives you the same rich Markdown editing experience for tooltip content as for the bug report and feedback dialogs.
+
+### Embedding Videos in Tooltips
+
+Tooltip hover content and dialog content support two ways to embed video:
+
+**Markdown shorthand** — use `@[title](url)` anywhere in the content field:
+
+```
+@[Product walkthrough](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+@[](https://vimeo.com/123456789)
+@[Demo recording](https://example.com/demo.mp4)
+```
+
+YouTube and Vimeo URLs are converted to responsive iframes automatically. Direct `.mp4`, `.webm`, and `.ogg` URLs render as a native `<video>` element with playback controls. The `▶` button in the Markdown editor toolbar inserts the shorthand template with the URL pre-selected for quick editing.
+
+**Raw HTML** — paste an `<iframe>` or `<video>` tag directly:
+
+```html
+<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+```
+
+All content is sanitized by DOMPurify before rendering. To restrict which domains may load embedded content, configure comma-separated URL prefixes in the **Security → Allowed URI prefixes** section of the property panel (empty = allow all).
 
 ---
 

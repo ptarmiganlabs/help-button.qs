@@ -18,6 +18,7 @@ import popupSection from "./property-panel/popup-section";
 import menuItemsSection from "./property-panel/menu-items-section";
 import tooltipsSection from "./property-panel/tooltips-section";
 import documentationSection from "./property-panel/documentation-section";
+import securitySection from "./property-panel/security-section";
 import aboutSection from "./property-panel/about-section";
 
 export default function ext(_galaxy) {
@@ -34,6 +35,7 @@ export default function ext(_galaxy) {
         menuItemsSection,
         tooltipsSection: tooltipsSection(getObjectList),
         documentationSection,
+        securitySection,
         aboutSection,
       },
     },

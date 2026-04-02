@@ -28,10 +28,13 @@ This guide covers everything a Qlik Sense app developer needs to configure toolt
     - [How It Works](#how-it-works)
   - [Configuring the Icon](#configuring-the-icon)
   - [Hover Content](#hover-content)
+    - [Embedding videos — Markdown shorthand](#embedding-videos--markdown-shorthand)
+    - [Embedding videos — Raw HTML](#embedding-videos--raw-html)
   - [Click Dialog](#click-dialog)
   - [Tooltip Colors](#tooltip-colors)
   - [Theme Preset Integration](#theme-preset-integration)
     - [Preset Color Palettes](#preset-color-palettes)
+  - [Security — Allowed URI Prefixes](#security--allowed-uri-prefixes)
   - [Field Limits](#field-limits)
 
 ---
@@ -255,11 +258,12 @@ Supported Markdown features:
 - Horizontal rules (`---`)
 - Images (`![alt](url)`)
 - Videos (`@[title](url)`) — YouTube, Vimeo, or direct `.mp4`/`.webm`/`.ogg` links
+- Raw HTML `<iframe>` and `<video>` elements
 
-### Embedding videos
+### Embedding videos — Markdown shorthand
 
-Use the `@[title](url)` syntax to embed a video. The title is used as an
-accessible label; if omitted, "Video" is used as a default.
+Use the `@[title](url)` syntax to embed a video. The title is used as the
+iframe's accessible label; if omitted, `"Video"` is used.
 
 ```markdown
 @[Product walkthrough](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
@@ -268,14 +272,43 @@ accessible label; if omitted, "Video" is used as a default.
 ```
 
 Supported sources:
-| Source | Example URL |
-|---|---|
-| **YouTube** | `https://www.youtube.com/watch?v=ID`, `https://youtu.be/ID` |
-| **Vimeo** | `https://vimeo.com/ID`, `https://player.vimeo.com/video/ID` |
-| **Direct file** | Any `https://` URL ending in `.mp4`, `.webm`, or `.ogg` |
 
-> **Note:** Only `https://` URLs are accepted. YouTube embeds use the
-> privacy-enhanced `youtube-nocookie.com` domain automatically.
+| Source | Accepted URL formats |
+|---|---|
+| **YouTube** | `https://www.youtube.com/watch?v=ID`, `https://youtu.be/ID`, `https://www.youtube.com/embed/ID` |
+| **Vimeo** | `https://vimeo.com/ID`, `https://player.vimeo.com/video/ID` |
+| **Direct video file** | Any `https://` URL ending in `.mp4`, `.webm`, or `.ogg` |
+
+YouTube and Vimeo URLs are automatically converted to their embed form. Direct file URLs render a native `<video>` element with playback controls.
+
+> **Note:** Only `https://` URLs are accepted. Non-matching or unsupported URLs produce no output.
+
+### Embedding videos — Raw HTML
+
+For cases where the Markdown shorthand doesn't fit — for example when you need to set specific iframe parameters or embed a service not covered by the shorthand — you can write a raw `<iframe>` or `<video>` element directly in the content field.
+
+```html
+<iframe
+  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+  allowfullscreen
+  width="560"
+  height="315"
+></iframe>
+```
+
+```html
+<video controls width="100%">
+  <source src="https://example.com/demo.mp4" type="video/mp4">
+</video>
+```
+
+The content is passed through DOMPurify before rendering, which strips dangerous attributes and tags while preserving safe video/iframe markup. The following attributes are allowed on iframes and video elements:
+
+`src`, `allow`, `allowfullscreen`, `controls`, `autoplay`, `muted`, `loop`,
+`poster`, `preload`, `playsinline`, `loading`, `referrerpolicy`, `frameborder`,
+`width`, `height`, `style`, `title`
+
+> **Tip:** Use the **Security → Allowed URI prefixes** property (see below) to restrict which domains are permitted to embed content.
 
 The hover popup appears below the icon (or above if there isn't enough space) and stays visible while the cursor is over it.
 
@@ -296,6 +329,46 @@ The dialog opens as a centered modal with a semi-transparent backdrop. It can be
 - Clicking the **×** close button
 - Clicking the backdrop
 - Pressing **Escape**
+
+The dialog body supports the same Markdown features as hover content, including video embedding via `@[title](url)` or raw HTML `<iframe>`/`<video>` tags.
+
+---
+
+## Security — Allowed URI Prefixes
+
+By default, embedded iframes and videos in tooltip content can load from any `https://` URL. In environments where you want to restrict which domains are permitted, use the **Security** section in the property panel.
+
+**Location:** Property Panel → Security → Allowed URI prefixes
+
+Enter a comma-separated list of URL prefixes. Any `<iframe>`, `<video>`, or `<source>` element whose `src` does not begin with one of the listed prefixes is silently removed before the content is rendered.
+
+```
+https://www.youtube.com/embed/, https://player.vimeo.com/video/
+```
+
+| Setting | Effect |
+|---|---|
+| *(empty — default)* | All `https://` sources are allowed |
+| One or more prefixes | Only iframes/videos whose `src` starts with a listed prefix are rendered; others are stripped |
+
+### Examples
+
+**Allow only YouTube and Vimeo:**
+```
+https://www.youtube.com/embed/, https://player.vimeo.com/video/
+```
+
+**Allow only an internal video server:**
+```
+https://media.internal.example.com/
+```
+
+**Allow Qlik Sense's built-in content library (client-managed):**
+```
+/content/Default/
+```
+
+> **Note:** The filter runs after DOMPurify sanitization. Setting allowed prefixes does not disable DOMPurify — all content is always sanitized regardless of this setting.
 
 ---
 
