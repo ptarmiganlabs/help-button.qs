@@ -125,7 +125,7 @@ function applyAction(textarea, action) {
                 textarea.selectionStart = start;
                 textarea.selectionEnd = start + rep.length;
             } else {
-                const rep = '@[title](https://youtube.com/watch?v=ID)';
+                const rep = '@[title](https://youtube.com/embed/ID)';
                 textarea.value = value.slice(0, start) + rep + value.slice(end);
                 const urlStart = start + 9;
                 textarea.selectionStart = urlStart;
