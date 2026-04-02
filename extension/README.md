@@ -24,7 +24,7 @@ If you find this project helpful and use it in your Qlik Sense environment, plea
 - **Invisible Footprint**: The extension cell itself can be configured to be invisible to end-users on the sheet. You can suppress the default interactive hover menus and context menus, and go even further by enabling **"Hide widget on sheet in analysis mode"** to make the grid cell completely invisible — no visible border, background, or shadow — so the extension leaves zero visual trace on the sheet.
 - **Extensive Customization**: Configure colors, icons, languages, and menu actions directly from the Qlik Sense property panel.
 - **Theme Presets**: Apply one of four predefined color palettes (Default, The Lean Green Machine, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, menu items, and tooltips to your corporate brand.
-- **Tooltips**: Attach floating help icons to any chart object or page element. Each icon shows a Markdown hover popup and optionally opens a detail dialog on click. Fully themeable with per-tooltip color overrides.
+- **Tooltips**: Attach floating help icons to any chart object or page element. Each icon shows a Markdown hover popup and optionally opens a detail dialog on click. Tooltip content supports **embedded videos** (YouTube, Vimeo, or direct video files). Fully themeable with per-tooltip color overrides.
 - **Context-Aware Links**: Dynamically pass application context (such as App ID, Sheet ID, and user details) to outbound links using template tags.
 - **Built-in Translations**: Supports automatic UI translation into multiple languages based on Qlik Sense locale, with full override capabilities via an expandable "Language & Translations" section in the property panel (see [language & translations docs](docs/language-and-translations.md) for details).
 
@@ -134,8 +134,8 @@ flowchart LR
 
 - **Two targeting modes**: Select a Qlik Sense object from a dropdown (dynamically populated with all objects on the current sheet), or enter a CSS selector for any page element.
 - **Icon customization**: Choose from 25 built-in icons, configure size, position (8 named anchor points or a percentage-based custom position), fill color, and background color. An optional **Floating** toggle lets users reposition the icon within the target element by click-dragging.
-- **Hover content**: Write content in Markdown — supports headings, bold/italic, lists, links, code, blockquotes, and images.
-- **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body.
+- **Hover content**: Write content in Markdown — supports headings, bold/italic, lists, links, code, blockquotes, images, and **embedded videos** (YouTube, Vimeo, or direct `.mp4`/`.webm`/`.ogg` files).
+- **Click dialog**: Optional modal dialog with configurable size (Small, Medium, Large, X-Large) and full Markdown body, including video embeds.
 - **Per-tooltip colors**: Customize hover popup colors (background, text, border) and dialog colors (header background/text, body background/text) individually for each tooltip.
 - **Theme preset integration**: When you select a theme preset (Default, The Lean Green Machine, Corporate Blue, Corporate Gold), all tooltip colors are automatically updated to match the preset's coordinated palette. Individual overrides still work after applying a preset.
 
@@ -185,8 +185,35 @@ When on the **Write** tab, a toolbar appears at the top-right of the editor with
 | 1. | Numbered list (`1. text`) | — |
 | ❝ | Blockquote (`> text`) | — |
 | — | Horizontal rule (`---`) | — |
+| ▶ | Video embed (`@[title](url)`) | — |
 
 When text is selected before clicking a toolbar button (or pressing a shortcut), the formatting wraps the selection. For list and heading buttons, the prefix is toggled on the affected lines.
+
+### Video Embeds
+
+Tooltip **Hover Content** and tooltip **Click Dialog** fields support embedded videos using the `@[title](url)` syntax. The extension supports three types of video sources:
+
+| Source | URL format | Example |
+|--------|-----------|---------|
+| **YouTube** | Any `youtube.com/watch?v=…`, `youtu.be/…`, or `youtube.com/embed/…` URL | `@[Demo](https://youtu.be/dQw4w9WgXcQ)` |
+| **Vimeo** | Any `vimeo.com/…` or `player.vimeo.com/video/…` URL | `@[Tutorial](https://vimeo.com/123456789)` |
+| **Direct video file** | A direct `.mp4`, `.webm`, or `.ogg` URL | `@[Walkthrough](https://example.com/demo.mp4)` |
+
+> **Note:** Only `https://` URLs are accepted. Non-HTTPS URLs and unrecognised hosts are silently ignored for security. The ▶ toolbar button inserts the syntax with a placeholder URL; replace the URL with the actual video address.
+
+#### Security: Restricting Allowed Video Sources
+
+By default, all `https://` sources are permitted. If you want to restrict which URLs can appear in tooltip video embeds, configure the **Allowed URI prefixes** setting in the **Security** section of the property panel. Enter comma-separated URL prefixes — only embeds whose URL starts with one of these prefixes will be rendered; others are silently removed.
+
+For example, to allow only YouTube and Vimeo:
+
+```
+https://www.youtube.com/embed/, https://player.vimeo.com/video/
+```
+
+Leave the field empty (the default) to allow all sources.
+
+> **Video embeds in the bug report and feedback dialogs:** The `@[title](url)` syntax can be typed in those editors and will render in the **Preview** tab. However, since webhook payloads contain the raw Markdown text (not rendered HTML), video embeds are most useful in tooltip fields where end users see the rendered result directly.
 
 ### Where Markdown Editing Is Available
 
