@@ -359,6 +359,91 @@ const translations = {
     pl: "Pokaż dane",
     es: "Mostrar contenido",
   },
+
+  // Payload viewer modal
+  payloadViewerAriaLabel: {
+    en: "Payload details",
+    sv: "Nyttolastdetaljer",
+    no: "Nyttelastdetaljer",
+    da: "Nyttelastdetaljer",
+    fi: "Hyötykuorman tiedot",
+    de: "Nutzlastdetails",
+    fr: "Détails du contenu",
+    pl: "Szczegóły danych",
+    es: "Detalles del contenido",
+  },
+
+  payloadViewerTitle: {
+    en: "Request Details",
+    sv: "Förfrågningsdetaljer",
+    no: "Forespørselsdetaljer",
+    da: "Anmodningsdetaljer",
+    fi: "Pyyntötiedot",
+    de: "Anforderungsdetails",
+    fr: "Détails de la requête",
+    pl: "Szczegóły żądania",
+    es: "Detalles de la solicitud",
+  },
+
+  payloadViewerUrl: {
+    en: "URL",
+    sv: "URL",
+    no: "URL",
+    da: "URL",
+    fi: "URL",
+    de: "URL",
+    fr: "URL",
+    pl: "URL",
+    es: "URL",
+  },
+
+  payloadViewerMethod: {
+    en: "Method",
+    sv: "Metod",
+    no: "Metode",
+    da: "Metode",
+    fi: "Metodi",
+    de: "Methode",
+    fr: "Méthode",
+    pl: "Metoda",
+    es: "Método",
+  },
+
+  payloadViewerHeaders: {
+    en: "Headers",
+    sv: "Huvuden",
+    no: "Hoder",
+    da: "Overskrifter",
+    fi: "Otsikot",
+    de: "Header",
+    fr: "En-têtes",
+    pl: "Nagłówki",
+    es: "Encabezados",
+  },
+
+  payloadViewerBody: {
+    en: "Body",
+    sv: "Brödtext",
+    no: "Innhold",
+    da: "Indhold",
+    fi: "Sisältö",
+    de: "Inhalt",
+    fr: "Corps",
+    pl: "Treść",
+    es: "Cuerpo",
+  },
+
+  payloadViewerClose: {
+    en: "Close",
+    sv: "Stäng",
+    no: "Lukk",
+    da: "Luk",
+    fi: "Sulje",
+    de: "Schließen",
+    fr: "Fermer",
+    pl: "Zamknij",
+    es: "Cerrar",
+  },
 };
 
 export default translations;

@@ -19,6 +19,7 @@ import {
   DEFAULT_PAYLOAD_FORMAT,
 } from "../util/timestamp-formats";
 import { createTabbedMarkdownEditor } from "./markdown-toolbar";
+import { showPayloadViewer } from "./payload-viewer";
 
 // ---------------------------------------------------------------------------
 // Field labels — maps internal field keys to user-visible labels.
@@ -488,6 +489,7 @@ export function openBugReportDialog(config, platformType) {
             authHeaderName,
             authHeaderValue,
             customHeaders,
+            showPayloadBtn,
           );
         });
         leftGroup.appendChild(showPayloadBtn);
@@ -541,6 +543,9 @@ export function openBugReportDialog(config, platformType) {
           "</span>";
 
         try {
+          // Capture a single instant so all payload timestamps are consistent.
+          const now = new Date();
+
           // Build payload context using only payloadFields, remapping
           // keys via payloadKeyNames so users can choose lowercase etc.
           const keyNames = config.payloadKeyNames || {};
@@ -558,13 +563,13 @@ export function openBugReportDialog(config, platformType) {
             const tsKey =
               (keyNames.timestamp && keyNames.timestamp.trim()) || "timestamp";
             payloadContext[tsKey] = formatTimestamp(
-              new Date(),
+              now,
               payloadTimestampFormat,
             );
           }
 
           const payload = {
-            timestamp: formatTimestamp(new Date(), payloadTimestampFormat),
+            timestamp: formatTimestamp(now, payloadTimestampFormat),
             context: payloadContext,
             description: descriptionTextarea.value.trim(),
           };
@@ -956,14 +961,17 @@ function buildPayload(
     }
   }
 
+  // Capture a single instant so all timestamps in this payload are consistent.
+  const now = new Date();
+
   if (payloadFields.includes("timestamp")) {
     const tsKey =
       (keyNames.timestamp && keyNames.timestamp.trim()) || "timestamp";
-    payloadContext[tsKey] = formatTimestamp(new Date(), timestampFormat);
+    payloadContext[tsKey] = formatTimestamp(now, timestampFormat);
   }
 
   const payload = {
-    timestamp: formatTimestamp(new Date(), timestampFormat),
+    timestamp: formatTimestamp(now, timestampFormat),
     context: payloadContext,
     description: description,
   };
@@ -973,205 +981,4 @@ function buildPayload(
   }
 
   return payload;
-}
-
-// ---------------------------------------------------------------------------
-// Payload viewer modal
-// ---------------------------------------------------------------------------
-
-/**
- * Show a modal with the full JSON payload, URL, and headers.
- *
- * @param {object} payload - The JSON payload object.
- * @param {string} url - The resolved webhook URL.
- * @param {object} headers - Headers that will be sent (Content-Type already added).
- * @param {string} authStrategy - Auth strategy used.
- * @param {string} authToken - Auth token (for header strategy).
- * @param {string} authHeaderName - Custom auth header name.
- * @param {string} authHeaderValue - Custom auth header value.
- * @param {object} customHeaders - Custom headers array/object.
- */
-function showPayloadViewer(
-  payload,
-  url,
-  headers,
-  authStrategy,
-  authToken,
-  authHeaderName,
-  authHeaderValue,
-  customHeaders,
-) {
-  const overlay = document.createElement("div");
-  overlay.className = "hbqs-payload-overlay";
-
-  const modal = document.createElement("div");
-  modal.className = "hbqs-payload-modal";
-  modal.setAttribute("role", "dialog");
-  modal.setAttribute("aria-modal", "true");
-  modal.setAttribute("aria-label", "Payload details");
-
-  // Store reference to the main dialog for focus management
-  const mainDialog = document.querySelector(".hbqs-bug-report-dialog");
-
-  const header = document.createElement("div");
-  header.className = "hbqs-payload-header";
-
-  const title = document.createElement("h3");
-  title.className = "hbqs-payload-title";
-  title.textContent = "Request Details";
-  header.appendChild(title);
-
-  const closeBtn = document.createElement("button");
-  closeBtn.className = "hbqs-payload-close";
-  closeBtn.type = "button";
-  closeBtn.setAttribute("aria-label", "Close");
-  closeBtn.innerHTML = makeSvg("close", 18);
-  closeBtn.addEventListener("click", () => overlay.remove());
-  header.appendChild(closeBtn);
-
-  modal.appendChild(header);
-
-  const body = document.createElement("div");
-  body.className = "hbqs-payload-body";
-
-  // URL section
-  const urlSection = document.createElement("div");
-  urlSection.className = "hbqs-payload-section";
-  const urlTitle = document.createElement("div");
-  urlTitle.className = "hbqs-payload-section-title";
-  urlTitle.textContent = "URL";
-  urlSection.appendChild(urlTitle);
-  const urlPre = document.createElement("pre");
-  urlPre.className = "hbqs-payload-code hl-url";
-  urlPre.textContent = url;
-  urlSection.appendChild(urlPre);
-  body.appendChild(urlSection);
-
-  // Request line (method)
-  const requestLine = document.createElement("div");
-  requestLine.className = "hbqs-payload-section";
-  const requestTitle = document.createElement("div");
-  requestTitle.className = "hbqs-payload-section-title";
-  requestTitle.textContent = "Method";
-  requestLine.appendChild(requestTitle);
-  const requestLinePre = document.createElement("pre");
-  requestLinePre.className = "hbqs-payload-code hl-method";
-  requestLinePre.textContent = "POST";
-  requestLine.appendChild(requestLinePre);
-  body.appendChild(requestLine);
-
-  // Headers section - show all headers including auth
-  const headersSection = document.createElement("div");
-  headersSection.className = "hbqs-payload-section";
-  const headersTitle = document.createElement("div");
-  headersTitle.className = "hbqs-payload-section-title";
-  headersTitle.textContent = "Headers";
-  headersSection.appendChild(headersTitle);
-  const headersPre = document.createElement("pre");
-  headersPre.className = "hbqs-payload-code hl-headers";
-
-  // Build comprehensive headers display
-  const headerDisplay = [];
-  headerDisplay.push("Content-Type: application/json");
-
-  if (authStrategy === "header") {
-    if (authHeaderName && authHeaderValue) {
-      headerDisplay.push(`${authHeaderName}: ${authHeaderValue}`);
-    } else if (authToken) {
-      headerDisplay.push(`Authorization: Bearer ${authToken.substring(0, 20)}...`);
-    }
-  } else if (authStrategy === "sense-session") {
-    headerDisplay.push("X-Qlik-Xrfkey: <generated>");
-  } else if (authStrategy === "custom") {
-    if (Array.isArray(customHeaders)) {
-      customHeaders.forEach((h) => {
-        if (h && h.name && h.value) {
-          headerDisplay.push(`${h.name}: ${h.value}`);
-        }
-      });
-    } else if (customHeaders && typeof customHeaders === "object") {
-      Object.entries(customHeaders).forEach(([k, v]) => {
-        headerDisplay.push(`${k}: ${v}`);
-      });
-    }
-  }
-
-  headersPre.textContent = headerDisplay.join("\n");
-  headersSection.appendChild(headersPre);
-  body.appendChild(headersSection);
-
-  // Body section
-  const bodySection = document.createElement("div");
-  bodySection.className = "hbqs-payload-section";
-  const bodyTitle = document.createElement("div");
-  bodyTitle.className = "hbqs-payload-section-title";
-  bodyTitle.textContent = "Body";
-  bodySection.appendChild(bodyTitle);
-  const bodyPre = document.createElement("pre");
-  bodyPre.className = "hbqs-payload-code hl-body";
-  bodyPre.innerHTML = syntaxHighlightJson(payload);
-  bodySection.appendChild(bodyPre);
-  body.appendChild(bodySection);
-
-  modal.appendChild(body);
-
-  // Footer with close button
-  const footer = document.createElement("div");
-  footer.className = "hbqs-payload-footer";
-  const closeFooterBtn = document.createElement("button");
-  closeFooterBtn.className = "hbqs-bug-report-btn hbqs-bug-report-btn-cancel";
-  closeFooterBtn.type = "button";
-  closeFooterBtn.textContent = "Close";
-  closeFooterBtn.addEventListener("click", () => overlay.remove());
-  footer.appendChild(closeFooterBtn);
-  modal.appendChild(footer);
-
-  overlay.appendChild(modal);
-
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) overlay.remove();
-  });
-
-  modal.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      overlay.remove();
-      if (mainDialog) mainDialog.focus();
-    }
-  });
-
-  document.body.appendChild(overlay);
-  modal.setAttribute("tabindex", "-1");
-  modal.focus();
-}
-
-// ---------------------------------------------------------------------------
-// JSON syntax highlighting
-// ---------------------------------------------------------------------------
-
-/**
- * Convert a JSON object to an HTML string with syntax highlighting.
- *
- * @param {object} obj - The object to stringify and highlight.
- * @returns {string} HTML string with syntax highlighting spans.
- */
-function syntaxHighlightJson(obj) {
-  const json = JSON.stringify(obj, null, 2);
-  return json.replace(
-    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
-    function (match) {
-      let cls = "hl-number";
-      if (/^"/.test(match)) {
-        if (/:$/.test(match)) {
-          cls = "hl-key";
-        } else {
-          cls = "hl-string";
-        }
-      } else if (/true|false/.test(match)) {
-        cls = "hl-bool";
-      } else if (/null/.test(match)) {
-        cls = "hl-null";
-      }
-      return '<span class="' + cls + '">' + escapeHtml(match) + "</span>";
-    },
-  );
 }
