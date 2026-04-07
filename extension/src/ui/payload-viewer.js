@@ -35,9 +35,9 @@ function isSensitiveHeader(name) {
     n === "x-auth-token" ||
     n === "x-access-token" ||
     n === "access-token" ||
-    n.indexOf("token") !== -1 ||
-    n.indexOf("secret") !== -1 ||
-    n.indexOf("key") !== -1
+    /\btoken\b/.test(n) ||
+    /\bsecret\b/.test(n) ||
+    /\bkey\b/.test(n)
   );
 }
 
@@ -146,7 +146,10 @@ export function syntaxHighlightJson(obj) {
   let result = "";
   let lastIndex = 0;
 
-  json.replace(pattern, (match, _p1, _p2, _p3, _p4, offset) => {
+  json.replace(pattern, (match, ...rest) => {
+    // `rest` contains capture groups and then offset, string, groups.
+    // offset is always at index rest.length - 2 (before the source string).
+    const offset = rest[rest.length - 2];
     // Escape structural characters (brackets, commas, whitespace) before match.
     result += escapeHtml(json.slice(lastIndex, offset));
     lastIndex = offset + match.length;
