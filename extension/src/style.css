@@ -1541,41 +1541,41 @@
   overflow-y: auto;
 }
 
-.hl-url {
+.hbqs-payload-modal .hl-url {
   color: #065f46;
 }
 
-.hl-method {
+.hbqs-payload-modal .hl-method {
   color: #065f46;
   font-weight: 600;
 }
 
-.hl-headers {
+.hbqs-payload-modal .hl-headers {
   color: #374151;
 }
 
-.hl-body {
+.hbqs-payload-modal .hl-body {
   color: #1f2937;
 }
 
 /* JSON syntax highlighting */
-.hl-key {
+.hbqs-payload-modal .hl-key {
   color: #991f1f;
 }
 
-.hl-string {
+.hbqs-payload-modal .hl-string {
   color: #032f62;
 }
 
-.hl-number {
+.hbqs-payload-modal .hl-number {
   color: #1750eb;
 }
 
-.hl-bool {
+.hbqs-payload-modal .hl-bool {
   color: #005cc5;
 }
 
-.hl-null {
+.hbqs-payload-modal .hl-null {
   color: #005cc5;
 }
 

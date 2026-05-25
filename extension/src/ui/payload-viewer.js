@@ -29,6 +29,8 @@ function isSensitiveHeader(name) {
     n === "proxy-authorization" ||
     n === "cookie" ||
     n === "set-cookie" ||
+    n === "x-qlik-xrfkey" ||
+    n === "xrfkey" ||
     n === "x-api-key" ||
     n === "api-key" ||
     n === "apikey" ||

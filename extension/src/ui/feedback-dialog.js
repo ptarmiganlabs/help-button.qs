@@ -392,7 +392,6 @@ export function openFeedbackDialog(config, platformType) {
 
       // --- Footer buttons ---
       footer.style.display = "flex";
-      footer.style.gap = "10px";
 
       const leftGroup = document.createElement("div");
       leftGroup.className = "hbqs-bug-report-actions-left";
@@ -531,7 +530,10 @@ export function openFeedbackDialog(config, platformType) {
             payload.rating = selectedRating;
           }
           if (enableComment && commentTextarea) {
-            payload.comment = commentTextarea.value.trim();
+            const trimmedComment = commentTextarea.value.trim();
+            if (trimmedComment.length > 0) {
+              payload.comment = trimmedComment;
+            }
           }
 
           const headers = buildAuthHeaders(authStrategy, {

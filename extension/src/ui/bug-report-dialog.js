@@ -442,7 +442,6 @@ export function openBugReportDialog(config, platformType) {
 
       // --- Footer buttons ---
       footer.style.display = "flex";
-      footer.style.gap = "10px";
 
       const leftGroup = document.createElement("div");
       leftGroup.className = "hbqs-bug-report-actions-left";
