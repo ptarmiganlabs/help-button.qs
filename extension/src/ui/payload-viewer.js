@@ -52,6 +52,8 @@ function isSensitiveHeader(name) {
  * @returns {string}
  */
 function formatHeaderValue(name, value) {
+  const n = String(name || "").toLowerCase();
+  if (n === "x-qlik-xrfkey" || n === "xrfkey") return "<generated>";
   if (isSensitiveHeader(name)) return "<redacted>";
   if (Array.isArray(value)) return value.join(", ");
   return String(value === null || value === undefined ? "" : value);
