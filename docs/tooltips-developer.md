@@ -25,7 +25,7 @@ Technical reference for developers who want to understand, modify, or extend the
 The tooltip feature spans several files, each with a single responsibility:
 
 ```
-extension/src/
+src/
 ├── ext.js                          # Property panel: Tooltips accordion + getObjectList()
 ├── index.js                        # Supernova entry: calls injectTooltips/destroyTooltips
 ├── object-properties.js            # Default layout: tooltips: [], security: { allowedUriPatterns: '' }
@@ -131,7 +131,9 @@ Rather than escaping all `<` and `>` characters, the converter uses a **partial 
 
 ```javascript
 // Escape bare & and < that are NOT part of an existing HTML tag
-text = text.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?![/a-zA-Z!])/g, '&lt;');
+text = text
+  .replace(/&(?!#?\w+;)/g, "&amp;")
+  .replace(/<(?![/a-zA-Z!])/g, "&lt;");
 ```
 
 This means authors can write raw `<iframe>` or `<video>` elements directly in their content fields and they will pass through to the DOMPurify stage rather than being escaped into visible text.
@@ -140,12 +142,12 @@ This means authors can write raw `<iframe>` or `<video>` elements directly in th
 
 The `@[title](url)` pattern is processed **before** the HTML escape pass. Recognized URLs are converted to safe iframe or video element strings:
 
-| Input URL | Output |
-|---|---|
-| `youtube.com/watch?v=ID` or `youtu.be/ID` | `<iframe src="https://www.youtube.com/embed/ID" ...>` |
+| Input URL                                     | Output                                                 |
+| --------------------------------------------- | ------------------------------------------------------ |
+| `youtube.com/watch?v=ID` or `youtu.be/ID`     | `<iframe src="https://www.youtube.com/embed/ID" ...>`  |
 | `vimeo.com/ID` or `player.vimeo.com/video/ID` | `<iframe src="https://player.vimeo.com/video/ID" ...>` |
-| URL ending in `.mp4`, `.webm`, or `.ogg` | `<video controls ...><source src="..."></video>` |
-| Any other host | *(empty — silently ignored for security)* |
+| URL ending in `.mp4`, `.webm`, or `.ogg`      | `<video controls ...><source src="..."></video>`       |
+| Any other host                                | _(empty — silently ignored for security)_              |
 
 The generated iframes are wrapped in a `<div class="hbqs-video-wrapper">` which provides the 16:9 aspect-ratio responsive container via CSS.
 
@@ -155,13 +157,24 @@ After the Markdown rules run, the full HTML is passed through [DOMPurify](https:
 
 ```javascript
 DOMPurify.sanitize(html, {
-    ADD_TAGS: ['iframe', 'video', 'source'],
-    ADD_ATTR: [
-        'target', 'rel', 'style', 'frameborder',
-        'controls', 'autoplay', 'muted', 'loop', 'poster',
-        'preload', 'playsinline', 'allowfullscreen', 'allow',
-        'loading', 'referrerpolicy',
-    ],
+  ADD_TAGS: ["iframe", "video", "source"],
+  ADD_ATTR: [
+    "target",
+    "rel",
+    "style",
+    "frameborder",
+    "controls",
+    "autoplay",
+    "muted",
+    "loop",
+    "poster",
+    "preload",
+    "playsinline",
+    "allowfullscreen",
+    "allow",
+    "loading",
+    "referrerpolicy",
+  ],
 });
 ```
 
@@ -173,17 +186,20 @@ After DOMPurify runs, an optional URI allowlist filter removes any remaining `if
 
 ```javascript
 function filterMediaUris(html, allowedUriPatterns) {
-    if (!allowedUriPatterns) return html;  // empty = allow all
+  if (!allowedUriPatterns) return html; // empty = allow all
 
-    const prefixes = allowedUriPatterns.split(',').map(p => p.trim()).filter(Boolean);
-    const container = document.createElement('div');
-    container.innerHTML = html;
+  const prefixes = allowedUriPatterns
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const container = document.createElement("div");
+  container.innerHTML = html;
 
-    container.querySelectorAll('iframe, video, source').forEach((el) => {
-        const src = el.getAttribute('src') || '';
-        if (!prefixes.some(prefix => src.startsWith(prefix))) el.remove();
-    });
-    return container.innerHTML;
+  container.querySelectorAll("iframe, video, source").forEach((el) => {
+    const src = el.getAttribute("src") || "";
+    if (!prefixes.some((prefix) => src.startsWith(prefix))) el.remove();
+  });
+  return container.innerHTML;
 }
 ```
 
@@ -192,7 +208,7 @@ The `allowedUriPatterns` value comes from `layout.security.allowedUriPatterns`, 
 ### Call signature
 
 ```javascript
-markdownToHtml(md, { allowedUriPatterns })
+markdownToHtml(md, { allowedUriPatterns });
 ```
 
 The `options` object is optional. Omitting it (e.g. in the live preview of the Markdown editor toolbar) is equivalent to `allowedUriPatterns = ''`, which allows all sources.
@@ -239,10 +255,10 @@ The active URI patterns are stored as a module-level variable in `tooltip-inject
 
 ```javascript
 // Module-level in tooltip-injector.js
-let activeAllowedUriPatterns = '';
+let activeAllowedUriPatterns = "";
 
 // Set once per inject cycle
-activeAllowedUriPatterns = layout.security?.allowedUriPatterns ?? '';
+activeAllowedUriPatterns = layout.security?.allowedUriPatterns ?? "";
 ```
 
 ---
@@ -337,7 +353,7 @@ for each item in layout.tooltips:
 2. Creates a `<div>` with class `.hbqs-tooltip-trigger`, unique ID, ARIA attributes
 3. Applies icon color, background, size via CSS custom properties
 4. Renders SVG via `makeSvg(iconName, size, color)`
-5. Positions icon via `applyPosition(iconEl, item)` — sets absolute CSS offsets; for `'percentage'` uses `iconPositionX`/`iconPositionY` with `translate(-50%, -50%)` so the icon's *center* lands at the given percentages
+5. Positions icon via `applyPosition(iconEl, item)` — sets absolute CSS offsets; for `'percentage'` uses `iconPositionX`/`iconPositionY` with `translate(-50%, -50%)` so the icon's _center_ lands at the given percentages
 6. If `iconFloating` is `true`, adds the `--floating` modifier class and calls `enableDrag()` for pointer-based drag-to-move constrained within the parent
 7. Resolves all 9 theme colors via `resolveColor()`
 8. Attaches event listeners:
@@ -350,17 +366,17 @@ for each item in layout.tooltips:
 
 `applyPosition(iconEl, item)` resets all positioning styles then applies the correct offsets for the chosen position:
 
-| `item.iconPosition` | Positioning applied |
-|---|---|
-| `top-left` | `top: 4px; left: 4px` |
-| `top-center` | `top: 4px; left: 50%; translateX(-50%)` |
-| `top-right` | `top: 4px; right: 4px` |
-| `center-left` | `top: 50%; left: 4px; translateY(-50%)` |
-| `center-right` | `top: 50%; right: 4px; translateY(-50%)` |
-| `bottom-left` | `bottom: 4px; left: 4px` |
-| `bottom-center` | `bottom: 4px; left: 50%; translateX(-50%)` |
-| `bottom-right` | `bottom: 4px; right: 4px` |
-| `percentage` | `left: X%; top: Y%; translate(-50%, -50%)` |
+| `item.iconPosition` | Positioning applied                        |
+| ------------------- | ------------------------------------------ |
+| `top-left`          | `top: 4px; left: 4px`                      |
+| `top-center`        | `top: 4px; left: 50%; translateX(-50%)`    |
+| `top-right`         | `top: 4px; right: 4px`                     |
+| `center-left`       | `top: 50%; left: 4px; translateY(-50%)`    |
+| `center-right`      | `top: 50%; right: 4px; translateY(-50%)`   |
+| `bottom-left`       | `bottom: 4px; left: 4px`                   |
+| `bottom-center`     | `bottom: 4px; left: 50%; translateX(-50%)` |
+| `bottom-right`      | `bottom: 4px; right: 4px`                  |
+| `percentage`        | `left: X%; top: Y%; translate(-50%, -50%)` |
 
 Translate values are set via the `--hbqs-tt-translate` CSS custom property, which is consumed by the `.hbqs-tooltip-trigger` rule.
 
@@ -404,6 +420,7 @@ objectById: function (id) {
 ```
 
 Both adapters expose the same API:
+
 - `getObjectSelector(objectId, codePath)` → CSS selector string
 - `getCurrentSheetId()` → sheet ID from URL or `qlik.navigation`
 - `getSheetObjects(app)` → list of object IDs on current sheet
@@ -454,10 +471,10 @@ Icons are defined in `ui/icons.js` as SVG path data inside a 16×16 viewBox:
 
 ```javascript
 const ICONS = {
-    help: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
-    info: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
-    lightbulb: '<path d="M8 1a4.5 4.5 0 0 0-1.5 8.74V11.5..."/>',
-    // ...
+  help: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
+  info: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
+  lightbulb: '<path d="M8 1a4.5 4.5 0 0 0-1.5 8.74V11.5..."/>',
+  // ...
 };
 ```
 
@@ -477,20 +494,20 @@ To add a new icon:
 
 Tooltip trigger icons use CSS custom properties for runtime theming:
 
-| Variable | Description | Default |
-|---|---|---|
-| `--hbqs-tt-icon-color` | SVG fill color | `currentColor` |
-| `--hbqs-tt-bg-color` | Circle background | `#165a9b` |
-| `--hbqs-tt-size` | Circle width/height | `28px` |
+| Variable               | Description         | Default        |
+| ---------------------- | ------------------- | -------------- |
+| `--hbqs-tt-icon-color` | SVG fill color      | `currentColor` |
+| `--hbqs-tt-bg-color`   | Circle background   | `#165a9b`      |
+| `--hbqs-tt-size`       | Circle width/height | `28px`         |
 
 These are set as inline styles on each `.hbqs-tooltip-trigger` element.
 
 ### Modifier Classes
 
-| Class | Description |
-|---|---|
+| Class                             | Description                                                                          |
+| --------------------------------- | ------------------------------------------------------------------------------------ |
 | `.hbqs-tooltip-trigger--floating` | Applied when `iconFloating` is `true`. Sets `cursor: grab` and `touch-action: none`. |
-| `.hbqs-tooltip-trigger--dragging` | Applied during an active drag. Disables transitions and sets `cursor: grabbing`. |
+| `.hbqs-tooltip-trigger--dragging` | Applied during an active drag. Disables transitions and sets `cursor: grabbing`.     |
 
 Hover popup and dialog colors are applied as **inline styles** (not CSS custom properties) because each popup/dialog is created dynamically per-tooltip and may have different colors.
 
@@ -518,7 +535,7 @@ myNewProp: {
 In `tooltip-injector.js`, access `item.myNewProp` inside `mountTooltipIcon()` and pass it where needed:
 
 ```javascript
-const myValue = item.myNewProp || 'default-value';
+const myValue = item.myNewProp || "default-value";
 // Use myValue when creating elements or calling showHover/openTooltipDialog
 ```
 
@@ -537,7 +554,7 @@ If the property should be themed:
 ### 5. Build and Test
 
 ```bash
-cd extension && npm run pack:dev && npm run lint
+npm run pack:dev && npm run lint
 ```
 
 ---
@@ -551,8 +568,8 @@ This check is at the top of `injectHelpButton()` in `toolbar-injector.js`:
 ```javascript
 const menuItems = layout.menuItems || [];
 if (menuItems.length === 0) {
-    destroyHelpButton();
-    return () => {};
+  destroyHelpButton();
+  return () => {};
 }
 ```
 

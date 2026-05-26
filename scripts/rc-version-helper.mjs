@@ -4,7 +4,7 @@ import { execSync } from 'node:child_process';
 function run(cmd) {
   try {
     return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
-  } catch (e) {
+  } catch {
     return '';
   }
 }
@@ -41,7 +41,7 @@ function highestChangeTypeFromCommits(commits) {
   for (const msg of commits) {
     if (!msg) continue;
     const header = msg.split('\n')[0] || '';
-    if (/BREAKING CHANGE/.test(msg) || /![:\)]/.test(header)) return 'major';
+    if (/BREAKING CHANGE/.test(msg) || /![:)]/.test(header)) return 'major';
     const m = header.match(/^(\w+)(?:\(.+\))?(!)?:/);
     if (m) {
       const type = m[1];
@@ -101,12 +101,13 @@ async function main() {
 
   // Query GitHub releases for existing prerelease for this base
   const releasesRaw = run(`gh api repos/${repo}/releases`);
-  let releases = [];
-  try {
-    releases = releasesRaw ? JSON.parse(releasesRaw) : [];
-  } catch (e) {
-    releases = [];
-  }
+  const releases = (() => {
+    try {
+      return releasesRaw ? JSON.parse(releasesRaw) : [];
+    } catch {
+      return [];
+    }
+  })();
 
   // Find prereleases that match desiredBase and prereleaseType
   const prefix = `v${desiredBase}-${prereleaseType}.`;

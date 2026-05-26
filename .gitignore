@@ -147,13 +147,13 @@ vite.config.ts.timestamp-*
 .DS_Store
 
 # Extension build artifacts
-extension/dist/
-extension/helpbutton-qs-ext/
-extension/node_modules/
-extension/*.zip
+dist/
+helpbutton-qs-ext/
+node_modules/
+*.zip
 helpbutton-qs-basic-v*
-helpbutton-qs-extension-v*
 helpbutton-qs-bug-report-v*
-extension/bundle-analysis.html
-docs-local/*
-extension/README.pdf
+helpbutton-qs-v*
+bundle-analysis.html
+docs-local/
+README.pdf

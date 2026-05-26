@@ -21,6 +21,7 @@ This guide covers everything a Qlik Sense app developer needs to configure toolt
     - [Step 3 — Copy the Selector](#step-3--copy-the-selector)
     - [Recommended Selector Patterns](#recommended-selector-patterns)
     - [Tips for Stable Selectors](#tips-for-stable-selectors)
+    - [Example: Target the Sheet Title](#example-target-the-sheet-title)
     - [Example: Target a Specific Chart Title](#example-target-a-specific-chart-title)
     - [Example: Target All Chart Containers](#example-target-all-chart-containers)
   - [Show Condition (Visibility)](#show-condition-visibility)
@@ -53,6 +54,8 @@ Each tooltip consists of three parts:
 
 You can add as many tooltips as you need per HelpButton.qs instance. They are configured in the **Tooltips** accordion section of the property panel.
 
+If multiple HelpButton.qs extension objects are placed on the same sheet, the tooltips from all of them are merged and rendered together in analysis mode.
+
 ---
 
 ## Adding a Tooltip
@@ -63,7 +66,7 @@ You can add as many tooltips as you need per HelpButton.qs instance. They are co
 4. Click **Add Tooltip**.
 5. Configure the tooltip using the fields described below.
 
-> **💡 Note on Qlik Sense Expressions:** Nearly all string properties in the tooltip configuration (such as Dialog title, Markdown content, CSS selectors) support Qlik Sense expressions. By clicking the **fx** button or starting with `=`, you can make these fields fully dynamic.
+> **💡 Note on Qlik Sense Expressions:** Expression support is field-specific. In the current tooltip configuration, fields such as **Label**, **CSS selector**, **Show condition**, and **Dialog title** expose the **fx** button and can be made dynamic. The Markdown content fields (**Tooltip text** and **Dialog content**) are plain text areas and do **not** expose **fx**.
 
 Each tooltip item has a **Label** that identifies it in the property panel list. This label is also used as the default dialog title and the icon's accessibility label.
 
@@ -94,6 +97,8 @@ Simply select the object you want to attach the tooltip to. The tooltip icon wil
 ## Targeting a CSS Selector
 
 When **Target type** is set to **CSS selector**, a text field appears where you enter a standard CSS selector string. The tooltip icon will be positioned on the first DOM element matching that selector.
+
+When the target is a whole chart or filter pane, prefer **Target type = Qlik Sense object** over a hand-written CSS selector. CSS selectors are most useful for page-level elements and chart sub-elements that do not have their own object dropdown entry.
 
 This mode is useful for:
 
@@ -137,25 +142,39 @@ Some selectors are more stable across Qlik Sense versions than others:
 
 | Pattern | Example | Stability |
 |---|---|---|
-| **Qlik `tid` attribute** | `[tid="QV04"]` | ✅ Very stable — Qlik's object identifier |
-| **`role` attribute** | `[role="application"]` | ✅ Stable — standard ARIA role |
+| **Page-specific selector** | `#sheet-title > header` | ✅ Working in client-managed Qlik Sense (November 2025) |
+| **Qlik object class** | `.qv-object-JpsyeF` | ✅ Good for a specific object in the current app |
+| **`role` attribute** | `article[role="application"]` | ✅ Stable — useful for broad targeting, not unique |
+| **Qlik `tid` attribute** | `[tid="btnQuickNavNext"]`, `.qv-gridcell[tid="JpsyeF"]` | ⚠️ Context-dependent — `tid` is used for several different purposes |
 | **Data attributes** | `[data-testid="some-value"]` | ✅ Stable — test identifiers |
-| **Class name** | `.qv-object-header` | ⚠️ Moderate — may change between versions |
+| **Class name** | `.qv-object-title` | ⚠️ Moderate — may change between versions |
 | **Auto-generated selector** | `#QV04 > div > div:nth-child(2)` | ❌ Fragile — highly version-dependent |
 
 ### Tips for Stable Selectors
 
+- **Prefer Qlik Sense object targeting** when you want to attach a tooltip to a whole chart, KPI, or filter pane.
 - **Prefer attribute selectors** over deeply nested positional selectors.
-- **Use `[tid]`** for Qlik Sense objects — this is the internal object identifier used by the client.
-- **Combine selectors** for specificity: `[tid="QV04"] .qv-object-header` targets the header of a specific object.
+- **Treat `[tid]` as context-dependent** — it can identify toolbar buttons, grid cells, repeated headers, and other elements, so it is not a universal object identifier.
+- **Combine selectors** for specificity: `.qv-object-JpsyeF [tid="chart-header"]` targets the title area of one specific object in the current app.
+- **For client-managed Qlik Sense (November 2025)**, `#sheet-title > header` is a working selector for the sheet title region.
 - **Test in analysis mode** — the DOM structure can differ between edit mode and analysis mode.
 - **Document your selectors** — add a note in the tooltip label about which element is targeted, so future maintainers know what to update if the DOM changes.
+
+### Example: Target the Sheet Title
+
+```css
+#sheet-title > header
+```
+
+This selector works in client-managed Qlik Sense as of November 2025.
 
 ### Example: Target a Specific Chart Title
 
 ```css
-[tid="QV04"] .qv-object-header
+.qv-object-6fe919be-14c5-451a-b645-7ff404ae2690 [tid="chart-header"]
 ```
+
+Replace `6fe919be-14c5-451a-b645-7ff404ae2690` with the object ID from your own app. The `[tid="chart-header"]` part is reused across charts, so it needs the object-specific parent selector.
 
 ### Example: Target All Chart Containers
 
@@ -173,7 +192,7 @@ The **Show condition** field controls whether a tooltip is visible or hidden at 
 
 - **Empty** (default): The tooltip is always visible.
 - **Literal value**: Enter any non-zero value (e.g. `1`) to show, or `0` to hide.
-- **Expression**: Click the **fx** toggle (or prefix with `=`) to enter a Qlik expression that is evaluated dynamically. The tooltip is hidden when the expression evaluates to `0`.
+- **Expression**: Click the **fx** toggle (or prefix with `=`) to enter a Qlik expression that is evaluated dynamically. The tooltip is hidden when the expression evaluates to `0` or `False()`.
 
 ### Examples
 
@@ -184,6 +203,7 @@ The **Show condition** field controls whether a tooltip is visible or hidden at 
 | `0` | Always hidden |
 | `=False()` | Always hidden (evaluates to `0` / `"False"`) |
 | `=True()` | Always visible (evaluates to `-1` / `"True"`) |
+| `=if(vShowTooltip = 1, True(), False())` | Visible only when variable `vShowTooltip` equals `1` |
 | `=GetSelectedCount(Country) > 0` | Visible only when a Country selection exists |
 | `=if(Sum(Revenue) > 1000000, 1, 0)` | Visible when total revenue exceeds 1,000,000 |
 
@@ -196,7 +216,30 @@ Qlik Sense evaluates the expression on every render and passes the result throug
 
 > **Note:** `=False()` is a Qlik dual value — its numeric part is `0` but its string representation is `"False"`. The extension handles both forms correctly.
 
-> **Tip:** Use this feature to show contextual help only when relevant — for example, display a tooltip on a chart only when the user has made a particular selection.
+### Driving Visibility From Variables
+
+Variable-driven show conditions work well when you want users to turn tooltip icons on or off without editing the extension.
+
+Example:
+
+```qlik
+=if(vShowTooltip = 1, True(), False())
+```
+
+With this pattern:
+
+- Setting `vShowTooltip` to `1` makes the tooltip icon visible.
+- Setting `vShowTooltip` to `0` hides the tooltip icon completely.
+- The change takes effect when Qlik updates the layout and the extension re-renders.
+
+This can be controlled in more than one way:
+
+- **Sheet objects** such as Qlik button objects can set the variable directly.
+- **HelpButton.qs menu items** can do the same if their action is set to **Set/Toggle variable**.
+
+For example, a HelpButton.qs menu item in **Toggle variable** mode can flip `vShowTooltip` between `1` and `0`. That lets the help menu itself act as a tooltip visibility switch for the same sheet.
+
+> **Tip:** Use this feature to show contextual help only when relevant — for example, display a tooltip on a chart only when the user has made a particular selection, or let users turn helper icons on and off with a variable-driven button or help-menu command.
 
 ---
 
