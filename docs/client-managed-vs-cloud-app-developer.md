@@ -65,16 +65,16 @@ If you stay within those shared capabilities, one app configuration can often be
 
 The main practical differences are below.
 
-| Area | Client-managed | Qlik Cloud | App developer impact |
-| --- | --- | --- | --- |
-| **Extension import** | Import via **QMC → Extensions** | Upload via **Management Console → Extensions** | Deployment step differs, but the package is the same |
-| **Detected platform value** | `client-managed` | `cloud` | The `platform` context field tells you which runtime the user is in |
-| **Toolbar anchor in the DOM** | `#top-bar-right-side` | `[data-testid="top-bar-right-side"]` | Toolbar internals differ, but HelpButton.qs handles this automatically |
-| **`userId`** | Qlik/Windows-style user ID from `/qps/user` | Email address from `/api/v1/users/me` | If you send `userId` to a backend, expect different formats |
-| **`userDirectory`** | Available | Empty / not applicable | Avoid relying on it in Cloud links or payloads |
-| **`senseVersion`** | Available | Reported as `N/A` | Only useful in client-managed troubleshooting flows |
-| **Cloud-only user fields** | `tenantId`, `status`, `picture`, `preferredZoneinfo`, `roles` are `N/A` | Available from `/api/v1/users/me` | You can enrich Cloud bug/feedback payloads with extra identity metadata |
-| **Tooltip CSS selectors** | DOM shape is client-managed-specific | DOM shape is Cloud-specific | Test any custom selector separately on each platform |
+| Area                              | Client-managed                                                            | Qlik Cloud                                                | App developer impact                                                         |
+| --------------------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Extension import**              | Import via **QMC → Extensions**                                           | Upload via **Management Console → Extensions**            | Deployment step differs, but the package is the same                         |
+| **Detected platform value**       | `client-managed`                                                          | `cloud`                                                   | The `platform` context field tells you which runtime the user is in          |
+| **Toolbar anchor in the DOM**     | `#top-bar-right-side`                                                     | `[data-testid="top-bar-right-side"]`                      | Toolbar internals differ, but HelpButton.qs handles this automatically       |
+| **`userId`**                      | Qlik/Windows-style user ID from `/qps/user`                               | Email address from `/api/v1/users/me`                     | If you send `userId` to a backend, expect different formats                  |
+| **`userDirectory`**               | Available                                                                 | Empty / not applicable                                    | Avoid relying on it in Cloud links or payloads                               |
+| **`senseVersion`**                | Available                                                                 | Reported as `N/A`                                         | Only useful in client-managed troubleshooting flows                          |
+| **Cloud-only user fields**        | `tenantId`, `status`, `picture`, `preferredZoneinfo`, `roles` are `N/A`   | Available from `/api/v1/users/me`                         | You can enrich Cloud bug/feedback payloads with extra identity metadata      |
+| **Tooltip CSS selectors**         | DOM shape is client-managed-specific                                      | DOM shape is Cloud-specific                               | Test any custom selector separately on each platform                         |
 | **Content library path examples** | `/content/Default/` is documented as a valid tooltip allow-prefix example | No equivalent built-in example is documented in this repo | Client-managed-only path assumptions should not be copied into Cloud configs |
 
 Important nuance:
@@ -91,12 +91,12 @@ Important nuance:
 
 The currently supported template placeholders are:
 
-| Placeholder | Client-managed | Qlik Cloud |
-| --- | --- | --- |
-| `{{appId}}` | Current app GUID | Current app GUID |
-| `{{sheetId}}` | Current sheet ID | Current sheet ID |
-| `{{userId}}` | Logged-in user ID | User email address |
-| `{{userDirectory}}` | Directory name | Empty string |
+| Placeholder         | Client-managed    | Qlik Cloud         |
+| ------------------- | ----------------- | ------------------ |
+| `{{appId}}`         | Current app GUID  | Current app GUID   |
+| `{{sheetId}}`       | Current sheet ID  | Current sheet ID   |
+| `{{userId}}`        | Logged-in user ID | User email address |
+| `{{userDirectory}}` | Directory name    | Empty string       |
 
 Practical implication:
 
@@ -108,18 +108,18 @@ Practical implication:
 
 HelpButton.qs uses a shared context-field model for bug report and feedback actions. The most important platform differences are:
 
-| Field | Client-managed | Qlik Cloud |
-| --- | --- | --- |
-| `userName` | Full name from proxy API | Display name from `/api/v1/users/me` |
-| `userId` | User ID | Email address |
-| `userDirectory` | Available | `N/A` / not applicable |
-| `senseVersion` | Available | `N/A` |
-| `tenantId` | `N/A` | Available |
-| `status` | `N/A` | Available |
-| `picture` | `N/A` | Available |
-| `preferredZoneinfo` | `N/A` | Available |
-| `roles` | `N/A` | Available |
-| `platform` | `client-managed` | `cloud` |
+| Field               | Client-managed           | Qlik Cloud                           |
+| ------------------- | ------------------------ | ------------------------------------ |
+| `userName`          | Full name from proxy API | Display name from `/api/v1/users/me` |
+| `userId`            | User ID                  | Email address                        |
+| `userDirectory`     | Available                | `N/A` / not applicable               |
+| `senseVersion`      | Available                | `N/A`                                |
+| `tenantId`          | `N/A`                    | Available                            |
+| `status`            | `N/A`                    | Available                            |
+| `picture`           | `N/A`                    | Available                            |
+| `preferredZoneinfo` | `N/A`                    | Available                            |
+| `roles`             | `N/A`                    | Available                            |
+| `platform`          | `client-managed`         | `cloud`                              |
 
 This matters when:
 
