@@ -56,7 +56,8 @@ const menuItemsSection = {
           expression: "optional",
           defaultValue: "https://example.com",
           maxlength: 2048,
-          show: (item) => !["bugReport", "feedback", "setVariable"].includes(item.action),
+          show: (item) =>
+            !["bugReport", "feedback", "setVariable"].includes(item.action),
         },
         target: {
           ref: "target",
@@ -68,7 +69,8 @@ const menuItemsSection = {
             { value: "_blank", label: "New tab" },
             { value: "_self", label: "Same tab" },
           ],
-          show: (item) => !["bugReport", "feedback", "setVariable"].includes(item.action),
+          show: (item) =>
+            !["bugReport", "feedback", "setVariable"].includes(item.action),
         },
         showCondition: {
           ref: "showCondition",
@@ -233,6 +235,17 @@ const menuItemsSection = {
                   component: "dropdown",
                   defaultValue: DEFAULT_PAYLOAD_FORMAT,
                   options: TIMESTAMP_FORMAT_OPTIONS,
+                },
+                brShowPayloadButton: {
+                  ref: "bugReport.showPayloadButton",
+                  label: "Show 'Show payload' button",
+                  type: "boolean",
+                  component: "switch",
+                  defaultValue: false,
+                  options: [
+                    { value: true, label: "On" },
+                    { value: false, label: "Off" },
+                  ],
                 },
               },
             },
@@ -870,6 +883,17 @@ const menuItemsSection = {
                   component: "dropdown",
                   defaultValue: DEFAULT_PAYLOAD_FORMAT,
                   options: TIMESTAMP_FORMAT_OPTIONS,
+                },
+                feedbackShowPayloadButton: {
+                  ref: "feedback.showPayloadButton",
+                  label: "Show 'Show payload' button",
+                  type: "boolean",
+                  component: "switch",
+                  defaultValue: false,
+                  options: [
+                    { value: true, label: "On" },
+                    { value: false, label: "Off" },
+                  ],
                 },
               },
             },
