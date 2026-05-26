@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - 'pre-release/**'
+      - "pre-release/**"
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
@@ -195,56 +195,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Create basic variant zip
-        run: |
-          VERSION=${{ needs.release-please.outputs.release_version }}
-          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
-          sed "s/__VERSION__/${VERSION}/g" release-config/html-variant-readme-template.txt > readme.txt
-          cd variants/basic
-          zip -r "../../${DIST_FILE_NAME}-basic-v${VERSION}${PRERELEASE_SUFFIX}.zip" \
-            README.md \
-            da \
-            de \
-            en \
-            es \
-            fi \
-            fr \
-            no \
-            pl \
-            sv \
-            -x "*/node_modules/*"
-          cd ../..
-          zip -j "${DIST_FILE_NAME}-basic-v${VERSION}${PRERELEASE_SUFFIX}.zip" LICENSE readme.txt
-
-      - name: Create bug-report variant zip
-        run: |
-          VERSION=${{ needs.release-please.outputs.release_version }}
-          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
-          cd variants/bug-report
-          zip -r "../../${DIST_FILE_NAME}-bug-report-v${VERSION}${PRERELEASE_SUFFIX}.zip" \
-            README.md \
-            da \
-            de \
-            en \
-            es \
-            fi \
-            fr \
-            no \
-            pl \
-            sv \
-            -x "*/node_modules/*"
-          cd ../..
-          zip -j "${DIST_FILE_NAME}-bug-report-v${VERSION}${PRERELEASE_SUFFIX}.zip" LICENSE readme.txt
-
-      - name: List zip contents (debug)
-        run: |
-          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
-          echo "=== Basic variant ==="
-          zipinfo "${DIST_FILE_NAME}-basic-v${{ needs.release-please.outputs.release_version }}${PRERELEASE_SUFFIX}.zip"
-          echo ""
-          echo "=== Bug-report variant ==="
-          zipinfo "${DIST_FILE_NAME}-bug-report-v${{ needs.release-please.outputs.release_version }}${PRERELEASE_SUFFIX}.zip"
-
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -255,34 +205,10 @@ jobs:
 
       - name: Build extension
         run: |
-          cd extension
           PUPPETEER_SKIP_DOWNLOAD=true npm ci
           npm run pack:prod
 
-      - name: Generate README-EXTENSION PDF
-        run: |
-          # ubuntu-latest ships google-chrome-stable; use it for both mmdc and md-to-pdf
-          CHROME=$(which google-chrome-stable 2>/dev/null || which chromium-browser 2>/dev/null || which chromium)
-          echo "Chrome executable: $CHROME"
-
-          # Write puppeteer config for mmdc
-          echo "{\"executablePath\":\"$CHROME\",\"args\":[\"--no-sandbox\",\"--disable-setuid-sandbox\"]}" > /tmp/mmdc-puppeteer.json
-
-          cd extension
-
-          # Step 1: convert Mermaid code blocks to SVG images
-          mmdc -i README.md -o README-processed.md --puppeteerConfigFile /tmp/mmdc-puppeteer.json
-
-          # Step 2: render the processed markdown (with inline SVG refs) to PDF
-          # md-to-pdf always names the output after the input (README-processed.pdf)
-          PUPPETEER_EXECUTABLE_PATH="$CHROME" md-to-pdf README-processed.md
-
-          # Clean up intermediate artefacts and give the PDF its final name
-          rm -f README-processed.md README-processed-*.svg
-          mv README-processed.pdf README-EXTENSION.pdf
-          echo "PDF size: $(du -sh README-EXTENSION.pdf)"
-
-      - name: Generate Main README PDF
+      - name: Generate README PDF
         run: |
           # ubuntu-latest ships google-chrome-stable; use it for both mmdc and md-to-pdf
           CHROME=$(which google-chrome-stable 2>/dev/null || which chromium-browser 2>/dev/null || which chromium)
@@ -308,22 +234,25 @@ jobs:
           PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
 
           # Create readme.txt from template
-          sed "s/__VERSION__/${VERSION}/g" release-config/extension-readme-template.txt > readme.txt
+          sed "s/__VERSION__/${VERSION}/g" release-config/readme-template.txt > readme.txt
 
-          # Create outer zip containing the extension zip + readme + license
-          # Ensure the internal extension zip includes version/suffix
-          (cd extension && PRERELEASE_SUFFIX="${PRERELEASE_SUFFIX}" RELEASE_VERSION="${VERSION}" npm run zip)
+          mkdir -p release-staging
 
-          zip -j "${DIST_FILE_NAME}-extension-v${VERSION}${PRERELEASE_SUFFIX}.zip" \
-            extension/${{ env.DIST_FILE_NAME }}${VERSION:+-v${VERSION}}${PRERELEASE_SUFFIX}.zip \
-            README-EXTENSION.pdf \
-            README.pdf \
-            readme.txt \
-            LICENSE
+          cp "${DIST_FILE_NAME}.zip" "release-staging/${DIST_FILE_NAME}.zip"
+          cp README.pdf release-staging/README.pdf
+          cp readme.txt release-staging/readme.txt
+          cp LICENSE release-staging/LICENSE
+
+          cd release-staging
+          zip -r "../${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.zip" .
+          cd ..
 
           echo ""
-          echo "=== Extension variant ==="
-          zipinfo "${DIST_FILE_NAME}-extension-v${VERSION}${PRERELEASE_SUFFIX}.zip"
+          echo "=== Outer release zip ==="
+          zipinfo "${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.zip"
+          echo ""
+          echo "=== Inner extension zip ==="
+          zipinfo "release-staging/${DIST_FILE_NAME}.zip"
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
@@ -335,9 +264,7 @@ jobs:
           tag: ${{ needs.release-please.outputs.release_tag_name }}
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
           artifacts: |
-            ${{ env.DIST_FILE_NAME }}-basic-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
-            ${{ env.DIST_FILE_NAME }}-bug-report-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
-            ${{ env.DIST_FILE_NAME }}-extension-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
+            ${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
           prerelease: ${{ env.IS_PRERELEASE }}
 
       - name: Fix pre-release name to include type suffix

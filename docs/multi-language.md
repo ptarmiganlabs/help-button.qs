@@ -12,17 +12,17 @@ This post walks through how the built-in translation system works, what "default
 
 The extension ships with built-in translations for **9 languages**:
 
-| Code | Language | Native Name |
-|------|----------|-------------|
-| `en` | English | English |
-| `sv` | Swedish | Svenska |
-| `no` | Norwegian | Norsk |
-| `da` | Danish | Dansk |
-| `fi` | Finnish | Suomi |
-| `de` | German | Deutsch |
-| `fr` | French | Français |
-| `pl` | Polish | Polski |
-| `es` | Spanish | Español |
+| Code | Language  | Native Name |
+| ---- | --------- | ----------- |
+| `en` | English   | English     |
+| `sv` | Swedish   | Svenska     |
+| `no` | Norwegian | Norsk       |
+| `da` | Danish    | Dansk       |
+| `fi` | Finnish   | Suomi       |
+| `de` | German    | Deutsch     |
+| `fr` | French    | Français    |
+| `pl` | Polish    | Polski      |
+| `es` | Spanish   | Español     |
 
 English (`en`) is the **ultimate fallback** — if the detected or forced locale is not supported, all strings resolve to their English value.
 
@@ -40,35 +40,35 @@ The following UI elements have built-in defaults for all 9 languages (23 transla
 
 Most strings are configurable via the property panel. The exceptions are noted below — these are used internally by the extension and are not exposed as editable fields.
 
-| UI Element | Translation Key | English Default | In property panel? |
-|---|---|---|---|
-| **Toolbar & popup** | | | |
-| Toolbar button label | `buttonLabel` | Help | ✅ |
-| Toolbar button tooltip | `buttonTooltip` | Open help menu | ✅ |
-| Popup title | `popupTitle` | Need assistance? | ✅ |
-| **Bug-report dialog** | | | |
-| Dialog title | `bugReportTitle` | Report a Bug | ✅ |
-| Description field label | `bugReportDescriptionLabel` | Description | ✅ |
-| Description placeholder | `bugReportDescriptionPlaceholder` | Describe the issue you encountered… | ✅ |
-| Submit button | `bugReportSubmit` | Submit | ✅ |
-| Cancel button | `bugReportCancel` | Cancel | ✅ |
-| Success toast | `bugReportSuccessMessage` | Bug report submitted successfully! | ✅ |
-| Error toast | `bugReportErrorMessage` | Failed to submit bug report. Please try again. | ✅ |
-| Context header | `bugReportContextHeader` | Context (auto-collected) | ❌ |
-| Loading message | `bugReportLoadingMessage` | Gathering environment info… | ❌ |
-| **Feedback dialog** | | | |
-| Dialog title | `feedbackTitle` | Send Feedback | ✅ |
-| Rating label | `feedbackRatingLabel` | How would you rate this app? | ✅ |
-| Comment field label | `feedbackCommentLabel` | Comments | ✅ |
-| Comment placeholder | `feedbackCommentPlaceholder` | Share your thoughts about this app… | ✅ |
-| Submit button | `feedbackSubmit` | Submit Feedback | ✅ |
-| Cancel button | `feedbackCancel` | Cancel | ✅ |
-| Success toast | `feedbackSuccessMessage` | Feedback submitted successfully! | ✅ |
-| Error toast | `feedbackErrorMessage` | Failed to submit feedback. Please try again. | ✅ |
-| **Edit mode** | | | |
-| Edit-mode placeholder title | `editPlaceholderTitle` | HelpButton.qs | ❌ |
-| Edit-mode placeholder description | `editPlaceholderDescription` | Injects a help button into the toolbar. Configure menu items in the property panel. | ❌ |
-| Analysis-mode placeholder | `analysisPlaceholder` | Help button active in toolbar | ✅ |
+| UI Element                        | Translation Key                   | English Default                                                                     | In property panel? |
+| --------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------- | ------------------ |
+| **Toolbar & popup**               |                                   |                                                                                     |                    |
+| Toolbar button label              | `buttonLabel`                     | Help                                                                                | ✅                 |
+| Toolbar button tooltip            | `buttonTooltip`                   | Open help menu                                                                      | ✅                 |
+| Popup title                       | `popupTitle`                      | Need assistance?                                                                    | ✅                 |
+| **Bug-report dialog**             |                                   |                                                                                     |                    |
+| Dialog title                      | `bugReportTitle`                  | Report a Bug                                                                        | ✅                 |
+| Description field label           | `bugReportDescriptionLabel`       | Description                                                                         | ✅                 |
+| Description placeholder           | `bugReportDescriptionPlaceholder` | Describe the issue you encountered…                                                 | ✅                 |
+| Submit button                     | `bugReportSubmit`                 | Submit                                                                              | ✅                 |
+| Cancel button                     | `bugReportCancel`                 | Cancel                                                                              | ✅                 |
+| Success toast                     | `bugReportSuccessMessage`         | Bug report submitted successfully!                                                  | ✅                 |
+| Error toast                       | `bugReportErrorMessage`           | Failed to submit bug report. Please try again.                                      | ✅                 |
+| Context header                    | `bugReportContextHeader`          | Context (auto-collected)                                                            | ❌                 |
+| Loading message                   | `bugReportLoadingMessage`         | Gathering environment info…                                                         | ❌                 |
+| **Feedback dialog**               |                                   |                                                                                     |                    |
+| Dialog title                      | `feedbackTitle`                   | Send Feedback                                                                       | ✅                 |
+| Rating label                      | `feedbackRatingLabel`             | How would you rate this app?                                                        | ✅                 |
+| Comment field label               | `feedbackCommentLabel`            | Comments                                                                            | ✅                 |
+| Comment placeholder               | `feedbackCommentPlaceholder`      | Share your thoughts about this app…                                                 | ✅                 |
+| Submit button                     | `feedbackSubmit`                  | Submit Feedback                                                                     | ✅                 |
+| Cancel button                     | `feedbackCancel`                  | Cancel                                                                              | ✅                 |
+| Success toast                     | `feedbackSuccessMessage`          | Feedback submitted successfully!                                                    | ✅                 |
+| Error toast                       | `feedbackErrorMessage`            | Failed to submit feedback. Please try again.                                        | ✅                 |
+| **Edit mode**                     |                                   |                                                                                     |                    |
+| Edit-mode placeholder title       | `editPlaceholderTitle`            | HelpButton.qs                                                                       | ❌                 |
+| Edit-mode placeholder description | `editPlaceholderDescription`      | Injects a help button into the toolbar. Configure menu items in the property panel. | ❌                 |
+| Analysis-mode placeholder         | `analysisPlaceholder`             | Help button active in toolbar                                                       | ✅                 |
 
 ---
 
@@ -120,13 +120,13 @@ flowchart LR
 
 A developer in Sweden opens Qlik Sense (UI language = Swedish). They add the extension and leave the **Button label** field empty.
 
-| Step | What happens |
-|---|---|
-| 1 | Extension detects locale → `sv` |
-| 2 | `resolveText('', 'buttonLabel')` is called |
-| 3 | Property-panel value is empty → fall through to translation lookup |
-| 4 | `translations.buttonLabel.sv` → `'Hjälp'` |
-| 5 | The toolbar button displays **Hjälp** |
+| Step | What happens                                                       |
+| ---- | ------------------------------------------------------------------ |
+| 1    | Extension detects locale → `sv`                                    |
+| 2    | `resolveText('', 'buttonLabel')` is called                         |
+| 3    | Property-panel value is empty → fall through to translation lookup |
+| 4    | `translations.buttonLabel.sv` → `'Hjälp'`                          |
+| 5    | The toolbar button displays **Hjälp**                              |
 
 If the same developer types `Support` into the Button label field, `resolveText('Support', 'buttonLabel')` returns `'Support'` immediately — the translation table is never consulted.
 
@@ -136,9 +136,9 @@ If the same developer types `Support` into the Button label field, `resolveText(
 
 In the property panel, the **Language** section contains a dropdown with two kinds of options:
 
-| Option | Behaviour |
-|---|---|
-| **Auto-detect** (default) | The extension detects the Qlik UI language at runtime and uses the matching translations. |
+| Option                                          | Behaviour                                                                                                 |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Auto-detect** (default)                       | The extension detects the Qlik UI language at runtime and uses the matching translations.                 |
 | **A specific language** (e.g. Svenska, Deutsch) | Forces all translated strings to that language, regardless of the end-user's browser or Qlik UI language. |
 
 ```mermaid
@@ -153,11 +153,11 @@ flowchart TD
 
 ### What happens when you change the dropdown
 
-| From → To | Effect |
-|---|---|
-| Auto-detect → Specific language | A confirmation prompt appears. If accepted, all translatable fields (button label, tooltip, popup title, bug-report dialog texts, and feedback dialog texts) are **overwritten** with the standard translations for that language. You can then edit any of them. |
-| Specific language → Auto-detect | A confirmation prompt appears. If accepted, all translatable fields are **cleared** (set to empty). This means the extension will auto-detect the language at runtime and use the built-in defaults. |
-| Specific language → Another language | Same as the first case — fields are overwritten with the new language's defaults. |
+| From → To                            | Effect                                                                                                                                                                                                                                                            |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Auto-detect → Specific language      | A confirmation prompt appears. If accepted, all translatable fields (button label, tooltip, popup title, bug-report dialog texts, and feedback dialog texts) are **overwritten** with the standard translations for that language. You can then edit any of them. |
+| Specific language → Auto-detect      | A confirmation prompt appears. If accepted, all translatable fields are **cleared** (set to empty). This means the extension will auto-detect the language at runtime and use the built-in defaults.                                                              |
+| Specific language → Another language | Same as the first case — fields are overwritten with the new language's defaults.                                                                                                                                                                                 |
 
 > **Tip:** Switching to a specific language and back to Auto-detect is a quick way to reset all text fields to their defaults.
 
@@ -240,12 +240,12 @@ The same rules apply as for the bug-report dialog: leave the property-panel fiel
 
 For example, a Finnish user (`fi`) who opens the feedback dialog with all fields left empty will see:
 
-| Field | Finnish default |
-|---|---|
-| Dialog title | Lähetä palautetta |
-| Rating label | Miten arvioisit tämän sovelluksen? |
-| Submit button | Lähetä palaute |
-| Cancel button | Peruuta |
+| Field         | Finnish default                    |
+| ------------- | ---------------------------------- |
+| Dialog title  | Lähetä palautetta                  |
+| Rating label  | Miten arvioisit tämän sovelluksen? |
+| Submit button | Lähetä palaute                     |
+| Cancel button | Peruuta                            |
 
 ---
 
@@ -260,18 +260,18 @@ flowchart LR
     C --> USE_EN["Use English default"]
 ```
 
-| Priority | Source | When used |
-|---|---|---|
-| 1 | Property-panel value | Developer typed a custom string |
-| 2 | Translation for active locale | Field is empty and locale has a translation |
-| 3 | English (`en`) translation | Field is empty and locale is unsupported |
+| Priority | Source                        | When used                                   |
+| -------- | ----------------------------- | ------------------------------------------- |
+| 1        | Property-panel value          | Developer typed a custom string             |
+| 2        | Translation for active locale | Field is empty and locale has a translation |
+| 3        | English (`en`) translation    | Field is empty and locale is unsupported    |
 
 ---
 
 ## 📦 Get Started
 
 - **Source & releases:** [github.com/ptarmiganlabs/help-button.qs](https://github.com/ptarmiganlabs/help-button.qs)
-- **Installation guide:** see the [extension README](https://github.com/ptarmiganlabs/help-button.qs/blob/main/extension/README.md)
+- **Installation guide:** see the [root README](https://github.com/ptarmiganlabs/help-button.qs/blob/main/README.md)
 - **Template fields (dynamic URLs):** see [docs/template-fields.md](https://github.com/ptarmiganlabs/help-button.qs/blob/main/docs/template-fields.md)
 
 Questions or feedback? Drop a comment below! 👇

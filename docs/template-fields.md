@@ -2,10 +2,10 @@
 
 Template fields let you build **dynamic, context-sensitive URLs** in your help button configuration. Instead of hard-coding a single generic help page, you can direct users to an app-specific or sheet-specific page — the URL is resolved at click time using live Qlik Sense context.
 
-Template fields work in **any configurable URL** across both the [basic](../variants/basic/README.md) and [bug-report](../variants/bug-report/README.md) variants:
+Template fields work in **any configurable URL** across both the [basic](../legacy/variants/basic/README.md) and [bug-report](../legacy/variants/bug-report/README.md) variants:
 
 - `menuItems[].url` — link URLs in the help popup
-- `bugReport.webhookUrl` — the webhook endpoint for bug reports *(bug-report variant only)*
+- `bugReport.webhookUrl` — the webhook endpoint for bug reports _(bug-report variant only)_
 
 ---
 
@@ -20,7 +20,7 @@ Use double curly braces around the field name:
 Place them anywhere inside a URL string in `helpbutton-qs.config.js`:
 
 ```js
-url: 'https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}'
+url: "https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}";
 ```
 
 At click time, the placeholders are replaced with the actual values from the current Qlik Sense session:
@@ -33,12 +33,12 @@ https://help.example.com/apps/4634fbc8-65eb-4aff-a686-34e75326e534/sheets/b8f5e2
 
 ## Supported Fields
 
-| Template field | Description | Client Managed | Cloud |
-|---|---|---|---|
-| `{{appId}}` | App GUID (e.g. `4634fbc8-65eb-...`) | Parsed from URL path | Parsed from URL path |
-| `{{sheetId}}` | Sheet ID (e.g. `tAyTET`, `b8f5e231-...`) | Parsed from URL path | Parsed from URL path |
-| `{{userId}}` | User identity | User ID from proxy API (e.g. `jsmith`) | User email from `/api/v1/users/me` |
-| `{{userDirectory}}` | User directory | Directory name (e.g. `CORP`) | Empty string (not applicable) |
+| Template field      | Description                              | Client Managed                         | Cloud                              |
+| ------------------- | ---------------------------------------- | -------------------------------------- | ---------------------------------- |
+| `{{appId}}`         | App GUID (e.g. `4634fbc8-65eb-...`)      | Parsed from URL path                   | Parsed from URL path               |
+| `{{sheetId}}`       | Sheet ID (e.g. `tAyTET`, `b8f5e231-...`) | Parsed from URL path                   | Parsed from URL path               |
+| `{{userId}}`        | User identity                            | User ID from proxy API (e.g. `jsmith`) | User email from `/api/v1/users/me` |
+| `{{userDirectory}}` | User directory                           | Directory name (e.g. `CORP`)           | Empty string (not applicable)      |
 
 ### Data sources
 
@@ -64,7 +64,7 @@ If a field cannot be resolved, its placeholder is replaced with an **empty strin
 Configuration:
 
 ```js
-url: 'https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}/guide'
+url: "https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}/guide";
 ```
 
 When the user is on the app overview (no sheet open), `{{sheetId}}` is empty:
@@ -96,12 +96,12 @@ Direct users to app-specific documentation:
 ```js
 menuItems: [
   {
-    label: 'Help for this app',
-    url: 'https://wiki.example.com/qlik/apps/{{appId}}',
-    icon: 'help',
-    target: '_blank',
+    label: "Help for this app",
+    url: "https://wiki.example.com/qlik/apps/{{appId}}",
+    icon: "help",
+    target: "_blank",
   },
-]
+];
 ```
 
 ### User-specific support portal
@@ -111,12 +111,12 @@ Pre-fill the user's identity in a support page URL:
 ```js
 menuItems: [
   {
-    label: 'My support tickets',
-    url: 'https://support.example.com/portal?user={{userId}}&dir={{userDirectory}}',
-    icon: 'mail',
-    target: '_blank',
+    label: "My support tickets",
+    url: "https://support.example.com/portal?user={{userId}}&dir={{userDirectory}}",
+    icon: "mail",
+    target: "_blank",
   },
-]
+];
 ```
 
 ### Deep link to sheet-level documentation
@@ -124,12 +124,12 @@ menuItems: [
 ```js
 menuItems: [
   {
-    label: 'Sheet guide',
-    url: 'https://docs.example.com/{{appId}}/{{sheetId}}',
-    icon: 'info',
-    target: '_blank',
+    label: "Sheet guide",
+    url: "https://docs.example.com/{{appId}}/{{sheetId}}",
+    icon: "info",
+    target: "_blank",
   },
-]
+];
 ```
 
 ### Template fields in query parameters
@@ -139,12 +139,12 @@ Template fields work in any part of the URL — path segments and query paramete
 ```js
 menuItems: [
   {
-    label: 'Report an issue',
-    url: 'https://jira.example.com/create?project=QLIK&appId={{appId}}&sheet={{sheetId}}&reporter={{userId}}',
-    icon: 'bug',
-    target: '_blank',
+    label: "Report an issue",
+    url: "https://jira.example.com/create?project=QLIK&appId={{appId}}&sheet={{sheetId}}&reporter={{userId}}",
+    icon: "bug",
+    target: "_blank",
   },
-]
+];
 ```
 
 ### Webhook URL with template fields (bug-report variant)
@@ -167,18 +167,18 @@ You can freely combine menu items that use template fields with items that use p
 ```js
 menuItems: [
   {
-    label: 'General help',
-    url: 'https://help.example.com',          // static — no template fields
-    icon: 'help',
-    target: '_blank',
+    label: "General help",
+    url: "https://help.example.com", // static — no template fields
+    icon: "help",
+    target: "_blank",
   },
   {
-    label: 'Help for this app',
-    url: 'https://help.example.com/{{appId}}', // dynamic — resolved at click time
-    icon: 'info',
-    target: '_blank',
+    label: "Help for this app",
+    url: "https://help.example.com/{{appId}}", // dynamic — resolved at click time
+    icon: "info",
+    target: "_blank",
   },
-]
+];
 ```
 
 ---

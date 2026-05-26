@@ -1,5 +1,5 @@
 ---
-applyTo: '**'
+applyTo: "**"
 ---
 
 # copilot-instructions.md
@@ -11,57 +11,47 @@ This file provides guidance to Copilot when working with code in this repository
 At the start of each session, read:
 
 1. The root `README.md`
-2. Each variant's `README.md` (in `variants/basic/` and `variants/bug-report/`)
-3. `docs/template-fields.md`
+2. `docs/template-fields.md`
+3. `docs/RELEASE_PROCESS.md` when working on build, versioning, or CI
 
 ## 🧱 Project Basics
 
-- This is a **vanilla JavaScript** project with **zero external dependencies**.
-- There is **no build step** — files are deployed as-is to Qlik Sense servers.
-- Each variant is a self-contained **IIFE** (Immediately Invoked Function Expression) in `helpbutton-qs.js`.
-- Configuration is loaded from a separate `helpbutton-qs.config.js` file that sets `window.helpButtonQsConfig`.
-- The project uses **ES5-compatible** JavaScript for broad browser support within Qlik Sense.
+- The active product in this repository is a **Nebula.js-based Qlik Sense extension**.
+- The extension is the **first-class root package**: package manifest, build scripts, source code, and release automation now live at the repository root.
+- The extension source lives in `src/`, build and release helpers live in `scripts/`, and primary documentation lives in `docs/`.
+- The repository has a build step. The main local validation commands are `PUPPETEER_SKIP_DOWNLOAD=true npm ci`, `npm run lint`, and `npm run pack:prod` from the repository root.
+- Legacy HTML injection variants still exist under `legacy/variants/`, but they are archived and no longer part of active release/version automation.
 
 ## 📁 Project Structure
 
 ```
-variants/
-  basic/                 ← Basic help button (toolbar button + popup menu)
-    helpbutton-qs.js           Main script (IIFE)
-    helpbutton-qs.config.js    Configuration template
-    loader-snippet.html        HTML to paste into client.html
-    README.md                  Deployment docs
-  bug-report/            ← Extended variant with bug-report dialog
-    helpbutton-qs.js           Main script (IIFE)
-    helpbutton-qs.config.js    Configuration template
-    loader-snippet.html        HTML to paste into client.html
-    README.md                  Deployment docs
-shared/
-  demo-server/               Express.js webhook demo (dev only, shared)
+src/                          ← Extension source code
+scripts/                      ← Build and release helpers
+docs/                         ← Extension and repo documentation
+legacy/variants/              ← Archived HTML injection variants
+shared/demo-server/           ← Express.js webhook demo (dev only, shared)
 ```
 
 ## 🚀 Deployment Model
 
 Users deploy by:
-1. Copying `helpbutton-qs.js` and `helpbutton-qs.config.js` to `C:\Program Files\Qlik\Sense\Client\custom\` on the Qlik Sense server.
-2. Adding two `<script>` tags (from `loader-snippet.html`) to `C:\Program Files\Qlik\Sense\Client\client.html`.
-3. Restarting Qlik Sense services.
+
+1. Building or downloading the compiled `helpbutton-qs.zip` extension package.
+2. Importing that zip into Qlik Sense SaaS or client-managed Qlik Sense.
+3. Placing the extension object on a sheet and configuring it in the property panel.
 
 ## ✍️ Coding Guidelines
 
-- **No build tools, transpilers, or bundlers.** Code must work as-is in the browser.
-- **No external dependencies.** Everything is vanilla JS + browser APIs.
-- **IIFE pattern.** All code must be wrapped in `(function () { 'use strict'; ... })();` to avoid polluting the global scope.
-- **ES5 compatible** — use `var`, not `let`/`const`. Use function expressions, not arrow functions.
-- Keep each variant **fully self-contained** — no shared imports between variants.
-- Configuration is read from `window.helpButtonQsConfig`, merged with `DEFAULT_CONFIG` defaults.
-- DOM manipulation targets Qlik Sense's toolbar structure (`.qs-toolbar`, `#qv-toolbar-search-toggle`, etc.).
+- Keep changes focused on the active extension implementation in `src/` unless the task explicitly targets archived legacy variants.
+- Preserve the existing root build and packaging flow built around Nebula, `scripts/post-build.mjs`, `scripts/zip-extension.mjs`, and `scripts/rc-version-helper.mjs`.
+- Follow the existing code style: modern JavaScript modules for the extension, minimal unrelated reformatting, and narrow diffs.
+- When changing docs or workflows, update root-first paths rather than reintroducing `extension/` assumptions.
 
 ## 🔄 Versioning
 
 - Versions are managed by **release-please** via conventional commits.
-- The `@version` JSDoc tag in each variant's `helpbutton-qs.js` is updated automatically by release-please.
-- Both variants share the same version number.
+- The active version files are the root `package.json` and `src/meta.json`.
+- Archived legacy variants are no longer included in active release-please version bumps or release packaging.
 - Use [Conventional Commits](https://www.conventionalcommits.org/) for all commit messages:
   - `feat:` for new features
   - `fix:` for bug fixes
@@ -73,4 +63,5 @@ Users deploy by:
 
 - Do not commit `node_modules/`, build artifacts, or IDE-specific files.
 - The `shared/demo-server/` directory is for development/testing only — it is not included in release packages.
+- The `legacy/variants/` tree is archival. Do not expand or modernize it unless the task explicitly targets legacy maintenance.
 - Keep diffs focused on the requested change — avoid drive-by formatting.
