@@ -89,6 +89,44 @@ Important nuance:
 
 ### Template placeholders
 
+**Template placeholders** (also called template fields) are dynamic `{{…}}` tokens that you can embed in URL strings throughout HelpButton.qs. At runtime, these tokens are replaced with live values from the current Qlik Sense session — such as the app ID, sheet ID, or user identity.
+
+#### What they are
+
+Template placeholders use double-curly-brace syntax: `{{fieldName}}`. For example:
+
+```text
+https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}
+```
+
+When a user clicks a link containing these placeholders, the extension resolves them based on the current context and navigates to the resulting URL.
+
+#### When they are used
+
+Template placeholders work in any URL field across HelpButton.qs:
+
+- **Menu item URLs** — Link actions in the help menu popup
+- **Bug report webhook URLs** — The endpoint that receives bug report payloads
+- **Feedback webhook URLs** — The endpoint that receives feedback payloads
+
+They let you build context-aware links without hardcoding app-specific or user-specific values in the property panel.
+
+#### How they work
+
+1. **At configuration time**: You enter a URL pattern containing one or more `{{…}}` placeholders in the property panel
+2. **At startup**: The extension fetches user identity from the platform API and caches it (client-managed: `/qps/user`, Cloud: `/api/v1/users/me`)
+3. **At click time**: When the user clicks a menu item or submits a dialog:
+   - The extension parses the current browser URL to extract `appId` and `sheetId`
+   - The extension reads the cached user identity
+   - All `{{…}}` placeholders in the URL are replaced with their resolved values
+   - If a placeholder cannot be resolved, it is replaced with an empty string
+   - Repeated slashes in the path are collapsed to a single slash
+   - The user is navigated to the resolved URL
+
+For more complete documentation on template fields, including syntax, fallback behavior, and debugging, see [Template Fields](./template-fields.md).
+
+#### Currently supported placeholders
+
 The currently supported template placeholders are:
 
 | Placeholder         | Client-managed    | Qlik Cloud         |
