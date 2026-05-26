@@ -542,40 +542,14 @@ export function openBugReportDialog(config, platformType) {
           "</span>";
 
         try {
-          // Capture a single instant so all payload timestamps are consistent.
-          const now = new Date();
-
-          // Build payload context using only payloadFields, remapping
-          // keys via payloadKeyNames so users can choose lowercase etc.
-          const keyNames = config.payloadKeyNames || {};
-          const payloadContext = {};
-          for (const f of payloadFields) {
-            if (context[f] !== undefined) {
-              const key = (keyNames[f] && keyNames[f].trim()) || f;
-              payloadContext[key] = context[f];
-            }
-          }
-
-          // Re-format payload context timestamp using the payload format
-          // (dialog context may use a different format for display).
-          if (payloadFields.includes("timestamp")) {
-            const tsKey =
-              (keyNames.timestamp && keyNames.timestamp.trim()) || "timestamp";
-            payloadContext[tsKey] = formatTimestamp(
-              now,
-              payloadTimestampFormat,
-            );
-          }
-
-          const payload = {
-            timestamp: formatTimestamp(now, payloadTimestampFormat),
-            context: payloadContext,
-            description: descriptionTextarea.value.trim(),
-          };
-
-          if (enableSeverity && selectedSeverity) {
-            payload.severity = selectedSeverity;
-          }
+          const payload = buildPayload(
+            context,
+            config,
+            payloadFields,
+            descriptionTextarea.value.trim(),
+            enableSeverity ? selectedSeverity : null,
+            payloadTimestampFormat,
+          );
 
           const headers = buildAuthHeaders(authStrategy, {
             authToken,

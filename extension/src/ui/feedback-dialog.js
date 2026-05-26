@@ -496,45 +496,14 @@ export function openFeedbackDialog(config, platformType) {
           "</span>";
 
         try {
-          // Capture a single instant so all payload timestamps are consistent.
-          const now = new Date();
-
-          // Build payload context using only payloadFields, remapping
-          // keys via payloadKeyNames so users can choose lowercase etc.
-          const keyNames = config.payloadKeyNames || {};
-          const payloadContext = {};
-          for (const f of payloadFields) {
-            if (context[f] !== undefined) {
-              const key = (keyNames[f] && keyNames[f].trim()) || f;
-              payloadContext[key] = context[f];
-            }
-          }
-
-          // Re-format payload context timestamp using the payload format
-          // (dialog context may use a different format for display).
-          if (payloadFields.includes("timestamp")) {
-            const tsKey =
-              (keyNames.timestamp && keyNames.timestamp.trim()) || "timestamp";
-            payloadContext[tsKey] = formatTimestamp(
-              now,
-              payloadTimestampFormat,
-            );
-          }
-
-          const payload = {
-            timestamp: formatTimestamp(now, payloadTimestampFormat),
-            context: payloadContext,
-          };
-
-          if (enableRating && selectedRating > 0) {
-            payload.rating = selectedRating;
-          }
-          if (enableComment && commentTextarea) {
-            const trimmedComment = commentTextarea.value.trim();
-            if (trimmedComment.length > 0) {
-              payload.comment = trimmedComment;
-            }
-          }
+          const payload = buildPayload(
+            context,
+            config,
+            payloadFields,
+            enableRating ? selectedRating : 0,
+            enableComment && commentTextarea ? commentTextarea.value.trim() : "",
+            payloadTimestampFormat,
+          );
 
           const headers = buildAuthHeaders(authStrategy, {
             authToken,

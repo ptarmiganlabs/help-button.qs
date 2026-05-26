@@ -218,7 +218,15 @@ export function showPayloadViewer(
     getTranslation("payloadViewerAriaLabel"),
   );
 
+  const handleEscapeKey = (e) => {
+    if (e.key !== "Escape") return;
+    e.preventDefault();
+    e.stopPropagation();
+    closeViewer();
+  };
+
   const closeViewer = () => {
+    document.removeEventListener("keydown", handleEscapeKey, true);
     overlay.remove();
     if (focusTarget) focusTarget.focus();
   };
@@ -324,11 +332,8 @@ export function showPayloadViewer(
     if (e.target === overlay) closeViewer();
   });
 
-  modal.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeViewer();
-  });
-
   document.body.appendChild(overlay);
+  document.addEventListener("keydown", handleEscapeKey, true);
   modal.setAttribute("tabindex", "-1");
   modal.focus();
 }
