@@ -328,7 +328,7 @@ sequenceDiagram
     D->>W: POST JSON payload with headers
 ```
 
-### Feedback webhook and authentication
+### Bug report webhook and authentication
 
 The bug-report dialog supports four authentication strategies:
 
