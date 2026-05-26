@@ -123,6 +123,10 @@ flowchart LR
     end
 ```
 
+### Menu Item Documentation
+
+* **App developers**: See [Menu Items — App Developer Guide](docs/menu-items-app-developer.md) for a complete walkthrough of configuring menu items from the property panel, including action types, template fields, dialog payload options, variable actions, and multi-instance behavior.
+
 ## Tooltips
 
 **Tooltips** let you attach floating help icons to any Qlik Sense chart object or arbitrary page element. Each icon triggers a hover popup (Markdown content) and optionally a click-to-open detail dialog. Right-click any tooltip in the property panel to **Duplicate** it — this copies all of its settings into a new tooltip, making it easy to create similar tooltips with only minor differences.
