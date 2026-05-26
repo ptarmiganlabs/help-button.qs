@@ -82,6 +82,8 @@ It is valid to place several HelpButton.qs extension objects on the same sheet. 
 2. **Qlik Sense SaaS**: Upload the extension in the Management Console under **Extensions**.
 3. **Qlik Sense Client-Managed**: Import the zip file via the Qlik Management Console (QMC) under the **Extensions** section.
 
+For app-developer guidance on using the extension across both platforms, see [Qlik Sense Client-Managed vs Qlik Cloud — Sense App Developer Guide](./docs/client-managed-vs-cloud-app-developer.md).
+
 ## Usage
 
 1. Open your Qlik Sense application in Edit Mode.
