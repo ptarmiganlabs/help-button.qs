@@ -1,6 +1,6 @@
 # helpbutton.qs
 
-**helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
+**helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Qlik Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
 
 ## ❤️ Support the project
 
@@ -112,7 +112,7 @@ When configuring the **Menu Items** in the Property Panel, you can add multiple 
    - Star rating and comment fields can each be independently enabled or disabled via the property panel.
    - When the comment field is enabled, a configurable maximum character length is enforced, with a live remaining-characters counter shown in the dialog.
    - Automatically gathers environment context (same fields as the bug report) and POSTs the feedback data as JSON to a configured webhook endpoint.
-   - Like bug reports, supports custom HTTP headers and customizable timestamp formatting.
+   - Like bug reports, supports four authentication strategies and customizable timestamp formatting.
 4. **Set/Toggle Variable (`setVariable`)**:
    - Directly control Qlik Sense app variable values from the help menu, without leaving the app or opening an external page.
    - Two sub-modes, selected via the **Variable Settings** section in the property panel:
