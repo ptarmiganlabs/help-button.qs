@@ -346,7 +346,7 @@ Important notes:
 - There is no built-in retry logic.
 - Browser networking rules such as CORS still apply.
 
-### Feedback dialog options
+### Bug report dialog options
 
 | Setting | Default | Behavior |
 | --- | --- | --- |
