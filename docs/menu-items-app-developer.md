@@ -9,7 +9,7 @@ HelpButton.qs menu items turn the toolbar help button into a configurable action
 
 This guide explains the feature from an app developer's perspective: what to configure in the property panel, how each action behaves at runtime, and which edge cases matter when you design a production-ready help menu.
 
-All behavioral statements in this guide are based on the source code in `extension/src`, which is the authoritative implementation.
+All behavioral statements in this guide are based on the source code in `src`, which is the authoritative implementation.
 
 ---
 
@@ -41,10 +41,10 @@ The **Menu Items** section controls the contents of the HelpButton.qs popup menu
 
 Think of the feature in two layers:
 
-| Layer | Configured where | What it controls |
-| --- | --- | --- |
+| Layer                              | Configured where          | What it controls                                                                   |
+| ---------------------------------- | ------------------------- | ---------------------------------------------------------------------------------- |
 | **Toolbar button and popup shell** | Button and Popup sections | Button label, button icon, button colors, popup title, popup border/header styling |
-| **Menu items** | Menu Items section | The clickable commands inside the popup |
+| **Menu items**                     | Menu Items section        | The clickable commands inside the popup                                            |
 
 The Menu Items section is array-based, which means you can:
 
@@ -82,12 +82,12 @@ This means you configure the menu from the sheet object in edit mode, but you ca
 
 The property panel exposes different groups depending on the selected action:
 
-| Action | Extra settings that appear |
-| --- | --- |
-| **Open URL** | URL, Link target |
-| **Open Bug Report dialog** | Bug Report Settings |
-| **Open Feedback dialog** | Feedback Settings |
-| **Set/Toggle variable** | Variable Settings |
+| Action                     | Extra settings that appear |
+| -------------------------- | -------------------------- |
+| **Open URL**               | URL, Link target           |
+| **Open Bug Report dialog** | Bug Report Settings        |
+| **Open Feedback dialog**   | Feedback Settings          |
+| **Set/Toggle variable**    | Variable Settings          |
 
 ---
 
@@ -123,15 +123,15 @@ Important implementation detail:
 
 Every menu item starts with the same common settings.
 
-| Setting | Applies to | Notes |
-| --- | --- | --- |
-| **Label** | All actions | Property-panel item title and popup text. Supports expressions. Max 128 characters. |
-| **Action** | All actions | One of: Open URL, Open Bug Report dialog, Open Feedback dialog, Set/Toggle variable. |
-| **URL** | Open URL only | Supports expressions and `{{template}}` fields. Max 2048 characters. |
-| **Link target** | Open URL only | `_blank` = new tab, `_self` = same tab. |
-| **Show condition** | All actions | Optional expression or literal. Controls whether the item is rendered. |
-| **Icon** | All actions | Select from built-in icon set. |
-| **Item Colors** | All actions | Per-item icon, background, hover background, and text colors. |
+| Setting            | Applies to    | Notes                                                                                |
+| ------------------ | ------------- | ------------------------------------------------------------------------------------ |
+| **Label**          | All actions   | Property-panel item title and popup text. Supports expressions. Max 128 characters.  |
+| **Action**         | All actions   | One of: Open URL, Open Bug Report dialog, Open Feedback dialog, Set/Toggle variable. |
+| **URL**            | Open URL only | Supports expressions and `{{template}}` fields. Max 2048 characters.                 |
+| **Link target**    | Open URL only | `_blank` = new tab, `_self` = same tab.                                              |
+| **Show condition** | All actions   | Optional expression or literal. Controls whether the item is rendered.               |
+| **Icon**           | All actions   | Select from built-in icon set.                                                       |
+| **Item Colors**    | All actions   | Per-item icon, background, hover background, and text colors.                        |
 
 Supported menu item icons:
 
@@ -160,15 +160,15 @@ The **Show condition** field is the main way to hide or show a menu item dynamic
 
 Examples:
 
-| Show condition | Result |
-| --- | --- |
-| *(empty)* | Always visible |
-| `1` | Always visible |
-| `0` | Hidden |
-| `=False()` | Hidden |
-| `=True()` | Visible |
+| Show condition                   | Result                                       |
+| -------------------------------- | -------------------------------------------- |
+| _(empty)_                        | Always visible                               |
+| `1`                              | Always visible                               |
+| `0`                              | Hidden                                       |
+| `=False()`                       | Hidden                                       |
+| `=True()`                        | Visible                                      |
 | `=GetSelectedCount(Country) > 0` | Visible only when a Country selection exists |
-| `=if(vCanSubmit = 1, 1, 0)` | Visible only when `vCanSubmit` is `1` |
+| `=if(vCanSubmit = 1, 1, 0)`      | Visible only when `vCanSubmit` is `1`        |
 
 How it works in practice:
 
@@ -182,12 +182,12 @@ How it works in practice:
 
 Each menu item has its own color settings:
 
-| Setting | Purpose |
-| --- | --- |
-| **Icon** | SVG icon color |
-| **Background** | Default background color |
+| Setting              | Purpose                   |
+| -------------------- | ------------------------- |
+| **Icon**             | SVG icon color            |
+| **Background**       | Default background color  |
 | **Hover background** | Background color on hover |
-| **Text** | Label color |
+| **Text**             | Label color               |
 
 These are applied directly to the popup item at runtime.
 
@@ -244,10 +244,10 @@ If the configured URL is unsafe, the item is not allowed to navigate.
 
 The **Link target** field controls where the URL opens:
 
-| Value | Behavior |
-| --- | --- |
-| `_blank` | Opens in a new tab |
-| `_self` | Opens in the current tab |
+| Value    | Behavior                 |
+| -------- | ------------------------ |
+| `_blank` | Opens in a new tab       |
+| `_self`  | Opens in the current tab |
 
 ### Expressions and template fields
 
@@ -286,12 +286,12 @@ The implementation supports the same template placeholders in:
 
 Supported placeholders:
 
-| Placeholder | Client-managed | Cloud |
-| --- | --- | --- |
-| `{{appId}}` | Current app GUID | Current app GUID |
-| `{{sheetId}}` | Current sheet ID | Current sheet ID |
-| `{{userId}}` | Logged-in user ID | User email address |
-| `{{userDirectory}}` | User directory, for example `INTERNAL` | Empty string |
+| Placeholder         | Client-managed                         | Cloud              |
+| ------------------- | -------------------------------------- | ------------------ |
+| `{{appId}}`         | Current app GUID                       | Current app GUID   |
+| `{{sheetId}}`       | Current sheet ID                       | Current sheet ID   |
+| `{{userId}}`        | Logged-in user ID                      | User email address |
+| `{{userDirectory}}` | User directory, for example `INTERNAL` | Empty string       |
 
 Notes:
 
@@ -332,12 +332,12 @@ sequenceDiagram
 
 The bug-report dialog supports four authentication strategies:
 
-| Strategy | What the code sends |
-| --- | --- |
-| **None** | No auth headers |
-| **Authorization header** | `Authorization: Bearer <token>` |
-| **Sense session (XRF key)** | Generated `X-Qlik-Xrfkey` header |
-| **Custom headers** | Exact name/value pairs from the property panel |
+| Strategy                    | What the code sends                            |
+| --------------------------- | ---------------------------------------------- |
+| **None**                    | No auth headers                                |
+| **Authorization header**    | `Authorization: Bearer <token>`                |
+| **Sense session (XRF key)** | Generated `X-Qlik-Xrfkey` header               |
+| **Custom headers**          | Exact name/value pairs from the property panel |
 
 Important notes:
 
@@ -348,14 +348,14 @@ Important notes:
 
 ### Bug report dialog options
 
-| Setting | Default | Behavior |
-| --- | --- | --- |
-| **Show severity picker (Low / Medium / High)** | On | Adds optional severity buttons to the dialog |
-| **Max description length** | 1000 | Character limit for the end-user description field |
-| **Dialog title override** | Empty | Overrides the global bug-report title when set |
-| **Dialog timestamp format** | Default dialog format | Used for timestamp shown in the dialog |
-| **Payload timestamp format** | Default payload format | Used for timestamp sent in the payload |
-| **Show 'Show payload' button** | Off | Opens a payload preview with the resolved URL and headers |
+| Setting                                        | Default                | Behavior                                                  |
+| ---------------------------------------------- | ---------------------- | --------------------------------------------------------- |
+| **Show severity picker (Low / Medium / High)** | On                     | Adds optional severity buttons to the dialog              |
+| **Max description length**                     | 1000                   | Character limit for the end-user description field        |
+| **Dialog title override**                      | Empty                  | Overrides the global bug-report title when set            |
+| **Dialog timestamp format**                    | Default dialog format  | Used for timestamp shown in the dialog                    |
+| **Payload timestamp format**                   | Default payload format | Used for timestamp sent in the payload                    |
+| **Show 'Show payload' button**                 | Off                    | Opens a payload preview with the resolved URL and headers |
 
 Notes:
 
@@ -367,10 +367,10 @@ Notes:
 
 Bug report items let you configure the same field catalog in two separate ways:
 
-| Group | What it controls |
-| --- | --- |
-| **Show in Dialog** | Which read-only context fields are visible to the user in the form |
-| **Include in Payload** | Which context fields are sent to the webhook |
+| Group                  | What it controls                                                   |
+| ---------------------- | ------------------------------------------------------------------ |
+| **Show in Dialog**     | Which read-only context fields are visible to the user in the form |
+| **Include in Payload** | Which context fields are sent to the webhook                       |
 
 These groups are independent.
 
@@ -384,23 +384,23 @@ That means you can, for example:
 
 These fields are available in both the bug-report and feedback dialogs:
 
-| Field | Default | Notes |
-| --- | --- | --- |
-| `userName` | On | Display name of the logged-in user |
-| `platform` | On | `client-managed` or `cloud` |
-| `appId` | On | Current app GUID |
-| `sheetId` | On | Current sheet ID |
-| `urlPath` | On | Current browser path and query string |
-| `timestamp` | On | Timestamp formatted using the selected format |
-| `userId` | Off | Login identifier; Cloud maps this to the user's email |
-| `userDirectory` | Off | Directory name on client-managed; unavailable on Cloud |
-| `senseVersion` | Off | Qlik Sense version; shown as `N/A` on Cloud |
-| `browser` | Off | Browser user-agent string |
-| `tenantId` | Off | Tenant identifier when available |
-| `status` | Off | User status when available |
-| `picture` | Off | User picture URL when available |
-| `preferredZoneinfo` | Off | User time-zone information when available |
-| `roles` | Off | User roles when available |
+| Field               | Default | Notes                                                  |
+| ------------------- | ------- | ------------------------------------------------------ |
+| `userName`          | On      | Display name of the logged-in user                     |
+| `platform`          | On      | `client-managed` or `cloud`                            |
+| `appId`             | On      | Current app GUID                                       |
+| `sheetId`           | On      | Current sheet ID                                       |
+| `urlPath`           | On      | Current browser path and query string                  |
+| `timestamp`         | On      | Timestamp formatted using the selected format          |
+| `userId`            | Off     | Login identifier; Cloud maps this to the user's email  |
+| `userDirectory`     | Off     | Directory name on client-managed; unavailable on Cloud |
+| `senseVersion`      | Off     | Qlik Sense version; shown as `N/A` on Cloud            |
+| `browser`           | Off     | Browser user-agent string                              |
+| `tenantId`          | Off     | Tenant identifier when available                       |
+| `status`            | Off     | User status when available                             |
+| `picture`           | Off     | User picture URL when available                        |
+| `preferredZoneinfo` | Off     | User time-zone information when available              |
+| `roles`             | Off     | User roles when available                              |
 
 ### Payload key names
 
@@ -469,15 +469,15 @@ The webhook URL also supports the same template fields described earlier.
 
 ### Dialog options
 
-| Setting | Default | Behavior |
-| --- | --- | --- |
-| **Show star rating (1-5)** | On | Displays a 1-5 star rating control |
-| **Show free-text comment field** | On | Displays a comment field |
-| **Max comment length** | 500 | Character limit for the comment field |
-| **Dialog title override** | Empty | Overrides the global feedback title |
-| **Dialog timestamp format** | Default dialog format | Affects the dialog-only timestamp |
-| **Payload timestamp format** | Default payload format | Affects the sent timestamp |
-| **Show 'Show payload' button** | Off | Opens a preview of payload, headers, and resolved URL |
+| Setting                          | Default                | Behavior                                              |
+| -------------------------------- | ---------------------- | ----------------------------------------------------- |
+| **Show star rating (1-5)**       | On                     | Displays a 1-5 star rating control                    |
+| **Show free-text comment field** | On                     | Displays a comment field                              |
+| **Max comment length**           | 500                    | Character limit for the comment field                 |
+| **Dialog title override**        | Empty                  | Overrides the global feedback title                   |
+| **Dialog timestamp format**      | Default dialog format  | Affects the dialog-only timestamp                     |
+| **Payload timestamp format**     | Default payload format | Affects the sent timestamp                            |
+| **Show 'Show payload' button**   | Off                    | Opens a preview of payload, headers, and resolved URL |
 
 Submit behavior is different from bug reports:
 
@@ -539,19 +539,19 @@ Use **Set/Toggle variable** when the help menu should change app state directly,
 
 The variable action is executed through the Qlik app object and supports two modes.
 
-| Mode | What it does |
-| --- | --- |
+| Mode                | What it does                                  |
+| ------------------- | --------------------------------------------- |
 | **Set variable(s)** | Sets one or more variables to specific values |
-| **Toggle variable** | Flips one variable between two values |
+| **Toggle variable** | Flips one variable between two values         |
 
 ### Set variable(s)
 
 In **Set** mode, the item contains an array of assignments:
 
-| Field | Purpose |
-| --- | --- |
-| **Variable name** | Qlik variable to update |
-| **Value** | String value to set; supports expressions |
+| Field             | Purpose                                   |
+| ----------------- | ----------------------------------------- |
+| **Variable name** | Qlik variable to update                   |
+| **Value**         | String value to set; supports expressions |
 
 Behavior:
 
@@ -561,20 +561,20 @@ Behavior:
 
 Example:
 
-| Variable | Value |
-| --- | --- |
-| `vShowTooltip` | `1` |
-| `vHelpMode` | `expanded` |
+| Variable       | Value      |
+| -------------- | ---------- |
+| `vShowTooltip` | `1`        |
+| `vHelpMode`    | `expanded` |
 
 ### Toggle variable
 
 In **Toggle** mode, the item uses one variable and three values:
 
-| Field | Purpose |
-| --- | --- |
-| **Variable name** | Variable to read and update |
-| **Value A** | First toggle value |
-| **Value B** | Second toggle value |
+| Field                          | Purpose                                                 |
+| ------------------------------ | ------------------------------------------------------- |
+| **Variable name**              | Variable to read and update                             |
+| **Value A**                    | First toggle value                                      |
+| **Value B**                    | Second toggle value                                     |
 | **Default value (safety net)** | Fallback when the current value matches neither A nor B |
 
 Toggle logic:
@@ -587,12 +587,12 @@ Toggle logic:
 
 Example:
 
-| Field | Value |
-| --- | --- |
+| Field         | Value          |
+| ------------- | -------------- |
 | Variable name | `vShowTooltip` |
-| Value A | `1` |
-| Value B | `0` |
-| Default value | `1` |
+| Value A       | `1`            |
+| Value B       | `0`            |
+| Default value | `1`            |
 
 This makes the menu item behave like a tooltip on/off switch.
 
@@ -711,20 +711,20 @@ Check these:
 
 ## Field Limits and Defaults
 
-| Setting | Limit or default |
-| --- | --- |
-| Label | Max 128 characters |
-| URL | Max 2048 characters |
-| Link target | `_blank` by default |
-| Default action | `link` |
-| Default icon | `help` |
-| Bug-report webhook URL | Max 2048 characters |
-| Feedback webhook URL | Max 2048 characters |
-| Bearer token | Max 8192 characters |
-| Bug-report description length | Default 1000, min 1, max 16384 |
-| Feedback comment length | Default 500, min 1, max 16384 |
-| Variable name | Max 256 characters |
-| Variable value / toggle values | Max 4096 characters |
+| Setting                        | Limit or default               |
+| ------------------------------ | ------------------------------ |
+| Label                          | Max 128 characters             |
+| URL                            | Max 2048 characters            |
+| Link target                    | `_blank` by default            |
+| Default action                 | `link`                         |
+| Default icon                   | `help`                         |
+| Bug-report webhook URL         | Max 2048 characters            |
+| Feedback webhook URL           | Max 2048 characters            |
+| Bearer token                   | Max 8192 characters            |
+| Bug-report description length  | Default 1000, min 1, max 16384 |
+| Feedback comment length        | Default 500, min 1, max 16384  |
+| Variable name                  | Max 256 characters             |
+| Variable value / toggle values | Max 4096 characters            |
 
 Default-on context fields for bug report and feedback:
 

@@ -9,8 +9,7 @@ on Windows and Qlik Cloud.
 Contents
 --------
 - helpbutton-qs.zip: The compiled Qlik Sense extension
-- README-EXTENSION.pdf: Extension-specific documentation (from extension/README.md)
-- README.pdf: Main repository documentation (from root README.md)
+- README.pdf: Full HelpButton.qs documentation
 - readme.txt: This file
 - LICENSE: MIT License
 
