@@ -13,7 +13,7 @@ This is a **dispatcher agent** that routes your request to the appropriate speci
 
 - **Creating new workflows**: Routes to `create` prompt
 - **Updating existing workflows**: Routes to `update` prompt
-- **Debugging workflows**: Routes to `debug` prompt  
+- **Debugging workflows**: Routes to `debug` prompt
 - **Upgrading workflows**: Routes to `upgrade-agentic-workflows` prompt
 - **Creating report-generating workflows**: Routes to `report` prompt — consult this whenever the workflow posts status updates, audits, analyses, or any structured output as issues, discussions, or comments
 - **Creating shared components**: Routes to `create-shared-agentic-workflow` prompt
@@ -57,112 +57,134 @@ When you interact with this agent, it will:
 ## Available Prompts
 
 ### Create New Workflow
+
 **Load when**: User wants to create a new workflow from scratch, add automation, or design a workflow that doesn't exist yet
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/create-agentic-workflow.md
 
 **Use cases**:
+
 - "Create a workflow that triages issues"
 - "I need a workflow to label pull requests"
 - "Design a weekly research automation"
 
-### Update Existing Workflow  
+### Update Existing Workflow
+
 **Load when**: User wants to modify, improve, or refactor an existing workflow
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/update-agentic-workflow.md
 
 **Use cases**:
+
 - "Add web-fetch tool to the issue-classifier workflow"
 - "Update the PR reviewer to use discussions instead of issues"
 - "Improve the prompt for the weekly-research workflow"
 
-### Debug Workflow  
+### Debug Workflow
+
 **Load when**: User needs to investigate, audit, debug, or understand a workflow, troubleshoot issues, analyze logs, or fix errors
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/debug-agentic-workflow.md
 
 **Use cases**:
+
 - "Why is this workflow failing?"
 - "Analyze the logs for workflow X"
 - "Investigate missing tool calls in run #12345"
 
 ### Upgrade Agentic Workflows
+
 **Load when**: User wants to upgrade workflows to a new gh-aw version or fix deprecations
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/upgrade-agentic-workflows.md
 
 **Use cases**:
+
 - "Upgrade all workflows to the latest version"
 - "Fix deprecated fields in workflows"
 - "Apply breaking changes from the new release"
 
 ### Create a Report-Generating Workflow
+
 **Load when**: The workflow being created or updated produces reports — recurring status updates, audit summaries, analyses, or any structured output posted as a GitHub issue, discussion, or comment
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/report.md
 
 **Use cases**:
+
 - "Create a weekly CI health report"
 - "Post a daily security audit to Discussions"
 - "Add a status update comment to open PRs"
 
 ### Create Shared Agentic Workflow
+
 **Load when**: User wants to create a reusable workflow component or wrap an MCP server
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/create-shared-agentic-workflow.md
 
 **Use cases**:
+
 - "Create a shared component for Notion integration"
 - "Wrap the Slack MCP server as a reusable component"
 - "Design a shared workflow for database queries"
 
 ### Fix Dependabot PRs
+
 **Load when**: User needs to close or fix open Dependabot PRs that update dependencies in generated manifest files (`.github/workflows/package.json`, `.github/workflows/requirements.txt`, `.github/workflows/go.mod`)
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/dependabot.md
 
 **Use cases**:
+
 - "Fix the open Dependabot PRs for npm dependencies"
 - "Bundle and close the Dependabot PRs for workflow dependencies"
 - "Update @playwright/test to fix the Dependabot PR"
 
 ### Analyze Test Coverage
+
 **Load when**: The workflow reads, analyzes, or reports test coverage — whether triggered by a PR, a schedule, or a slash command. Always consult this prompt before designing the coverage data strategy.
 
 **Prompt file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/test-coverage.md
 
 **Use cases**:
+
 - "Create a workflow that comments coverage on PRs"
 - "Analyze coverage trends over time"
 - "Add a coverage gate that blocks PRs below a threshold"
 
 ### Render ASCII Charts in Markdown
+
 **Load when**: The workflow needs in-markdown charts (sparklines, bars, table+trend views) that must align cleanly and render reliably across GitHub surfaces, including mobile.
 
 **Reference file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/asciicharts.md
 
 **Use cases**:
+
 - "Show a compact trend chart in an issue comment"
 - "Render a dashboard table with sparkline trends"
 - "Generate aligned ASCII bars for service metrics"
 
 ### CLI Commands Reference
+
 **Load when**: The user asks how to run, compile, debug, or manage workflows from the command line; needs the MCP tool equivalent of a `gh aw` command; or is in a restricted environment (e.g., Copilot Cloud) without direct CLI access.
 
 **Reference file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/cli-commands.md
 
 **Use cases**:
+
 - "How do I trigger workflow X on the main branch?"
 - "What's the MCP equivalent of `gh aw logs`?"
 - "I'm in Copilot Cloud — how do I compile a workflow?"
 - "Show me all available gh aw commands"
 
 ### Token Consumption Optimization
+
 **Load when**: The user asks how to reduce token usage, lower workflow costs, make a workflow faster or cheaper, or measure the impact of prompt or configuration changes.
 
 **Reference file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/token-optimization.md
 
 **Use cases**:
+
 - "How do I reduce the token cost of this workflow?"
 - "My workflow is too expensive — how do I optimize it?"
 - "How do I compare token usage between two runs?"
@@ -171,11 +193,13 @@ When you interact with this agent, it will:
 - "How do I measure the impact of a prompt change?"
 
 ### Workflow Pattern Selection
+
 **Load when**: The user asks for architecture, strategy, operating model selection, or pattern recommendations for building agentic workflows.
 
 **Reference file**: https://github.com/github/gh-aw/blob/v0.75.1/.github/aw/patterns.md
 
 **Use cases**:
+
 - "Which pattern should I use for multi-repo rollout?"
 - "How should I structure this workflow architecture?"
 - "What pattern fits slash-command triage?"
