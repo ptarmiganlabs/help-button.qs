@@ -1,5 +1,69 @@
 # Changelog
 
+## [2.7.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.6.0...helpbutton-qs-v2.7.0) (2026-05-27)
+
+
+### Features
+
+* add cooldown period for new npm libraries ([bf2c821](https://github.com/ptarmiganlabs/help-button.qs/commit/bf2c8212d2171fdc3b483efd3053d48659cb57df))
+* add more icon options for help menu items and toolbar button ([ff27d4e](https://github.com/ptarmiganlabs/help-button.qs/commit/ff27d4e2d70971685486a1eca0eb25f4139ef68b))
+* Add optional payload viewer to bug report/feedback dialogs ([662fc78](https://github.com/ptarmiganlabs/help-button.qs/commit/662fc78a4777c0823aa664d45dbfc5dec0d4e573))
+* add video embed support in markdown content (@[title](url) syntax) ([7743046](https://github.com/ptarmiganlabs/help-button.qs/commit/774304646ac611124a7e59ee3f71df95ff6beabb))
+* add video embed support in tooltip and dialog markdown content ([2968b03](https://github.com/ptarmiganlabs/help-button.qs/commit/2968b03f06591558869f1942c6127534c5b72dd7))
+* **security:** do security review and take needed actions to mitigate findings ([2e8cf74](https://github.com/ptarmiganlabs/help-button.qs/commit/2e8cf74b8f985d4b120340b1ccf67c0fba8beea3))
+
+
+### Bug Fixes
+
+* address code review - remove autoplay, tighten placeholder regex, improve slot pattern ([18aca01](https://github.com/ptarmiganlabs/help-button.qs/commit/18aca0103f1ba1b3a2f566c302a5a3df48ccc012))
+* address latest payload viewer review comments ([c72769e](https://github.com/ptarmiganlabs/help-button.qs/commit/c72769e3579f9eaee713195f28350a14bd99a15e))
+* address payload viewer review feedback ([986a6b2](https://github.com/ptarmiganlabs/help-button.qs/commit/986a6b2be04ba75156474020e9c4e37208b1e064))
+* Address PR review feedback for payload viewer ([e68cd4f](https://github.com/ptarmiganlabs/help-button.qs/commit/e68cd4f76a73fb268e5e20374079eb513d19f0ee))
+* pin checkout action in copilot setup workflow ([a21ad2d](https://github.com/ptarmiganlabs/help-button.qs/commit/a21ad2d20b6b8ed1211e5c781d3d6a0754bb1d09))
+* remove iframe sandbox attr (YouTube Error 153) and add min-width for hover popup video ([9d9a285](https://github.com/ptarmiganlabs/help-button.qs/commit/9d9a2850889eb02a962767c1fb341d5c47eead10))
+* show generated xrf key in payload viewer ([f2f7d07](https://github.com/ptarmiganlabs/help-button.qs/commit/f2f7d0727e71a9c9cc5a1fa5a57b495f0bf04074))
+* update video embed URL format for YouTube in markdown toolbar ([8b177fb](https://github.com/ptarmiganlabs/help-button.qs/commit/8b177fbe970e7a9b7d29886532e1d84740348e89))
+* Use word-boundary matching for sensitive header detection and remove unused regex params ([d54b8dc](https://github.com/ptarmiganlabs/help-button.qs/commit/d54b8dcd81671fb172bc84771c14b21d45d572f4))
+
+
+### Miscellaneous
+
+* **deps:** bump actions/checkout from 4.2.2 to 6.0.2 ([a58a593](https://github.com/ptarmiganlabs/help-button.qs/commit/a58a5933a63dfe261e04e2d87100ab8bab1235dd))
+* **deps:** bump crazy-max/ghaction-virustotal from 4.2.0 to 5.0.0 ([7d416f5](https://github.com/ptarmiganlabs/help-button.qs/commit/7d416f511c51cfbaefb965a92b7397638afac2ec))
+* **deps:** bump github/codeql-action from 4.31.7 to 4.35.5 ([f99198e](https://github.com/ptarmiganlabs/help-button.qs/commit/f99198efebf5e5f340daa0b00f52442d84fceeff))
+* **deps:** bump github/codeql-action from 4.31.7 to 4.35.5 ([563777e](https://github.com/ptarmiganlabs/help-button.qs/commit/563777eead46db0a35f4badaf73e40cb373fca97))
+* **deps:** bump googleapis/release-please-action from 4.4.0 to 5.0.0 ([c2b3ada](https://github.com/ptarmiganlabs/help-button.qs/commit/c2b3ada59454ba02743194dcdf29eea6115bd303))
+* **deps:** bump googleapis/release-please-action from 4.4.0 to 5.0.0 ([51d5442](https://github.com/ptarmiganlabs/help-button.qs/commit/51d544265a49a39a56afd52e740e1547a7e736f4))
+* **deps:** bump ncipollo/release-action from 1.20.0 to 1.21.0 ([047e4e9](https://github.com/ptarmiganlabs/help-button.qs/commit/047e4e927ae0169ddf16a2838d3f5069e4976bcf))
+* **deps:** bump ncipollo/release-action from 1.20.0 to 1.21.0 ([d647b50](https://github.com/ptarmiganlabs/help-button.qs/commit/d647b50b453d4b55c83adfedb40842a5ead448e5))
+* merge main branch (refactor-1) into PR branch, accept deletion of extension/README.md ([1d7fb2c](https://github.com/ptarmiganlabs/help-button.qs/commit/1d7fb2c2cc481b26be3afafc27e67718b9605a94))
+* update archiver to version 8.0.0 and refactor zip creation accordingly ([23498b7](https://github.com/ptarmiganlabs/help-button.qs/commit/23498b7e734003844317945e61503d835d1a209f))
+
+
+### Refactoring
+
+* major restructure of the entire repository. HTML-native helpbuttons moved to legecy folder. ([da234a8](https://github.com/ptarmiganlabs/help-button.qs/commit/da234a856977209816bab6aacf28678da66a51d2))
+
+
+### Documentation
+
+* Add app developer docs for menu items and tooltips ([fda3155](https://github.com/ptarmiganlabs/help-button.qs/commit/fda31553064a36c51780edf64755645623876790))
+* add cloud vs client-managed app guide ([c3f0d2d](https://github.com/ptarmiganlabs/help-button.qs/commit/c3f0d2d2c5f2f9dbd92663db78e520afe899f447))
+* Add menu item documentation for app developers ([e3314c6](https://github.com/ptarmiganlabs/help-button.qs/commit/e3314c6ff1afc47892f469fca9af979156408aee))
+* add property panel reference ([63dff6b](https://github.com/ptarmiganlabs/help-button.qs/commit/63dff6b8a309a8e7fe80b8206dbe43b323a5aaec))
+* add template placeholder explanation ([b44ca26](https://github.com/ptarmiganlabs/help-button.qs/commit/b44ca269cb1ff114994bbb1561dbc2c6c05b0dea))
+* document video embed feature in extension README ([3bfc6c4](https://github.com/ptarmiganlabs/help-button.qs/commit/3bfc6c45a480d27c2f8a5d96f081c11a6f5c8a35))
+* enhance property panel reference with additional sections and details ([d65ae98](https://github.com/ptarmiganlabs/help-button.qs/commit/d65ae98f4f273a4471b4e1d1e8b59c349232536d))
+* finalize property panel reference ([c383365](https://github.com/ptarmiganlabs/help-button.qs/commit/c383365615fa5abd04d47701e3725c950d6b5c85))
+* fix bug report dialog heading ([31f8ec2](https://github.com/ptarmiganlabs/help-button.qs/commit/31f8ec2986e2f05fe197f25480f9b2c6d412c9e5))
+* fix bug report webhook heading ([64b7471](https://github.com/ptarmiganlabs/help-button.qs/commit/64b74717481664d9d0a232e2a0595001479465da))
+* fix two remaining README inaccuracies (Qlik Sense product name, Feedback auth description) ([89c97a5](https://github.com/ptarmiganlabs/help-button.qs/commit/89c97a5fafeff7b04ecbd799ba3f4098ad39eeff))
+* merge main into PR branch and resolve conflict in extension/README.md ([ab30cc1](https://github.com/ptarmiganlabs/help-button.qs/commit/ab30cc1bd4e69062d4ee7b017b44fa07eb8408ba))
+* polish platform comparison guide ([c9bcd79](https://github.com/ptarmiganlabs/help-button.qs/commit/c9bcd79d80283c61adbe48587513c4f454388e43))
+* rewrite README for restructured repo — fix inaccuracies, add missing features ([f8f06ef](https://github.com/ptarmiganlabs/help-button.qs/commit/f8f06eff34306a19b92866a9d657f4cec97c9242))
+* update extension README to match current feature set ([a364ec5](https://github.com/ptarmiganlabs/help-button.qs/commit/a364ec5adadda57b35183d71099295e240407dc5))
+* update extension README to reflect current features accurately ([76bcfc0](https://github.com/ptarmiganlabs/help-button.qs/commit/76bcfc0a16f183e1df3e1df391941eaa5b2fe344))
+
 ## [2.6.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.5.7...helpbutton-qs-v2.6.0) (2026-03-31)
 
 
