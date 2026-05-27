@@ -19,25 +19,25 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Text auf der Symbolleisten-Schaltfläche */
-  buttonLabel: 'Hilfe',
+  buttonLabel: "Hilfe",
 
   /** Browser-Tooltip beim Überfahren */
-  buttonTooltip: 'Hilfemenü öffnen',
+  buttonTooltip: "Hilfemenü öffnen",
 
   /** Symbolleisten-Symbol: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Symbolleisten-Schaltfläche — Farben / Stil
   // --------------------------------------------------------------------------
   buttonStyle: {
-    backgroundColor: '#165a9b',
-    backgroundColorHover: '#12487c',
-    backgroundColorActive: '#0e3b65',
-    textColor: '#ffffff',
-    borderColor: '#0e3b65',
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+    backgroundColor: "#165a9b",
+    backgroundColorHover: "#12487c",
+    backgroundColorActive: "#0e3b65",
+    textColor: "#ffffff",
+    borderColor: "#0e3b65",
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
   },
 
   // --------------------------------------------------------------------------
@@ -45,17 +45,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Titel oben im Popup-Menü */
-  popupTitle: 'Brauchen Sie Hilfe?',
+  popupTitle: "Brauchen Sie Hilfe?",
 
   /** Popup-Farben — dunkelblauer Header mit gelbem Text */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',
-    headerTextColor: '#ffcc33',
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256",
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256",
+    headerTextColor: "#ffcc33",
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -80,23 +80,23 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Hilfe & Dokumentation',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      label: "Hilfe & Dokumentation",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Fehler melden',
-      action: 'bugReport',       // <-- Öffnet den Fehlerbericht-Dialog
-      icon: 'bug',
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      label: "Fehler melden",
+      action: "bugReport", // <-- Öffnet den Fehlerbericht-Dialog
+      icon: "bug",
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
   ],
 
@@ -105,15 +105,15 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   bugReport: {
     /** Titel oben im Fehlerbericht-Dialog */
-    dialogTitle: 'Fehler melden',
+    dialogTitle: "Fehler melden",
 
     /**
      * ERFORDERLICH — Die URL, an die die JSON-Daten des Fehlerberichts gesendet werden.
      */
-    webhookUrl: 'https://localhost:3443/api/bug-reports',
+    webhookUrl: "https://localhost:3443/api/bug-reports",
 
     /** HTTP-Methode für den Webhook-Aufruf (Standard: POST) */
-    webhookMethod: 'POST',
+    webhookMethod: "POST",
 
     /**
      * Authentifizierungsstrategie für den Webhook-Aufruf.
@@ -124,56 +124,56 @@ window.helpButtonQsConfig = {
      * type: 'custom'         — Beliebige Headers aus customHeaders-Objekt senden
      */
     auth: {
-      type: 'none',
+      type: "none",
     },
 
     /**
      * Welche Kontextfelder gesammelt und im Dialog angezeigt werden.
      */
     collectFields: [
-      'userName',
-      'userDirectory',
-      'userId',
-      'senseVersion',
-      'appId',
-      'sheetId',
-      'urlPath',
+      "userName",
+      "userDirectory",
+      "userId",
+      "senseVersion",
+      "appId",
+      "sheetId",
+      "urlPath",
     ],
 
     /** Platzhaltertext für das Beschreibungstextfeld */
-    descriptionPlaceholder: 'Beschreiben Sie das aufgetretene Problem…',
+    descriptionPlaceholder: "Beschreiben Sie das aufgetretene Problem…",
 
     /** Benachrichtigungen nach dem Absenden */
-    successMessage: 'Fehlerbericht erfolgreich gesendet!',
-    errorMessage: 'Fehlerbericht konnte nicht gesendet werden.',
+    successMessage: "Fehlerbericht erfolgreich gesendet!",
+    errorMessage: "Fehlerbericht konnte nicht gesendet werden.",
 
     /** Beschriftung über dem Beschreibungstextfeld */
-    descriptionLabel: 'Beschreibung *',
+    descriptionLabel: "Beschreibung *",
 
     /** Text auf der Abbrechen-Schaltfläche */
-    cancelButtonText: 'Abbrechen',
+    cancelButtonText: "Abbrechen",
 
     /** Text auf der Absenden-Schaltfläche */
-    submitButtonText: 'Absenden',
+    submitButtonText: "Absenden",
 
     /** Text auf der Absenden-Schaltfläche während des Sendens */
-    submittingButtonText: 'Wird gesendet…',
+    submittingButtonText: "Wird gesendet…",
 
     /** Text während des Ladens der Umgebungsinformationen */
-    loadingMessage: 'Umgebungsinformationen werden gesammelt…',
+    loadingMessage: "Umgebungsinformationen werden gesammelt…",
 
     /** Aria-Beschriftung für die Schließen-Schaltfläche (×) */
-    closeDialogAriaLabel: 'Dialog schließen',
+    closeDialogAriaLabel: "Dialog schließen",
 
     /** Beschriftungen für jedes Kontextfeld im Dialog. */
     fieldLabels: {
-      userId: 'Benutzer-ID',
-      userName: 'Benutzername',
-      userDirectory: 'Benutzerverzeichnis',
-      senseVersion: 'Qlik Sense-Version',
-      appId: 'App-ID',
-      sheetId: 'Blatt-ID',
-      urlPath: 'URL-Pfad',
+      userId: "Benutzer-ID",
+      userName: "Benutzername",
+      userDirectory: "Benutzerverzeichnis",
+      senseVersion: "Qlik Sense-Version",
+      appId: "App-ID",
+      sheetId: "Blatt-ID",
+      urlPath: "URL-Pfad",
     },
   },
 

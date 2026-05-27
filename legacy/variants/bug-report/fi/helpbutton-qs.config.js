@@ -19,25 +19,25 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Työkalupalkin painikkeessa näytettävä teksti */
-  buttonLabel: 'Ohje',
+  buttonLabel: "Ohje",
 
   /** Selaimen vihje osoitettaessa */
-  buttonTooltip: 'Avaa ohjevalikko',
+  buttonTooltip: "Avaa ohjevalikko",
 
   /** Työkalupalkin painikkeen kuvake: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Työkalupalkin painike — värit / tyyli
   // --------------------------------------------------------------------------
   buttonStyle: {
-    backgroundColor: '#165a9b',
-    backgroundColorHover: '#12487c',
-    backgroundColorActive: '#0e3b65',
-    textColor: '#ffffff',
-    borderColor: '#0e3b65',
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+    backgroundColor: "#165a9b",
+    backgroundColorHover: "#12487c",
+    backgroundColorActive: "#0e3b65",
+    textColor: "#ffffff",
+    borderColor: "#0e3b65",
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
   },
 
   // --------------------------------------------------------------------------
@@ -45,17 +45,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Ponnahdusvalikon yläosassa näytettävä otsikko */
-  popupTitle: 'Tarvitsetko apua?',
+  popupTitle: "Tarvitsetko apua?",
 
   /** Ponnahdusikkunan värit — tummansininen otsikko keltaisella tekstillä */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',
-    headerTextColor: '#ffcc33',
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256",
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256",
+    headerTextColor: "#ffcc33",
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -80,23 +80,23 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Ohje ja dokumentaatio',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      label: "Ohje ja dokumentaatio",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Ilmoita virheestä',
-      action: 'bugReport',       // <-- Avaa virheraporttidialogin
-      icon: 'bug',
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      label: "Ilmoita virheestä",
+      action: "bugReport", // <-- Avaa virheraporttidialogin
+      icon: "bug",
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
   ],
 
@@ -105,15 +105,15 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   bugReport: {
     /** Virheraporttidialogin yläosan otsikko */
-    dialogTitle: 'Ilmoita virheestä',
+    dialogTitle: "Ilmoita virheestä",
 
     /**
      * PAKOLLINEN — URL, johon virheraportin JSON-data lähetetään POST-pyynnöllä.
      */
-    webhookUrl: 'https://localhost:3443/api/bug-reports',
+    webhookUrl: "https://localhost:3443/api/bug-reports",
 
     /** HTTP-metodi webhook-kutsulle (oletus: POST) */
-    webhookMethod: 'POST',
+    webhookMethod: "POST",
 
     /**
      * Todennusstrategia webhook-kutsulle.
@@ -124,56 +124,56 @@ window.helpButtonQsConfig = {
      * type: 'custom'         — Lähetä mielivaltaisia otsikoita customHeaders-objektista
      */
     auth: {
-      type: 'none',
+      type: "none",
     },
 
     /**
      * Mitä kontekstikenttiä kerätään ja näytetään dialogissa.
      */
     collectFields: [
-      'userName',
-      'userDirectory',
-      'userId',
-      'senseVersion',
-      'appId',
-      'sheetId',
-      'urlPath',
+      "userName",
+      "userDirectory",
+      "userId",
+      "senseVersion",
+      "appId",
+      "sheetId",
+      "urlPath",
     ],
 
     /** Kuvaustekstikentän paikkamerkkiteksti */
-    descriptionPlaceholder: 'Kuvaile kohtaamaasi ongelmaa…',
+    descriptionPlaceholder: "Kuvaile kohtaamaasi ongelmaa…",
 
     /** Ilmoitusviestit lähetyksen jälkeen */
-    successMessage: 'Virheraportti lähetetty onnistuneesti!',
-    errorMessage: 'Virheraportin lähettäminen epäonnistui.',
+    successMessage: "Virheraportti lähetetty onnistuneesti!",
+    errorMessage: "Virheraportin lähettäminen epäonnistui.",
 
     /** Kuvaustekstikentän yläpuolella oleva otsikko */
-    descriptionLabel: 'Kuvaus *',
+    descriptionLabel: "Kuvaus *",
 
     /** Peruuta-painikkeen teksti */
-    cancelButtonText: 'Peruuta',
+    cancelButtonText: "Peruuta",
 
     /** Lähetä-painikkeen teksti */
-    submitButtonText: 'Lähetä',
+    submitButtonText: "Lähetä",
 
     /** Lähetä-painikkeen teksti raportin lähetyksen aikana */
-    submittingButtonText: 'Lähetetään…',
+    submittingButtonText: "Lähetetään…",
 
     /** Teksti joka näytetään ympäristökontekstin latautuessa */
-    loadingMessage: 'Kerätään ympäristötietoja…',
+    loadingMessage: "Kerätään ympäristötietoja…",
 
     /** Sulje-painikkeen (×) aria-otsikko dialogin otsikossa */
-    closeDialogAriaLabel: 'Sulje valintaikkuna',
+    closeDialogAriaLabel: "Sulje valintaikkuna",
 
     /** Dialogin kontekstikenttien otsikot. */
     fieldLabels: {
-      userId: 'Käyttäjätunnus',
-      userName: 'Käyttäjänimi',
-      userDirectory: 'Käyttäjähakemisto',
-      senseVersion: 'Qlik Sense -versio',
-      appId: 'Sovellustunnus',
-      sheetId: 'Taulukon tunnus',
-      urlPath: 'URL-polku',
+      userId: "Käyttäjätunnus",
+      userName: "Käyttäjänimi",
+      userDirectory: "Käyttäjähakemisto",
+      senseVersion: "Qlik Sense -versio",
+      appId: "Sovellustunnus",
+      sheetId: "Taulukon tunnus",
+      urlPath: "URL-polku",
     },
   },
 

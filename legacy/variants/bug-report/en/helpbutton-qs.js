@@ -28,38 +28,38 @@
  * @see https://github.com/ptarmiganlabs/help-button.qs
  */
 (function () {
-  'use strict';
+  "use strict";
 
   // ---------------------------------------------------------------------------
   // Configuration (merged with window.helpButtonQsConfig if present)
   // ---------------------------------------------------------------------------
   var DEFAULT_CONFIG = {
     // -- Button appearance --
-    buttonLabel: 'Help',
-    buttonTooltip: 'Open help menu',
-    buttonIcon: 'help',
+    buttonLabel: "Help",
+    buttonTooltip: "Open help menu",
+    buttonIcon: "help",
 
     // -- Toolbar button colors --
     buttonStyle: {
-      backgroundColor: '#165a9b',
-      backgroundColorHover: '#12487c',
-      backgroundColorActive: '#0e3b65',
-      textColor: '#ffffff',
-      borderColor: '#0e3b65',
-      borderRadius: '4px',
-      focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+      backgroundColor: "#165a9b",
+      backgroundColorHover: "#12487c",
+      backgroundColorActive: "#0e3b65",
+      textColor: "#ffffff",
+      borderColor: "#0e3b65",
+      borderRadius: "4px",
+      focusOutlineColor: "rgba(255, 204, 51, 0.6)",
     },
 
     // -- Popup appearance --
-    popupTitle: 'Need assistance?',
+    popupTitle: "Need assistance?",
     popupStyle: {
-      backgroundColor: '#ffffff',
-      borderColor: '#0c3256',
-      borderRadius: '8px',
-      headerBackgroundColor: '#0c3256',
-      headerTextColor: '#ffcc33',
-      separatorColor: '#e0e0e0',
-      shadowColor: 'rgba(12, 50, 86, 0.25)',
+      backgroundColor: "#ffffff",
+      borderColor: "#0c3256",
+      borderRadius: "8px",
+      headerBackgroundColor: "#0c3256",
+      headerTextColor: "#ffcc33",
+      separatorColor: "#e0e0e0",
+      shadowColor: "rgba(12, 50, 86, 0.25)",
     },
 
     // -- Menu items --
@@ -67,38 +67,38 @@
     // Items with action: 'bugReport' open the bug-report dialog instead of a URL.
     menuItems: [
       {
-        label: 'Help documentation',
-        url: 'https://help.example.com',
-        icon: 'help',
-        target: '_blank',
-        iconColor: '#165a9b',
-        bgColor: '#f0f6fc',
-        bgColorHover: '#dbeafe',
-        textColor: '#0c3256',
+        label: "Help documentation",
+        url: "https://help.example.com",
+        icon: "help",
+        target: "_blank",
+        iconColor: "#165a9b",
+        bgColor: "#f0f6fc",
+        bgColorHover: "#dbeafe",
+        textColor: "#0c3256",
       },
       {
-        label: 'Report a bug',
-        action: 'bugReport',
-        icon: 'bug',
-        iconColor: '#b45309',
-        bgColor: '#fffbeb',
-        bgColorHover: '#fef3c7',
-        textColor: '#78350f',
+        label: "Report a bug",
+        action: "bugReport",
+        icon: "bug",
+        iconColor: "#b45309",
+        bgColor: "#fffbeb",
+        bgColorHover: "#fef3c7",
+        textColor: "#78350f",
       },
     ],
 
     // -- Bug Report settings --
     bugReport: {
-      dialogTitle: 'Report a Bug',
-      webhookUrl: '',  // REQUIRED — the URL to POST the bug report to
-      webhookMethod: 'POST',
+      dialogTitle: "Report a Bug",
+      webhookUrl: "", // REQUIRED — the URL to POST the bug report to
+      webhookMethod: "POST",
 
       // Authentication strategy: 'none' | 'header' | 'sense-session' | 'custom'
       auth: {
-        type: 'none',
+        type: "none",
         // For type: 'header' — a single custom header
-        headerName: '',
-        headerValue: '',
+        headerName: "",
+        headerValue: "",
         // For type: 'custom' — arbitrary headers object
         customHeaders: {},
       },
@@ -107,60 +107,65 @@
       // Options: 'userId', 'userName', 'userDirectory', 'senseVersion',
       //          'appId', 'sheetId', 'urlPath'
       collectFields: [
-        'userName', 'userDirectory', 'userId',
-        'senseVersion', 'appId', 'sheetId', 'urlPath',
+        "userName",
+        "userDirectory",
+        "userId",
+        "senseVersion",
+        "appId",
+        "sheetId",
+        "urlPath",
       ],
 
       // Dialog style overrides
       dialogStyle: {
-        overlayColor: 'rgba(0, 0, 0, 0.5)',
-        backgroundColor: '#ffffff',
-        borderColor: '#0c3256',
-        borderRadius: '10px',
-        headerBackgroundColor: '#0c3256',
-        headerTextColor: '#ffcc33',
-        primaryButtonBg: '#165a9b',
-        primaryButtonText: '#ffffff',
-        primaryButtonHoverBg: '#12487c',
-        cancelButtonBg: '#e5e7eb',
-        cancelButtonText: '#374151',
-        cancelButtonHoverBg: '#d1d5db',
-        inputBorderColor: '#d1d5db',
-        inputBorderFocusColor: '#165a9b',
-        labelColor: '#374151',
-        shadowColor: 'rgba(12, 50, 86, 0.3)',
+        overlayColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "#ffffff",
+        borderColor: "#0c3256",
+        borderRadius: "10px",
+        headerBackgroundColor: "#0c3256",
+        headerTextColor: "#ffcc33",
+        primaryButtonBg: "#165a9b",
+        primaryButtonText: "#ffffff",
+        primaryButtonHoverBg: "#12487c",
+        cancelButtonBg: "#e5e7eb",
+        cancelButtonText: "#374151",
+        cancelButtonHoverBg: "#d1d5db",
+        inputBorderColor: "#d1d5db",
+        inputBorderFocusColor: "#165a9b",
+        labelColor: "#374151",
+        shadowColor: "rgba(12, 50, 86, 0.3)",
       },
 
       // Toast messages
-      successMessage: 'Bug report submitted successfully!',
-      errorMessage: 'Failed to submit bug report.',
+      successMessage: "Bug report submitted successfully!",
+      errorMessage: "Failed to submit bug report.",
 
       // Placeholder text for the description field
-      descriptionPlaceholder: 'Describe the issue you encountered…',
+      descriptionPlaceholder: "Describe the issue you encountered…",
 
       // UI text overrides — every visible string in the dialog
-      descriptionLabel: 'Description *',
-      cancelButtonText: 'Cancel',
-      submitButtonText: 'Submit',
-      submittingButtonText: 'Submitting…',
-      loadingMessage: 'Gathering environment info…',
-      closeDialogAriaLabel: 'Close dialog',
+      descriptionLabel: "Description *",
+      cancelButtonText: "Cancel",
+      submitButtonText: "Submit",
+      submittingButtonText: "Submitting…",
+      loadingMessage: "Gathering environment info…",
+      closeDialogAriaLabel: "Close dialog",
 
       // Labels shown next to each context field in the dialog.
       // Keys correspond to the entries in collectFields.
       fieldLabels: {
-        userId: 'User ID',
-        userName: 'User Name',
-        userDirectory: 'User Directory',
-        senseVersion: 'Qlik Sense Version',
-        appId: 'App ID',
-        sheetId: 'Sheet ID',
-        urlPath: 'URL Path',
+        userId: "User ID",
+        userName: "User Name",
+        userDirectory: "User Directory",
+        senseVersion: "Qlik Sense Version",
+        appId: "App ID",
+        sheetId: "Sheet ID",
+        urlPath: "URL Path",
       },
     },
 
     // -- Injection --
-    anchorSelector: '#top-bar-right-side',
+    anchorSelector: "#top-bar-right-side",
     pollInterval: 500,
     timeout: 30000,
     debug: false,
@@ -172,10 +177,10 @@
   // ---------------------------------------------------------------------------
   // SVG icon library (16×16 viewBox)
   // ---------------------------------------------------------------------------
-var ICONS = {
+  var ICONS = {
     help:
       '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 13A6 6 0 1 1 8 2a6 6 0 0 1 0 12z' +
-      'm-.5-3h1v1h-1V11zm.5-7a2.5 2.5 0 0 0-2.5 2.5h1A1.5 1.5 0 0 1 8 5a1.5 1.5 0 0 1 1.5 1.5' +
+      "m-.5-3h1v1h-1V11zm.5-7a2.5 2.5 0 0 0-2.5 2.5h1A1.5 1.5 0 0 1 8 5a1.5 1.5 0 0 1 1.5 1.5" +
       'c0 .827-.673 1.5-1.5 1.5-.276 0-.5.224-.5.5V10h1v-.645A2.5 2.5 0 0 0 8 4z"/>',
     bug:
       '<path d="M8 1C4.1 1 1 4.1 1 8s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 13c-3.3 0-6-2.7-6-6' +
@@ -188,88 +193,87 @@ var ICONS = {
       'm-.2 1L8 8.5 2.2 4zM2 12V4.9l6 4.6 6-4.6V12z"/>',
     link:
       '<path d="M6.9 11.1a.5.5 0 0 1-.7 0l-1.3-1.3a3 3 0 0 1 0-4.2L6.2 4.3a3 3 0 0 1 4.2 0' +
-      'l1.3 1.3a.5.5 0 0 1-.7.7L9.7 5a2 2 0 0 0-2.8 0L5.6 6.3a2 2 0 0 0 0 2.8l1.3 1.3' +
-      'a.5.5 0 0 1 0 .7zm2.2-6.2a.5.5 0 0 1 .7 0l1.3 1.3a3 3 0 0 1 0 4.2l-1.3 1.3' +
-      'a3 3 0 0 1-4.2 0L4.3 10.4a.5.5 0 0 1 .7-.7l1.3 1.3a2 2 0 0 0 2.8 0l1.3-1.3' +
+      "l1.3 1.3a.5.5 0 0 1-.7.7L9.7 5a2 2 0 0 0-2.8 0L5.6 6.3a2 2 0 0 0 0 2.8l1.3 1.3" +
+      "a.5.5 0 0 1 0 .7zm2.2-6.2a.5.5 0 0 1 .7 0l1.3 1.3a3 3 0 0 1 0 4.2l-1.3 1.3" +
+      "a3 3 0 0 1-4.2 0L4.3 10.4a.5.5 0 0 1 .7-.7l1.3 1.3a2 2 0 0 0 2.8 0l1.3-1.3" +
       'a2 2 0 0 0 0-2.8L9.1 5.6a.5.5 0 0 1 0-.7z"/>',
     star:
       '<path d="M8 1.25l1.75 3.55 3.92.57-2.84 2.77.67 3.91L8 10.27l-3.5 1.78.67-3.91' +
       'L2.33 5.37l3.92-.57L8 1.25z"/>',
     heart:
       '<path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385' +
-      '.92 1.815 2.834 3.989 6.286 6.562 3.452-2.573 5.365-4.747 6.286-6.562.955-1.886' +
+      ".92 1.815 2.834 3.989 6.286 6.562 3.452-2.573 5.365-4.747 6.286-6.562.955-1.886" +
       '.837-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z"/>',
     close:
       '<path d="M12.3 4.4a.5.5 0 0 0-.7-.7L8 7.3 4.4 3.7a.5.5 0 0 0-.7.7L7.3 8 3.7 11.6' +
       'a.5.5 0 0 0 .7.7L8 8.7l3.6 3.6a.5.5 0 0 0 .7-.7L8.7 8z"/>',
     send:
       '<path d="M1.5 1.3c-.2-.1-.5-.1-.7.1-.1.1-.2.3-.1.5l2.1 5.6L1 13.1c-.1.2 0 .4.1.5' +
-      '.1.1.3.2.4.2.1 0 .2 0 .3-.1l13-6.5c.2-.1.3-.3.3-.5s-.1-.4-.3-.5L1.5 1.3zM2.2 12.1' +
+      ".1.1.3.2.4.2.1 0 .2 0 .3-.1l13-6.5c.2-.1.3-.3.3-.5s-.1-.4-.3-.5L1.5 1.3zM2.2 12.1" +
       'l1.9-4.6h5.4L2.2 12.1zM9.5 6.5H4.1L2.2 1.9l7.3 4.6z"/>',
     lightbulb:
       '<path d="M8 1a4.5 4.5 0 0 0-1.5 8.74V11.5a1.5 1.5 0 0 0 3 0V9.74A4.5 4.5 0 0 0 8 1z' +
-      'm0 1a3.5 3.5 0 0 1 1.07 6.835.5.5 0 0 0-.32.235.5.5 0 0 0-.25.43v2a.5.5 0 0 1-1 0v-2' +
+      "m0 1a3.5 3.5 0 0 1 1.07 6.835.5.5 0 0 0-.32.235.5.5 0 0 0-.25.43v2a.5.5 0 0 1-1 0v-2" +
       'a.5.5 0 0 0-.57-.665A3.5 3.5 0 0 1 8 2zM6.5 13a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1z"/>',
     bookmark:
       '<path d="M3 1.5A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v13a.5.5 0 0 1-.74.44L8 12.47' +
-      'l-4.26 2.47A.5.5 0 0 1 3 14.5zM4.5 1a.5.5 0 0 0-.5.5v12.04l3.76-2.18a.5.5 0 0 1 .48 0' +
+      "l-4.26 2.47A.5.5 0 0 1 3 14.5zM4.5 1a.5.5 0 0 0-.5.5v12.04l3.76-2.18a.5.5 0 0 1 .48 0" +
       'L12 13.54V1.5a.5.5 0 0 0-.5-.5z"/>',
     eye:
       '<path d="M8 3.5C4.36 3.5 1.26 6.1.05 7.72a.5.5 0 0 0 0 .56C1.26 9.9 4.36 12.5 8 12.5' +
-      's6.74-2.6 7.95-4.22a.5.5 0 0 0 0-.56C14.74 6.1 11.64 3.5 8 3.5zM1.11 8C2.26 6.52 5.02' +
-      ' 4.5 8 4.5s5.74 2.02 6.89 3.5C13.74 9.48 10.98 11.5 8 11.5S2.26 9.48 1.11 8zM8 5.5' +
+      "s6.74-2.6 7.95-4.22a.5.5 0 0 0 0-.56C14.74 6.1 11.64 3.5 8 3.5zM1.11 8C2.26 6.52 5.02" +
+      " 4.5 8 4.5s5.74 2.02 6.89 3.5C13.74 9.48 10.98 11.5 8 11.5S2.26 9.48 1.11 8zM8 5.5" +
       'a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM6.5 8a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0z"/>',
     pin:
       '<path d="M9.828 2.172a2 2 0 0 1 2.828 0l1.172 1.172a2 2 0 0 1 0 2.828L11.5 8.5l.354.354' +
-      'a.5.5 0 0 1-.354.853H8.707L6.854 11.56a.5.5 0 0 1-.708 0L2.44 7.854a.5.5 0 0 1 0-.708' +
-      'L4.293 5.293V2.5a.5.5 0 0 1 .853-.354L5.5 2.5zM5.293 3.707v1.879a.5.5 0 0 1-.147.354' +
-      'L3.56 7.5 6.5 10.44l1.56-1.586a.5.5 0 0 1 .354-.147h1.879l1.879-1.879a1 1 0 0 0 0-1.414' +
+      "a.5.5 0 0 1-.354.853H8.707L6.854 11.56a.5.5 0 0 1-.708 0L2.44 7.854a.5.5 0 0 1 0-.708" +
+      "L4.293 5.293V2.5a.5.5 0 0 1 .853-.354L5.5 2.5zM5.293 3.707v1.879a.5.5 0 0 1-.147.354" +
+      "L3.56 7.5 6.5 10.44l1.56-1.586a.5.5 0 0 1 .354-.147h1.879l1.879-1.879a1 1 0 0 0 0-1.414" +
       'l-1.172-1.172a1 1 0 0 0-1.414 0z"/>',
-    'chart-bar':
-      '<path d="M1 14h14v1H1zM3 4h2v9H3zm4-3h2v12H7zm4 5h2v7h-2z"/>',
+    "chart-bar": '<path d="M1 14h14v1H1zM3 4h2v9H3zm4-3h2v12H7zm4 5h2v7h-2z"/>',
     toggle:
       '<path d="M5.5 4A3.5 3.5 0 0 0 2 7.5v1A3.5 3.5 0 0 0 5.5 12h5a3.5 3.5 0 0 0 3.5-3.5v-1 ' +
-      'A3.5 3.5 0 0 0 10.5 4h-5zM3 7.5A2.5 2.5 0 0 1 5.5 5h5A2.5 2.5 0 0 1 13 7.5v1 ' +
+      "A3.5 3.5 0 0 0 10.5 4h-5zM3 7.5A2.5 2.5 0 0 1 5.5 5h5A2.5 2.5 0 0 1 13 7.5v1 " +
       'a2.5 2.5 0 0 1-2.5 2.5h-5A2.5 2.5 0 0 1 3 8.5v-1z"/>' +
       '<circle cx="10.5" cy="8" r="2"/>',
     user:
       '<path d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM6 4a2 2 0 1 1 4 0 2 2 0 0 1-4 0z' +
-      'm-1.5 7A2.5 2.5 0 0 1 7 8.5h2A2.5 2.5 0 0 1 11.5 11v1.5a.5.5 0 0 1-1 0V11' +
+      "m-1.5 7A2.5 2.5 0 0 1 7 8.5h2A2.5 2.5 0 0 1 11.5 11v1.5a.5.5 0 0 1-1 0V11" +
       'A1.5 1.5 0 0 0 9 9.5H7A1.5 1.5 0 0 0 5.5 11v1.5a.5.5 0 0 1-1 0V11z"/>',
     flash:
       '<path d="M9.5 1a.5.5 0 0 1 .443.27l.014.03L10 1.5v.01l-.003.04-.013.09-.055.27' +
-      '-.082.31L9.5 3.5H13a.5.5 0 0 1 .39.812l-.05.05L7.5 11V8.5H4a.5.5 0 0 1-.4-.8' +
-      'l4-5.5A.5.5 0 0 1 8 2h.003L8.5 2l.028.002L9.5 1zM8.75 3L5.5 7.5h2.75a.5.5 0 0 1 .5.5' +
+      "-.082.31L9.5 3.5H13a.5.5 0 0 1 .39.812l-.05.05L7.5 11V8.5H4a.5.5 0 0 1-.4-.8" +
+      "l4-5.5A.5.5 0 0 1 8 2h.003L8.5 2l.028.002L9.5 1zM8.75 3L5.5 7.5h2.75a.5.5 0 0 1 .5.5" +
       'v1.25L12 5.5H9a.5.5 0 0 1-.47-.67L8.75 3z"/>',
     home:
       '<path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 2 8h1v5.5a.5.5 0 0 0 .5.5h3' +
-      'a.5.5 0 0 0 .5-.5V10h2v3.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V8h1a.5.5 0 0 0' +
-      ' .354-.854l-6-6zM13 7l-5-5-5 5h.5v6h2v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5' +
+      "a.5.5 0 0 0 .5-.5V10h2v3.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V8h1a.5.5 0 0 0" +
+      " .354-.854l-6-6zM13 7l-5-5-5 5h.5v6h2v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5" +
       'V13h2V7z"/>',
     settings:
       '<path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8' +
       'a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>' +
       '<path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52' +
-      'l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094' +
-      'c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64' +
-      '.902 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79' +
-      ' 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.892 3.434-.902 2.54-2.541' +
-      'l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094' +
-      'a.873.873 0 0 1-.52-1.255l.16-.292c.892-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873' +
+      "l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094" +
+      "c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64" +
+      ".902 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79" +
+      " 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.892 3.434-.902 2.54-2.541" +
+      "l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094" +
+      "a.873.873 0 0 1-.52-1.255l.16-.292c.892-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873" +
       ' 0 0 1-1.255-.52l-.094-.319z"/>',
     search:
       '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414' +
       'l-3.85-3.85zm-5.242.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>',
     bell:
       '<path d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742' +
-      '-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197' +
-      ' 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78' +
-      ' 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901' +
+      "-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197" +
+      " 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78" +
+      " 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901" +
       'a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>' +
       '<path d="M6 13a2 2 0 0 0 4 0z"/>',
     check:
       '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 13A6 6 0 1 1 8 2a6 6 0 0 1 0 12z' +
-      'm3.354-8.354a.5.5 0 0 0-.708 0L7 9.293 5.354 7.646a.5.5 0 1 0-.708.708l2 2' +
+      "m3.354-8.354a.5.5 0 0 0-.708 0L7 9.293 5.354 7.646a.5.5 0 1 0-.708.708l2 2" +
       'a.5.5 0 0 0 .708 0l4-4a.5.5 0 0 0 0-.708z"/>',
     download:
       '<path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1' +
@@ -278,30 +282,30 @@ var ICONS = {
       'a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>',
     calendar:
       '<path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2' +
-      ' 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12' +
+      " 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12" +
       'a1 1 0 0 0 1-1V4z"/>',
     lock:
       '<path d="M8 1a3 3 0 0 0-3 3v2H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7' +
       'a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm2 5V4a2 2 0 1 0-4 0v2zm-6 1h8v6H4z"/>',
     globe:
       '<path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855' +
-      'A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.27 9.27 0 0 1 .64-1.539A6.98 6.98 0 0 0' +
-      ' 1.532 4zm-2.36 1a6.96 6.96 0 0 0-.64 2.5H3.97A17 17 0 0 1 4.09 5zM1.09 8.5' +
-      'a6.96 6.96 0 0 0 .64 2.5h1.776a17 17 0 0 1-.116-2.5zm.782 3.5a6.98 6.98 0 0 0' +
-      ' 3.197 1.539A9.27 9.27 0 0 1 4.435 12zm2.07 1.923c.552 1.035 1.218 1.65 1.887 1.855' +
-      'V12H5.145a7.97 7.97 0 0 0 .468 1.068zM8.5 12v3.778c.67-.204 1.335-.82 1.887-1.855' +
-      'A7.97 7.97 0 0 0 10.855 12zm2.415 0a9.27 9.27 0 0 1-.64 1.539A6.98 6.98 0 0 0' +
-      ' 14.468 12zm2.865-1a6.96 6.96 0 0 0 .64-2.5H12.03a17 17 0 0 1 .116 2.5zM14.91 7.5' +
-      'a6.96 6.96 0 0 0-.64-2.5h-1.776a17 17 0 0 1 .116 2.5zm-.782-3.5a6.98 6.98 0 0 0' +
-      '-3.197-1.539c.263.46.5.98.64 1.539zm-2.07-1.923C11.506 1.297 10.84.682 10.17.477' +
-      'V4h2.355a7.97 7.97 0 0 0-.468-1.068zM7.5 8.5V12H4.09a16 16 0 0 1-.09-2.5H7.5z' +
-      'M7.5 4V7.5H4a16 16 0 0 1 .09-2.5H7.5zM8.5 7.5V4h3.41a16 16 0 0 1 .09 2.5H8.5z' +
+      "A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.27 9.27 0 0 1 .64-1.539A6.98 6.98 0 0 0" +
+      " 1.532 4zm-2.36 1a6.96 6.96 0 0 0-.64 2.5H3.97A17 17 0 0 1 4.09 5zM1.09 8.5" +
+      "a6.96 6.96 0 0 0 .64 2.5h1.776a17 17 0 0 1-.116-2.5zm.782 3.5a6.98 6.98 0 0 0" +
+      " 3.197 1.539A9.27 9.27 0 0 1 4.435 12zm2.07 1.923c.552 1.035 1.218 1.65 1.887 1.855" +
+      "V12H5.145a7.97 7.97 0 0 0 .468 1.068zM8.5 12v3.778c.67-.204 1.335-.82 1.887-1.855" +
+      "A7.97 7.97 0 0 0 10.855 12zm2.415 0a9.27 9.27 0 0 1-.64 1.539A6.98 6.98 0 0 0" +
+      " 14.468 12zm2.865-1a6.96 6.96 0 0 0 .64-2.5H12.03a17 17 0 0 1 .116 2.5zM14.91 7.5" +
+      "a6.96 6.96 0 0 0-.64-2.5h-1.776a17 17 0 0 1 .116 2.5zm-.782-3.5a6.98 6.98 0 0 0" +
+      "-3.197-1.539c.263.46.5.98.64 1.539zm-2.07-1.923C11.506 1.297 10.84.682 10.17.477" +
+      "V4h2.355a7.97 7.97 0 0 0-.468-1.068zM7.5 8.5V12H4.09a16 16 0 0 1-.09-2.5H7.5z" +
+      "M7.5 4V7.5H4a16 16 0 0 1 .09-2.5H7.5zM8.5 7.5V4h3.41a16 16 0 0 1 .09 2.5H8.5z" +
       'M8.5 8.5H12a16 16 0 0 1-.09 2.5H8.5z"/>',
     phone:
       '<path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77' +
-      'a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45' +
-      'l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547' +
-      'a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.459-1.657l.548-2.19' +
+      "a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45" +
+      "l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547" +
+      "a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.459-1.657l.548-2.19" +
       'a.678.678 0 0 0-.122-.58z"/>',
   };
 
@@ -321,16 +325,17 @@ var ICONS = {
       if (oVal === undefined || oVal === null) {
         result[key] = dVal;
       } else if (
-        typeof dVal === 'object' && !Array.isArray(dVal) &&
-        typeof oVal === 'object' && !Array.isArray(oVal)
+        typeof dVal === "object" &&
+        !Array.isArray(dVal) &&
+        typeof oVal === "object" &&
+        !Array.isArray(oVal)
       ) {
         // One-level deep merge for style sub-objects
         result[key] = {};
         for (var sk in dVal) {
           if (dVal.hasOwnProperty(sk)) {
-            result[key][sk] = (oVal.hasOwnProperty(sk) && oVal[sk] != null)
-              ? oVal[sk]
-              : dVal[sk];
+            result[key][sk] =
+              oVal.hasOwnProperty(sk) && oVal[sk] != null ? oVal[sk] : dVal[sk];
           }
         }
         // Also copy any extra keys the user added
@@ -348,25 +353,33 @@ var ICONS = {
 
   function log() {
     if (cfg.debug) {
-      var args = ['[helpbutton-qs]'].concat(Array.prototype.slice.call(arguments));
+      var args = ["[helpbutton-qs]"].concat(
+        Array.prototype.slice.call(arguments),
+      );
       console.log.apply(console, args);
     }
   }
 
   function makeSvg(iconKey, size, color) {
     var paths = ICONS[iconKey] || ICONS.help;
-    var fill = color ? color : 'currentColor';
+    var fill = color ? color : "currentColor";
     return (
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" ' +
-      'width="' + (size || 16) + '" height="' + (size || 16) + '" ' +
-      'fill="' + fill + '" aria-hidden="true" role="img">' +
+      'width="' +
+      (size || 16) +
+      '" height="' +
+      (size || 16) +
+      '" ' +
+      'fill="' +
+      fill +
+      '" aria-hidden="true" role="img">' +
       paths +
-      '</svg>'
+      "</svg>"
     );
   }
 
   function escapeHtml(str) {
-    var div = document.createElement('div');
+    var div = document.createElement("div");
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
   }
@@ -382,8 +395,8 @@ var ICONS = {
     // Sheet IDs can be short engine-generated IDs (e.g. "tAyTET") or GUIDs
     var sheetMatch = path.match(/\/sheet\/([^\/]+)/);
     return {
-      appId: appMatch ? appMatch[1] : '(not in an app)',
-      sheetId: sheetMatch ? sheetMatch[1] : '(no sheet selected)',
+      appId: appMatch ? appMatch[1] : "(not in an app)",
+      sheetId: sheetMatch ? sheetMatch[1] : "(no sheet selected)",
     };
   }
 
@@ -397,24 +410,27 @@ var ICONS = {
    * GET /qps/user?targetUri=<current URL> — no CSRF header needed.
    */
   function getUserInfo() {
-    return fetch('/qps/user?targetUri=' + encodeURIComponent(window.location.href))
+    return fetch(
+      "/qps/user?targetUri=" + encodeURIComponent(window.location.href),
+    )
       .then(function (resp) {
-        if (!resp.ok) throw new Error('User info request failed: ' + resp.status);
+        if (!resp.ok)
+          throw new Error("User info request failed: " + resp.status);
         return resp.json();
       })
       .then(function (data) {
         return {
-          userId: data.userId || '(unknown)',
-          userDirectory: data.userDirectory || '(unknown)',
-          userName: data.userName || '(unknown)',
+          userId: data.userId || "(unknown)",
+          userDirectory: data.userDirectory || "(unknown)",
+          userName: data.userName || "(unknown)",
         };
       })
       .catch(function (err) {
-        log('Failed to fetch user info:', err);
+        log("Failed to fetch user info:", err);
         return {
-          userId: '(unavailable)',
-          userDirectory: '(unavailable)',
-          userName: '(unavailable)',
+          userId: "(unavailable)",
+          userDirectory: "(unavailable)",
+          userName: "(unavailable)",
         };
       });
   }
@@ -424,24 +440,27 @@ var ICONS = {
    * GET /resources/autogenerated/product-info.js — parse the AMD module.
    */
   function getSenseVersion() {
-    return fetch('/resources/autogenerated/product-info.js')
+    return fetch("/resources/autogenerated/product-info.js")
       .then(function (resp) {
-        if (!resp.ok) throw new Error('Product info request failed: ' + resp.status);
+        if (!resp.ok)
+          throw new Error("Product info request failed: " + resp.status);
         return resp.text();
       })
       .then(function (text) {
         // AMD module: define([], /** ... */ { ... });
         // Strip the define wrapper to get the JSON object
         var json = text
-          .replace(/^define\(\[],\s*\/\*\*.*?\*\/\s*/s, '')
-          .replace(/\s*\);?\s*$/, '');
+          .replace(/^define\(\[],\s*\/\*\*.*?\*\/\s*/s, "")
+          .replace(/\s*\);?\s*$/, "");
         var info = JSON.parse(json);
         var comp = info.composition || {};
-        return (comp.releaseLabel || 'Unknown') + ' (v' + (comp.version || '?') + ')';
+        return (
+          (comp.releaseLabel || "Unknown") + " (v" + (comp.version || "?") + ")"
+        );
       })
       .catch(function (err) {
-        log('Failed to fetch Sense version:', err);
-        return '(unavailable)';
+        log("Failed to fetch Sense version:", err);
+        return "(unavailable)";
       });
   }
 
@@ -454,15 +473,17 @@ var ICONS = {
     var fields = cfg.bugReport.collectFields || [];
 
     // Start async calls in parallel
-    var userPromise = (
-      fields.indexOf('userId') >= 0 ||
-      fields.indexOf('userName') >= 0 ||
-      fields.indexOf('userDirectory') >= 0
-    ) ? getUserInfo() : Promise.resolve({});
+    var userPromise =
+      fields.indexOf("userId") >= 0 ||
+      fields.indexOf("userName") >= 0 ||
+      fields.indexOf("userDirectory") >= 0
+        ? getUserInfo()
+        : Promise.resolve({});
 
-    var versionPromise = (
-      fields.indexOf('senseVersion') >= 0
-    ) ? getSenseVersion() : Promise.resolve('');
+    var versionPromise =
+      fields.indexOf("senseVersion") >= 0
+        ? getSenseVersion()
+        : Promise.resolve("");
 
     return Promise.all([userPromise, versionPromise]).then(function (results) {
       var user = results[0];
@@ -471,14 +492,30 @@ var ICONS = {
       var context = {};
       fields.forEach(function (field) {
         switch (field) {
-          case 'userId':        context.userId = user.userId || '(unavailable)'; break;
-          case 'userName':      context.userName = user.userName || '(unavailable)'; break;
-          case 'userDirectory': context.userDirectory = user.userDirectory || '(unavailable)'; break;
-          case 'senseVersion':  context.senseVersion = version || '(unavailable)'; break;
-          case 'appId':         context.appId = ids.appId; break;
-          case 'sheetId':       context.sheetId = ids.sheetId; break;
-          case 'urlPath':       context.urlPath = getUrlPath(); break;
-          default:              log('Unknown collect field:', field); break;
+          case "userId":
+            context.userId = user.userId || "(unavailable)";
+            break;
+          case "userName":
+            context.userName = user.userName || "(unavailable)";
+            break;
+          case "userDirectory":
+            context.userDirectory = user.userDirectory || "(unavailable)";
+            break;
+          case "senseVersion":
+            context.senseVersion = version || "(unavailable)";
+            break;
+          case "appId":
+            context.appId = ids.appId;
+            break;
+          case "sheetId":
+            context.sheetId = ids.sheetId;
+            break;
+          case "urlPath":
+            context.urlPath = getUrlPath();
+            break;
+          default:
+            log("Unknown collect field:", field);
+            break;
         }
       });
 
@@ -495,7 +532,7 @@ var ICONS = {
    * init time from the Qlik Sense proxy API. App ID and sheet ID are parsed
    * from the current URL at resolution time (they change on SPA navigation).
    */
-  var _templateContext = { userDirectory: '', userId: '' };
+  var _templateContext = { userDirectory: "", userId: "" };
 
   /**
    * Fetch user info from the Qlik Sense proxy API and cache it for template
@@ -503,18 +540,18 @@ var ICONS = {
    * user-related template fields will resolve to empty strings.
    */
   function fetchTemplateContext() {
-    fetch('/qps/user?targetUri=' + encodeURIComponent(window.location.href))
+    fetch("/qps/user?targetUri=" + encodeURIComponent(window.location.href))
       .then(function (resp) {
-        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        if (!resp.ok) throw new Error("HTTP " + resp.status);
         return resp.json();
       })
       .then(function (data) {
-        _templateContext.userDirectory = data.userDirectory || '';
-        _templateContext.userId = data.userId || '';
-        log('Template context loaded:', JSON.stringify(_templateContext));
+        _templateContext.userDirectory = data.userDirectory || "";
+        _templateContext.userId = data.userId || "";
+        log("Template context loaded:", JSON.stringify(_templateContext));
       })
       .catch(function (err) {
-        log('Failed to fetch template context (user info):', err);
+        log("Failed to fetch template context (user info):", err);
       });
   }
 
@@ -534,7 +571,7 @@ var ICONS = {
    * @returns {string} Resolved URL.
    */
   function resolveTemplateFields(url) {
-    if (!url || url.indexOf('{{') < 0) return url;
+    if (!url || url.indexOf("{{") < 0) return url;
 
     // Parse app/sheet IDs fresh from the current URL (changes on SPA navigation)
     var path = location.pathname;
@@ -542,23 +579,23 @@ var ICONS = {
     var sheetMatch = path.match(/\/sheet\/([^\/]+)/);
 
     var resolved = url
-      .replace(/\{\{userDirectory\}\}/g, _templateContext.userDirectory || '')
-      .replace(/\{\{userId\}\}/g, _templateContext.userId || '')
-      .replace(/\{\{appId\}\}/g, appMatch ? appMatch[1] : '')
-      .replace(/\{\{sheetId\}\}/g, sheetMatch ? sheetMatch[1] : '');
+      .replace(/\{\{userDirectory\}\}/g, _templateContext.userDirectory || "")
+      .replace(/\{\{userId\}\}/g, _templateContext.userId || "")
+      .replace(/\{\{appId\}\}/g, appMatch ? appMatch[1] : "")
+      .replace(/\{\{sheetId\}\}/g, sheetMatch ? sheetMatch[1] : "");
 
     // Clean up double-slashes in the path portion (preserve the :// in protocol)
-    var protocolEnd = resolved.indexOf('://');
+    var protocolEnd = resolved.indexOf("://");
     if (protocolEnd >= 0) {
       var protocol = resolved.substring(0, protocolEnd + 3);
       var rest = resolved.substring(protocolEnd + 3);
-      rest = rest.replace(/\/{2,}/g, '/');
+      rest = rest.replace(/\/{2,}/g, "/");
       resolved = protocol + rest;
     } else {
-      resolved = resolved.replace(/\/{2,}/g, '/');
+      resolved = resolved.replace(/\/{2,}/g, "/");
     }
 
-    log('Template URL resolved:', url, '→', resolved);
+    log("Template URL resolved:", url, "→", resolved);
     return resolved;
   }
 
@@ -571,108 +608,121 @@ var ICONS = {
 
     return {
       container:
-        'display:flex;align-items:center;margin-right:8px;position:relative;',
+        "display:flex;align-items:center;margin-right:8px;position:relative;",
 
       button: [
-        'display:flex',
-        'align-items:center',
-        'gap:6px',
-        'padding:5px 14px',
-        'border:1px solid ' + bs.borderColor,
-        'border-radius:' + bs.borderRadius,
-        'background:' + bs.backgroundColor,
-        'color:' + bs.textColor,
-        'cursor:pointer',
-        'font-size:13px',
+        "display:flex",
+        "align-items:center",
+        "gap:6px",
+        "padding:5px 14px",
+        "border:1px solid " + bs.borderColor,
+        "border-radius:" + bs.borderRadius,
+        "background:" + bs.backgroundColor,
+        "color:" + bs.textColor,
+        "cursor:pointer",
+        "font-size:13px",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-        'font-weight:600',
-        'height:32px',
-        'white-space:nowrap',
-        'transition:background-color 0.15s,border-color 0.15s,box-shadow 0.15s,transform 0.1s',
-        'outline:none',
-        'box-sizing:border-box',
-        'letter-spacing:0.02em',
-        'text-shadow:0 1px 1px rgba(0,0,0,0.15)',
-        'box-shadow:0 1px 3px rgba(0,0,0,0.12)',
-      ].join(';'),
+        "font-weight:600",
+        "height:32px",
+        "white-space:nowrap",
+        "transition:background-color 0.15s,border-color 0.15s,box-shadow 0.15s,transform 0.1s",
+        "outline:none",
+        "box-sizing:border-box",
+        "letter-spacing:0.02em",
+        "text-shadow:0 1px 1px rgba(0,0,0,0.15)",
+        "box-shadow:0 1px 3px rgba(0,0,0,0.12)",
+      ].join(";"),
 
       buttonHover: [
-        'background:' + bs.backgroundColorHover,
-        'border-color:' + bs.backgroundColorHover,
-        'box-shadow:0 2px 6px rgba(0,0,0,0.18)',
-      ].join(';'),
+        "background:" + bs.backgroundColorHover,
+        "border-color:" + bs.backgroundColorHover,
+        "box-shadow:0 2px 6px rgba(0,0,0,0.18)",
+      ].join(";"),
 
       buttonActive: [
-        'background:' + bs.backgroundColorActive,
-        'border-color:' + bs.backgroundColorActive,
-        'transform:scale(0.98)',
-        'box-shadow:0 1px 2px rgba(0,0,0,0.15)',
-      ].join(';'),
+        "background:" + bs.backgroundColorActive,
+        "border-color:" + bs.backgroundColorActive,
+        "transform:scale(0.98)",
+        "box-shadow:0 1px 2px rgba(0,0,0,0.15)",
+      ].join(";"),
 
-      buttonFocus: 'box-shadow:0 0 0 3px ' + bs.focusOutlineColor + ';',
+      buttonFocus: "box-shadow:0 0 0 3px " + bs.focusOutlineColor + ";",
 
       popup: [
-        'display:none',
-        'position:absolute',
-        'top:calc(100% + 8px)',
-        'right:0',
-        'background:' + ps.backgroundColor,
-        'border:2px solid ' + ps.borderColor,
-        'border-radius:' + ps.borderRadius,
-        'box-shadow:0 10px 30px ' + ps.shadowColor + ',0 4px 12px rgba(0,0,0,0.06)',
-        'padding:0',
-        'z-index:10000',
-        'min-width:220px',
-        'box-sizing:border-box',
-        'overflow:hidden',
-      ].join(';'),
+        "display:none",
+        "position:absolute",
+        "top:calc(100% + 8px)",
+        "right:0",
+        "background:" + ps.backgroundColor,
+        "border:2px solid " + ps.borderColor,
+        "border-radius:" + ps.borderRadius,
+        "box-shadow:0 10px 30px " +
+          ps.shadowColor +
+          ",0 4px 12px rgba(0,0,0,0.06)",
+        "padding:0",
+        "z-index:10000",
+        "min-width:220px",
+        "box-sizing:border-box",
+        "overflow:hidden",
+      ].join(";"),
 
       popupHeader: [
-        'padding:10px 16px',
-        'font-weight:700',
-        'font-size:13px',
-        'color:' + ps.headerTextColor,
-        'background:' + ps.headerBackgroundColor,
-        'letter-spacing:0.04em',
-        'text-transform:uppercase',
-        'box-sizing:border-box',
-        'margin:0',
-      ].join(';'),
+        "padding:10px 16px",
+        "font-weight:700",
+        "font-size:13px",
+        "color:" + ps.headerTextColor,
+        "background:" + ps.headerBackgroundColor,
+        "letter-spacing:0.04em",
+        "text-transform:uppercase",
+        "box-sizing:border-box",
+        "margin:0",
+      ].join(";"),
 
       separator:
-        'height:0;margin:0;border:none;border-top:1px solid ' + ps.separatorColor + ';',
+        "height:0;margin:0;border:none;border-top:1px solid " +
+        ps.separatorColor +
+        ";",
 
       menuItemBase: [
-        'display:flex',
-        'align-items:center',
-        'gap:10px',
-        'padding:10px 16px',
-        'text-decoration:none',
-        'font-size:14px',
+        "display:flex",
+        "align-items:center",
+        "gap:10px",
+        "padding:10px 16px",
+        "text-decoration:none",
+        "font-size:14px",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-        'font-weight:500',
-        'transition:background 0.12s,transform 0.1s',
-        'cursor:pointer',
-        'box-sizing:border-box',
-        'border-left:3px solid transparent',
-      ].join(';'),
+        "font-weight:500",
+        "transition:background 0.12s,transform 0.1s",
+        "cursor:pointer",
+        "box-sizing:border-box",
+        "border-left:3px solid transparent",
+      ].join(";"),
     };
   }
 
   /** Build the inline style string for a specific menu item. */
   function menuItemStyle(item) {
     return (
-      buildStyles().menuItemBase + ';' +
-      'color:' + (item.textColor || '#333333') + ';' +
-      'background:' + (item.bgColor || '#ffffff') + ';'
+      buildStyles().menuItemBase +
+      ";" +
+      "color:" +
+      (item.textColor || "#333333") +
+      ";" +
+      "background:" +
+      (item.bgColor || "#ffffff") +
+      ";"
     );
   }
 
   /** Build the hover style for a specific menu item. */
   function menuItemHoverStyle(item) {
     return (
-      'background:' + (item.bgColorHover || '#f4f4f4') + ';' +
-      'border-left-color:' + (item.iconColor || '#165a9b') + ';'
+      "background:" +
+      (item.bgColorHover || "#f4f4f4") +
+      ";" +
+      "border-left-color:" +
+      (item.iconColor || "#165a9b") +
+      ";"
     );
   }
 
@@ -690,200 +740,198 @@ var ICONS = {
     var ds = cfg.bugReport.dialogStyle;
     return {
       overlay: [
-        'position:fixed',
-        'top:0',
-        'left:0',
-        'width:100%',
-        'height:100%',
-        'background:' + ds.overlayColor,
-        'z-index:10001',
-        'display:flex',
-        'align-items:center',
-        'justify-content:center',
+        "position:fixed",
+        "top:0",
+        "left:0",
+        "width:100%",
+        "height:100%",
+        "background:" + ds.overlayColor,
+        "z-index:10001",
+        "display:flex",
+        "align-items:center",
+        "justify-content:center",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-      ].join(';'),
+      ].join(";"),
 
       modal: [
-        'background:' + ds.backgroundColor,
-        'border:2px solid ' + ds.borderColor,
-        'border-radius:' + ds.borderRadius,
-        'box-shadow:0 20px 60px ' + ds.shadowColor + ',0 8px 24px rgba(0,0,0,0.1)',
-        'width:700px',
-        'max-width:90vw',
-        'max-height:90vh',
-        'overflow-y:auto',
-        'box-sizing:border-box',
-        'position:relative',
-      ].join(';'),
+        "background:" + ds.backgroundColor,
+        "border:2px solid " + ds.borderColor,
+        "border-radius:" + ds.borderRadius,
+        "box-shadow:0 20px 60px " +
+          ds.shadowColor +
+          ",0 8px 24px rgba(0,0,0,0.1)",
+        "width:700px",
+        "max-width:90vw",
+        "max-height:90vh",
+        "overflow-y:auto",
+        "box-sizing:border-box",
+        "position:relative",
+      ].join(";"),
 
       header: [
-        'display:flex',
-        'align-items:center',
-        'justify-content:space-between',
-        'padding:14px 20px',
-        'background:' + ds.headerBackgroundColor,
-        'color:' + ds.headerTextColor,
-        'font-weight:700',
-        'font-size:15px',
-        'letter-spacing:0.04em',
-        'text-transform:uppercase',
-        'border-radius:' + ds.borderRadius + ' ' + ds.borderRadius + ' 0 0',
-        'margin:0',
-      ].join(';'),
+        "display:flex",
+        "align-items:center",
+        "justify-content:space-between",
+        "padding:14px 20px",
+        "background:" + ds.headerBackgroundColor,
+        "color:" + ds.headerTextColor,
+        "font-weight:700",
+        "font-size:15px",
+        "letter-spacing:0.04em",
+        "text-transform:uppercase",
+        "border-radius:" + ds.borderRadius + " " + ds.borderRadius + " 0 0",
+        "margin:0",
+      ].join(";"),
 
       closeBtn: [
-        'background:none',
-        'border:none',
-        'cursor:pointer',
-        'padding:4px',
-        'display:flex',
-        'align-items:center',
-        'color:' + ds.headerTextColor,
-        'opacity:0.8',
-        'transition:opacity 0.15s',
-      ].join(';'),
+        "background:none",
+        "border:none",
+        "cursor:pointer",
+        "padding:4px",
+        "display:flex",
+        "align-items:center",
+        "color:" + ds.headerTextColor,
+        "opacity:0.8",
+        "transition:opacity 0.15s",
+      ].join(";"),
 
-      body: [
-        'padding:20px',
-      ].join(';'),
+      body: ["padding:20px"].join(";"),
 
-      fieldGroup: [
-        'margin-bottom:10px',
-      ].join(';'),
+      fieldGroup: ["margin-bottom:10px"].join(";"),
 
-      fieldRow: [
-        'display:flex',
-        'gap:12px',
-        'margin-bottom:10px',
-      ].join(';'),
+      fieldRow: ["display:flex", "gap:12px", "margin-bottom:10px"].join(";"),
 
-      fieldRowItem: [
-        'flex:1',
-        'min-width:0',
-      ].join(';'),
+      fieldRowItem: ["flex:1", "min-width:0"].join(";"),
 
       label: [
-        'display:block',
-        'font-size:12px',
-        'font-weight:600',
-        'color:' + ds.labelColor,
-        'margin-bottom:4px',
-        'text-transform:uppercase',
-        'letter-spacing:0.03em',
-      ].join(';'),
+        "display:block",
+        "font-size:12px",
+        "font-weight:600",
+        "color:" + ds.labelColor,
+        "margin-bottom:4px",
+        "text-transform:uppercase",
+        "letter-spacing:0.03em",
+      ].join(";"),
 
       readonlyInput: [
-        'width:100%',
-        'padding:8px 10px',
-        'border:1px solid ' + ds.inputBorderColor,
-        'border-radius:4px',
-        'font-size:13px',
+        "width:100%",
+        "padding:8px 10px",
+        "border:1px solid " + ds.inputBorderColor,
+        "border-radius:4px",
+        "font-size:13px",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-        'background:#f9fafb',
-        'color:#6b7280',
-        'box-sizing:border-box',
-        'cursor:default',
-      ].join(';'),
+        "background:#f9fafb",
+        "color:#6b7280",
+        "box-sizing:border-box",
+        "cursor:default",
+      ].join(";"),
 
       textarea: [
-        'width:100%',
-        'padding:10px 12px',
-        'border:1px solid ' + ds.inputBorderColor,
-        'border-radius:4px',
-        'font-size:13px',
+        "width:100%",
+        "padding:10px 12px",
+        "border:1px solid " + ds.inputBorderColor,
+        "border-radius:4px",
+        "font-size:13px",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-        'resize:vertical',
-        'min-height:100px',
-        'box-sizing:border-box',
-        'outline:none',
-        'transition:border-color 0.15s',
-        'line-height:1.5',
-      ].join(';'),
+        "resize:vertical",
+        "min-height:100px",
+        "box-sizing:border-box",
+        "outline:none",
+        "transition:border-color 0.15s",
+        "line-height:1.5",
+      ].join(";"),
 
-      textareaFocus: 'border-color:' + ds.inputBorderFocusColor + ';box-shadow:0 0 0 2px ' +
-        ds.inputBorderFocusColor.replace(')', ',0.15)').replace('rgb(', 'rgba(') + ';',
+      textareaFocus:
+        "border-color:" +
+        ds.inputBorderFocusColor +
+        ";box-shadow:0 0 0 2px " +
+        ds.inputBorderFocusColor
+          .replace(")", ",0.15)")
+          .replace("rgb(", "rgba(") +
+        ";",
 
       footer: [
-        'display:flex',
-        'justify-content:flex-end',
-        'gap:10px',
-        'padding:16px 20px',
-        'border-top:1px solid #e5e7eb',
-      ].join(';'),
+        "display:flex",
+        "justify-content:flex-end",
+        "gap:10px",
+        "padding:16px 20px",
+        "border-top:1px solid #e5e7eb",
+      ].join(";"),
 
       primaryBtn: [
-        'display:flex',
-        'align-items:center',
-        'gap:6px',
-        'padding:8px 20px',
-        'background:' + ds.primaryButtonBg,
-        'color:' + ds.primaryButtonText,
-        'border:none',
-        'border-radius:6px',
-        'font-size:13px',
-        'font-weight:600',
-        'cursor:pointer',
-        'transition:background 0.15s,transform 0.1s',
+        "display:flex",
+        "align-items:center",
+        "gap:6px",
+        "padding:8px 20px",
+        "background:" + ds.primaryButtonBg,
+        "color:" + ds.primaryButtonText,
+        "border:none",
+        "border-radius:6px",
+        "font-size:13px",
+        "font-weight:600",
+        "cursor:pointer",
+        "transition:background 0.15s,transform 0.1s",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-      ].join(';'),
+      ].join(";"),
 
-      primaryBtnHover: 'background:' + ds.primaryButtonHoverBg + ';',
+      primaryBtnHover: "background:" + ds.primaryButtonHoverBg + ";",
 
       primaryBtnDisabled: [
-        'display:flex',
-        'align-items:center',
-        'gap:6px',
-        'padding:8px 20px',
-        'background:#9ca3af',
-        'color:#ffffff',
-        'border:none',
-        'border-radius:6px',
-        'font-size:13px',
-        'font-weight:600',
-        'cursor:not-allowed',
-        'opacity:0.6',
+        "display:flex",
+        "align-items:center",
+        "gap:6px",
+        "padding:8px 20px",
+        "background:#9ca3af",
+        "color:#ffffff",
+        "border:none",
+        "border-radius:6px",
+        "font-size:13px",
+        "font-weight:600",
+        "cursor:not-allowed",
+        "opacity:0.6",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-      ].join(';'),
+      ].join(";"),
 
       cancelBtn: [
-        'padding:8px 20px',
-        'background:' + ds.cancelButtonBg,
-        'color:' + ds.cancelButtonText,
-        'border:none',
-        'border-radius:6px',
-        'font-size:13px',
-        'font-weight:600',
-        'cursor:pointer',
-        'transition:background 0.15s',
+        "padding:8px 20px",
+        "background:" + ds.cancelButtonBg,
+        "color:" + ds.cancelButtonText,
+        "border:none",
+        "border-radius:6px",
+        "font-size:13px",
+        "font-weight:600",
+        "cursor:pointer",
+        "transition:background 0.15s",
         'font-family:"Source Sans Pro","Segoe UI",sans-serif',
-      ].join(';'),
+      ].join(";"),
 
-      cancelBtnHover: 'background:' + ds.cancelButtonHoverBg + ';',
+      cancelBtnHover: "background:" + ds.cancelButtonHoverBg + ";",
 
       toast: [
-        'padding:10px 16px',
-        'border-radius:6px',
-        'font-size:13px',
-        'font-weight:600',
-        'margin:0 20px 12px 20px',
-        'transition:opacity 0.5s',
-        'display:flex',
-        'align-items:center',
-        'gap:8px',
-      ].join(';'),
+        "padding:10px 16px",
+        "border-radius:6px",
+        "font-size:13px",
+        "font-weight:600",
+        "margin:0 20px 12px 20px",
+        "transition:opacity 0.5s",
+        "display:flex",
+        "align-items:center",
+        "gap:8px",
+      ].join(";"),
 
-      toastSuccess: 'background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;',
-      toastError: 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
+      toastSuccess:
+        "background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;",
+      toastError: "background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;",
 
       spinner: [
-        'display:inline-block',
-        'width:14px',
-        'height:14px',
-        'border:2px solid rgba(255,255,255,0.3)',
-        'border-top-color:#ffffff',
-        'border-radius:50%',
-        'animation:helpbutton-qs-spin 0.6s linear infinite',
-      ].join(';'),
+        "display:inline-block",
+        "width:14px",
+        "height:14px",
+        "border:2px solid rgba(255,255,255,0.3)",
+        "border-top-color:#ffffff",
+        "border-radius:50%",
+        "animation:helpbutton-qs-spin 0.6s linear infinite",
+      ].join(";"),
     };
   }
 
@@ -893,8 +941,9 @@ var ICONS = {
   var spinnerStyleInjected = false;
   function injectSpinnerStyle() {
     if (spinnerStyleInjected) return;
-    var style = document.createElement('style');
-    style.textContent = '@keyframes helpbutton-qs-spin { to { transform: rotate(360deg); } }';
+    var style = document.createElement("style");
+    style.textContent =
+      "@keyframes helpbutton-qs-spin { to { transform: rotate(360deg); } }";
     document.head.appendChild(style);
     spinnerStyleInjected = true;
   }
@@ -907,7 +956,7 @@ var ICONS = {
     var br = cfg.bugReport;
 
     if (!br.webhookUrl) {
-      return Promise.reject(new Error('No webhook URL configured.'));
+      return Promise.reject(new Error("No webhook URL configured."));
     }
 
     var payload = {
@@ -918,29 +967,32 @@ var ICONS = {
 
     // Build headers
     var headers = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
 
-    var authType = (br.auth && br.auth.type) || 'none';
+    var authType = (br.auth && br.auth.type) || "none";
 
     switch (authType) {
-      case 'header':
+      case "header":
         if (br.auth.headerName && br.auth.headerValue) {
           headers[br.auth.headerName] = br.auth.headerValue;
         }
         break;
 
-      case 'sense-session':
+      case "sense-session":
         // Generate a 16-character XRF key
-        var xrfKey = 'abcdefghij123456';
-        headers['X-Qlik-Xrfkey'] = xrfKey;
+        var xrfKey = "abcdefghij123456";
+        headers["X-Qlik-Xrfkey"] = xrfKey;
         // Append xrfkey to URL if not already present
-        var separator = br.webhookUrl.indexOf('?') >= 0 ? '&' : '?';
-        br._resolvedUrl = br.webhookUrl + separator + 'xrfkey=' + xrfKey;
+        var separator = br.webhookUrl.indexOf("?") >= 0 ? "&" : "?";
+        br._resolvedUrl = br.webhookUrl + separator + "xrfkey=" + xrfKey;
         break;
 
-      case 'custom':
-        if (br.auth.customHeaders && typeof br.auth.customHeaders === 'object') {
+      case "custom":
+        if (
+          br.auth.customHeaders &&
+          typeof br.auth.customHeaders === "object"
+        ) {
           if (Array.isArray(br.auth.customHeaders)) {
             for (var i = 0; i < br.auth.customHeaders.length; i++) {
               var h = br.auth.customHeaders[i];
@@ -956,7 +1008,7 @@ var ICONS = {
         }
         break;
 
-      case 'none':
+      case "none":
       default:
         // No additional headers
         break;
@@ -966,17 +1018,17 @@ var ICONS = {
     // Clean up temp property
     delete br._resolvedUrl;
 
-    log('Submitting bug report to:', url);
-    log('Payload:', JSON.stringify(payload, null, 2));
+    log("Submitting bug report to:", url);
+    log("Payload:", JSON.stringify(payload, null, 2));
 
     return fetch(url, {
-      method: br.webhookMethod || 'POST',
+      method: br.webhookMethod || "POST",
       headers: headers,
       body: JSON.stringify(payload),
-      credentials: authType === 'sense-session' ? 'include' : 'same-origin',
+      credentials: authType === "sense-session" ? "include" : "same-origin",
     }).then(function (resp) {
       if (!resp.ok) {
-        throw new Error('HTTP ' + resp.status + ' ' + resp.statusText);
+        throw new Error("HTTP " + resp.status + " " + resp.statusText);
       }
       return resp;
     });
@@ -988,7 +1040,7 @@ var ICONS = {
    */
   function showBugReportDialog(closePopupFn) {
     // Prevent multiple dialogs
-    if (document.getElementById('helpbutton-qs-bug-dialog-overlay')) return;
+    if (document.getElementById("helpbutton-qs-bug-dialog-overlay")) return;
 
     injectSpinnerStyle();
 
@@ -998,57 +1050,64 @@ var ICONS = {
     var br = cfg.bugReport;
 
     // -- Overlay --
-    var overlay = document.createElement('div');
-    overlay.id = 'helpbutton-qs-bug-dialog-overlay';
-    overlay.setAttribute('style', DS.overlay);
+    var overlay = document.createElement("div");
+    overlay.id = "helpbutton-qs-bug-dialog-overlay";
+    overlay.setAttribute("style", DS.overlay);
 
     // -- Modal --
-    var modal = document.createElement('div');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', br.dialogTitle);
-    modal.setAttribute('style', DS.modal);
+    var modal = document.createElement("div");
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", br.dialogTitle);
+    modal.setAttribute("style", DS.modal);
 
     // -- Header --
-    var header = document.createElement('div');
-    header.setAttribute('style', DS.header);
+    var header = document.createElement("div");
+    header.setAttribute("style", DS.header);
 
-    var titleSpan = document.createElement('span');
+    var titleSpan = document.createElement("span");
     titleSpan.textContent = br.dialogTitle;
     header.appendChild(titleSpan);
 
-    var closeBtn = document.createElement('button');
-    closeBtn.setAttribute('type', 'button');
-    closeBtn.setAttribute('aria-label', br.closeDialogAriaLabel);
-    closeBtn.setAttribute('style', DS.closeBtn);
-    closeBtn.innerHTML = makeSvg('close', 16, br.dialogStyle.headerTextColor);
-    closeBtn.addEventListener('mouseenter', function () {
-      closeBtn.style.opacity = '1';
+    var closeBtn = document.createElement("button");
+    closeBtn.setAttribute("type", "button");
+    closeBtn.setAttribute("aria-label", br.closeDialogAriaLabel);
+    closeBtn.setAttribute("style", DS.closeBtn);
+    closeBtn.innerHTML = makeSvg("close", 16, br.dialogStyle.headerTextColor);
+    closeBtn.addEventListener("mouseenter", function () {
+      closeBtn.style.opacity = "1";
     });
-    closeBtn.addEventListener('mouseleave', function () {
-      closeBtn.style.opacity = '0.8';
+    closeBtn.addEventListener("mouseleave", function () {
+      closeBtn.style.opacity = "0.8";
     });
     header.appendChild(closeBtn);
 
     modal.appendChild(header);
 
     // -- Toast area (hidden initially) --
-    var toastArea = document.createElement('div');
-    toastArea.id = 'helpbutton-qs-bug-toast';
-    toastArea.setAttribute('style', 'display:none;');
+    var toastArea = document.createElement("div");
+    toastArea.id = "helpbutton-qs-bug-toast";
+    toastArea.setAttribute("style", "display:none;");
     modal.appendChild(toastArea);
 
     // -- Body --
-    var body = document.createElement('div');
-    body.setAttribute('style', DS.body);
+    var body = document.createElement("div");
+    body.setAttribute("style", DS.body);
 
     // Loading indicator while context is being gathered
-    var loadingMsg = document.createElement('div');
-    loadingMsg.setAttribute('style',
-      'text-align:center;padding:20px;color:#6b7280;font-size:14px;');
+    var loadingMsg = document.createElement("div");
+    loadingMsg.setAttribute(
+      "style",
+      "text-align:center;padding:20px;color:#6b7280;font-size:14px;",
+    );
     loadingMsg.innerHTML =
-      '<div style="' + DS.spinner.replace('border-top-color:#ffffff', 'border-top-color:#165a9b')
-        .replace('border:2px solid rgba(255,255,255,0.3)', 'border:2px solid rgba(22,90,155,0.2)') +
+      '<div style="' +
+      DS.spinner
+        .replace("border-top-color:#ffffff", "border-top-color:#165a9b")
+        .replace(
+          "border:2px solid rgba(255,255,255,0.3)",
+          "border:2px solid rgba(22,90,155,0.2)",
+        ) +
       ';width:24px;height:24px;margin:0 auto 10px auto;"></div>' +
       escapeHtml(br.loadingMessage);
     body.appendChild(loadingMsg);
@@ -1056,15 +1115,15 @@ var ICONS = {
     modal.appendChild(body);
 
     // -- Footer (will be shown after loading) --
-    var footer = document.createElement('div');
-    footer.setAttribute('style', DS.footer + ';display:none;');
+    var footer = document.createElement("div");
+    footer.setAttribute("style", DS.footer + ";display:none;");
     modal.appendChild(footer);
 
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
     // Focus trap — focus the modal
-    modal.setAttribute('tabindex', '-1');
+    modal.setAttribute("tabindex", "-1");
     modal.focus();
 
     // -- Close handlers --
@@ -1074,22 +1133,25 @@ var ICONS = {
       }
     }
 
-    closeBtn.addEventListener('click', closeDialog);
+    closeBtn.addEventListener("click", closeDialog);
 
-    overlay.addEventListener('click', function (e) {
+    overlay.addEventListener("click", function (e) {
       if (e.target === overlay) closeDialog();
     });
 
-    document.addEventListener('keydown', function onEsc(e) {
-      if (e.key === 'Escape' && document.getElementById('helpbutton-qs-bug-dialog-overlay')) {
+    document.addEventListener("keydown", function onEsc(e) {
+      if (
+        e.key === "Escape" &&
+        document.getElementById("helpbutton-qs-bug-dialog-overlay")
+      ) {
         closeDialog();
-        document.removeEventListener('keydown', onEsc);
+        document.removeEventListener("keydown", onEsc);
       }
     });
 
     // -- Gather context, then build form --
     gatherContext().then(function (context) {
-      log('Context gathered:', JSON.stringify(context, null, 2));
+      log("Context gathered:", JSON.stringify(context, null, 2));
 
       // Remove loading indicator
       body.removeChild(loadingMsg);
@@ -1097,19 +1159,19 @@ var ICONS = {
       // Context fields (read-only)
       // Helper to create a single labelled read-only field
       function makeField(field) {
-        var group = document.createElement('div');
-        group.setAttribute('style', DS.fieldGroup);
+        var group = document.createElement("div");
+        group.setAttribute("style", DS.fieldGroup);
 
-        var label = document.createElement('label');
-        label.setAttribute('style', DS.label);
+        var label = document.createElement("label");
+        label.setAttribute("style", DS.label);
         label.textContent = FIELD_LABELS[field] || field;
 
-        var input = document.createElement('input');
-        input.setAttribute('type', 'text');
-        input.setAttribute('readonly', 'readonly');
-        input.setAttribute('value', context[field]);
-        input.setAttribute('style', DS.readonlyInput);
-        input.setAttribute('tabindex', '-1');
+        var input = document.createElement("input");
+        input.setAttribute("type", "text");
+        input.setAttribute("readonly", "readonly");
+        input.setAttribute("value", context[field]);
+        input.setAttribute("style", DS.readonlyInput);
+        input.setAttribute("tabindex", "-1");
 
         group.appendChild(label);
         group.appendChild(input);
@@ -1117,10 +1179,11 @@ var ICONS = {
       }
 
       // Paired fields that should render side-by-side
-      var pairedFields = { userDirectory: 'userId' };
+      var pairedFields = { userDirectory: "userId" };
       var skipFields = {}; // track second items in pairs to skip in main loop
       for (var pf in pairedFields) {
-        if (pairedFields.hasOwnProperty(pf)) skipFields[pairedFields[pf]] = true;
+        if (pairedFields.hasOwnProperty(pf))
+          skipFields[pairedFields[pf]] = true;
       }
 
       var fields = br.collectFields || [];
@@ -1131,17 +1194,17 @@ var ICONS = {
         // Check if this field starts a side-by-side pair
         if (pairedFields[field]) {
           var pairField = pairedFields[field];
-          var row = document.createElement('div');
-          row.setAttribute('style', DS.fieldRow);
+          var row = document.createElement("div");
+          row.setAttribute("style", DS.fieldRow);
 
-          var left = document.createElement('div');
-          left.setAttribute('style', DS.fieldRowItem);
+          var left = document.createElement("div");
+          left.setAttribute("style", DS.fieldRowItem);
           left.appendChild(makeField(field));
           row.appendChild(left);
 
           if (context[pairField] !== undefined) {
-            var right = document.createElement('div');
-            right.setAttribute('style', DS.fieldRowItem);
+            var right = document.createElement("div");
+            right.setAttribute("style", DS.fieldRowItem);
             right.appendChild(makeField(pairField));
             row.appendChild(right);
           }
@@ -1153,22 +1216,25 @@ var ICONS = {
       });
 
       // Description textarea
-      var descGroup = document.createElement('div');
-      descGroup.setAttribute('style', DS.fieldGroup);
+      var descGroup = document.createElement("div");
+      descGroup.setAttribute("style", DS.fieldGroup);
 
-      var descLabel = document.createElement('label');
-      descLabel.setAttribute('style', DS.label);
+      var descLabel = document.createElement("label");
+      descLabel.setAttribute("style", DS.label);
       descLabel.textContent = br.descriptionLabel;
 
-      var textarea = document.createElement('textarea');
-      textarea.setAttribute('placeholder', br.descriptionPlaceholder || 'Describe the issue…');
-      textarea.setAttribute('style', DS.textarea);
-      textarea.setAttribute('rows', '4');
+      var textarea = document.createElement("textarea");
+      textarea.setAttribute(
+        "placeholder",
+        br.descriptionPlaceholder || "Describe the issue…",
+      );
+      textarea.setAttribute("style", DS.textarea);
+      textarea.setAttribute("rows", "4");
 
-      textarea.addEventListener('focus', function () {
-        textarea.style.cssText = DS.textarea + ';' + DS.textareaFocus;
+      textarea.addEventListener("focus", function () {
+        textarea.style.cssText = DS.textarea + ";" + DS.textareaFocus;
       });
-      textarea.addEventListener('blur', function () {
+      textarea.addEventListener("blur", function () {
         textarea.style.cssText = DS.textarea;
       });
 
@@ -1177,90 +1243,106 @@ var ICONS = {
       body.appendChild(descGroup);
 
       // -- Footer buttons --
-      footer.style.display = 'flex';
+      footer.style.display = "flex";
 
-      var cancelBtn = document.createElement('button');
-      cancelBtn.setAttribute('type', 'button');
+      var cancelBtn = document.createElement("button");
+      cancelBtn.setAttribute("type", "button");
       cancelBtn.textContent = br.cancelButtonText;
-      cancelBtn.setAttribute('style', DS.cancelBtn);
-      cancelBtn.addEventListener('mouseenter', function () {
-        cancelBtn.style.cssText = DS.cancelBtn + ';' + DS.cancelBtnHover;
+      cancelBtn.setAttribute("style", DS.cancelBtn);
+      cancelBtn.addEventListener("mouseenter", function () {
+        cancelBtn.style.cssText = DS.cancelBtn + ";" + DS.cancelBtnHover;
       });
-      cancelBtn.addEventListener('mouseleave', function () {
+      cancelBtn.addEventListener("mouseleave", function () {
         cancelBtn.style.cssText = DS.cancelBtn;
       });
-      cancelBtn.addEventListener('click', closeDialog);
+      cancelBtn.addEventListener("click", closeDialog);
 
-      var submitBtn = document.createElement('button');
-      submitBtn.setAttribute('type', 'button');
-      submitBtn.setAttribute('style', DS.primaryBtnDisabled);
-      submitBtn.setAttribute('disabled', 'disabled');
+      var submitBtn = document.createElement("button");
+      submitBtn.setAttribute("type", "button");
+      submitBtn.setAttribute("style", DS.primaryBtnDisabled);
+      submitBtn.setAttribute("disabled", "disabled");
       submitBtn.innerHTML =
-        makeSvg('send', 14, '#ffffff') +
-        '<span>' + escapeHtml(br.submitButtonText) + '</span>';
+        makeSvg("send", 14, "#ffffff") +
+        "<span>" +
+        escapeHtml(br.submitButtonText) +
+        "</span>";
 
       // Enable/disable submit based on textarea content
       function updateSubmitState() {
         if (textarea.value.trim().length > 0) {
-          submitBtn.removeAttribute('disabled');
-          submitBtn.setAttribute('style', DS.primaryBtn);
+          submitBtn.removeAttribute("disabled");
+          submitBtn.setAttribute("style", DS.primaryBtn);
           submitBtn.innerHTML =
-            makeSvg('send', 14, br.dialogStyle.primaryButtonText) +
-            '<span>' + escapeHtml(br.submitButtonText) + '</span>';
+            makeSvg("send", 14, br.dialogStyle.primaryButtonText) +
+            "<span>" +
+            escapeHtml(br.submitButtonText) +
+            "</span>";
         } else {
-          submitBtn.setAttribute('disabled', 'disabled');
-          submitBtn.setAttribute('style', DS.primaryBtnDisabled);
+          submitBtn.setAttribute("disabled", "disabled");
+          submitBtn.setAttribute("style", DS.primaryBtnDisabled);
           submitBtn.innerHTML =
-            makeSvg('send', 14, '#ffffff') +
-            '<span>' + escapeHtml(br.submitButtonText) + '</span>';
+            makeSvg("send", 14, "#ffffff") +
+            "<span>" +
+            escapeHtml(br.submitButtonText) +
+            "</span>";
         }
       }
 
-      textarea.addEventListener('input', updateSubmitState);
+      textarea.addEventListener("input", updateSubmitState);
 
       // Hover effects for submit button (only when enabled)
-      submitBtn.addEventListener('mouseenter', function () {
-        if (!submitBtn.hasAttribute('disabled')) {
-          submitBtn.style.cssText = DS.primaryBtn + ';' + DS.primaryBtnHover;
+      submitBtn.addEventListener("mouseenter", function () {
+        if (!submitBtn.hasAttribute("disabled")) {
+          submitBtn.style.cssText = DS.primaryBtn + ";" + DS.primaryBtnHover;
         }
       });
-      submitBtn.addEventListener('mouseleave', function () {
-        if (!submitBtn.hasAttribute('disabled')) {
+      submitBtn.addEventListener("mouseleave", function () {
+        if (!submitBtn.hasAttribute("disabled")) {
           submitBtn.style.cssText = DS.primaryBtn;
         }
       });
 
       // -- Submit handler --
-      submitBtn.addEventListener('click', function () {
-        if (submitBtn.hasAttribute('disabled')) return;
+      submitBtn.addEventListener("click", function () {
+        if (submitBtn.hasAttribute("disabled")) return;
 
         var description = textarea.value.trim();
         if (!description) return;
 
         // Show loading state
-        submitBtn.setAttribute('disabled', 'disabled');
+        submitBtn.setAttribute("disabled", "disabled");
         submitBtn.innerHTML =
-          '<span style="' + DS.spinner + '"></span>' +
-          '<span>' + escapeHtml(br.submittingButtonText) + '</span>';
-        submitBtn.setAttribute('style', DS.primaryBtnDisabled);
+          '<span style="' +
+          DS.spinner +
+          '"></span>' +
+          "<span>" +
+          escapeHtml(br.submittingButtonText) +
+          "</span>";
+        submitBtn.setAttribute("style", DS.primaryBtnDisabled);
 
         submitBugReport(context, description)
           .then(function () {
-            log('Bug report submitted successfully.');
-            showToast(toastArea, DS, 'success', br.successMessage);
+            log("Bug report submitted successfully.");
+            showToast(toastArea, DS, "success", br.successMessage);
             // Auto-close after 2 seconds
             setTimeout(closeDialog, 2000);
           })
           .catch(function (err) {
-            log('Bug report submission failed:', err);
-            showToast(toastArea, DS, 'error',
-              br.errorMessage + (err.message ? ' (' + err.message + ')' : ''));
+            log("Bug report submission failed:", err);
+            showToast(
+              toastArea,
+              DS,
+              "error",
+              br.errorMessage + (err.message ? " (" + err.message + ")" : ""),
+            );
             // Re-enable submit
-            submitBtn.removeAttribute('disabled');
-            submitBtn.setAttribute('style', DS.primaryBtn);
+            submitBtn.removeAttribute("disabled");
+            submitBtn.setAttribute("style", DS.primaryBtn);
             submitBtn.innerHTML =
-              makeSvg('send', 14, br.dialogStyle.primaryButtonText) +
-              '<span>' + escapeHtml(br.submitButtonText) + '</span>';
+              makeSvg("send", 14, br.dialogStyle.primaryButtonText) +
+              "<span>" +
+              escapeHtml(br.submitButtonText) +
+              "</span>";
           });
       });
 
@@ -1276,19 +1358,25 @@ var ICONS = {
    * Show a toast notification in the dialog.
    */
   function showToast(toastArea, DS, type, message) {
-    var style = DS.toast + ';' + (type === 'success' ? DS.toastSuccess : DS.toastError);
-    toastArea.setAttribute('style', style);
+    var style =
+      DS.toast + ";" + (type === "success" ? DS.toastSuccess : DS.toastError);
+    toastArea.setAttribute("style", style);
     toastArea.innerHTML =
-      makeSvg(type === 'success' ? 'info' : 'bug', 16,
-        type === 'success' ? '#065f46' : '#991b1b') +
-      '<span>' + escapeHtml(message) + '</span>';
+      makeSvg(
+        type === "success" ? "info" : "bug",
+        16,
+        type === "success" ? "#065f46" : "#991b1b",
+      ) +
+      "<span>" +
+      escapeHtml(message) +
+      "</span>";
 
     // Fade out after 4 seconds
     setTimeout(function () {
-      toastArea.style.opacity = '0';
+      toastArea.style.opacity = "0";
       setTimeout(function () {
-        toastArea.style.display = 'none';
-        toastArea.style.opacity = '1';
+        toastArea.style.display = "none";
+        toastArea.style.opacity = "1";
       }, 500);
     }, 4000);
   }
@@ -1298,88 +1386,90 @@ var ICONS = {
   // ---------------------------------------------------------------------------
   function createHelpButton() {
     // Guard against double-injection
-    if (document.getElementById('helpbutton-qs')) {
-      log('Button already exists, skipping injection.');
+    if (document.getElementById("helpbutton-qs")) {
+      log("Button already exists, skipping injection.");
       return;
     }
 
     var anchor = document.querySelector(cfg.anchorSelector);
     if (!anchor) {
-      log('Anchor element not found:', cfg.anchorSelector);
+      log("Anchor element not found:", cfg.anchorSelector);
       return;
     }
 
-    log('Anchor found. Injecting help button…');
+    log("Anchor found. Injecting help button…");
 
     var S = buildStyles();
 
     // -- Container --
-    var container = document.createElement('div');
-    container.id = 'helpbutton-qs-container';
-    container.setAttribute('style', S.container);
+    var container = document.createElement("div");
+    container.id = "helpbutton-qs-container";
+    container.setAttribute("style", S.container);
 
     // -- Toolbar button --
-    var btn = document.createElement('button');
-    btn.id = 'helpbutton-qs';
-    btn.setAttribute('type', 'button');
-    btn.setAttribute('title', cfg.buttonTooltip);
-    btn.setAttribute('aria-label', cfg.buttonTooltip);
-    btn.setAttribute('aria-haspopup', 'true');
-    btn.setAttribute('aria-expanded', 'false');
-    btn.setAttribute('style', S.button);
+    var btn = document.createElement("button");
+    btn.id = "helpbutton-qs";
+    btn.setAttribute("type", "button");
+    btn.setAttribute("title", cfg.buttonTooltip);
+    btn.setAttribute("aria-label", cfg.buttonTooltip);
+    btn.setAttribute("aria-haspopup", "true");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("style", S.button);
     btn.innerHTML =
-      makeSvg(cfg.buttonIcon || 'help', 16, cfg.buttonStyle.textColor) +
-      '<span>' + escapeHtml(cfg.buttonLabel) + '</span>';
+      makeSvg(cfg.buttonIcon || "help", 16, cfg.buttonStyle.textColor) +
+      "<span>" +
+      escapeHtml(cfg.buttonLabel) +
+      "</span>";
 
     // Hover / Active / Focus states
-    btn.addEventListener('mouseenter', function () {
-      btn.style.cssText = S.button + ';' + S.buttonHover;
+    btn.addEventListener("mouseenter", function () {
+      btn.style.cssText = S.button + ";" + S.buttonHover;
     });
-    btn.addEventListener('mouseleave', function () {
+    btn.addEventListener("mouseleave", function () {
       btn.style.cssText = S.button;
     });
-    btn.addEventListener('mousedown', function () {
-      btn.style.cssText = S.button + ';' + S.buttonActive;
+    btn.addEventListener("mousedown", function () {
+      btn.style.cssText = S.button + ";" + S.buttonActive;
     });
-    btn.addEventListener('mouseup', function () {
-      btn.style.cssText = S.button + ';' + S.buttonHover;
+    btn.addEventListener("mouseup", function () {
+      btn.style.cssText = S.button + ";" + S.buttonHover;
     });
-    btn.addEventListener('focus', function () {
-      btn.style.cssText = S.button + ';' + S.buttonFocus;
+    btn.addEventListener("focus", function () {
+      btn.style.cssText = S.button + ";" + S.buttonFocus;
     });
-    btn.addEventListener('blur', function () {
+    btn.addEventListener("blur", function () {
       btn.style.cssText = S.button;
     });
 
     // -- Popup --
-    var popup = document.createElement('div');
-    popup.id = 'helpbutton-qs-popup';
-    popup.setAttribute('role', 'menu');
-    popup.setAttribute('aria-label', cfg.popupTitle);
-    popup.setAttribute('style', S.popup);
+    var popup = document.createElement("div");
+    popup.id = "helpbutton-qs-popup";
+    popup.setAttribute("role", "menu");
+    popup.setAttribute("aria-label", cfg.popupTitle);
+    popup.setAttribute("style", S.popup);
 
     // Popup header (dark blue with yellow text)
-    var header = document.createElement('div');
-    header.setAttribute('style', S.popupHeader);
+    var header = document.createElement("div");
+    header.setAttribute("style", S.popupHeader);
     header.textContent = cfg.popupTitle;
     popup.appendChild(header);
 
     // -- Toggle popup --
     function openPopup() {
-      popup.style.display = 'block';
-      btn.setAttribute('aria-expanded', 'true');
-      log('Popup opened.');
+      popup.style.display = "block";
+      btn.setAttribute("aria-expanded", "true");
+      log("Popup opened.");
     }
 
     function closePopup() {
-      popup.style.display = 'none';
-      btn.setAttribute('aria-expanded', 'false');
-      log('Popup closed.');
+      popup.style.display = "none";
+      btn.setAttribute("aria-expanded", "false");
+      log("Popup closed.");
     }
 
     function togglePopup(e) {
       e.stopPropagation();
-      if (popup.style.display === 'none' || popup.style.display === '') {
+      if (popup.style.display === "none" || popup.style.display === "") {
         openPopup();
       } else {
         closePopup();
@@ -1390,8 +1480,8 @@ var ICONS = {
     cfg.menuItems.forEach(function (item, idx) {
       // Separator between items
       if (idx > 0) {
-        var sep = document.createElement('hr');
-        sep.setAttribute('style', S.separator);
+        var sep = document.createElement("hr");
+        sep.setAttribute("style", S.separator);
         popup.appendChild(sep);
       }
 
@@ -1399,22 +1489,24 @@ var ICONS = {
       var hoverAddition = menuItemHoverStyle(item);
 
       // Check if this is a bug-report action item
-      if (item.action === 'bugReport') {
-        var bugBtn = document.createElement('a');
-        bugBtn.setAttribute('href', '#');
-        bugBtn.setAttribute('role', 'menuitem');
-        bugBtn.setAttribute('style', baseStyle);
+      if (item.action === "bugReport") {
+        var bugBtn = document.createElement("a");
+        bugBtn.setAttribute("href", "#");
+        bugBtn.setAttribute("role", "menuitem");
+        bugBtn.setAttribute("style", baseStyle);
         bugBtn.innerHTML =
-          makeSvg(item.icon || 'bug', 16, item.iconColor || '#b45309') +
-          '<span>' + escapeHtml(item.label) + '</span>';
+          makeSvg(item.icon || "bug", 16, item.iconColor || "#b45309") +
+          "<span>" +
+          escapeHtml(item.label) +
+          "</span>";
 
-        bugBtn.addEventListener('mouseenter', function () {
+        bugBtn.addEventListener("mouseenter", function () {
           bugBtn.style.cssText = baseStyle + hoverAddition;
         });
-        bugBtn.addEventListener('mouseleave', function () {
+        bugBtn.addEventListener("mouseleave", function () {
           bugBtn.style.cssText = baseStyle;
         });
-        bugBtn.addEventListener('click', function (e) {
+        bugBtn.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
           showBugReportDialog(closePopup);
@@ -1423,36 +1515,38 @@ var ICONS = {
         popup.appendChild(bugBtn);
       } else {
         // Standard link item
-        var a = document.createElement('a');
-        var itemUrl = item.url || '#';
-        var itemTarget = item.target || '_blank';
+        var a = document.createElement("a");
+        var itemUrl = item.url || "#";
+        var itemTarget = item.target || "_blank";
 
         // If URL contains {{…}} template fields, resolve them at click time
-        if (itemUrl.indexOf('{{') >= 0) {
-          a.setAttribute('href', '#');
+        if (itemUrl.indexOf("{{") >= 0) {
+          a.setAttribute("href", "#");
           (function (tplUrl, tplTarget) {
-            a.addEventListener('click', function (e) {
+            a.addEventListener("click", function (e) {
               e.preventDefault();
               e.stopPropagation();
               var resolved = resolveTemplateFields(tplUrl);
-              window.open(resolved, tplTarget, 'noopener,noreferrer');
+              window.open(resolved, tplTarget, "noopener,noreferrer");
             });
           })(itemUrl, itemTarget);
         } else {
-          a.setAttribute('href', itemUrl);
-          a.setAttribute('target', itemTarget);
-          a.setAttribute('rel', 'noopener noreferrer');
+          a.setAttribute("href", itemUrl);
+          a.setAttribute("target", itemTarget);
+          a.setAttribute("rel", "noopener noreferrer");
         }
-        a.setAttribute('role', 'menuitem');
-        a.setAttribute('style', baseStyle);
+        a.setAttribute("role", "menuitem");
+        a.setAttribute("style", baseStyle);
         a.innerHTML =
-          makeSvg(item.icon || 'help', 16, item.iconColor || '#165a9b') +
-          '<span>' + escapeHtml(item.label) + '</span>';
+          makeSvg(item.icon || "help", 16, item.iconColor || "#165a9b") +
+          "<span>" +
+          escapeHtml(item.label) +
+          "</span>";
 
-        a.addEventListener('mouseenter', function () {
+        a.addEventListener("mouseenter", function () {
           a.style.cssText = baseStyle + hoverAddition;
         });
-        a.addEventListener('mouseleave', function () {
+        a.addEventListener("mouseleave", function () {
           a.style.cssText = baseStyle;
         });
 
@@ -1466,23 +1560,26 @@ var ICONS = {
 
     // -- Insert into DOM --
     anchor.insertBefore(container, anchor.firstChild);
-    anchor.style.width = 'auto';
-    anchor.style.minWidth = '300px';
+    anchor.style.width = "auto";
+    anchor.style.minWidth = "300px";
 
-    log('Button injected successfully.');
+    log("Button injected successfully.");
 
-    btn.addEventListener('click', togglePopup);
+    btn.addEventListener("click", togglePopup);
 
     // Close on click outside
-    document.addEventListener('click', function (e) {
+    document.addEventListener("click", function (e) {
       if (!container.contains(e.target)) {
         closePopup();
       }
     });
 
     // Close on Escape key (only for popup, not the dialog which has its own handler)
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !document.getElementById('helpbutton-qs-bug-dialog-overlay')) {
+    document.addEventListener("keydown", function (e) {
+      if (
+        e.key === "Escape" &&
+        !document.getElementById("helpbutton-qs-bug-dialog-overlay")
+      ) {
         closePopup();
         btn.focus();
       }
@@ -1493,7 +1590,7 @@ var ICONS = {
   // Initialization — wait for the anchor element to appear in the DOM
   // ---------------------------------------------------------------------------
   function init() {
-    log('Initializing. Config:', JSON.stringify(cfg, null, 2));
+    log("Initializing. Config:", JSON.stringify(cfg, null, 2));
 
     // If the anchor already exists, inject immediately
     if (document.querySelector(cfg.anchorSelector)) {
@@ -1501,7 +1598,7 @@ var ICONS = {
       return;
     }
 
-    log('Anchor not yet in DOM. Setting up observer…');
+    log("Anchor not yet in DOM. Setting up observer…");
 
     var startTime = Date.now();
     var observer = null;
@@ -1515,7 +1612,11 @@ var ICONS = {
         return;
       }
       if (Date.now() - startTime > cfg.timeout) {
-        log('Timeout: anchor element did not appear within', cfg.timeout, 'ms.');
+        log(
+          "Timeout: anchor element did not appear within",
+          cfg.timeout,
+          "ms.",
+        );
         cleanup();
         return;
       }
@@ -1541,7 +1642,7 @@ var ICONS = {
     }
 
     // Start MutationObserver
-    if (typeof MutationObserver !== 'undefined') {
+    if (typeof MutationObserver !== "undefined") {
       observer = new MutationObserver(onMutation);
       observer.observe(document.documentElement, {
         childList: true,
@@ -1561,11 +1662,11 @@ var ICONS = {
   // Qlik Sense is a SPA — navigating between apps/sheets may destroy and
   // recreate the toolbar. We watch for removal of our button and re-inject.
   function watchForRemoval() {
-    if (typeof MutationObserver === 'undefined') return;
+    if (typeof MutationObserver === "undefined") return;
 
     var removalObserver = new MutationObserver(function () {
-      if (!document.getElementById('helpbutton-qs')) {
-        log('Button removed from DOM (SPA navigation?). Re-injecting…');
+      if (!document.getElementById("helpbutton-qs")) {
+        log("Button removed from DOM (SPA navigation?). Re-injecting…");
         // Small delay to let the new toolbar render
         setTimeout(function () {
           init();
@@ -1582,8 +1683,8 @@ var ICONS = {
   // ---------------------------------------------------------------------------
   // Entry point
   // ---------------------------------------------------------------------------
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
       fetchTemplateContext();
       init();
       watchForRemoval();

@@ -18,25 +18,25 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Tekst som vises på verktøylinjeknappen */
-  buttonLabel: 'Hjelp',
+  buttonLabel: "Hjelp",
 
   /** Nettleserens verktøytips ved peker */
-  buttonTooltip: 'Åpne hjelpemenyen',
+  buttonTooltip: "Åpne hjelpemenyen",
 
   /** Ikon for verktøylinjeknappen: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Verktøylinjeknapp — farger / stil
   // --------------------------------------------------------------------------
   buttonStyle: {
-    backgroundColor: '#165a9b',
-    backgroundColorHover: '#12487c',
-    backgroundColorActive: '#0e3b65',
-    textColor: '#ffffff',
-    borderColor: '#0e3b65',
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+    backgroundColor: "#165a9b",
+    backgroundColorHover: "#12487c",
+    backgroundColorActive: "#0e3b65",
+    textColor: "#ffffff",
+    borderColor: "#0e3b65",
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
   },
 
   // --------------------------------------------------------------------------
@@ -44,17 +44,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Overskrift som vises øverst i popup-menyen */
-  popupTitle: 'Trenger du hjelp?',
+  popupTitle: "Trenger du hjelp?",
 
   /** Popup-farger — mørk marineblå overskrift med gul tekst */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',
-    headerTextColor: '#ffcc33',
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256",
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256",
+    headerTextColor: "#ffcc33",
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -79,23 +79,23 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Hjelp og dokumentasjon',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      label: "Hjelp og dokumentasjon",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Rapporter en feil',
-      action: 'bugReport',       // <-- Åpner feilrapportdialogen
-      icon: 'bug',
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      label: "Rapporter en feil",
+      action: "bugReport", // <-- Åpner feilrapportdialogen
+      icon: "bug",
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
   ],
 
@@ -104,15 +104,15 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   bugReport: {
     /** Tittel som vises øverst i feilrapportdialogen */
-    dialogTitle: 'Rapporter en feil',
+    dialogTitle: "Rapporter en feil",
 
     /**
      * OBLIGATORISK — URL-en å POSTe feilrapportens JSON-data til.
      */
-    webhookUrl: 'https://localhost:3443/api/bug-reports',
+    webhookUrl: "https://localhost:3443/api/bug-reports",
 
     /** HTTP-metode for webhook-kallet (standard: POST) */
-    webhookMethod: 'POST',
+    webhookMethod: "POST",
 
     /**
      * Autentiseringsstrategi for webhook-kallet.
@@ -123,56 +123,56 @@ window.helpButtonQsConfig = {
      * type: 'custom'         — Send vilkårlige headers fra customHeaders-objektet
      */
     auth: {
-      type: 'none',
+      type: "none",
     },
 
     /**
      * Hvilke kontekstfelter som skal samles inn og vises i dialogen.
      */
     collectFields: [
-      'userName',
-      'userDirectory',
-      'userId',
-      'senseVersion',
-      'appId',
-      'sheetId',
-      'urlPath',
+      "userName",
+      "userDirectory",
+      "userId",
+      "senseVersion",
+      "appId",
+      "sheetId",
+      "urlPath",
     ],
 
     /** Plassholdertekst for beskrivelses-tekstfeltet */
-    descriptionPlaceholder: 'Beskriv problemet du opplevde…',
+    descriptionPlaceholder: "Beskriv problemet du opplevde…",
 
     /** Varslingsmeldinger som vises etter innsending */
-    successMessage: 'Feilrapporten ble sendt!',
-    errorMessage: 'Kunne ikke sende feilrapporten.',
+    successMessage: "Feilrapporten ble sendt!",
+    errorMessage: "Kunne ikke sende feilrapporten.",
 
     /** Etikett over beskrivelses-tekstfeltet */
-    descriptionLabel: 'Beskrivelse *',
+    descriptionLabel: "Beskrivelse *",
 
     /** Tekst på Avbryt-knappen */
-    cancelButtonText: 'Avbryt',
+    cancelButtonText: "Avbryt",
 
     /** Tekst på Send-knappen */
-    submitButtonText: 'Send',
+    submitButtonText: "Send",
 
     /** Tekst som vises på Send-knappen mens rapporten sendes */
-    submittingButtonText: 'Sender…',
+    submittingButtonText: "Sender…",
 
     /** Tekst som vises mens miljøkontekst lastes */
-    loadingMessage: 'Samler inn miljøinformasjon…',
+    loadingMessage: "Samler inn miljøinformasjon…",
 
     /** Aria-etikett for lukk-knappen (×) i dialogens overskrift */
-    closeDialogAriaLabel: 'Lukk dialogboksen',
+    closeDialogAriaLabel: "Lukk dialogboksen",
 
     /** Etiketter for hvert kontekstfelt i dialogen. */
     fieldLabels: {
-      userId: 'Bruker-ID',
-      userName: 'Brukernavn',
-      userDirectory: 'Brukerkatalog',
-      senseVersion: 'Qlik Sense-versjon',
-      appId: 'App-ID',
-      sheetId: 'Ark-ID',
-      urlPath: 'URL-sti',
+      userId: "Bruker-ID",
+      userName: "Brukernavn",
+      userDirectory: "Brukerkatalog",
+      senseVersion: "Qlik Sense-versjon",
+      appId: "App-ID",
+      sheetId: "Ark-ID",
+      urlPath: "URL-sti",
     },
   },
 

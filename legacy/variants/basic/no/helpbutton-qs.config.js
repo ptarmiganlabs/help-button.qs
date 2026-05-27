@@ -18,13 +18,13 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Tekst som vises på verktøylinjeknappen */
-  buttonLabel: 'Hjelp',
+  buttonLabel: "Hjelp",
 
   /** Nettleserens verktøytips ved pekerfølging */
-  buttonTooltip: 'Åpne hjelpemenyen',
+  buttonTooltip: "Åpne hjelpemenyen",
 
   /** Ikon for verktøylinjeknappen: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Verktøylinjeknapp — farger / stil
@@ -32,13 +32,13 @@ window.helpButtonQsConfig = {
   // Hovedknappen i Qlik Sense verktøylinjen.
   // Alle farger nedenfor har en profesjonell blå stil som standard.
   buttonStyle: {
-    backgroundColor: '#165a9b',        // Primær blå
-    backgroundColorHover: '#12487c',   // Mørkere ved peking
-    backgroundColorActive: '#0e3b65',  // Mørkest ved klikk
-    textColor: '#ffffff',              // Hvit tekst og ikon
-    borderColor: '#0e3b65',            // Subtil mørk kantlinje
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)', // Gul fokusring
+    backgroundColor: "#165a9b", // Primær blå
+    backgroundColorHover: "#12487c", // Mørkere ved peking
+    backgroundColorActive: "#0e3b65", // Mørkest ved klikk
+    textColor: "#ffffff", // Hvit tekst og ikon
+    borderColor: "#0e3b65", // Subtil mørk kantlinje
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)", // Gul fokusring
   },
 
   // --------------------------------------------------------------------------
@@ -46,17 +46,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Overskrift som vises øverst i popup-menyen */
-  popupTitle: 'Trenger du hjelp?',
+  popupTitle: "Trenger du hjelp?",
 
   /** Popup-farger — mørkeblå overskrift med gul tekst */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',            // Mørk marineblå kantlinje
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',  // Mørk marineblå overskrift
-    headerTextColor: '#ffcc33',        // Gul overskriftstekst
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256", // Mørk marineblå kantlinje
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256", // Mørk marineblå overskrift
+    headerTextColor: "#ffcc33", // Gul overskriftstekst
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -84,37 +84,37 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Hjelp og dokumentasjon',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
+      label: "Hjelp og dokumentasjon",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
       // Farger per element (blå tone)
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Rapporter en feil',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
-      icon: 'bug',
-      target: '_blank',
+      label: "Rapporter en feil",
+      url: "https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose",
+      icon: "bug",
+      target: "_blank",
       // Farger per element (varm ravtone)
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
     {
-      label:  'Ptarmigan Labs',
-      url:    'https://ptarmiganlabs.com',
-      icon:   'link',
-      target: '_blank',
+      label: "Ptarmigan Labs",
+      url: "https://ptarmiganlabs.com",
+      icon: "link",
+      target: "_blank",
       // Farger per element (grønn tone)
-      iconColor:    '#059669',
-      bgColor:      '#ecfdf5',
-      bgColorHover: '#d1fae5',
-      textColor:    '#065f46',
+      iconColor: "#059669",
+      bgColor: "#ecfdf5",
+      bgColorHover: "#d1fae5",
+      textColor: "#065f46",
     },
   ],
 

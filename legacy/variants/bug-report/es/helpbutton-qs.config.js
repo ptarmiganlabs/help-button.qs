@@ -19,25 +19,25 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Texto mostrado en el botón de la barra de herramientas */
-  buttonLabel: 'Ayuda',
+  buttonLabel: "Ayuda",
 
   /** Información emergente del navegador al pasar el cursor */
-  buttonTooltip: 'Abrir menú de ayuda',
+  buttonTooltip: "Abrir menú de ayuda",
 
   /** Icono del botón: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Botón de la barra de herramientas — colores / estilo
   // --------------------------------------------------------------------------
   buttonStyle: {
-    backgroundColor: '#165a9b',
-    backgroundColorHover: '#12487c',
-    backgroundColorActive: '#0e3b65',
-    textColor: '#ffffff',
-    borderColor: '#0e3b65',
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+    backgroundColor: "#165a9b",
+    backgroundColorHover: "#12487c",
+    backgroundColorActive: "#0e3b65",
+    textColor: "#ffffff",
+    borderColor: "#0e3b65",
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
   },
 
   // --------------------------------------------------------------------------
@@ -45,17 +45,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Título en la parte superior del menú emergente */
-  popupTitle: '¿Necesita ayuda?',
+  popupTitle: "¿Necesita ayuda?",
 
   /** Colores del popup — encabezado azul marino oscuro con texto amarillo */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',
-    headerTextColor: '#ffcc33',
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256",
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256",
+    headerTextColor: "#ffcc33",
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -80,23 +80,23 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Ayuda y documentación',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      label: "Ayuda y documentación",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Reportar un error',
-      action: 'bugReport',       // <-- Abre el diálogo de informe de errores
-      icon: 'bug',
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      label: "Reportar un error",
+      action: "bugReport", // <-- Abre el diálogo de informe de errores
+      icon: "bug",
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
   ],
 
@@ -105,15 +105,15 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   bugReport: {
     /** Título en la parte superior del diálogo de informe de errores */
-    dialogTitle: 'Reportar un error',
+    dialogTitle: "Reportar un error",
 
     /**
      * OBLIGATORIO — La URL a la que enviar los datos JSON del informe de errores.
      */
-    webhookUrl: 'https://localhost:3443/api/bug-reports',
+    webhookUrl: "https://localhost:3443/api/bug-reports",
 
     /** Método HTTP para la llamada webhook (predeterminado: POST) */
-    webhookMethod: 'POST',
+    webhookMethod: "POST",
 
     /**
      * Estrategia de autenticación para la llamada webhook.
@@ -124,56 +124,56 @@ window.helpButtonQsConfig = {
      * type: 'custom'         — Enviar encabezados arbitrarios desde customHeaders
      */
     auth: {
-      type: 'none',
+      type: "none",
     },
 
     /**
      * Qué campos de contexto recopilar y mostrar en el diálogo.
      */
     collectFields: [
-      'userName',
-      'userDirectory',
-      'userId',
-      'senseVersion',
-      'appId',
-      'sheetId',
-      'urlPath',
+      "userName",
+      "userDirectory",
+      "userId",
+      "senseVersion",
+      "appId",
+      "sheetId",
+      "urlPath",
     ],
 
     /** Texto indicativo para el campo de descripción */
-    descriptionPlaceholder: 'Describa el problema encontrado…',
+    descriptionPlaceholder: "Describa el problema encontrado…",
 
     /** Mensajes de notificación después del envío */
-    successMessage: '¡Informe de error enviado con éxito!',
-    errorMessage: 'No se pudo enviar el informe de error.',
+    successMessage: "¡Informe de error enviado con éxito!",
+    errorMessage: "No se pudo enviar el informe de error.",
 
     /** Etiqueta sobre el campo de descripción */
-    descriptionLabel: 'Descripción *',
+    descriptionLabel: "Descripción *",
 
     /** Texto del botón Cancelar */
-    cancelButtonText: 'Cancelar',
+    cancelButtonText: "Cancelar",
 
     /** Texto del botón Enviar */
-    submitButtonText: 'Enviar',
+    submitButtonText: "Enviar",
 
     /** Texto del botón Enviar durante el envío */
-    submittingButtonText: 'Enviando…',
+    submittingButtonText: "Enviando…",
 
     /** Texto mostrado mientras se cargan las informaciones del entorno */
-    loadingMessage: 'Recopilando información del entorno…',
+    loadingMessage: "Recopilando información del entorno…",
 
     /** Etiqueta aria para el botón de cierre (×) */
-    closeDialogAriaLabel: 'Cerrar diálogo',
+    closeDialogAriaLabel: "Cerrar diálogo",
 
     /** Etiquetas para cada campo de contexto en el diálogo. */
     fieldLabels: {
-      userId: 'ID de usuario',
-      userName: 'Nombre de usuario',
-      userDirectory: 'Directorio de usuario',
-      senseVersion: 'Versión de Qlik Sense',
-      appId: 'ID de aplicación',
-      sheetId: 'ID de hoja',
-      urlPath: 'Ruta URL',
+      userId: "ID de usuario",
+      userName: "Nombre de usuario",
+      userDirectory: "Directorio de usuario",
+      senseVersion: "Versión de Qlik Sense",
+      appId: "ID de aplicación",
+      sheetId: "ID de hoja",
+      urlPath: "Ruta URL",
     },
   },
 

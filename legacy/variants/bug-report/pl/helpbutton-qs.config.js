@@ -18,25 +18,25 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Tekst wyświetlany na przycisku paska narzędzi */
-  buttonLabel: 'Pomoc',
+  buttonLabel: "Pomoc",
 
   /** Podpowiedź przeglądarki po najechaniu */
-  buttonTooltip: 'Otwórz menu pomocy',
+  buttonTooltip: "Otwórz menu pomocy",
 
   /** Ikona przycisku: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Przycisk paska narzędzi — kolory / styl
   // --------------------------------------------------------------------------
   buttonStyle: {
-    backgroundColor: '#165a9b',
-    backgroundColorHover: '#12487c',
-    backgroundColorActive: '#0e3b65',
-    textColor: '#ffffff',
-    borderColor: '#0e3b65',
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+    backgroundColor: "#165a9b",
+    backgroundColorHover: "#12487c",
+    backgroundColorActive: "#0e3b65",
+    textColor: "#ffffff",
+    borderColor: "#0e3b65",
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
   },
 
   // --------------------------------------------------------------------------
@@ -44,17 +44,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Tytuł na górze menu popup */
-  popupTitle: 'Potrzebujesz pomocy?',
+  popupTitle: "Potrzebujesz pomocy?",
 
   /** Kolory popup — ciemnogranatowy nagłówek z żółtym tekstem */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',
-    headerTextColor: '#ffcc33',
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256",
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256",
+    headerTextColor: "#ffcc33",
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -79,23 +79,23 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Pomoc i dokumentacja',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      label: "Pomoc i dokumentacja",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Zgłoś błąd',
-      action: 'bugReport',       // <-- Otwiera dialog raportu błędu
-      icon: 'bug',
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      label: "Zgłoś błąd",
+      action: "bugReport", // <-- Otwiera dialog raportu błędu
+      icon: "bug",
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
   ],
 
@@ -104,15 +104,15 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   bugReport: {
     /** Tytuł na górze dialogu raportu błędu */
-    dialogTitle: 'Zgłoś błąd',
+    dialogTitle: "Zgłoś błąd",
 
     /**
      * WYMAGANE — URL, na który wysyłane są dane JSON raportu błędu.
      */
-    webhookUrl: 'https://localhost:3443/api/bug-reports',
+    webhookUrl: "https://localhost:3443/api/bug-reports",
 
     /** Metoda HTTP dla wywołania webhook (domyślnie: POST) */
-    webhookMethod: 'POST',
+    webhookMethod: "POST",
 
     /**
      * Strategia uwierzytelniania dla wywołania webhook.
@@ -123,56 +123,56 @@ window.helpButtonQsConfig = {
      * type: 'custom'         — Wyślij dowolne nagłówki z obiektu customHeaders
      */
     auth: {
-      type: 'none',
+      type: "none",
     },
 
     /**
      * Jakie pola kontekstowe zbierać i wyświetlać w dialogu.
      */
     collectFields: [
-      'userName',
-      'userDirectory',
-      'userId',
-      'senseVersion',
-      'appId',
-      'sheetId',
-      'urlPath',
+      "userName",
+      "userDirectory",
+      "userId",
+      "senseVersion",
+      "appId",
+      "sheetId",
+      "urlPath",
     ],
 
     /** Tekst zastępczy dla pola opisu */
-    descriptionPlaceholder: 'Opisz napotkany problem…',
+    descriptionPlaceholder: "Opisz napotkany problem…",
 
     /** Komunikaty powiadomień po wysłaniu */
-    successMessage: 'Raport błędu wysłany pomyślnie!',
-    errorMessage: 'Nie udało się wysłać raportu błędu.',
+    successMessage: "Raport błędu wysłany pomyślnie!",
+    errorMessage: "Nie udało się wysłać raportu błędu.",
 
     /** Etykieta nad polem opisu */
-    descriptionLabel: 'Opis *',
+    descriptionLabel: "Opis *",
 
     /** Tekst przycisku Anuluj */
-    cancelButtonText: 'Anuluj',
+    cancelButtonText: "Anuluj",
 
     /** Tekst przycisku Wyślij */
-    submitButtonText: 'Wyślij',
+    submitButtonText: "Wyślij",
 
     /** Tekst przycisku Wyślij podczas wysyłania */
-    submittingButtonText: 'Wysyłanie…',
+    submittingButtonText: "Wysyłanie…",
 
     /** Tekst wyświetlany podczas ładowania informacji o środowisku */
-    loadingMessage: 'Zbieranie informacji o środowisku…',
+    loadingMessage: "Zbieranie informacji o środowisku…",
 
     /** Etykieta aria dla przycisku zamknięcia (×) */
-    closeDialogAriaLabel: 'Zamknij okno dialogowe',
+    closeDialogAriaLabel: "Zamknij okno dialogowe",
 
     /** Etykiety dla każdego pola kontekstowego w dialogu. */
     fieldLabels: {
-      userId: 'ID użytkownika',
-      userName: 'Nazwa użytkownika',
-      userDirectory: 'Katalog użytkownika',
-      senseVersion: 'Wersja Qlik Sense',
-      appId: 'ID aplikacji',
-      sheetId: 'ID arkusza',
-      urlPath: 'Ścieżka URL',
+      userId: "ID użytkownika",
+      userName: "Nazwa użytkownika",
+      userDirectory: "Katalog użytkownika",
+      senseVersion: "Wersja Qlik Sense",
+      appId: "ID aplikacji",
+      sheetId: "ID arkusza",
+      urlPath: "Ścieżka URL",
     },
   },
 

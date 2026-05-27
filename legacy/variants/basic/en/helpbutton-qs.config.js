@@ -18,13 +18,13 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Text shown on the toolbar button */
-  buttonLabel: 'Help',
+  buttonLabel: "Help",
 
   /** Native browser tooltip on hover */
-  buttonTooltip: 'Open help menu',
+  buttonTooltip: "Open help menu",
 
   /** Icon for the toolbar button: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Toolbar button — colors / style
@@ -32,13 +32,13 @@ window.helpButtonQsConfig = {
   // The main button that sits in the Qlik Sense toolbar.
   // All colors below default to a professional blue style.
   buttonStyle: {
-    backgroundColor: '#165a9b',        // Primary blue
-    backgroundColorHover: '#12487c',   // Darker on hover
-    backgroundColorActive: '#0e3b65',  // Darkest on click
-    textColor: '#ffffff',              // White text & icon
-    borderColor: '#0e3b65',            // Subtle dark border
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)', // Yellow focus ring
+    backgroundColor: "#165a9b", // Primary blue
+    backgroundColorHover: "#12487c", // Darker on hover
+    backgroundColorActive: "#0e3b65", // Darkest on click
+    textColor: "#ffffff", // White text & icon
+    borderColor: "#0e3b65", // Subtle dark border
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)", // Yellow focus ring
   },
 
   // --------------------------------------------------------------------------
@@ -46,17 +46,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Heading displayed at the top of the dropdown popup */
-  popupTitle: 'Need assistance?',
+  popupTitle: "Need assistance?",
 
   /** Popup colors — dark-blue header with yellow text */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',            // Dark navy border
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',  // Dark navy header
-    headerTextColor: '#ffcc33',        // Yellow header text
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256", // Dark navy border
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256", // Dark navy header
+    headerTextColor: "#ffcc33", // Yellow header text
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -84,37 +84,37 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Help & documentation',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
+      label: "Help & documentation",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
       // Per-item colors (blue tint)
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Report a bug',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
-      icon: 'bug',
-      target: '_blank',
+      label: "Report a bug",
+      url: "https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose",
+      icon: "bug",
+      target: "_blank",
       // Per-item colors (warm amber tint)
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
     {
-      label:  'Ptarmigan Labs',
-      url:    'https://ptarmiganlabs.com',
-      icon:   'link',
-      target: '_blank',
+      label: "Ptarmigan Labs",
+      url: "https://ptarmiganlabs.com",
+      icon: "link",
+      target: "_blank",
       // Per-item colors (green tint)
-      iconColor:    '#059669',
-      bgColor:      '#ecfdf5',
-      bgColorHover: '#d1fae5',
-      textColor:    '#065f46',
+      iconColor: "#059669",
+      bgColor: "#ecfdf5",
+      bgColorHover: "#d1fae5",
+      textColor: "#065f46",
     },
     // -- Examples of additional items you can add: --
     // {                                    // ← Template field example
