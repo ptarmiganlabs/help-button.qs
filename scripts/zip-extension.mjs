@@ -1,6 +1,6 @@
 import { createWriteStream } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import archiver from 'archiver';
+import { ZipArchive } from 'archiver';
 
 /**
  * Create a ZIP archive of the extension for distribution.
@@ -13,7 +13,7 @@ async function main() {
     const versionTag = (process.env.RELEASE_VERSION && `-v${process.env.RELEASE_VERSION}`) || '';
     const zipName = `${pkg.name}${versionTag}${prerelease}.zip`;
     const output = createWriteStream(zipName);
-    const archive = archiver('zip', {
+    const archive = new ZipArchive({
         zlib: { level: 9 },
     });
 
