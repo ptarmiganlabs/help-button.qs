@@ -1,31 +1,31 @@
-'use strict';
+"use strict";
 
 // Load .env file (if present) before reading any process.env values
-require('dotenv').config();
+require("dotenv").config();
 
-const express = require('express');
-const cors = require('cors');
-const winston = require('winston');
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
+const express = require("express");
+const cors = require("cors");
+const winston = require("winston");
+const https = require("https");
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
 
 // ---------------------------------------------------------------------------
 // Configuration via environment variables
 // ---------------------------------------------------------------------------
-const HOST = process.env.HOST || 'localhost';
+const HOST = process.env.HOST || "localhost";
 const HTTP_PORT = process.env.PORT || 3000;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
-const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
-const DEBUG_LOG_AUTH = process.env.DEBUG_LOG_AUTH === 'true';
+const LOG_LEVEL = process.env.LOG_LEVEL || "info";
+const DEBUG_LOG_AUTH = process.env.DEBUG_LOG_AUTH === "true";
 
 // ---------------------------------------------------------------------------
 // TLS certificate paths
 // ---------------------------------------------------------------------------
-const CERT_DIR = path.join(__dirname, 'certs');
-const CERT_PATH = process.env.TLS_CERT || path.join(CERT_DIR, 'cert.pem');
-const KEY_PATH = process.env.TLS_KEY || path.join(CERT_DIR, 'key.pem');
+const CERT_DIR = path.join(__dirname, "certs");
+const CERT_PATH = process.env.TLS_CERT || path.join(CERT_DIR, "cert.pem");
+const KEY_PATH = process.env.TLS_KEY || path.join(CERT_DIR, "key.pem");
 
 // ---------------------------------------------------------------------------
 // Winston logger — follows the pattern from github.com/ptarmiganlabs/butler
@@ -34,18 +34,22 @@ const logger = winston.createLogger({
   level: LOG_LEVEL,
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+    winston.format.printf(
+      (info) => `${info.timestamp} ${info.level}: ${info.message}`,
+    ),
   ),
   transports: [
     new winston.transports.Console({
-      name: 'console',
+      name: "console",
       level: LOG_LEVEL,
       format: winston.format.combine(
         winston.format.errors({ stack: true }),
         winston.format.timestamp(),
         winston.format.colorize(),
         winston.format.simple(),
-        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+        winston.format.printf(
+          (info) => `${info.timestamp} ${info.level}: ${info.message}`,
+        ),
       ),
     }),
   ],
@@ -60,32 +64,29 @@ const feedbackEntries = [];
 
 function storeEntry(list, entry, req) {
   // Detect authentication strategy from request headers
-  let authType = 'none';
-  let authDetails = '';
+  let authType = "none";
+  let authDetails = "";
 
-  const authHeader = req.get('Authorization');
-  const xrfKey = req.get('X-Qlik-Xrfkey');
+  const authHeader = req.get("Authorization");
 
-  if (xrfKey) {
-    authType = 'sense-session';
-    authDetails = `XRF Key: ${xrfKey}`;
-  } else if (authHeader) {
-    if (authHeader.startsWith('Bearer ')) {
-      authType = 'header';
+  if (authHeader) {
+    if (authHeader.startsWith("Bearer ")) {
+      authType = "header";
       if (DEBUG_LOG_AUTH) {
         // Mask token but show first/last bits for debugging (only when explicitly enabled)
         const token = authHeader.substring(7);
-        const masked = token.length > 12
-          ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}`
-          : '***';
+        const masked =
+          token.length > 12
+            ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}`
+            : "***";
         authDetails = `Bearer token: ${masked}`;
       } else {
         // Do not store or log any token-derived data by default
-        authDetails = 'Bearer token present';
+        authDetails = "Bearer token present";
       }
     } else {
-      authType = 'custom';
-      authDetails = 'Authorization header (non-Bearer)';
+      authType = "custom";
+      authDetails = "Authorization header (non-Bearer)";
     }
   } else {
     // Check for other headers with a custom/vendor prefix to
@@ -93,17 +94,17 @@ function storeEntry(list, entry, req) {
     // brittle allowlist of standard browser headers.
     const customHeaders = Object.keys(req.headers).filter(function (h) {
       const name = h.toLowerCase();
-      return name.indexOf('x-') === 0;
+      return name.indexOf("x-") === 0;
     });
 
     if (customHeaders.length > 0) {
-      authType = 'custom';
-      authDetails = `${customHeaders.length} custom header(s): ${customHeaders.join(', ')}`;
+      authType = "custom";
+      authDetails = `${customHeaders.length} custom header(s): ${customHeaders.join(", ")}`;
     }
   }
 
   entry.auth = { type: authType, details: authDetails };
-  
+
   list.unshift(entry);
   if (list.length > MAX_STORED) list.length = MAX_STORED;
 }
@@ -114,9 +115,21 @@ function storeEntry(list, entry, req) {
 // object-properties.js → payloadKeyNames.
 // ---------------------------------------------------------------------------
 const DEFAULT_CONTEXT_KEYS = new Set([
-  'userName', 'platform', 'appId', 'sheetId', 'urlPath', 'timestamp',
-  'userId', 'userDirectory', 'senseVersion', 'browser',
-  'tenantId', 'status', 'picture', 'preferredZoneinfo', 'roles',
+  "userName",
+  "platform",
+  "appId",
+  "sheetId",
+  "urlPath",
+  "timestamp",
+  "userId",
+  "userDirectory",
+  "senseVersion",
+  "browser",
+  "tenantId",
+  "status",
+  "picture",
+  "preferredZoneinfo",
+  "roles",
 ]);
 
 // ---------------------------------------------------------------------------
@@ -128,14 +141,15 @@ const DEFAULT_CONTEXT_KEYS = new Set([
  * Adapts to whatever fields are present rather than hard-coding.
  */
 function formatContextFields(context) {
-  if (!context || typeof context !== 'object') return '  (no context)';
+  if (!context || typeof context !== "object") return "  (no context)";
   const lines = [];
   for (const [key, value] of Object.entries(context)) {
     // Pad key for alignment (right-align keys in a 20-char column)
-    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+    const label =
+      key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
     lines.push(`  ${label.padStart(22)}: ${value}`);
   }
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 /**
@@ -143,7 +157,7 @@ function formatContextFields(context) {
  * default camelCase set (i.e. the user has customised payload key names).
  */
 function hasCustomKeyNames(context) {
-  if (!context || typeof context !== 'object') return false;
+  if (!context || typeof context !== "object") return false;
   return Object.keys(context).some((k) => !DEFAULT_CONTEXT_KEYS.has(k));
 }
 
@@ -153,64 +167,83 @@ function hasCustomKeyNames(context) {
 
 function escapeHtml(str) {
   return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function renderContextTable(context) {
-  if (!context || typeof context !== 'object' || Object.keys(context).length === 0) {
+  if (
+    !context ||
+    typeof context !== "object" ||
+    Object.keys(context).length === 0
+  ) {
     return '<p class="empty">No context fields</p>';
   }
   let html = '<table class="ctx">';
   for (const [key, value] of Object.entries(context)) {
-    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+    const label =
+      key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
     html += `<tr><td class="ctx-key">${escapeHtml(label)}</td><td class="ctx-val">${escapeHtml(String(value))}</td></tr>`;
   }
-  html += '</table>';
+  html += "</table>";
   return html;
 }
 
 function renderStars(rating) {
-  if (typeof rating !== 'number') return '';
-  return '<span class="stars">' + '★'.repeat(rating) + '☆'.repeat(5 - rating) + ` (${rating}/5)</span>`;
+  if (typeof rating !== "number") return "";
+  return (
+    '<span class="stars">' +
+    "★".repeat(rating) +
+    "☆".repeat(5 - rating) +
+    ` (${rating}/5)</span>`
+  );
 }
 
 function renderDashboard() {
   const authHtml = (a) => {
-    if (!a || a.type === 'none') return '<span class="ts">None</span>';
+    if (!a || a.type === "none") return '<span class="ts">None</span>';
     const typeLabel = {
-      header: '🛡️ Authorization (Bearer)',
-      'sense-session': '🔑 Sense Session (XRF)',
-      custom: '⚙️ Custom Headers'
+      header: "🛡️ Authorization (Bearer)",
+      custom: "⚙️ Custom Headers",
     };
-    return `<span class="ts" title="${escapeHtml(a.details || '')}">${typeLabel[a.type] || escapeHtml(a.type)}${a.details ? ' ℹ️' : ''}</span>`;
+    return `<span class="ts" title="${escapeHtml(a.details || "")}">${typeLabel[a.type] || escapeHtml(a.type)}${a.details ? " ℹ️" : ""}</span>`;
   };
 
-  const severityHtml = { low: '🟢 Low', medium: '🟡 Medium', high: '🔴 High' };
+  const severityHtml = { low: "🟢 Low", medium: "🟡 Medium", high: "🔴 High" };
 
-  const bugRows = bugReports.map((b) => {
-    const sev = b.severity
-      ? `<div class="severity">${severityHtml[b.severity] || escapeHtml(b.severity)}</div>`
-      : '';
-    const desc = b.description
-      ? `<div class="desc">${escapeHtml(b.description.length > 200 ? b.description.substring(0, 200) + '…' : b.description)}</div>`
-      : '';
-    const clientTs = b.clientTimestamp ? `<span class="ts" title="Client timestamp">${escapeHtml(b.clientTimestamp)}</span>` : '';
-    const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(b.auth)}</span></div>`;
-    return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTs}<span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${sev}${desc}${auth}</div>`;
-  }).join('');
+  const bugRows = bugReports
+    .map((b) => {
+      const sev = b.severity
+        ? `<div class="severity">${severityHtml[b.severity] || escapeHtml(b.severity)}</div>`
+        : "";
+      const desc = b.description
+        ? `<div class="desc">${escapeHtml(b.description.length > 200 ? b.description.substring(0, 200) + "…" : b.description)}</div>`
+        : "";
+      const clientTs = b.clientTimestamp
+        ? `<span class="ts" title="Client timestamp">${escapeHtml(b.clientTimestamp)}</span>`
+        : "";
+      const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(b.auth)}</span></div>`;
+      return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTs}<span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${sev}${desc}${auth}</div>`;
+    })
+    .join("");
 
-  const fbRows = feedbackEntries.map((f) => {
-    const rating = f.rating ? `<div class="rating">${renderStars(f.rating)}</div>` : '';
-    const comment = f.comment
-      ? `<div class="desc">${escapeHtml(f.comment.length > 200 ? f.comment.substring(0, 200) + '…' : f.comment)}</div>`
-      : '';
-    const clientTs = f.clientTimestamp ? `<span class="ts" title="Client timestamp">${escapeHtml(f.clientTimestamp)}</span>` : '';
-    const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(f.auth)}</span></div>`;
-    return `<div class="card fb"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTs}<span class="ts">${escapeHtml(f.receivedAt)}</span></div>${renderContextTable(f.context)}${rating}${comment}${auth}</div>`;
-  }).join('');
+  const fbRows = feedbackEntries
+    .map((f) => {
+      const rating = f.rating
+        ? `<div class="rating">${renderStars(f.rating)}</div>`
+        : "";
+      const comment = f.comment
+        ? `<div class="desc">${escapeHtml(f.comment.length > 200 ? f.comment.substring(0, 200) + "…" : f.comment)}</div>`
+        : "";
+      const clientTs = f.clientTimestamp
+        ? `<span class="ts" title="Client timestamp">${escapeHtml(f.clientTimestamp)}</span>`
+        : "";
+      const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(f.auth)}</span></div>`;
+      return `<div class="card fb"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTs}<span class="ts">${escapeHtml(f.receivedAt)}</span></div>${renderContextTable(f.context)}${rating}${comment}${auth}</div>`;
+    })
+    .join("");
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -263,7 +296,7 @@ h1{font-size:22px;margin-bottom:4px;color:#0c3256}
 const app = express();
 
 // Parse JSON bodies
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: "1mb" }));
 
 // Enable CORS for all origins (permissive — this is a demo server)
 app.use(cors());
@@ -282,16 +315,16 @@ app.use((req, res, next) => {
  * Dashboard — HTML view of received submissions.
  * GET /
  */
-app.get('/', (_req, res) => {
-  res.type('html').send(renderDashboard());
+app.get("/", (_req, res) => {
+  res.type("html").send(renderDashboard());
 });
 
 /**
  * Health check endpoint.
  * GET /health
  */
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', uptime: process.uptime() });
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
 });
 
 /**
@@ -301,20 +334,27 @@ app.get('/health', (req, res) => {
  * Accepts any JSON payload with { timestamp, context, description }.
  * Context fields are displayed adaptively — whatever is sent is shown.
  */
-app.post('/api/bug-reports', (req, res) => {
+app.post("/api/bug-reports", (req, res) => {
   const { timestamp, context, description, severity } = req.body;
 
   // --- Validation ---
   const errors = [];
-  if (!timestamp) errors.push('Missing required field: timestamp');
-  if (!context || typeof context !== 'object') errors.push('Missing or invalid field: context');
-  if (!description || typeof description !== 'string' || description.trim().length === 0) {
-    errors.push('Missing or empty field: description');
+  if (!timestamp) errors.push("Missing required field: timestamp");
+  if (!context || typeof context !== "object")
+    errors.push("Missing or invalid field: context");
+  if (
+    !description ||
+    typeof description !== "string" ||
+    description.trim().length === 0
+  ) {
+    errors.push("Missing or empty field: description");
   }
 
   if (errors.length > 0) {
-    logger.warn(`BUG REPORT: Rejected — validation failed: ${errors.join('; ')}`);
-    return res.status(400).json({ status: 'error', errors });
+    logger.warn(
+      `BUG REPORT: Rejected — validation failed: ${errors.join("; ")}`,
+    );
+    return res.status(400).json({ status: "error", errors });
   }
 
   // --- Store ---
@@ -332,35 +372,42 @@ app.post('/api/bug-reports', (req, res) => {
   storeEntry(bugReports, entry, req);
 
   // --- Log (adaptive — shows whatever context fields are present) ---
-  const descExcerpt = description.length > 80
-    ? description.substring(0, 80) + '…'
-    : description;
+  const descExcerpt =
+    description.length > 80 ? description.substring(0, 80) + "…" : description;
 
-  const severityIcons = { low: '🟢', medium: '🟡', high: '🔴' };
+  const severityIcons = { low: "🟢", medium: "🟡", high: "🔴" };
 
-  logger.info('─'.repeat(72));
+  logger.info("─".repeat(72));
   logger.info(`BUG REPORT received at ${timestamp}`);
-  logger.info(`                Auth: ${entry.auth.type} (${entry.auth.details || 'no details'})`);
+  logger.info(
+    `                Auth: ${entry.auth.type} (${entry.auth.details || "no details"})`,
+  );
   logger.info(formatContextFields(context));
   if (severity) {
-    logger.info(`              Severity: ${severityIcons[severity] || '?'} ${severity}`);
+    logger.info(
+      `              Severity: ${severityIcons[severity] || "?"} ${severity}`,
+    );
   }
   logger.info(`           Description: ${descExcerpt}`);
-  logger.info('─'.repeat(72));
+  logger.info("─".repeat(72));
 
   // When custom payload key names are detected, log the full payload at info
   // level so operators can see the remapped keys without switching to verbose.
   if (hasCustomKeyNames(context)) {
-    logger.info('BUG REPORT: Custom payload key names detected — full payload:');
+    logger.info(
+      "BUG REPORT: Custom payload key names detected — full payload:",
+    );
     logger.info(JSON.stringify(req.body, null, 2));
   }
 
   // Full payload at verbose level for debugging
-  logger.verbose(`BUG REPORT: Full payload:\n${JSON.stringify(req.body, null, 2)}`);
+  logger.verbose(
+    `BUG REPORT: Full payload:\n${JSON.stringify(req.body, null, 2)}`,
+  );
 
   res.json({
-    status: 'ok',
-    message: 'Bug report received',
+    status: "ok",
+    message: "Bug report received",
     id: entry.id,
   });
 });
@@ -372,29 +419,30 @@ app.post('/api/bug-reports', (req, res) => {
  * Accepts any JSON payload with { timestamp, context, rating?, comment? }.
  * Context fields are displayed adaptively — whatever is sent is shown.
  */
-app.post('/api/feedback', (req, res) => {
+app.post("/api/feedback", (req, res) => {
   const { timestamp, context, rating, comment } = req.body;
 
   // --- Validation ---
   const errors = [];
-  if (!timestamp) errors.push('Missing required field: timestamp');
-  if (!context || typeof context !== 'object') errors.push('Missing or invalid field: context');
+  if (!timestamp) errors.push("Missing required field: timestamp");
+  if (!context || typeof context !== "object")
+    errors.push("Missing or invalid field: context");
 
   // At least one of rating or comment must be provided
-  const hasRating = typeof rating === 'number' && rating >= 1 && rating <= 5;
-  const hasComment = typeof comment === 'string' && comment.trim().length > 0;
+  const hasRating = typeof rating === "number" && rating >= 1 && rating <= 5;
+  const hasComment = typeof comment === "string" && comment.trim().length > 0;
 
   if (!hasRating && !hasComment) {
-    errors.push('At least one of rating (1-5) or comment must be provided');
+    errors.push("At least one of rating (1-5) or comment must be provided");
   }
 
-  if (typeof rating !== 'undefined' && !hasRating) {
-    errors.push('Rating must be a number between 1 and 5');
+  if (typeof rating !== "undefined" && !hasRating) {
+    errors.push("Rating must be a number between 1 and 5");
   }
 
   if (errors.length > 0) {
-    logger.warn(`FEEDBACK: Rejected — validation failed: ${errors.join('; ')}`);
-    return res.status(400).json({ status: 'error', errors });
+    logger.warn(`FEEDBACK: Rejected — validation failed: ${errors.join("; ")}`);
+    return res.status(400).json({ status: "error", errors });
   }
 
   // --- Store ---
@@ -413,39 +461,52 @@ app.post('/api/feedback', (req, res) => {
 
   // --- Log (adaptive — shows whatever context fields are present) ---
   const commentExcerpt = hasComment
-    ? (comment.length > 80 ? comment.substring(0, 80) + '…' : comment)
-    : '(no comment)';
+    ? comment.length > 80
+      ? comment.substring(0, 80) + "…"
+      : comment
+    : "(no comment)";
 
-  logger.info('─'.repeat(72));
+  logger.info("─".repeat(72));
   logger.info(`FEEDBACK received at ${timestamp}`);
-  logger.info(`                Auth: ${entry.auth.type} (${entry.auth.details || 'no details'})`);
+  logger.info(
+    `                Auth: ${entry.auth.type} (${entry.auth.details || "no details"})`,
+  );
   logger.info(formatContextFields(context));
   if (hasRating) {
-    logger.info(`                Rating: ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5)`);
+    logger.info(
+      `                Rating: ${"★".repeat(rating)}${"☆".repeat(5 - rating)} (${rating}/5)`,
+    );
   }
   logger.info(`               Comment: ${commentExcerpt}`);
-  logger.info('─'.repeat(72));
+  logger.info("─".repeat(72));
 
   // When custom payload key names are detected, log the full payload at info
   // level so operators can see the remapped keys without switching to verbose.
   if (hasCustomKeyNames(context)) {
-    logger.info('FEEDBACK: Custom payload key names detected — full payload:');
+    logger.info("FEEDBACK: Custom payload key names detected — full payload:");
     logger.info(JSON.stringify(req.body, null, 2));
   }
 
   // Full payload at verbose level for debugging
-  logger.verbose(`FEEDBACK: Full payload:\n${JSON.stringify(req.body, null, 2)}`);
+  logger.verbose(
+    `FEEDBACK: Full payload:\n${JSON.stringify(req.body, null, 2)}`,
+  );
 
   res.json({
-    status: 'ok',
-    message: 'Feedback received',
+    status: "ok",
+    message: "Feedback received",
     id: entry.id,
   });
 });
 
 // Catch-all for unknown routes
 app.use((req, res) => {
-  res.status(404).json({ status: 'error', message: `Route not found: ${req.method} ${req.url}` });
+  res
+    .status(404)
+    .json({
+      status: "error",
+      message: `Route not found: ${req.method} ${req.url}`,
+    });
 });
 
 // ---------------------------------------------------------------------------
@@ -466,43 +527,51 @@ if (hasCerts) {
   };
 
   https.createServer(tlsOptions, app).listen(HTTPS_PORT, HOST, () => {
-    logger.info('═'.repeat(72));
-    logger.info('  HelpButton.qs Demo Server  (HTTPS)');
-    
+    logger.info("═".repeat(72));
+    logger.info("  HelpButton.qs Demo Server  (HTTPS)");
+
     // Parse and log non-sensitive certificate info
     try {
       const x509 = new crypto.X509Certificate(certRaw);
-      logger.info('  Certificate Info:');
+      logger.info("  Certificate Info:");
       logger.info(`    Subject:          ${x509.subject}`);
       logger.info(`    Issuer:           ${x509.issuer}`);
       logger.info(`    Valid to:         ${x509.validTo}`);
       if (x509.subjectAltName) {
         logger.info(`    Subject Alt Name: ${x509.subjectAltName}`);
       }
-    } catch (err) {
-      logger.warn('  (Could not parse certificate details)');
+    } catch {
+      logger.warn("  (Could not parse certificate details)");
     }
 
     logger.info(`  Listening on:  https://${HOST}:${HTTPS_PORT}`);
-    logger.info(`  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`);
-    logger.info(`  Feedback:      POST https://${HOST}:${HTTPS_PORT}/api/feedback`);
+    logger.info(
+      `  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`,
+    );
+    logger.info(
+      `  Feedback:      POST https://${HOST}:${HTTPS_PORT}/api/feedback`,
+    );
     logger.info(`  Health check:  GET  https://${HOST}:${HTTPS_PORT}/health`);
     logger.info(`  Log level:     ${LOG_LEVEL}`);
-    logger.info('═'.repeat(72));
+    logger.info("═".repeat(72));
   });
 } else {
   // ---- HTTP mode (no certs found) ----------------------------------------
-  logger.warn('No TLS certificates found — starting in plain HTTP mode.');
-  logger.warn('  See README.md for instructions on generating certs.');
+  logger.warn("No TLS certificates found — starting in plain HTTP mode.");
+  logger.warn("  See README.md for instructions on generating certs.");
 
   app.listen(HTTP_PORT, HOST, () => {
-    logger.info('═'.repeat(72));
-    logger.info('  HelpButton.qs Demo Server  (HTTP)');
+    logger.info("═".repeat(72));
+    logger.info("  HelpButton.qs Demo Server  (HTTP)");
     logger.info(`  Listening on:  http://${HOST}:${HTTP_PORT}`);
-    logger.info(`  Bug reports:   POST http://${HOST}:${HTTP_PORT}/api/bug-reports`);
-    logger.info(`  Feedback:      POST http://${HOST}:${HTTP_PORT}/api/feedback`);
+    logger.info(
+      `  Bug reports:   POST http://${HOST}:${HTTP_PORT}/api/bug-reports`,
+    );
+    logger.info(
+      `  Feedback:      POST http://${HOST}:${HTTP_PORT}/api/feedback`,
+    );
     logger.info(`  Health check:  GET  http://${HOST}:${HTTP_PORT}/health`);
     logger.info(`  Log level:     ${LOG_LEVEL}`);
-    logger.info('═'.repeat(72));
+    logger.info("═".repeat(72));
   });
 }

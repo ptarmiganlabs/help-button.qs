@@ -29,8 +29,6 @@ function isSensitiveHeader(name) {
     n === "proxy-authorization" ||
     n === "cookie" ||
     n === "set-cookie" ||
-    n === "x-qlik-xrfkey" ||
-    n === "xrfkey" ||
     n === "x-api-key" ||
     n === "api-key" ||
     n === "apikey" ||
@@ -52,8 +50,6 @@ function isSensitiveHeader(name) {
  * @returns {string}
  */
 function formatHeaderValue(name, value) {
-  const n = String(name || "").toLowerCase();
-  if (n === "x-qlik-xrfkey" || n === "xrfkey") return "<generated>";
   if (isSensitiveHeader(name)) return "<redacted>";
   if (Array.isArray(value)) return value.join(", ");
   return String(value === null || value === undefined ? "" : value);
@@ -110,8 +106,6 @@ export function buildHeaderDisplay(
     } else if (authToken) {
       display.push("Authorization: <redacted>");
     }
-  } else if (authStrategy === "sense-session") {
-    display.push("X-Qlik-Xrfkey: <generated>");
   } else if (authStrategy === "custom") {
     if (Array.isArray(customHeaders)) {
       customHeaders.forEach((h) => {
@@ -215,10 +209,7 @@ export function showPayloadViewer(
   modal.className = "hbqs-payload-modal";
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
-  modal.setAttribute(
-    "aria-label",
-    getTranslation("payloadViewerAriaLabel"),
-  );
+  modal.setAttribute("aria-label", getTranslation("payloadViewerAriaLabel"));
 
   const handleEscapeKey = (e) => {
     if (e.key !== "Escape") return;

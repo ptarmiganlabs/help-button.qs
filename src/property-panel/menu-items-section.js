@@ -141,10 +141,6 @@ const menuItemsSection = {
                   options: [
                     { value: "none", label: "None" },
                     { value: "header", label: "Authorization header" },
-                    {
-                      value: "sense-session",
-                      label: "Sense session (XRF key)",
-                    },
                     { value: "custom", label: "Custom headers" },
                   ],
                 },
@@ -780,10 +776,6 @@ const menuItemsSection = {
                   options: [
                     { value: "none", label: "None" },
                     { value: "header", label: "Authorization header" },
-                    {
-                      value: "sense-session",
-                      label: "Sense session (XRF key)",
-                    },
                     { value: "custom", label: "Custom headers" },
                   ],
                 },

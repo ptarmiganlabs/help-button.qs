@@ -9,15 +9,25 @@
  * calls to resolveText / getTranslation.
  */
 
-import translations from './translations';
-import logger from '../util/logger';
+import translations from "./translations";
+import logger from "../util/logger";
 
 /**
  * Supported locale codes.
  *
  * @type {string[]}
  */
-const SUPPORTED_LOCALES = ['en', 'sv', 'no', 'da', 'fi', 'de', 'fr', 'pl', 'es'];
+const SUPPORTED_LOCALES = [
+  "en",
+  "sv",
+  "no",
+  "da",
+  "fi",
+  "de",
+  "fr",
+  "pl",
+  "es",
+];
 
 /**
  * Detected locale — cached after first call to detectLocale().
@@ -32,7 +42,7 @@ let detectedLocale = null;
  *
  * @type {string}
  */
-let forceLocale = 'auto';
+let forceLocale = "auto";
 
 /**
  * Set the forced locale.
@@ -41,8 +51,8 @@ let forceLocale = 'auto';
  * @param {string} locale - 'auto' or a supported two-letter locale code.
  */
 export function setForceLocale(locale) {
-    forceLocale = locale || 'auto';
-    logger.debug('Force locale set to:', forceLocale);
+  forceLocale = locale || "auto";
+  logger.debug("Force locale set to:", forceLocale);
 }
 
 /**
@@ -55,10 +65,14 @@ export function setForceLocale(locale) {
  * @returns {string} Two-letter locale code.
  */
 export function getEffectiveLocale() {
-    if (forceLocale && forceLocale !== 'auto' && SUPPORTED_LOCALES.includes(forceLocale)) {
-        return forceLocale;
-    }
-    return detectLocale();
+  if (
+    forceLocale &&
+    forceLocale !== "auto" &&
+    SUPPORTED_LOCALES.includes(forceLocale)
+  ) {
+    return forceLocale;
+  }
+  return detectLocale();
 }
 
 /**
@@ -73,31 +87,31 @@ export function getEffectiveLocale() {
  * @returns {string} Two-letter locale code (e.g. 'en', 'sv', 'de').
  */
 export function detectLocale() {
-    if (detectedLocale) return detectedLocale;
+  if (detectedLocale) return detectedLocale;
 
-    let locale = 'en';
+  let locale = "en";
 
-    // Try document lang attribute (Qlik sets this in some deployments)
-    const docLang = document.documentElement.lang;
-    if (docLang) {
-        const code = normalizeLocale(docLang);
-        if (SUPPORTED_LOCALES.includes(code)) {
-            locale = code;
-        }
+  // Try document lang attribute (Qlik sets this in some deployments)
+  const docLang = document.documentElement.lang;
+  if (docLang) {
+    const code = normalizeLocale(docLang);
+    if (SUPPORTED_LOCALES.includes(code)) {
+      locale = code;
     }
+  }
 
-    // Fallback to browser language
-    if (locale === 'en' && !docLang) {
-        const browserLang = navigator.language || navigator.userLanguage || '';
-        const code = normalizeLocale(browserLang);
-        if (SUPPORTED_LOCALES.includes(code)) {
-            locale = code;
-        }
+  // Fallback to browser language
+  if (locale === "en" && !docLang) {
+    const browserLang = navigator.language || navigator.userLanguage || "";
+    const code = normalizeLocale(browserLang);
+    if (SUPPORTED_LOCALES.includes(code)) {
+      locale = code;
     }
+  }
 
-    detectedLocale = locale;
-    logger.debug('Detected locale:', locale);
-    return locale;
+  detectedLocale = locale;
+  logger.debug("Detected locale:", locale);
+  return locale;
 }
 
 /**
@@ -110,12 +124,12 @@ export function detectLocale() {
  * @returns {string} Normalized two-letter code.
  */
 function normalizeLocale(localeStr) {
-    const code = (localeStr || '').split('-')[0].toLowerCase();
+  const code = (localeStr || "").split("-")[0].toLowerCase();
 
-    // Norwegian Bokmål / Nynorsk → 'no'
-    if (code === 'nb' || code === 'nn') return 'no';
+  // Norwegian Bokmål / Nynorsk → 'no'
+  if (code === "nb" || code === "nn") return "no";
 
-    return code;
+  return code;
 }
 
 /**
@@ -126,15 +140,15 @@ function normalizeLocale(localeStr) {
  * @returns {string} Translated string, or the English fallback.
  */
 export function getTranslation(key, locale) {
-    const loc = locale || getEffectiveLocale();
-    const entry = translations[key];
+  const loc = locale || getEffectiveLocale();
+  const entry = translations[key];
 
-    if (!entry) {
-        logger.warn('Unknown translation key:', key);
-        return '';
-    }
+  if (!entry) {
+    logger.warn("Unknown translation key:", key);
+    return "";
+  }
 
-    return entry[loc] || entry.en || '';
+  return entry[loc] || entry.en || "";
 }
 
 /**
@@ -151,8 +165,12 @@ export function getTranslation(key, locale) {
  * @returns {string} The resolved string.
  */
 export function resolveText(propertyValue, translationKey, locale) {
-    if (propertyValue !== undefined && propertyValue !== null && propertyValue !== '') {
-        return propertyValue;
-    }
-    return getTranslation(translationKey, locale);
+  if (
+    propertyValue !== undefined &&
+    propertyValue !== null &&
+    propertyValue !== ""
+  ) {
+    return propertyValue;
+  }
+  return getTranslation(translationKey, locale);
 }

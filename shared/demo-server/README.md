@@ -1,12 +1,12 @@
 # HelpButton.qs Demo Server
 
-A minimal Node.js backend that receives bug reports and user feedback from **HelpButton.qs** — both the **Qlik Sense extension** and the **HTML injection Bug Report variant** — and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
+A minimal Node.js backend that receives bug reports and user feedback from the current **HelpButton.qs** extension and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
 
 The server also provides a nice dashboard showing what bug reports and feedback have been received.
 
 ![HelpButton.qs Demo Server Dashboard](./docs/helpbutton_demo-server_dashboard-1.png)
 
-> **Location:** This server lives in `shared/demo-server/` at the repository root and is shared across all HelpButton.qs delivery methods.
+> **Location:** This server lives in `shared/demo-server/` at the repository root and is intended for the current HelpButton.qs extension workflow.
 
 ---
 
@@ -28,10 +28,12 @@ The server also provides a nice dashboard showing what bug reports and feedback 
   - [Testing](#testing)
     - [Health check](#health-check)
     - [Submit a bug report](#submit-a-bug-report)
+    - [Submit feedback](#submit-feedback)
   - [Example Console Output](#example-console-output)
+    - [Custom Payload Key Names](#custom-payload-key-names)
   - [Troubleshooting](#troubleshooting)
     - ["Mixed Content" — browser silently blocks the request](#mixed-content--browser-silently-blocks-the-request)
-    - ["NET::ERR\_CERT\_AUTHORITY\_INVALID" or similar](#neterr_cert_authority_invalid-or-similar)
+    - ["NET::ERR_CERT_AUTHORITY_INVALID" or similar](#neterr_cert_authority_invalid-or-similar)
     - [Server starts in HTTP mode even though certs exist](#server-starts-in-http-mode-even-though-certs-exist)
     - [`fetch()` succeeds from curl but fails from the browser](#fetch-succeeds-from-curl-but-fails-from-the-browser)
     - [PowerShell error: "The underlying connection was closed"](#powershell-error-the-underlying-connection-was-closed)
@@ -41,9 +43,9 @@ The server also provides a nice dashboard showing what bug reports and feedback 
 
 ## Prerequisites
 
-| Requirement | Details |
-|---|---|
-| **Node.js** | Version 14 or later. Download from [nodejs.org](https://nodejs.org). |
+| Requirement | Details                                                                                                                                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Node.js** | Version 14 or later. Download from [nodejs.org](https://nodejs.org).                                                                                                                                                                                   |
 | **OpenSSL** | Required only for generating self-signed certificates. Pre-installed on macOS. On Windows it is bundled with [Git for Windows](https://gitforwindows.org) (available as `openssl` inside Git Bash or at `"C:\Program Files\Git\usr\bin\openssl.exe"`). |
 
 ---
@@ -72,11 +74,11 @@ Qlik Sense Enterprise on Windows serves the hub and apps over **HTTPS** (e.g. `h
 
 When the help button submits a bug report it uses the browser's `fetch()` API. Browsers enforce a **mixed content** policy:
 
-| Page protocol | Endpoint protocol | Result |
-|---|---|---|
-| HTTPS | HTTPS | Allowed |
-| HTTPS | HTTP | **Blocked** (mixed active content) |
-| HTTP | HTTP | Allowed |
+| Page protocol | Endpoint protocol | Result                             |
+| ------------- | ----------------- | ---------------------------------- |
+| HTTPS         | HTTPS             | Allowed                            |
+| HTTPS         | HTTP              | **Blocked** (mixed active content) |
+| HTTP          | HTTP              | Allowed                            |
 
 The `fetch()` call is silently blocked — no CORS error, no prompt — the request simply never leaves the browser.
 
@@ -270,19 +272,20 @@ Update the webhook URL to use HTTPS and port 3443.
 
 **HTML injection variant** — in `helpbutton-qs.config.js`:
 
-**Extension** — set the *Webhook URL* in the Property Panel to `https://localhost:3443/api/bug-reports`.
+**Extension** — set the _Webhook URL_ in the Property Panel to `https://localhost:3443/api/bug-reports`.
 
-Example config value:
+For a bug-report menu item, the relevant settings are:
 
 ```js
 bugReport: {
   webhookUrl: 'https://localhost:3443/api/bug-reports',
-  webhookMethod: 'POST',
-  auth: { type: 'none' },
+  authStrategy: 'none',
 }
 ```
 
-Deploy the updated config to the Qlik Sense server and hard-refresh the browser (`Ctrl+Shift+R` / `Cmd+Shift+R`).
+For feedback, set `feedback.webhookUrl` to `https://localhost:3443/api/feedback` and choose `none`, `header`, or `custom` as needed.
+
+Deploy the updated config to Qlik Sense and hard-refresh the browser (`Ctrl+Shift+R` / `Cmd+Shift+R`).
 
 ---
 
@@ -290,14 +293,14 @@ Deploy the updated config to the Qlik Sense server and hard-refresh the browser 
 
 All settings are controlled via environment variables. Copy `.env.example` to `.env` and adjust as needed.
 
-| Variable | Default | Description |
-|---|---|---|
-| `HOST` | `localhost` | Hostname or IP address the server binds to. Set to `0.0.0.0` to listen on all network interfaces. |
-| `PORT` | `3000` | Port for HTTP mode (used when no TLS certs are found). |
-| `HTTPS_PORT` | `3443` | Port for HTTPS mode (used when TLS certs are present). |
-| `LOG_LEVEL` | `info` | Winston log level: `error`, `warn`, `info`, `verbose`, `debug`, `silly`. Set to `verbose` to see the full JSON payload. |
-| `TLS_CERT` | `./certs/cert.pem` | Path to the TLS certificate file (PEM format). |
-| `TLS_KEY` | `./certs/key.pem` | Path to the TLS private key file (PEM format). |
+| Variable     | Default            | Description                                                                                                             |
+| ------------ | ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `HOST`       | `localhost`        | Hostname or IP address the server binds to. Set to `0.0.0.0` to listen on all network interfaces.                       |
+| `PORT`       | `3000`             | Port for HTTP mode (used when no TLS certs are found).                                                                  |
+| `HTTPS_PORT` | `3443`             | Port for HTTPS mode (used when TLS certs are present).                                                                  |
+| `LOG_LEVEL`  | `info`             | Winston log level: `error`, `warn`, `info`, `verbose`, `debug`, `silly`. Set to `verbose` to see the full JSON payload. |
+| `TLS_CERT`   | `./certs/cert.pem` | Path to the TLS certificate file (PEM format).                                                                          |
+| `TLS_KEY`    | `./certs/key.pem`  | Path to the TLS private key file (PEM format).                                                                          |
 
 Example:
 
@@ -502,6 +505,6 @@ This server is deliberately minimal. For production use, consider:
 - **Persistent storage** — save reports to a database (PostgreSQL, MongoDB, SQLite) or append to a log file.
 - **Email / chat notifications** — forward reports to Slack, Teams, or email.
 - **Ticket creation** — create Jira, ServiceNow, or GitHub issues from the payload.
-- **Authentication** — validate Bearer tokens or API keys (configure `bugReport.auth.type: 'header'` on the client side).
+- **Authentication** — validate Bearer tokens or API keys (configure `bugReport.authStrategy` or `feedback.authStrategy` as `header` on the client side, or use `custom` for fixed header pairs).
 - **Rate limiting** — prevent abuse with `express-rate-limit`.
 - **Production TLS** — use a CA-signed certificate or run behind a reverse proxy (nginx, Traefik, Caddy) with automatic Let's Encrypt certs.

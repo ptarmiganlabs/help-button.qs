@@ -325,12 +325,13 @@ export function applyPreset(data, presetKey) {
   // Menu item colors — apply type-specific styles when available
   if (data.menuItems && Array.isArray(data.menuItems)) {
     const typeStyles = preset.menuItemTypeStyles;
-    data.menuItems = data.menuItems.map(item => {
-      let styleKey = 'url'; // 'link', '' (legacy), and unknown actions all map to 'url'
-      if (item.action === 'bugReport') styleKey = 'bugReport';
-      else if (item.action === 'feedback') styleKey = 'feedback';
-      else if (item.action === 'setVariable') styleKey = 'setVariable';
-      const style = (typeStyles && typeStyles[styleKey]) || preset.menuItemDefaults;
+    data.menuItems = data.menuItems.map((item) => {
+      let styleKey = "url"; // 'link', '' (legacy), and unknown actions all map to 'url'
+      if (item.action === "bugReport") styleKey = "bugReport";
+      else if (item.action === "feedback") styleKey = "feedback";
+      else if (item.action === "setVariable") styleKey = "setVariable";
+      const style =
+        (typeStyles && typeStyles[styleKey]) || preset.menuItemDefaults;
       const updates = {
         ...item,
         iconColor: style.iconColor,
@@ -339,7 +340,10 @@ export function applyPreset(data, presetKey) {
         textColor: style.textColor,
       };
       // Set icon for bug-report, feedback and setVariable items; preserve user-chosen icon for URL items
-      if (['bugReport', 'feedback', 'setVariable'].includes(item.action) && style.icon) {
+      if (
+        ["bugReport", "feedback", "setVariable"].includes(item.action) &&
+        style.icon
+      ) {
         updates.icon = style.icon;
       }
       return updates;
@@ -349,7 +353,7 @@ export function applyPreset(data, presetKey) {
   // Tooltip colors — apply preset tooltip defaults to all existing tooltip items
   if (data.tooltips && Array.isArray(data.tooltips) && preset.tooltipDefaults) {
     const td = preset.tooltipDefaults;
-    data.tooltips = data.tooltips.map(item => ({
+    data.tooltips = data.tooltips.map((item) => ({
       ...item,
       iconColor: td.iconColor,
       iconBackgroundColor: td.iconBackgroundColor,
@@ -384,7 +388,7 @@ export function applyPresetToNewTooltips(data) {
 
   let changed = false;
   const td = preset.tooltipDefaults;
-  data.tooltips.forEach(item => {
+  data.tooltips.forEach((item) => {
     if (item._themedPreset === presetKey) return; // already themed
     item.iconColor = td.iconColor;
     item.iconBackgroundColor = td.iconBackgroundColor;
