@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - "pre-release/**"
+
+permissions: {}
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
@@ -28,13 +31,19 @@ jobs:
         run: echo "$GITHUB_REF"
 
       - name: Show release-please job variables
+        env:
+          CI_GITHUB_REF: ${{ github.ref }}
+          CI_GITHUB_REF_NAME: ${{ github.ref_name }}
+          CI_GITHUB_EVENT_NAME: ${{ github.event_name }}
+          CI_GITHUB_REPOSITORY: ${{ github.repository }}
+          CI_GITHUB_SHA: ${{ github.sha }}
         run: |
           echo "=== Trigger ==="
-          echo "github.ref         : ${{ github.ref }}"
-          echo "github.ref_name    : ${{ github.ref_name }}"
-          echo "github.event_name  : ${{ github.event_name }}"
-          echo "github.repository  : ${{ github.repository }}"
-          echo "github.sha         : ${{ github.sha }}"
+          echo "github.ref         : $CI_GITHUB_REF"
+          echo "github.ref_name    : $CI_GITHUB_REF_NAME"
+          echo "github.event_name  : $CI_GITHUB_EVENT_NAME"
+          echo "github.repository  : $CI_GITHUB_REPOSITORY"
+          echo "github.sha         : $CI_GITHUB_SHA"
           echo ""
           echo "=== Pre-release detection ==="
           echo "IS_PRERELEASE_BRANCH: $IS_PRERELEASE_BRANCH"
@@ -42,6 +51,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Determine config file
         id: config
@@ -138,11 +148,15 @@ jobs:
       IS_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/pre-release/') }}
     steps:
       - name: Show build-release job variables
+        env:
+          CI_GITHUB_REF: ${{ github.ref }}
+          CI_GITHUB_REF_NAME: ${{ github.ref_name }}
+          CI_GITHUB_SHA: ${{ github.sha }}
         run: |
           echo "=== Trigger ==="
-          echo "github.ref         : ${{ github.ref }}"
-          echo "github.ref_name    : ${{ github.ref_name }}"
-          echo "github.sha         : ${{ github.sha }}"
+          echo "github.ref         : $CI_GITHUB_REF"
+          echo "github.ref_name    : $CI_GITHUB_REF_NAME"
+          echo "github.sha         : $CI_GITHUB_SHA"
           echo ""
           echo "=== Build flags ==="
           echo "DIST_FILE_NAME     : $DIST_FILE_NAME"
@@ -194,11 +208,14 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
+          package-manager-cache: false
 
       - name: Install PDF tools
         run: PUPPETEER_SKIP_DOWNLOAD=true npm install -g md-to-pdf@5.2.4 @mermaid-js/mermaid-cli@11.12.0
