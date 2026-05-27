@@ -2,6 +2,8 @@
 
 **helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Qlik Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
 
+For a complete property-by-property guide to the extension's configuration UI, see the [Property Panel Reference](./docs/property-panel-reference.md).
+
 ## ❤️ Support the project
 
 If you find this project helpful and use it in your Qlik Sense environment, please consider supporting it financially! Your sponsorship helps ensure the project's long-term sustainability and allows me to continue maintaining it, fixing bugs, and adding new features.
