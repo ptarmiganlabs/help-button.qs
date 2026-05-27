@@ -7,6 +7,8 @@ on:
     paths:
       - .github/workflows/copilot-setup-steps.yml
 
+permissions: {}
+
 jobs:
   # The job MUST be called 'copilot-setup-steps' to be recognized by GitHub Copilot Agent
   copilot-setup-steps:
@@ -20,6 +22,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - name: Install gh-aw extension
         uses: github/gh-aw-actions/setup-cli@bf62a61fbcc511abd62545691d59de30292a1279 # v0.75.1
         with:

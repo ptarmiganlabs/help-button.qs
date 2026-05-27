@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - "pre-release/**"
+
+permissions: {}
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
@@ -28,13 +31,19 @@ jobs:
         run: echo "$GITHUB_REF"
 
       - name: Show release-please job variables
+        env:
+          CI_GITHUB_REF: ${{ github.ref }}
+          CI_GITHUB_REF_NAME: ${{ github.ref_name }}
+          CI_GITHUB_EVENT_NAME: ${{ github.event_name }}
+          CI_GITHUB_REPOSITORY: ${{ github.repository }}
+          CI_GITHUB_SHA: ${{ github.sha }}
         run: |
           echo "=== Trigger ==="
-          echo "github.ref         : ${{ github.ref }}"
-          echo "github.ref_name    : ${{ github.ref_name }}"
-          echo "github.event_name  : ${{ github.event_name }}"
-          echo "github.repository  : ${{ github.repository }}"
-          echo "github.sha         : ${{ github.sha }}"
+          echo "github.ref         : $CI_GITHUB_REF"
+          echo "github.ref_name    : $CI_GITHUB_REF_NAME"
+          echo "github.event_name  : $CI_GITHUB_EVENT_NAME"
+          echo "github.repository  : $CI_GITHUB_REPOSITORY"
+          echo "github.sha         : $CI_GITHUB_SHA"
           echo ""
           echo "=== Pre-release detection ==="
           echo "IS_PRERELEASE_BRANCH: $IS_PRERELEASE_BRANCH"
@@ -42,6 +51,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Determine config file
         id: config
@@ -90,20 +100,35 @@ jobs:
 
       - name: Provide release outputs
         id: provide
+        env:
+          RELEASE_CREATED_FLAG: ${{ steps.release.outputs.releases_created }}
+          RELEASE_TAG_NAME: ${{ steps.release.outputs.tag_name }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          RELEASE_UPLOAD_URL: ${{ steps.release.outputs.upload_url }}
+          RELEASE_IS_PRERELEASE: ${{ steps.release.outputs.prerelease }}
+          DECIDE_RELEASE_CREATED_FLAG: ${{ steps.decide.outputs.releases_created }}
+          DECIDE_RELEASE_TAG_NAME: ${{ steps.decide.outputs.release_tag_name }}
+          DECIDE_RELEASE_VERSION: ${{ steps.decide.outputs.release_version }}
+          DECIDE_RELEASE_UPLOAD_URL: ${{ steps.decide.outputs.release_upload_url }}
+          DECIDE_RELEASE_IS_PRERELEASE: ${{ steps.decide.outputs.is_prerelease }}
         run: |
+          write_output() {
+            printf '%s=%s\n' "$1" "$2" >> "$GITHUB_OUTPUT"
+          }
+
           # If release-please ran and produced outputs, use them; otherwise use the decide outputs
-          if [ -n "${{ steps.release.outputs.tag_name }}" ]; then
-            echo "releases_created=${{ steps.release.outputs.releases_created }}" >> $GITHUB_OUTPUT
-            echo "release_tag_name=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT
-            echo "release_version=${{ steps.release.outputs.version }}" >> $GITHUB_OUTPUT
-            echo "release_upload_url=${{ steps.release.outputs.upload_url }}" >> $GITHUB_OUTPUT
-            echo "is_prerelease=${{ steps.release.outputs.prerelease }}" >> $GITHUB_OUTPUT
+          if [ -n "$RELEASE_TAG_NAME" ]; then
+            write_output "releases_created" "$RELEASE_CREATED_FLAG"
+            write_output "release_tag_name" "$RELEASE_TAG_NAME"
+            write_output "release_version" "$RELEASE_VERSION"
+            write_output "release_upload_url" "$RELEASE_UPLOAD_URL"
+            write_output "is_prerelease" "$RELEASE_IS_PRERELEASE"
           else
-            echo "releases_created=${{ steps.decide.outputs.releases_created }}" >> $GITHUB_OUTPUT
-            echo "release_tag_name=${{ steps.decide.outputs.release_tag_name }}" >> $GITHUB_OUTPUT
-            echo "release_version=${{ steps.decide.outputs.release_version }}" >> $GITHUB_OUTPUT
-            echo "release_upload_url=${{ steps.decide.outputs.release_upload_url }}" >> $GITHUB_OUTPUT
-            echo "is_prerelease=${{ steps.decide.outputs.is_prerelease }}" >> $GITHUB_OUTPUT
+            write_output "releases_created" "$DECIDE_RELEASE_CREATED_FLAG"
+            write_output "release_tag_name" "$DECIDE_RELEASE_TAG_NAME"
+            write_output "release_version" "$DECIDE_RELEASE_VERSION"
+            write_output "release_upload_url" "$DECIDE_RELEASE_UPLOAD_URL"
+            write_output "is_prerelease" "$DECIDE_RELEASE_IS_PRERELEASE"
           fi
 
       - name: Show output from Release-Please
@@ -113,19 +138,32 @@ jobs:
         run: echo "$RELEASE_PLEASE_OUTPUT"
 
       - name: Show output from Release-Please
+        env:
+          RELEASES_CREATED: ${{ steps.release.outputs.releases_created }}
+          RELEASE_CREATED: ${{ steps.release.outputs.release_created }}
+          RELEASE_DRAFT: ${{ steps.release.outputs['draft'] }}
+          RELEASE_PATH: ${{ steps.release.outputs['path'] }}
+          RELEASE_UPLOAD_URL: ${{ steps.release.outputs['upload_url'] }}
+          RELEASE_HTML_URL: ${{ steps.release.outputs['html_url'] }}
+          RELEASE_TAG_NAME: ${{ steps.release.outputs['tag_name'] }}
+          RELEASE_VERSION: ${{ steps.release.outputs['version'] }}
+          RELEASE_MAJOR: ${{ steps.release.outputs['major'] }}
+          RELEASE_MINOR: ${{ steps.release.outputs['minor'] }}
+          RELEASE_PATCH: ${{ steps.release.outputs['patch'] }}
+          RELEASE_SHA: ${{ steps.release.outputs['sha'] }}
         run: |
-          echo "releases_created: ${{ steps.release.outputs.releases_created }}"
-          echo "release_created : ${{ steps.release.outputs.release_created }}"
-          echo "draft           : ${{ steps.release.outputs['draft'] }}"
-          echo "path            : ${{ steps.release.outputs['path'] }}"
-          echo "upload_url      : ${{ steps.release.outputs['upload_url'] }}"
-          echo "html_url        : ${{ steps.release.outputs['html_url'] }}"
-          echo "tag_name        : ${{ steps.release.outputs['tag_name'] }}"
-          echo "version         : ${{ steps.release.outputs['version'] }}"
-          echo "major           : ${{ steps.release.outputs['major'] }}"
-          echo "minor           : ${{ steps.release.outputs['minor'] }}"
-          echo "patch           : ${{ steps.release.outputs['patch'] }}"
-          echo "sha             : ${{ steps.release.outputs['sha'] }}"
+          echo "releases_created: $RELEASES_CREATED"
+          echo "release_created : $RELEASE_CREATED"
+          echo "draft           : $RELEASE_DRAFT"
+          echo "path            : $RELEASE_PATH"
+          echo "upload_url      : $RELEASE_UPLOAD_URL"
+          echo "html_url        : $RELEASE_HTML_URL"
+          echo "tag_name        : $RELEASE_TAG_NAME"
+          echo "version         : $RELEASE_VERSION"
+          echo "major           : $RELEASE_MAJOR"
+          echo "minor           : $RELEASE_MINOR"
+          echo "patch           : $RELEASE_PATCH"
+          echo "sha             : $RELEASE_SHA"
 
   build-release:
     needs: release-please
@@ -138,30 +176,42 @@ jobs:
       IS_PRERELEASE: ${{ startsWith(github.ref, 'refs/heads/pre-release/') }}
     steps:
       - name: Show build-release job variables
+        env:
+          CI_GITHUB_REF: ${{ github.ref }}
+          CI_GITHUB_REF_NAME: ${{ github.ref_name }}
+          CI_GITHUB_SHA: ${{ github.sha }}
+          RELEASES_CREATED: ${{ needs.release-please.outputs.releases_created }}
+          RELEASE_TAG_NAME: ${{ needs.release-please.outputs.release_tag_name }}
+          RELEASE_VERSION: ${{ needs.release-please.outputs.release_version }}
+          RELEASE_UPLOAD_URL: ${{ needs.release-please.outputs.release_upload_url }}
+          RELEASE_IS_PRERELEASE: ${{ needs.release-please.outputs.is_prerelease }}
         run: |
           echo "=== Trigger ==="
-          echo "github.ref         : ${{ github.ref }}"
-          echo "github.ref_name    : ${{ github.ref_name }}"
-          echo "github.sha         : ${{ github.sha }}"
+          echo "github.ref         : $CI_GITHUB_REF"
+          echo "github.ref_name    : $CI_GITHUB_REF_NAME"
+          echo "github.sha         : $CI_GITHUB_SHA"
           echo ""
           echo "=== Build flags ==="
           echo "DIST_FILE_NAME     : $DIST_FILE_NAME"
           echo "IS_PRERELEASE      : $IS_PRERELEASE"
           echo ""
           echo "=== Release-please outputs ==="
-          echo "releases_created   : ${{ needs.release-please.outputs.releases_created }}"
-          echo "release_tag_name   : ${{ needs.release-please.outputs.release_tag_name }}"
-          echo "release_version    : ${{ needs.release-please.outputs.release_version }}"
-          echo "release_upload_url : ${{ needs.release-please.outputs.release_upload_url }}"
-          echo "is_prerelease      : ${{ needs.release-please.outputs.is_prerelease }}"
+          echo "releases_created   : $RELEASES_CREATED"
+          echo "release_tag_name   : $RELEASE_TAG_NAME"
+          echo "release_version    : $RELEASE_VERSION"
+          echo "release_upload_url : $RELEASE_UPLOAD_URL"
+          echo "is_prerelease      : $RELEASE_IS_PRERELEASE"
 
       - name: Determine pre-release suffix
         id: prerelease
+        env:
+          RELEASE_TAG_NAME_INPUT: ${{ needs.release-please.outputs.release_tag_name }}
+          RELEASE_VERSION_INPUT: ${{ needs.release-please.outputs.release_version }}
         run: |
           if [ "$IS_PRERELEASE" = "true" ]; then
             PRERELEASE_TYPE="${GITHUB_REF#refs/heads/pre-release/}"
             # Prefer to derive suffix from the release tag name (set by release-please or decide)
-            TAG_NAME="${{ needs.release-please.outputs.release_tag_name }}"
+            TAG_NAME="$RELEASE_TAG_NAME_INPUT"
             # Strip optional package prefix like "helpbutton-qs-v" or just a leading "v"
             # This handles tags like "helpbutton-qs-v2.5.6-rc.0" -> "2.5.6-rc.0"
             TAG_NO_V="${TAG_NAME#*-v}"
@@ -174,14 +224,14 @@ jobs:
               # Suffix already embedded in tag name; leave PRERELEASE_SUFFIX empty to avoid duplication
               PRERELEASE_SUFFIX=""
               RELEASE_VERSION="$TAG_NO_V"
-            elif [[ "${{ needs.release-please.outputs.release_version }}" =~ -${PRERELEASE_TYPE}\.([0-9]+) ]]; then
+            elif [[ "$RELEASE_VERSION_INPUT" =~ -${PRERELEASE_TYPE}\.([0-9]+) ]]; then
               # Suffix already embedded in release_version; leave PRERELEASE_SUFFIX empty to avoid duplication
               PRERELEASE_SUFFIX=""
-              RELEASE_VERSION="${{ needs.release-please.outputs.release_version }}"
+              RELEASE_VERSION="$RELEASE_VERSION_INPUT"
             else
               PRERELEASE_SUFFIX="-${PRERELEASE_TYPE}.0"
               # fallback release version is the base release_version output
-              RELEASE_VERSION="${{ needs.release-please.outputs.release_version }}"
+              RELEASE_VERSION="$RELEASE_VERSION_INPUT"
             fi
 
             echo "PRERELEASE_TYPE: $PRERELEASE_TYPE"
@@ -194,11 +244,14 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
+          package-manager-cache: false
 
       - name: Install PDF tools
         run: PUPPETEER_SKIP_DOWNLOAD=true npm install -g md-to-pdf@5.2.4 @mermaid-js/mermaid-cli@11.12.0
@@ -229,9 +282,12 @@ jobs:
           echo "PDF size: $(du -sh README.pdf)"
 
       - name: Create extension release zip
+        env:
+          RELEASE_VERSION: ${{ needs.release-please.outputs.release_version }}
+          RELEASE_PRERELEASE_SUFFIX: ${{ steps.prerelease.outputs.prerelease_suffix }}
         run: |
-          VERSION=${{ needs.release-please.outputs.release_version }}
-          PRERELEASE_SUFFIX=${{ steps.prerelease.outputs.prerelease_suffix }}
+          VERSION="$RELEASE_VERSION"
+          PRERELEASE_SUFFIX="$RELEASE_PRERELEASE_SUFFIX"
 
           # Create readme.txt from template
           sed "s/__VERSION__/${VERSION}/g" release-config/readme-template.txt > readme.txt
