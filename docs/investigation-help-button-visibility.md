@@ -58,13 +58,13 @@ flowchart LR
 
 Any solution must work within these constraints:
 
-| Constraint | Detail |
-|---|---|
-| **Cross-platform** | Must work on both Qlik Sense Client-Managed (Enterprise on Windows) and Qlik Cloud |
-| **No external dependencies** | The extension is vanilla JS bundled via Rollup (nebula CLI). No runtime library additions. |
-| **Single extension package** | Users should not need to install a second extension or helper script. |
+| Constraint                           | Detail                                                                                                                                                                      |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Cross-platform**                   | Must work on both Qlik Sense Client-Managed (Enterprise on Windows) and Qlik Cloud                                                                                          |
+| **No external dependencies**         | The extension is vanilla JS bundled via Rollup (nebula CLI). No runtime library additions.                                                                                  |
+| **Single extension package**         | Users should not need to install a second extension or helper script.                                                                                                       |
 | **Configuration via property panel** | The extension's appearance and behavior are configured in the Qlik Sense property panel and stored as object properties. Any solution must use these configured properties. |
-| **Nebula.js Supernova API** | The extension uses the modern Supernova API — not the legacy `paint()`/`define()` API. |
+| **Nebula.js Supernova API**          | The extension uses the modern Supernova API — not the legacy `paint()`/`define()` API.                                                                                      |
 
 ## Solution Options
 
@@ -95,12 +95,14 @@ flowchart TD
 3. When `component()` later runs on the host sheet, it updates the cache and re-injects with the latest config.
 
 **Advantages:**
+
 - Works on both Cloud and Client-Managed.
 - No additional API calls to the Engine.
 - Session-scoped — clears when the browser tab closes, so stale configs don't persist indefinitely.
 - Very low latency — the button appears almost instantly on cached loads.
 
 **Disadvantages:**
+
 - **Cold start problem**: The very first time a user opens the app (or after clearing browser data), the button won't appear until the host sheet is visited. Subsequent visits to the app in the same session (or a new tab) will work from cache.
 - Config staleness: If the developer changes the config, users with cached data will see old config until they visit the host sheet. However, since `sessionStorage` is per-tab and short-lived, this risk is low.
 - Storage limitations: `sessionStorage` is limited (~5 MB), but the config is small (a few KB).
@@ -114,9 +116,11 @@ flowchart TD
 Same as Option A, but uses `localStorage` instead of `sessionStorage`.
 
 **Additional advantages:**
+
 - The cached config survives browser restarts, so even the second app visit will show the button immediately.
 
 **Additional disadvantages:**
+
 - Higher staleness risk: If config changes, users may see the old button until they visit the host sheet.
 - Requires cache invalidation strategy (e.g., store a version or timestamp alongside the config).
 - Persists across all tabs, which could cause issues in multi-app scenarios if keys aren't scoped properly.
@@ -148,11 +152,13 @@ flowchart TD
 4. Use that layout to call `injectHelpButton()`.
 
 **Advantages:**
+
 - No cold-start problem — works on the very first app visit.
 - Always uses the latest config from the Engine.
 - No browser storage needed.
 
 **Disadvantages:**
+
 - **Complex cross-platform implementation:** The `galaxy` object does not expose the app/engine reference directly. Getting it requires different approaches on Cloud vs Client-Managed.
   - **Client-Managed:** Can use `require(['qlik'], ...)` (RequireJS Capability API) — but this is the **legacy API** and mixing it with nebula.js is not officially supported.
   - **Cloud:** No direct access to Capability APIs. Would need to establish an enigma.js session or intercept the existing one.
@@ -187,10 +193,12 @@ flowchart TD
 ```
 
 **Advantages:**
+
 - Best of both worlds: immediate injection when possible, cache fallback otherwise.
 - Degrades gracefully to current behavior if both paths fail.
 
 **Disadvantages:**
+
 - Most complex implementation — combines the challenges of Options A and C.
 - Still has the Client-Managed vs Cloud API divergence problem.
 
@@ -203,10 +211,12 @@ flowchart TD
 **Concept:** This is a **deployment workaround**, not a code change. The administrator places the HelpButton extension inside a container or master item that is present on every sheet (or on a "template" sheet that Qlik clones).
 
 **Advantages:**
+
 - No code changes needed.
 - Works today.
 
 **Disadvantages:**
+
 - Requires manual effort from the deploying admin.
 - Must remember to add the extension to every new sheet.
 - Not scalable for apps with many sheets.
@@ -227,10 +237,12 @@ flowchart TD
 3. When the extension renders, it takes over from the companion script with fresh config.
 
 **Advantages:**
+
 - Guarantees the button is always present on Client-Managed.
 - Leverages existing HTML injection variant code.
 
 **Disadvantages:**
+
 - **Does not work on Qlik Cloud** — there is no `client.html` to modify.
 - Requires a two-step deployment (extension + script).
 - Couples the extension to the HTML variant's lifecycle.
@@ -241,16 +253,16 @@ flowchart TD
 
 ## Comparison Matrix
 
-| Criterion | A: sessionStorage | B: localStorage | C: Engine API | D: Hybrid | E: Deploy workaround | F: Companion script |
-|---|---|---|---|---|---|---|
-| **First-visit coverage** | ❌ Needs one host-sheet visit | ❌ Needs one host-sheet visit (then persists) | ✅ Always works | ✅/❌ Depends on Engine availability | ✅ If set up correctly | ✅ CM only |
-| **Subsequent visits** | ✅ Same session | ✅ Always | ✅ Always | ✅ Always | ✅ If maintained | ✅ CM only |
-| **Cloud support** | ✅ | ✅ | ⚠️ Complex | ⚠️ Complex | ✅ | ❌ |
-| **Client-Managed support** | ✅ | ✅ | ⚠️ Complex | ⚠️ Complex | ✅ | ✅ |
-| **Config freshness** | ⚠️ Until host sheet visited | ⚠️ Until host sheet visited | ✅ Always fresh | ✅ Mostly fresh | ✅ Fresh | ⚠️ Depends on localStorage |
-| **Implementation complexity** | 🟢 Low | 🟢 Low | 🔴 High | 🔴 Very high | 🟢 None | 🟡 Medium |
-| **Maintenance burden** | 🟢 Low | 🟢 Low | 🟡 Medium | 🔴 High | 🔴 Ongoing (per-app) | 🟡 Two artifacts |
-| **User experience** | 🟡 Cold-start gap | 🟢 Gap only on first-ever visit | 🟢 Seamless | 🟢 Seamless | 🟢 Seamless | 🟢 Seamless (CM) |
+| Criterion                     | A: sessionStorage             | B: localStorage                               | C: Engine API   | D: Hybrid                            | E: Deploy workaround   | F: Companion script        |
+| ----------------------------- | ----------------------------- | --------------------------------------------- | --------------- | ------------------------------------ | ---------------------- | -------------------------- |
+| **First-visit coverage**      | ❌ Needs one host-sheet visit | ❌ Needs one host-sheet visit (then persists) | ✅ Always works | ✅/❌ Depends on Engine availability | ✅ If set up correctly | ✅ CM only                 |
+| **Subsequent visits**         | ✅ Same session               | ✅ Always                                     | ✅ Always       | ✅ Always                            | ✅ If maintained       | ✅ CM only                 |
+| **Cloud support**             | ✅                            | ✅                                            | ⚠️ Complex      | ⚠️ Complex                           | ✅                     | ❌                         |
+| **Client-Managed support**    | ✅                            | ✅                                            | ⚠️ Complex      | ⚠️ Complex                           | ✅                     | ✅                         |
+| **Config freshness**          | ⚠️ Until host sheet visited   | ⚠️ Until host sheet visited                   | ✅ Always fresh | ✅ Mostly fresh                      | ✅ Fresh               | ⚠️ Depends on localStorage |
+| **Implementation complexity** | 🟢 Low                        | 🟢 Low                                        | 🔴 High         | 🔴 Very high                         | 🟢 None                | 🟡 Medium                  |
+| **Maintenance burden**        | 🟢 Low                        | 🟢 Low                                        | 🟡 Medium       | 🔴 High                              | 🔴 Ongoing (per-app)   | 🟡 Two artifacts           |
+| **User experience**           | 🟡 Cold-start gap             | 🟢 Gap only on first-ever visit               | 🟢 Seamless     | 🟢 Seamless                          | 🟢 Seamless            | 🟢 Seamless (CM)           |
 
 ## Recommendation
 

@@ -8,17 +8,17 @@ The **Language & Translations** section in the property panel centralises every 
 
 ### Supported languages
 
-| Code | Language | Native Name |
-|------|----------|-------------|
-| `en` | English | English |
-| `sv` | Swedish | Svenska |
-| `no` | Norwegian | Norsk |
-| `da` | Danish | Dansk |
-| `fi` | Finnish | Suomi |
-| `de` | German | Deutsch |
-| `fr` | French | Français |
-| `pl` | Polish | Polski |
-| `es` | Spanish | Español |
+| Code | Language  | Native Name |
+| ---- | --------- | ----------- |
+| `en` | English   | English     |
+| `sv` | Swedish   | Svenska     |
+| `no` | Norwegian | Norsk       |
+| `da` | Danish    | Dansk       |
+| `fi` | Finnish   | Suomi       |
+| `de` | German    | Deutsch     |
+| `fr` | French    | Français    |
+| `pl` | Polish    | Polski      |
+| `es` | Spanish   | Español     |
 
 ---
 
@@ -39,47 +39,47 @@ The **Language & Translations** accordion section contains:
 
 ### Button
 
-| Property ref | Label | Default (EN) |
-|---|---|---|
-| `buttonLabel` | Button label | Help |
+| Property ref    | Label          | Default (EN)   |
+| --------------- | -------------- | -------------- |
+| `buttonLabel`   | Button label   | Help           |
 | `buttonTooltip` | Button tooltip | Open help menu |
 
 ### Popup
 
-| Property ref | Label | Default (EN) |
-|---|---|---|
+| Property ref | Label         | Default (EN)     |
+| ------------ | ------------- | ---------------- |
 | `popupTitle` | Popup heading | Need assistance? |
 
 ### Bug Report Dialog
 
-| Property ref | Label | Default (EN) |
-|---|---|---|
-| `bugReportStrings.title` | Dialog title | Report a Bug |
-| `bugReportStrings.descriptionLabel` | Description field label | Description |
-| `bugReportStrings.descriptionPlaceholder` | Description placeholder | Describe the issue you encountered… |
-| `bugReportStrings.submitButton` | Submit button text | Submit |
-| `bugReportStrings.cancelButton` | Cancel button text | Cancel |
-| `bugReportStrings.successMessage` | Success message | Bug report submitted successfully! |
-| `bugReportStrings.errorMessage` | Error message | Failed to submit bug report. Please try again. |
-| `bugReportStrings.loadingMessage` | Loading message | Gathering environment info… |
+| Property ref                              | Label                   | Default (EN)                                   |
+| ----------------------------------------- | ----------------------- | ---------------------------------------------- |
+| `bugReportStrings.title`                  | Dialog title            | Report a Bug                                   |
+| `bugReportStrings.descriptionLabel`       | Description field label | Description                                    |
+| `bugReportStrings.descriptionPlaceholder` | Description placeholder | Describe the issue you encountered…            |
+| `bugReportStrings.submitButton`           | Submit button text      | Submit                                         |
+| `bugReportStrings.cancelButton`           | Cancel button text      | Cancel                                         |
+| `bugReportStrings.successMessage`         | Success message         | Bug report submitted successfully!             |
+| `bugReportStrings.errorMessage`           | Error message           | Failed to submit bug report. Please try again. |
+| `bugReportStrings.loadingMessage`         | Loading message         | Gathering environment info…                    |
 
 ### Feedback Dialog
 
-| Property ref | Label | Default (EN) |
-|---|---|---|
-| `feedbackStrings.title` | Dialog title | Send Feedback |
-| `feedbackStrings.ratingLabel` | Rating label | How would you rate this app? |
-| `feedbackStrings.commentLabel` | Comment field label | Comments |
-| `feedbackStrings.commentPlaceholder` | Comment placeholder | Share your thoughts about this app… |
-| `feedbackStrings.submitButton` | Submit button text | Submit Feedback |
-| `feedbackStrings.cancelButton` | Cancel button text | Cancel |
-| `feedbackStrings.successMessage` | Success message | Feedback submitted successfully! |
-| `feedbackStrings.errorMessage` | Error message | Failed to submit feedback. Please try again. |
+| Property ref                         | Label               | Default (EN)                                 |
+| ------------------------------------ | ------------------- | -------------------------------------------- |
+| `feedbackStrings.title`              | Dialog title        | Send Feedback                                |
+| `feedbackStrings.ratingLabel`        | Rating label        | How would you rate this app?                 |
+| `feedbackStrings.commentLabel`       | Comment field label | Comments                                     |
+| `feedbackStrings.commentPlaceholder` | Comment placeholder | Share your thoughts about this app…          |
+| `feedbackStrings.submitButton`       | Submit button text  | Submit Feedback                              |
+| `feedbackStrings.cancelButton`       | Cancel button text  | Cancel                                       |
+| `feedbackStrings.successMessage`     | Success message     | Feedback submitted successfully!             |
+| `feedbackStrings.errorMessage`       | Error message       | Failed to submit feedback. Please try again. |
 
 ### General
 
-| Property ref | Label | Default (EN) |
-|---|---|---|
+| Property ref                     | Label                          | Default (EN)                  |
+| -------------------------------- | ------------------------------ | ----------------------------- |
 | `widget.analysisPlaceholderText` | Analysis-mode placeholder text | Help button active in toolbar |
 
 ---
@@ -105,11 +105,11 @@ Each bug-report or feedback menu item still exposes a **Dialog title override** 
 
 ## Language dropdown behaviour
 
-| Transition | Effect |
-|---|---|
-| Auto-detect → Specific language | All translatable fields are overwritten with the selected language's standard translations. |
-| Specific language → Auto-detect | All translatable fields are cleared (set to empty) so the extension auto-detects at runtime. |
-| Specific language → Another language | Fields are overwritten with the new language's translations. |
+| Transition                           | Effect                                                                                       |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Auto-detect → Specific language      | All translatable fields are overwritten with the selected language's standard translations.  |
+| Specific language → Auto-detect      | All translatable fields are cleared (set to empty) so the extension auto-detects at runtime. |
+| Specific language → Another language | Fields are overwritten with the new language's translations.                                 |
 
 A confirmation prompt is shown before any language switch to prevent accidental data loss.
 
