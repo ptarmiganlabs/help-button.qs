@@ -18,25 +18,25 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Tekst vist på værktøjslinjeknappen */
-  buttonLabel: 'Hjælp',
+  buttonLabel: "Hjælp",
 
   /** Browserens tooltip ved musover */
-  buttonTooltip: 'Åbn hjælpemenuen',
+  buttonTooltip: "Åbn hjælpemenuen",
 
   /** Ikon for værktøjslinjeknappen: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Værktøjslinjeknap — farver / stil
   // --------------------------------------------------------------------------
   buttonStyle: {
-    backgroundColor: '#165a9b',
-    backgroundColorHover: '#12487c',
-    backgroundColorActive: '#0e3b65',
-    textColor: '#ffffff',
-    borderColor: '#0e3b65',
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+    backgroundColor: "#165a9b",
+    backgroundColorHover: "#12487c",
+    backgroundColorActive: "#0e3b65",
+    textColor: "#ffffff",
+    borderColor: "#0e3b65",
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
   },
 
   // --------------------------------------------------------------------------
@@ -44,17 +44,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Overskrift øverst i popup-menuen */
-  popupTitle: 'Brug for hjælp?',
+  popupTitle: "Brug for hjælp?",
 
   /** Popup-farver — mørk marineblå overskrift med gul tekst */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',
-    headerTextColor: '#ffcc33',
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256",
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256",
+    headerTextColor: "#ffcc33",
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -79,23 +79,23 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Hjælp og dokumentation',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      label: "Hjælp og dokumentation",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Rapportér en fejl',
-      action: 'bugReport',       // <-- Åbner fejlrapportdialogen
-      icon: 'bug',
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      label: "Rapportér en fejl",
+      action: "bugReport", // <-- Åbner fejlrapportdialogen
+      icon: "bug",
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
   ],
 
@@ -104,15 +104,15 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   bugReport: {
     /** Titel øverst i fejlrapportdialogen */
-    dialogTitle: 'Rapportér en fejl',
+    dialogTitle: "Rapportér en fejl",
 
     /**
      * OBLIGATORISK — URL'en at POSTe fejlrapportens JSON-data til.
      */
-    webhookUrl: 'https://localhost:3443/api/bug-reports',
+    webhookUrl: "https://localhost:3443/api/bug-reports",
 
     /** HTTP-metode for webhook-kaldet (standard: POST) */
-    webhookMethod: 'POST',
+    webhookMethod: "POST",
 
     /**
      * Autentificeringsstrategi for webhook-kaldet.
@@ -123,56 +123,56 @@ window.helpButtonQsConfig = {
      * type: 'custom'         — Send vilkårlige headers fra customHeaders-objektet
      */
     auth: {
-      type: 'none',
+      type: "none",
     },
 
     /**
      * Hvilke kontekstfelter der skal indsamles og vises i dialogen.
      */
     collectFields: [
-      'userName',
-      'userDirectory',
-      'userId',
-      'senseVersion',
-      'appId',
-      'sheetId',
-      'urlPath',
+      "userName",
+      "userDirectory",
+      "userId",
+      "senseVersion",
+      "appId",
+      "sheetId",
+      "urlPath",
     ],
 
     /** Pladsholdertekst for beskrivelsestekstfeltet */
-    descriptionPlaceholder: 'Beskriv det problem, du stødte på…',
+    descriptionPlaceholder: "Beskriv det problem, du stødte på…",
 
     /** Beskednotifikationer efter indsendelse */
-    successMessage: 'Fejlrapporten blev sendt!',
-    errorMessage: 'Kunne ikke sende fejlrapporten.',
+    successMessage: "Fejlrapporten blev sendt!",
+    errorMessage: "Kunne ikke sende fejlrapporten.",
 
     /** Etiket over beskrivelsestekstfeltet */
-    descriptionLabel: 'Beskrivelse *',
+    descriptionLabel: "Beskrivelse *",
 
     /** Tekst på Annuller-knappen */
-    cancelButtonText: 'Annuller',
+    cancelButtonText: "Annuller",
 
     /** Tekst på Send-knappen */
-    submitButtonText: 'Send',
+    submitButtonText: "Send",
 
     /** Tekst på Send-knappen mens rapporten sendes */
-    submittingButtonText: 'Sender…',
+    submittingButtonText: "Sender…",
 
     /** Tekst der vises mens miljøkontekst indlæses */
-    loadingMessage: 'Indsamler miljøoplysninger…',
+    loadingMessage: "Indsamler miljøoplysninger…",
 
     /** Aria-etiket for luk-knappen (×) i dialogens overskrift */
-    closeDialogAriaLabel: 'Luk dialogboksen',
+    closeDialogAriaLabel: "Luk dialogboksen",
 
     /** Etiketter for hvert kontekstfelt i dialogen. */
     fieldLabels: {
-      userId: 'Bruger-ID',
-      userName: 'Brugernavn',
-      userDirectory: 'Brugermappe',
-      senseVersion: 'Qlik Sense-version',
-      appId: 'App-ID',
-      sheetId: 'Ark-ID',
-      urlPath: 'URL-sti',
+      userId: "Bruger-ID",
+      userName: "Brugernavn",
+      userDirectory: "Brugermappe",
+      senseVersion: "Qlik Sense-version",
+      appId: "App-ID",
+      sheetId: "Ark-ID",
+      urlPath: "URL-sti",
     },
   },
 

@@ -19,13 +19,13 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Tekst wyświetlany na przycisku paska narzędzi */
-  buttonLabel: 'Pomoc',
+  buttonLabel: "Pomoc",
 
   /** Podpowiedź przeglądarki po najechaniu */
-  buttonTooltip: 'Otwórz menu pomocy',
+  buttonTooltip: "Otwórz menu pomocy",
 
   /** Ikona przycisku: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Przycisk paska narzędzi — kolory / styl
@@ -33,13 +33,13 @@ window.helpButtonQsConfig = {
   // Główny przycisk na pasku narzędzi Qlik Sense.
   // Wszystkie poniższe kolory domyślnie w profesjonalnym niebieskim.
   buttonStyle: {
-    backgroundColor: '#165a9b',        // Niebieski podstawowy
-    backgroundColorHover: '#12487c',   // Ciemniejszy po najechaniu
-    backgroundColorActive: '#0e3b65',  // Najciemniejszy po kliknięciu
-    textColor: '#ffffff',              // Biały tekst i ikona
-    borderColor: '#0e3b65',            // Subtelna ciemna ramka
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)', // Żółty pierścień fokusa
+    backgroundColor: "#165a9b", // Niebieski podstawowy
+    backgroundColorHover: "#12487c", // Ciemniejszy po najechaniu
+    backgroundColorActive: "#0e3b65", // Najciemniejszy po kliknięciu
+    textColor: "#ffffff", // Biały tekst i ikona
+    borderColor: "#0e3b65", // Subtelna ciemna ramka
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)", // Żółty pierścień fokusa
   },
 
   // --------------------------------------------------------------------------
@@ -47,17 +47,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Tytuł na górze menu popup */
-  popupTitle: 'Potrzebujesz pomocy?',
+  popupTitle: "Potrzebujesz pomocy?",
 
   /** Kolory popup — ciemnogranatowy nagłówek z żółtym tekstem */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',            // Ciemnogranatowa ramka
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',  // Ciemnogranatowy nagłówek
-    headerTextColor: '#ffcc33',        // Żółty tekst nagłówka
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256", // Ciemnogranatowa ramka
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256", // Ciemnogranatowy nagłówek
+    headerTextColor: "#ffcc33", // Żółty tekst nagłówka
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -85,37 +85,37 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Pomoc i dokumentacja',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
+      label: "Pomoc i dokumentacja",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
       // Kolory per pozycja (odcienie niebieskiego)
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Zgłoś błąd',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
-      icon: 'bug',
-      target: '_blank',
+      label: "Zgłoś błąd",
+      url: "https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose",
+      icon: "bug",
+      target: "_blank",
       // Kolory per pozycja (ciepłe odcienie bursztynowe)
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
     {
-      label:  'Ptarmigan Labs',
-      url:    'https://ptarmiganlabs.com',
-      icon:   'link',
-      target: '_blank',
+      label: "Ptarmigan Labs",
+      url: "https://ptarmiganlabs.com",
+      icon: "link",
+      target: "_blank",
       // Kolory per pozycja (odcienie zielonego)
-      iconColor:    '#059669',
-      bgColor:      '#ecfdf5',
-      bgColorHover: '#d1fae5',
-      textColor:    '#065f46',
+      iconColor: "#059669",
+      bgColor: "#ecfdf5",
+      bgColorHover: "#d1fae5",
+      textColor: "#065f46",
     },
   ],
 

@@ -137,12 +137,12 @@ Pre-releases use the format: `MAJOR.MINOR.PATCH-TYPE.N`
 
 The version suffix is driven by the branch name, which maps to a dedicated release-please config file:
 
-| Branch | Config file | Version format |
-|--------|-------------|----------------|
-| `pre-release/alpha` | `release-please-prerelease-alpha.json` | `X.Y.Z-alpha.N` |
-| `pre-release/beta` | `release-please-prerelease-beta.json` | `X.Y.Z-beta.N` |
-| `pre-release/rc` | `release-please-prerelease-rc.json` | `X.Y.Z-rc.N` |
-| `pre-release/<other>` | `release-please-prerelease.json` | `X.Y.Z` (no suffix) |
+| Branch                | Config file                            | Version format      |
+| --------------------- | -------------------------------------- | ------------------- |
+| `pre-release/alpha`   | `release-please-prerelease-alpha.json` | `X.Y.Z-alpha.N`     |
+| `pre-release/beta`    | `release-please-prerelease-beta.json`  | `X.Y.Z-beta.N`      |
+| `pre-release/rc`      | `release-please-prerelease-rc.json`    | `X.Y.Z-rc.N`        |
+| `pre-release/<other>` | `release-please-prerelease.json`       | `X.Y.Z` (no suffix) |
 
 > [!IMPORTANT]
 > Only the branch names `pre-release/alpha`, `pre-release/beta`, and `pre-release/rc` produce versioned suffixes (e.g., `-rc.0`). Any other `pre-release/*` branch falls back to the generic prerelease config and will produce a plain version number.
@@ -160,10 +160,10 @@ When the pre-release is ready for general availability:
 
 The `release-please` job in CI has two possible code paths, selected by `rc-version-helper.mjs`:
 
-| Scenario | Helper output | What happens |
-|----------|--------------|--------------|
-| Push to `main` | `action=run_release_please` | Standard release-please flow. |
-| First push to `pre-release/*` (no existing RC releases) | `action=run_release_please` | Release-please runs with the prerelease config, creates a Release PR. |
+| Scenario                                                        | Helper output                                   | What happens                                                                                            |
+| --------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Push to `main`                                                  | `action=run_release_please`                     | Standard release-please flow.                                                                           |
+| First push to `pre-release/*` (no existing RC releases)         | `action=run_release_please`                     | Release-please runs with the prerelease config, creates a Release PR.                                   |
 | Subsequent push to `pre-release/*` (existing RC releases found) | `action=increment_rc` + `releases_created=true` | Skips release-please. Directly sets the next `rc.N` tag. `build-release` job creates draft + artifacts. |
 
 The `build-release` job only runs when `releases_created == true`. It builds zips, generates PDFs, and uploads everything to the GitHub release via `ncipollo/release-action`.

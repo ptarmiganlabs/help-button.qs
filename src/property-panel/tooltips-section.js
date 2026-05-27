@@ -266,18 +266,25 @@ export default function tooltipsSection(getObjectList) {
                     component: "button",
                     async action(item) {
                       const itemCId = item.cId;
-                      let uriPatterns = '';
+                      let uriPatterns = "";
                       try {
                         const layout = await extensionState.model?.getLayout();
-                        uriPatterns = layout?.security?.allowedUriPatterns || '';
-                      } catch (_) { /* best effort */ }
+                        uriPatterns =
+                          layout?.security?.allowedUriPatterns || "";
+                      } catch (_) {
+                        /* best effort */
+                      }
                       openMarkdownEditorDialog({
                         title: "Edit Tooltip Text",
                         value: item.hoverContent || "",
                         maxLength: 256,
                         allowedUriPatterns: uriPatterns,
                         async onSave(text) {
-                          await persistTooltipProperty(itemCId, "hoverContent", text);
+                          await persistTooltipProperty(
+                            itemCId,
+                            "hoverContent",
+                            text,
+                          );
                         },
                       });
                     },
@@ -332,18 +339,25 @@ export default function tooltipsSection(getObjectList) {
                     show: (item) => item.dialogEnabled !== false,
                     async action(item) {
                       const itemCId = item.cId;
-                      let uriPatterns = '';
+                      let uriPatterns = "";
                       try {
                         const layout = await extensionState.model?.getLayout();
-                        uriPatterns = layout?.security?.allowedUriPatterns || '';
-                      } catch (_) { /* best effort */ }
+                        uriPatterns =
+                          layout?.security?.allowedUriPatterns || "";
+                      } catch (_) {
+                        /* best effort */
+                      }
                       openMarkdownEditorDialog({
                         title: "Edit Dialog Content",
                         value: item.dialogContent || "",
                         maxLength: 16384,
                         allowedUriPatterns: uriPatterns,
                         async onSave(text) {
-                          await persistTooltipProperty(itemCId, "dialogContent", text);
+                          await persistTooltipProperty(
+                            itemCId,
+                            "dialogContent",
+                            text,
+                          );
                         },
                       });
                     },
@@ -379,7 +393,7 @@ export default function tooltipsSection(getObjectList) {
 async function persistTooltipProperty(cId, property, value) {
   const { model } = extensionState;
   if (!model) {
-    logger.warn('Cannot persist property change — model not available');
+    logger.warn("Cannot persist property change — model not available");
     return;
   }
 
@@ -390,9 +404,9 @@ async function persistTooltipProperty(cId, property, value) {
       tooltip[property] = value;
       await model.setProperties(props);
     } else {
-      logger.warn('Tooltip not found for cId:', cId);
+      logger.warn("Tooltip not found for cId:", cId);
     }
   } catch (err) {
-    logger.warn('Failed to persist Markdown editor change:', err);
+    logger.warn("Failed to persist Markdown editor change:", err);
   }
 }

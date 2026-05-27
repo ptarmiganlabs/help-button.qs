@@ -2,7 +2,7 @@
 
 A lightweight, self-contained solution that adds a **Help** button to the toolbar of every app in **Qlik Sense Enterprise on Windows** (client-managed).
 
-Clicking the button opens a dropdown popup with configurable links — for example *Help documentation*, *Report a bug* or a *link to any website*.
+Clicking the button opens a dropdown popup with configurable links — for example _Help documentation_, _Report a bug_ or a _link to any website_.
 
 ![Help button in toolbar](docs/screenshot-animated.gif)
 
@@ -12,16 +12,16 @@ Clicking the button opens a dropdown popup with configurable links — for examp
 
 Each language folder is **self-contained** — it includes all the files needed for deployment. Pick the language that matches your organisation, copy its files to the Sense server, and follow the installation steps below.
 
-| Language | Folder | Status |
-|---|---|---|
-| **English** | [`en/`](en/) | ✅ Complete |
+| Language              | Folder       | Status      |
+| --------------------- | ------------ | ----------- |
+| **English**           | [`en/`](en/) | ✅ Complete |
 | **Swedish** (Svenska) | [`sv/`](sv/) | ✅ Complete |
 | **Norwegian** (Norsk) | [`no/`](no/) | ✅ Complete |
-| **Danish** (Dansk) | [`da/`](da/) | ✅ Complete |
-| **Finnish** (Suomi) | [`fi/`](fi/) | ✅ Complete |
-| **German** (Deutsch) | [`de/`](de/) | ✅ Complete |
+| **Danish** (Dansk)    | [`da/`](da/) | ✅ Complete |
+| **Finnish** (Suomi)   | [`fi/`](fi/) | ✅ Complete |
+| **German** (Deutsch)  | [`de/`](de/) | ✅ Complete |
 | **French** (Français) | [`fr/`](fr/) | ✅ Complete |
-| **Polish** (Polski) | [`pl/`](pl/) | ✅ Complete |
+| **Polish** (Polski)   | [`pl/`](pl/) | ✅ Complete |
 | **Spanish** (Español) | [`es/`](es/) | ✅ Complete |
 
 ### What's in each language folder
@@ -60,11 +60,11 @@ Get-Service QlikSense* | Restart-Service
 
 ### Prerequisites
 
-| Requirement | Details |
-|---|---|
-| Qlik Sense Enterprise on Windows | Client-managed deployment (not Qlik Cloud) |
-| Server access | Administrator / RDP access to the Qlik Sense server |
-| Qlik Sense version | Tested with client-managed Qlik Sense 2025-Nov-IR, 2025-Nov-patch3 |
+| Requirement                      | Details                                                            |
+| -------------------------------- | ------------------------------------------------------------------ |
+| Qlik Sense Enterprise on Windows | Client-managed deployment (not Qlik Cloud)                         |
+| Server access                    | Administrator / RDP access to the Qlik Sense server                |
+| Qlik Sense version               | Tested with client-managed Qlik Sense 2025-Nov-IR, 2025-Nov-patch3 |
 
 ### Step 1 — Copy files to the Sense server
 
@@ -112,14 +112,14 @@ All configuration is done in `helpbutton-qs.config.js`. See the config file in y
 
 Key configurable properties:
 
-| Property | Type | Default (English) | Description |
-|---|---|---|---|
-| `buttonLabel` | string | `'Help'` | Text displayed on the toolbar button |
-| `buttonTooltip` | string | `'Open help menu'` | Native tooltip shown on hover |
-| `popupTitle` | string | `'Need assistance?'` | Heading inside the dropdown popup |
-| `menuItems` | array | *(see config file)* | Links shown in the popup |
-| `buttonStyle` | object | *(blue palette)* | Toolbar button colors |
-| `popupStyle` | object | *(dark navy + yellow)* | Popup panel colors |
+| Property        | Type   | Default (English)      | Description                          |
+| --------------- | ------ | ---------------------- | ------------------------------------ |
+| `buttonLabel`   | string | `'Help'`               | Text displayed on the toolbar button |
+| `buttonTooltip` | string | `'Open help menu'`     | Native tooltip shown on hover        |
+| `popupTitle`    | string | `'Need assistance?'`   | Heading inside the dropdown popup    |
+| `menuItems`     | array  | _(see config file)_    | Links shown in the popup             |
+| `buttonStyle`   | object | _(blue palette)_       | Toolbar button colors                |
+| `popupStyle`    | object | _(dark navy + yellow)_ | Popup panel colors                   |
 
 ---
 

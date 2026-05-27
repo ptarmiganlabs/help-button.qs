@@ -7,8 +7,8 @@
  * changes can be made independently.
  */
 
-import logger from '../util/logger';
-import { getSelectors } from './selectors';
+import logger from "../util/logger";
+import { getSelectors } from "./selectors";
 
 // ---------------------------------------------------------------------------
 // Toolbar anchor
@@ -26,8 +26,8 @@ import { getSelectors } from './selectors';
  * @returns {Element | null} The toolbar anchor element, or null if not found.
  */
 export function getToolbarAnchor(codePath) {
-    const sels = getSelectors('cloud', codePath);
-    return document.querySelector(sels.toolbarAnchor);
+  const sels = getSelectors("cloud", codePath);
+  return document.querySelector(sels.toolbarAnchor);
 }
 
 /**
@@ -37,8 +37,8 @@ export function getToolbarAnchor(codePath) {
  * @returns {string} CSS selector for the toolbar anchor.
  */
 export function getToolbarAnchorSelector(codePath) {
-    const sels = getSelectors('cloud', codePath);
-    return sels.toolbarAnchor;
+  const sels = getSelectors("cloud", codePath);
+  return sels.toolbarAnchor;
 }
 
 // ---------------------------------------------------------------------------
@@ -62,23 +62,26 @@ let cachedUserContext = null;
  * @returns {Promise<{ userDirectory: string, userId: string, userName: string }>}
  */
 export async function getUserContext() {
-    if (cachedUserContext) return cachedUserContext;
+  if (cachedUserContext) return cachedUserContext;
 
-    try {
-        const resp = await fetch('/api/v1/users/me');
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
-        cachedUserContext = {
-            userDirectory: '',
-            userId: data.email || '',
-            userName: data.name || '',
-        };
-        logger.debug('Cloud user context loaded:', JSON.stringify(cachedUserContext));
-        return cachedUserContext;
-    } catch (err) {
-        logger.warn('Failed to fetch Cloud user context:', err);
-        return { userDirectory: '', userId: '', userName: '' };
-    }
+  try {
+    const resp = await fetch("/api/v1/users/me");
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    cachedUserContext = {
+      userDirectory: "",
+      userId: data.email || "",
+      userName: data.name || "",
+    };
+    logger.debug(
+      "Cloud user context loaded:",
+      JSON.stringify(cachedUserContext),
+    );
+    return cachedUserContext;
+  } catch (err) {
+    logger.warn("Failed to fetch Cloud user context:", err);
+    return { userDirectory: "", userId: "", userName: "" };
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -93,13 +96,13 @@ export async function getUserContext() {
  * @param {string} id - Unique ID for the <style> element.
  */
 export function injectCSS(css, id) {
-    if (document.getElementById(id)) return;
+  if (document.getElementById(id)) return;
 
-    const style = document.createElement('style');
-    style.id = id;
-    style.textContent = css;
-    document.head.appendChild(style);
-    logger.debug('Injected CSS:', id);
+  const style = document.createElement("style");
+  style.id = id;
+  style.textContent = css;
+  document.head.appendChild(style);
+  logger.debug("Injected CSS:", id);
 }
 
 // ---------------------------------------------------------------------------
@@ -112,15 +115,22 @@ export function injectCSS(css, id) {
  * @returns {string | null} Sheet ID or null.
  */
 export function getCurrentSheetId() {
-    const match = window.location.href.match(/\/sheet\/([a-zA-Z0-9-]+)/);
-    return match ? match[1] : null;
+  const match = window.location.href.match(/\/sheet\/([a-zA-Z0-9-]+)/);
+  return match ? match[1] : null;
 }
 
 /** Object types to exclude from sheet object lists. */
 const EXCLUDE_TYPES = [
-    'sheet', 'story', 'appprops', 'loadmodel',
-    'dimension', 'measure', 'masterobject',
-    'bookmark', 'snapshot', 'variable',
+  "sheet",
+  "story",
+  "appprops",
+  "loadmodel",
+  "dimension",
+  "measure",
+  "masterobject",
+  "bookmark",
+  "snapshot",
+  "variable",
 ];
 
 /**
@@ -130,71 +140,84 @@ const EXCLUDE_TYPES = [
  * @returns {Promise<Array<{id: string, title: string, type: string}>>}
  */
 export async function getSheetObjects(app) {
-    try {
-        let infos = await app.getAllInfos();
-        const sheetId = getCurrentSheetId();
+  try {
+    let infos = await app.getAllInfos();
+    const sheetId = getCurrentSheetId();
 
-        if (sheetId) {
-            try {
-                const sheetObj = await app.getObject(sheetId);
-                const sheetLayout = await sheetObj.getLayout();
-                let sheetObjectIds = (sheetLayout.cells || []).map((c) => c.name);
+    if (sheetId) {
+      try {
+        const sheetObj = await app.getObject(sheetId);
+        const sheetLayout = await sheetObj.getLayout();
+        let sheetObjectIds = (sheetLayout.cells || []).map((c) => c.name);
 
-                for (const id of [...sheetObjectIds]) {
-                    try {
-                        const objHandle = await app.getObject(id);
-                        const layout = await objHandle.getLayout();
-                        if (layout.qChildList?.qItems) {
-                            layout.qChildList.qItems.forEach((item) => {
-                                sheetObjectIds.push(item.qInfo.qId);
-                            });
-                        }
-                    } catch (e) {
-                        logger.warn(`Cloud: could not get layout for object ${id}:`, e);
-                    }
-                }
-
-                if (sheetLayout.qChildList?.qItems) {
-                    const childIds = sheetLayout.qChildList.qItems.map((item) => item.qInfo.qId);
-                    sheetObjectIds = [...new Set([...sheetObjectIds, ...childIds])];
-                }
-
-                const filtered = infos.filter((info) => sheetObjectIds.includes(info.qId));
-                if (filtered.length > 0) infos = filtered;
-            } catch (e) {
-                logger.warn('Cloud: could not filter by sheet:', e);
+        for (const id of [...sheetObjectIds]) {
+          try {
+            const objHandle = await app.getObject(id);
+            const layout = await objHandle.getLayout();
+            if (layout.qChildList?.qItems) {
+              layout.qChildList.qItems.forEach((item) => {
+                sheetObjectIds.push(item.qInfo.qId);
+              });
             }
+          } catch (e) {
+            logger.warn(`Cloud: could not get layout for object ${id}:`, e);
+          }
         }
 
-        const objects = infos
-            .filter((info) => !EXCLUDE_TYPES.includes(info.qType) && !info.qType.includes('system'))
-            .map((info) => ({ id: info.qId, title: info.qTitle || info.qId, type: info.qType }));
-
-        if (objects.length < 100) {
-            const enriched = await Promise.all(
-                objects.map(async (obj) => {
-                    if (obj.title === obj.id) {
-                        try {
-                            const objHandle = await app.getObject(obj.id);
-                            const layout = await objHandle.getLayout();
-                            return {
-                                ...obj,
-                                title: layout.title || layout.qMeta?.title || obj.id,
-                                type: layout.qInfo?.qType || obj.type,
-                            };
-                        } catch { /* ignored */ }
-                    }
-                    return obj;
-                })
-            );
-            return enriched.sort((a, b) => a.title.localeCompare(b.title));
+        if (sheetLayout.qChildList?.qItems) {
+          const childIds = sheetLayout.qChildList.qItems.map(
+            (item) => item.qInfo.qId,
+          );
+          sheetObjectIds = [...new Set([...sheetObjectIds, ...childIds])];
         }
 
-        return objects.sort((a, b) => a.title.localeCompare(b.title));
-    } catch (err) {
-        logger.error('Cloud: failed to get sheet objects:', err);
-        return [];
+        const filtered = infos.filter((info) =>
+          sheetObjectIds.includes(info.qId),
+        );
+        if (filtered.length > 0) infos = filtered;
+      } catch (e) {
+        logger.warn("Cloud: could not filter by sheet:", e);
+      }
     }
+
+    const objects = infos
+      .filter(
+        (info) =>
+          !EXCLUDE_TYPES.includes(info.qType) && !info.qType.includes("system"),
+      )
+      .map((info) => ({
+        id: info.qId,
+        title: info.qTitle || info.qId,
+        type: info.qType,
+      }));
+
+    if (objects.length < 100) {
+      const enriched = await Promise.all(
+        objects.map(async (obj) => {
+          if (obj.title === obj.id) {
+            try {
+              const objHandle = await app.getObject(obj.id);
+              const layout = await objHandle.getLayout();
+              return {
+                ...obj,
+                title: layout.title || layout.qMeta?.title || obj.id,
+                type: layout.qInfo?.qType || obj.type,
+              };
+            } catch {
+              /* ignored */
+            }
+          }
+          return obj;
+        }),
+      );
+      return enriched.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    return objects.sort((a, b) => a.title.localeCompare(b.title));
+  } catch (err) {
+    logger.error("Cloud: failed to get sheet objects:", err);
+    return [];
+  }
 }
 
 /**
@@ -205,6 +228,6 @@ export async function getSheetObjects(app) {
  * @returns {string} CSS selector string.
  */
 export function getObjectSelector(objectId, codePath) {
-    const sels = getSelectors('cloud', codePath);
-    return sels.objectById(objectId);
+  const sels = getSelectors("cloud", codePath);
+  return sels.objectById(objectId);
 }

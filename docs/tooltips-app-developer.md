@@ -46,11 +46,11 @@ Tooltips are rendered in **analysis mode only**. In edit mode the property panel
 
 Each tooltip consists of three parts:
 
-| Part | Description |
-|---|---|
-| **Trigger icon** | A small circular icon positioned on the target element |
-| **Hover popup** | A floating panel that appears on mouse hover, rendered from Markdown |
-| **Click dialog** | An optional modal dialog that appears on click, also Markdown |
+| Part             | Description                                                          |
+| ---------------- | -------------------------------------------------------------------- |
+| **Trigger icon** | A small circular icon positioned on the target element               |
+| **Hover popup**  | A floating panel that appears on mouse hover, rendered from Markdown |
+| **Click dialog** | An optional modal dialog that appears on click, also Markdown        |
 
 You can add as many tooltips as you need per HelpButton.qs instance. They are configured in the **Tooltips** accordion section of the property panel.
 
@@ -140,15 +140,15 @@ Follow these steps to find the correct CSS selector for any on-page element:
 
 Some selectors are more stable across Qlik Sense versions than others:
 
-| Pattern | Example | Stability |
-|---|---|---|
-| **Page-specific selector** | `#sheet-title > header` | ✅ Working in client-managed Qlik Sense (November 2025) |
-| **Qlik object class** | `.qv-object-JpsyeF` | ✅ Good for a specific object in the current app |
-| **`role` attribute** | `article[role="application"]` | ✅ Stable — useful for broad targeting, not unique |
-| **Qlik `tid` attribute** | `[tid="btnQuickNavNext"]`, `.qv-gridcell[tid="JpsyeF"]` | ⚠️ Context-dependent — `tid` is used for several different purposes |
-| **Data attributes** | `[data-testid="some-value"]` | ✅ Stable — test identifiers |
-| **Class name** | `.qv-object-title` | ⚠️ Moderate — may change between versions |
-| **Auto-generated selector** | `#QV04 > div > div:nth-child(2)` | ❌ Fragile — highly version-dependent |
+| Pattern                     | Example                                                 | Stability                                                           |
+| --------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------- |
+| **Page-specific selector**  | `#sheet-title > header`                                 | ✅ Working in client-managed Qlik Sense (November 2025)             |
+| **Qlik object class**       | `.qv-object-JpsyeF`                                     | ✅ Good for a specific object in the current app                    |
+| **`role` attribute**        | `article[role="application"]`                           | ✅ Stable — useful for broad targeting, not unique                  |
+| **Qlik `tid` attribute**    | `[tid="btnQuickNavNext"]`, `.qv-gridcell[tid="JpsyeF"]` | ⚠️ Context-dependent — `tid` is used for several different purposes |
+| **Data attributes**         | `[data-testid="some-value"]`                            | ✅ Stable — test identifiers                                        |
+| **Class name**              | `.qv-object-title`                                      | ⚠️ Moderate — may change between versions                           |
+| **Auto-generated selector** | `#QV04 > div > div:nth-child(2)`                        | ❌ Fragile — highly version-dependent                               |
 
 ### Tips for Stable Selectors
 
@@ -196,16 +196,16 @@ The **Show condition** field controls whether a tooltip is visible or hidden at 
 
 ### Examples
 
-| Show condition value | Result |
-|---|---|
-| *(empty)* | Always visible |
-| `1` | Always visible |
-| `0` | Always hidden |
-| `=False()` | Always hidden (evaluates to `0` / `"False"`) |
-| `=True()` | Always visible (evaluates to `-1` / `"True"`) |
+| Show condition value                     | Result                                               |
+| ---------------------------------------- | ---------------------------------------------------- |
+| _(empty)_                                | Always visible                                       |
+| `1`                                      | Always visible                                       |
+| `0`                                      | Always hidden                                        |
+| `=False()`                               | Always hidden (evaluates to `0` / `"False"`)         |
+| `=True()`                                | Always visible (evaluates to `-1` / `"True"`)        |
 | `=if(vShowTooltip = 1, True(), False())` | Visible only when variable `vShowTooltip` equals `1` |
-| `=GetSelectedCount(Country) > 0` | Visible only when a Country selection exists |
-| `=if(Sum(Revenue) > 1000000, 1, 0)` | Visible when total revenue exceeds 1,000,000 |
+| `=GetSelectedCount(Country) > 0`         | Visible only when a Country selection exists         |
+| `=if(Sum(Revenue) > 1000000, 1, 0)`      | Visible when total revenue exceeds 1,000,000         |
 
 ### How It Works
 
@@ -247,16 +247,16 @@ For example, a HelpButton.qs menu item in **Toggle variable** mode can flip `vSh
 
 Expand the **Icon Appearance** section within each tooltip item to configure:
 
-| Setting | Description | Default |
-|---|---|---|
-| **Icon** | Choose from: Help, Bug, Info, Mail, Link, Star, Lightbulb, Bookmark, Eye, Pin, Chart bar | Info |
-| **Icon size** | Icon dimensions in pixels | 20 |
-| **Position on target** | Where the icon is placed: top-left, top-center, top-right, center-left, center-right, bottom-left, bottom-center, bottom-right, or **percentage** (custom position) | Top right |
-| **Horizontal position (%)** | Horizontal offset from the left edge (0–100%). The icon's center is placed at this percentage. Visible when position is **Percentage** | 80 |
-| **Vertical position (%)** | Vertical offset from the top edge (0–100%). The icon's center is placed at this percentage. Visible when position is **Percentage** | 10 |
-| **Floating (drag to move)** | Toggle that enables click-drag repositioning. Works with any initial placement | Off |
-| **Icon color** | Fill color of the SVG icon | White (`#ffffff`) |
-| **Background color** | Circle background behind the icon | Blue (`#165a9b`) |
+| Setting                     | Description                                                                                                                                                         | Default           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| **Icon**                    | Choose from: Help, Bug, Info, Mail, Link, Star, Lightbulb, Bookmark, Eye, Pin, Chart bar                                                                            | Info              |
+| **Icon size**               | Icon dimensions in pixels                                                                                                                                           | 20                |
+| **Position on target**      | Where the icon is placed: top-left, top-center, top-right, center-left, center-right, bottom-left, bottom-center, bottom-right, or **percentage** (custom position) | Top right         |
+| **Horizontal position (%)** | Horizontal offset from the left edge (0–100%). The icon's center is placed at this percentage. Visible when position is **Percentage**                              | 80                |
+| **Vertical position (%)**   | Vertical offset from the top edge (0–100%). The icon's center is placed at this percentage. Visible when position is **Percentage**                                 | 10                |
+| **Floating (drag to move)** | Toggle that enables click-drag repositioning. Works with any initial placement                                                                                      | Off               |
+| **Icon color**              | Fill color of the SVG icon                                                                                                                                          | White (`#ffffff`) |
+| **Background color**        | Circle background behind the icon                                                                                                                                   | Blue (`#165a9b`)  |
 
 The icon is rendered as a circle with a subtle shadow. It scales up slightly on hover to provide visual feedback.
 
@@ -271,7 +271,7 @@ This allows pixel-precise placement independent of the predefined corner/center 
 
 ### Floating (Drag to Move)
 
-The **Floating** toggle can be enabled for *any* initial placement (including percentage). When turned on, the icon can be repositioned by click-dragging it anywhere within the target element. A short click (without dragging) still opens the detail dialog as usual.
+The **Floating** toggle can be enabled for _any_ initial placement (including percentage). When turned on, the icon can be repositioned by click-dragging it anywhere within the target element. A short click (without dragging) still opens the detail dialog as usual.
 
 ---
 
@@ -283,6 +283,7 @@ The **Tooltip text** field accepts **Markdown** syntax:
 
 ```markdown
 ### Quick help
+
 This chart shows **revenue by region**.
 
 - Hover over bars for exact values
@@ -292,6 +293,7 @@ This chart shows **revenue by region**.
 ```
 
 Supported Markdown features:
+
 - Headings (`###`, `####`)
 - Bold (`**text**`), italic (`*text*`)
 - Bullet lists (`- item`) and numbered lists (`1. item`)
@@ -316,11 +318,11 @@ iframe's accessible label; if omitted, `"Video"` is used.
 
 Supported sources:
 
-| Source | Accepted URL formats |
-|---|---|
-| **YouTube** | `https://www.youtube.com/watch?v=ID`, `https://youtu.be/ID`, `https://www.youtube.com/embed/ID` |
-| **Vimeo** | `https://vimeo.com/ID`, `https://player.vimeo.com/video/ID` |
-| **Direct video file** | Any `https://` URL ending in `.mp4`, `.webm`, or `.ogg` |
+| Source                | Accepted URL formats                                                                            |
+| --------------------- | ----------------------------------------------------------------------------------------------- |
+| **YouTube**           | `https://www.youtube.com/watch?v=ID`, `https://youtu.be/ID`, `https://www.youtube.com/embed/ID` |
+| **Vimeo**             | `https://vimeo.com/ID`, `https://player.vimeo.com/video/ID`                                     |
+| **Direct video file** | Any `https://` URL ending in `.mp4`, `.webm`, or `.ogg`                                         |
 
 YouTube and Vimeo URLs are automatically converted to their embed form. Direct file URLs render a native `<video>` element with playback controls.
 
@@ -341,7 +343,7 @@ For cases where the Markdown shorthand doesn't fit — for example when you need
 
 ```html
 <video controls width="100%">
-  <source src="https://example.com/demo.mp4" type="video/mp4">
+  <source src="https://example.com/demo.mp4" type="video/mp4" />
 </video>
 ```
 
@@ -361,14 +363,15 @@ The hover popup appears below the icon (or above if there isn't enough space) an
 
 Expand the **Click Dialog** section to configure the modal that opens when the user clicks the icon.
 
-| Setting | Description | Default |
-|---|---|---|
-| **Open dialog on click** | Enable/disable the click dialog | On |
-| **Dialog title** | Heading text (uses the tooltip label if empty) | *(empty)* |
-| **Dialog content** | Full Markdown content for the dialog body | *(empty)* |
-| **Dialog size** | Small (~280px max height), Medium (~400px), Large (~500px), X-Large (~600px) | Medium |
+| Setting                  | Description                                                                  | Default   |
+| ------------------------ | ---------------------------------------------------------------------------- | --------- |
+| **Open dialog on click** | Enable/disable the click dialog                                              | On        |
+| **Dialog title**         | Heading text (uses the tooltip label if empty)                               | _(empty)_ |
+| **Dialog content**       | Full Markdown content for the dialog body                                    | _(empty)_ |
+| **Dialog size**          | Small (~280px max height), Medium (~400px), Large (~500px), X-Large (~600px) | Medium    |
 
 The dialog opens as a centered modal with a semi-transparent backdrop. It can be closed by:
+
 - Clicking the **×** close button
 - Clicking the backdrop
 - Pressing **Escape**
@@ -389,24 +392,27 @@ Enter a comma-separated list of URL prefixes. Any `<iframe>`, `<video>`, or `<so
 https://www.youtube.com/embed/, https://player.vimeo.com/video/
 ```
 
-| Setting | Effect |
-|---|---|
-| *(empty — default)* | All `https://` sources are allowed |
+| Setting              | Effect                                                                                        |
+| -------------------- | --------------------------------------------------------------------------------------------- |
+| _(empty — default)_  | All `https://` sources are allowed                                                            |
 | One or more prefixes | Only iframes/videos whose `src` starts with a listed prefix are rendered; others are stripped |
 
 ### Examples
 
 **Allow only YouTube and Vimeo:**
+
 ```
 https://www.youtube.com/embed/, https://player.vimeo.com/video/
 ```
 
 **Allow only an internal video server:**
+
 ```
 https://media.internal.example.com/
 ```
 
 **Allow Qlik Sense's built-in content library (client-managed):**
+
 ```
 /content/Default/
 ```
@@ -419,15 +425,15 @@ https://media.internal.example.com/
 
 Expand the **Tooltip Colors** section within each tooltip item to customize the hover popup and dialog colors independently per tooltip:
 
-| Setting | Description | Default |
-|---|---|---|
-| **Hover background** | Background color of the hover popup | `#ffffff` |
-| **Hover text** | Text color of the hover popup | `#1f2937` |
-| **Hover border** | Border color of the hover popup | `#d1d5db` |
-| **Dialog header background** | Background of the dialog header bar | `#f9fafb` |
-| **Dialog header text** | Text and close-icon color in the dialog header | `#111827` |
-| **Dialog body background** | Background color of the dialog body | `#ffffff` |
-| **Dialog body text** | Text color of the dialog body content | `#374151` |
+| Setting                      | Description                                    | Default   |
+| ---------------------------- | ---------------------------------------------- | --------- |
+| **Hover background**         | Background color of the hover popup            | `#ffffff` |
+| **Hover text**               | Text color of the hover popup                  | `#1f2937` |
+| **Hover border**             | Border color of the hover popup                | `#d1d5db` |
+| **Dialog header background** | Background of the dialog header bar            | `#f9fafb` |
+| **Dialog header text**       | Text and close-icon color in the dialog header | `#111827` |
+| **Dialog body background**   | Background color of the dialog body            | `#ffffff` |
+| **Dialog body text**         | Text color of the dialog body content          | `#374151` |
 
 Icon colors (`Icon color` and `Background color`) are in the **Icon Appearance** section.
 
@@ -448,12 +454,12 @@ After applying a preset, you can still **override individual colors** per toolti
 
 ### Preset Color Palettes
 
-| Preset | Icon Circle | Hover BG | Dialog Header |
-|---|---|---|---|
-| **Default** | Grey (`#595959`) | Light grey (`#f5f5f5`) | Grey (`#595959`) / White text |
-| **Lean Green** | Green (`#009845`) | Mint (`#e8f5ee`) | Dark green (`#006b30`) / White text |
-| **Corporate Blue** | Blue (`#165a9b`) | Light blue (`#f0f6fc`) | Navy (`#0c3256`) / Gold text |
-| **Corporate Gold** | Gold (`#ffcc33`) | Cream (`#fffae6`) | Navy (`#0c3256`) / Gold text |
+| Preset             | Icon Circle       | Hover BG               | Dialog Header                       |
+| ------------------ | ----------------- | ---------------------- | ----------------------------------- |
+| **Default**        | Grey (`#595959`)  | Light grey (`#f5f5f5`) | Grey (`#595959`) / White text       |
+| **Lean Green**     | Green (`#009845`) | Mint (`#e8f5ee`)       | Dark green (`#006b30`) / White text |
+| **Corporate Blue** | Blue (`#165a9b`)  | Light blue (`#f0f6fc`) | Navy (`#0c3256`) / Gold text        |
+| **Corporate Gold** | Gold (`#ffcc33`)  | Cream (`#fffae6`)      | Navy (`#0c3256`) / Gold text        |
 
 ---
 
@@ -461,15 +467,15 @@ After applying a preset, you can still **override individual colors** per toolti
 
 When you first place the HelpButton.qs extension onto a sheet, a default tooltip is included out of the box:
 
-| Property | Value |
-|---|---|
-| **Label** | Sheet title |
-| **Target type** | CSS selector |
-| **CSS selector** | `#sheet-title > header` |
-| **Icon** | Info |
-| **Position** | Center right |
-| **Hover content** | Explains that this is the sheet name |
-| **Click dialog** | Describes sheet navigation using arrows and the sheet navigator |
+| Property          | Value                                                           |
+| ----------------- | --------------------------------------------------------------- |
+| **Label**         | Sheet title                                                     |
+| **Target type**   | CSS selector                                                    |
+| **CSS selector**  | `#sheet-title > header`                                         |
+| **Icon**          | Info                                                            |
+| **Position**      | Center right                                                    |
+| **Hover content** | Explains that this is the sheet name                            |
+| **Click dialog**  | Describes sheet navigation using arrows and the sheet navigator |
 
 This default gives end-users immediate help on the most commonly asked question: "How do I move between sheets?"
 
@@ -483,40 +489,40 @@ All text and number fields in the property panel enforce hard limits. String fie
 
 ### General Settings
 
-| Field | Type | Limit |
-|---|---|---|
-| Button label | string | 512 chars |
+| Field          | Type   | Limit     |
+| -------------- | ------ | --------- |
+| Button label   | string | 512 chars |
 | Button tooltip | string | 512 chars |
-| Popup title | string | 512 chars |
+| Popup title    | string | 512 chars |
 
 ### Menu Items
 
-| Field | Type | Limit |
-|---|---|---|
-| Label | string | 128 chars |
-| URL | string | 2 048 chars |
+| Field | Type   | Limit       |
+| ----- | ------ | ----------- |
+| Label | string | 128 chars   |
+| URL   | string | 2 048 chars |
 
 ### Bug Report
 
-| Field | Type | Limit |
-|---|---|---|
-| Webhook URL | string | 2 048 chars |
-| Bearer token | string | 8 192 chars |
-| Custom header name | string | 512 chars |
-| Custom header value | string | 8 192 chars |
-| Max description length | number | 1 – 16 384 |
-| Dialog title | string | 128 chars |
+| Field                  | Type   | Limit       |
+| ---------------------- | ------ | ----------- |
+| Webhook URL            | string | 2 048 chars |
+| Bearer token           | string | 8 192 chars |
+| Custom header name     | string | 512 chars   |
+| Custom header value    | string | 8 192 chars |
+| Max description length | number | 1 – 16 384  |
+| Dialog title           | string | 128 chars   |
 
 ### Feedback
 
-| Field | Type | Limit |
-|---|---|---|
-| Webhook URL | string | 2 048 chars |
-| Bearer token | string | 8 192 chars |
-| Custom header name | string | 512 chars |
+| Field               | Type   | Limit       |
+| ------------------- | ------ | ----------- |
+| Webhook URL         | string | 2 048 chars |
+| Bearer token        | string | 8 192 chars |
+| Custom header name  | string | 512 chars   |
 | Custom header value | string | 8 192 chars |
-| Max comment length | number | 1 – 16 384 |
-| Dialog title | string | 128 chars |
+| Max comment length  | number | 1 – 16 384  |
+| Dialog title        | string | 128 chars   |
 
 ### Translatable Strings
 
@@ -524,17 +530,17 @@ All translatable string overrides (button labels, dialog strings, placeholder te
 
 ### Tooltips
 
-| Field | Type | Limit |
-|---|---|---|
-| Label | string | 128 chars |
-| CSS selector | string | 512 chars |
-| Icon size | number | 1 – 80 px |
-| Hover content | textarea | 256 chars |
-| Dialog title | string | 128 chars |
+| Field          | Type     | Limit        |
+| -------------- | -------- | ------------ |
+| Label          | string   | 128 chars    |
+| CSS selector   | string   | 512 chars    |
+| Icon size      | number   | 1 – 80 px    |
+| Hover content  | textarea | 256 chars    |
+| Dialog title   | string   | 128 chars    |
 | Dialog content | textarea | 16 384 chars |
 
 ### Analysis / Placeholder
 
-| Field | Type | Limit |
-|---|---|---|
+| Field                     | Type   | Limit     |
+| ------------------------- | ------ | --------- |
 | Analysis placeholder text | string | 512 chars |

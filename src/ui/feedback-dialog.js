@@ -20,6 +20,7 @@ import {
   DEFAULT_DIALOG_FORMAT,
   DEFAULT_PAYLOAD_FORMAT,
 } from "../util/timestamp-formats";
+import { normalizeAuthStrategy } from "../util/auth-strategy";
 import { createTabbedMarkdownEditor } from "./markdown-toolbar";
 import { showPayloadViewer } from "./payload-viewer";
 
@@ -75,7 +76,7 @@ const PAIRED_FIELDS = {
 /**
  * @typedef {object} FeedbackConfig
  * @property {string} webhookUrl - URL to POST feedback to.
- * @property {string} [authStrategy] - Auth strategy: 'none', 'header', 'sense-session', 'custom'.
+ * @property {string} [authStrategy] - Auth strategy: 'none', 'header', 'custom'.
  * @property {string} [authToken] - Bearer token (for 'header' strategy).
  * @property {string} [authHeaderName] - Custom header name (for 'header' strategy).
  * @property {string} [authHeaderValue] - Custom header value (for 'header' strategy).
@@ -97,7 +98,7 @@ const PAIRED_FIELDS = {
 export function openFeedbackDialog(config, platformType) {
   const {
     webhookUrl = "",
-    authStrategy = "none",
+    authStrategy: rawAuthStrategy = "none",
     authToken = "",
     authHeaderName = "Authorization",
     authHeaderValue = "",
@@ -110,6 +111,10 @@ export function openFeedbackDialog(config, platformType) {
     payloadTimestampFormat = DEFAULT_PAYLOAD_FORMAT,
     showPayloadButton = false,
   } = config;
+  const authStrategy = normalizeAuthStrategy(
+    rawAuthStrategy,
+    "feedback.authStrategy",
+  );
 
   // Derive which fields to show in the dialog and which to send in the payload.
   // New config uses dialogFields / payloadFields objects; fall back to legacy
@@ -501,7 +506,9 @@ export function openFeedbackDialog(config, platformType) {
             config,
             payloadFields,
             enableRating ? selectedRating : 0,
-            enableComment && commentTextarea ? commentTextarea.value.trim() : "",
+            enableComment && commentTextarea
+              ? commentTextarea.value.trim()
+              : "",
             payloadTimestampFormat,
           );
 
@@ -846,12 +853,6 @@ function buildAuthHeaders(strategy, options) {
       }
       break;
 
-    case "sense-session": {
-      const xrfKey = generateXrfKey();
-      headers["X-Qlik-Xrfkey"] = xrfKey;
-      break;
-    }
-
     case "custom":
       if (Array.isArray(options.customHeaders)) {
         options.customHeaders.forEach((header) => {
@@ -873,24 +874,6 @@ function buildAuthHeaders(strategy, options) {
   }
 
   return headers;
-}
-
-/**
- * Generate a 16-character XRF key.
- *
- * Uses crypto.getRandomValues() for cryptographically secure randomness.
- *
- * @returns {string} 16-character alphanumeric string.
- */
-function generateXrfKey() {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  let key = "";
-  for (let i = 0; i < 16; i++) {
-    key += chars.charAt(bytes[i] % chars.length);
-  }
-  return key;
 }
 
 // ---------------------------------------------------------------------------

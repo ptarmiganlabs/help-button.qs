@@ -2,7 +2,26 @@
 
 **helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Qlik Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
 
-For a complete property-by-property guide to the extension's configuration UI, see the [Property Panel Reference](./docs/property-panel-reference.md).
+## Documentation
+
+Use the guides below when you need deeper configuration details, implementation notes, or maintainer workflows.
+
+| Document                                                                                         | Audience                      | What it covers                                                                                                                  |
+| ------------------------------------------------------------------------------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [Property Panel Reference](./docs/property-panel-reference.md)                                   | App developers                | Complete property-panel field inventory for the extension, including defaults, conditional settings, and stored property paths. |
+| [Menu Items - App Developer Guide](./docs/menu-items-app-developer.md)                           | App developers                | How to configure menu actions, webhooks, variables, visibility rules, and multi-instance behavior.                              |
+| [Feedback and Bug Report Authentication](./docs/feedback-bug-report-authentication.md)           | App developers                | Explains None, Authorization header, and Custom headers modes for feedback and bug-report menu items.                           |
+| [Tooltips - App Developer Guide](./docs/tooltips-app-developer.md)                               | App developers                | How to target objects or selectors, write Markdown content, tune styling, and work within tooltip limits.                       |
+| [Tooltips - Developer Guide](./docs/tooltips-developer.md)                                       | Extension developers          | Tooltip internals: data model, rendering, sanitization, theming, lifecycle, and extension points.                               |
+| [Client-Managed vs Cloud - App Developer Guide](./docs/client-managed-vs-cloud-app-developer.md) | App developers                | Platform differences that affect links, payload fields, selectors, and other runtime behavior.                                  |
+| [Language and Translations Reference](./docs/language-and-translations.md)                       | App developers                | Locale selection, string override precedence, forced-language settings, and stored translation properties.                      |
+| [Template Fields](./docs/template-fields.md)                                                     | App developers                | Dynamic URL and webhook placeholders, platform-specific values, fallback behavior, and debugging tips.                          |
+| [Security](./docs/SECURITY.md)                                                                   | Developers and administrators | Sanitization, URL validation, webhook trust boundaries, and remaining security considerations.                                  |
+| [Development Guide](./docs/DEVELOPMENT.md)                                                       | Extension developers          | Project structure, local setup, build commands, packaging steps, and development workflow.                                      |
+| [Release Process](./docs/RELEASE_PROCESS.md)                                                     | Maintainers                   | Stable and prerelease branching, release-please automation, versioning rules, and release troubleshooting.                      |
+| [Help Button Visibility Investigation](./docs/investigation-help-button-visibility.md)           | Maintainers                   | Root-cause analysis of delayed toolbar injection and a proposed sessionStorage bootstrap approach.                              |
+| [Multi-Language Support](./docs/multi-language.md)                                               | App developers                | Background guide to locale detection, fallback order, forced-language behavior, and multilingual configuration patterns.        |
+| [Extension Documentation Redirect](./docs/EXTENSION.md)                                          | Legacy links                  | Compatibility redirect to the root manual, legacy variant docs, and the development guide.                                      |
 
 ## ❤️ Support the project
 
@@ -21,7 +40,7 @@ _This project is maintained by [Göran Sander](https://github.com/mountaindude) 
 
 The bug report and feedback features look like this in action:
 
-![Qlik Sense Help Button Demo](./docs/helpbutton-qs_animated-demo-2.gif)
+![Qlik Sense Help Button Demo](./docs/img/helpbutton-qs_animated-demo-2.gif)
 
 > Archived HTML injection variants remain available for existing deployments and migration reference in [legacy/variants/basic/README.md](./legacy/variants/basic/README.md) and [legacy/variants/bug-report/README.md](./legacy/variants/bug-report/README.md). New deployments should use the extension documented below.
 
@@ -108,9 +127,11 @@ When configuring the **Menu Items** in the Property Panel, you can add multiple 
    - Optional **severity picker** (Low / Medium / High) can be shown or hidden via the property panel.
    - Configurable **max description length** (default 1 000 characters), with a live remaining-characters counter in the dialog.
    - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request.
-   - Supports four authentication strategies: `None`, `Authorization header` (Bearer token), `Sense session (XRF key)`, and `Custom headers`.
-   - Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles.
-   - Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
+
+- Supports three authentication strategies: `None`, `Authorization header` (Bearer token), and `Custom headers`.
+- Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles.
+- Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
+
 3. **Feedback Dialog (`feedback`)**:
    - Opens a modal dialog where users can rate the current app (1–5 stars) and/or leave a free-text comment.
    - Star rating and comment fields can each be independently enabled or disabled via the property panel.
@@ -139,6 +160,8 @@ flowchart LR
 ### Menu Item Documentation
 
 - **App developers**: See [Menu Items — App Developer Guide](./docs/menu-items-app-developer.md) for a complete walkthrough of configuring menu items from the property panel, including action types, template fields, dialog payload options, variable actions, and multi-instance behavior.
+- **App developers**: See [Feedback and Bug Report Authentication](./docs/feedback-bug-report-authentication.md) for a deeper explanation of the `None`, `Authorization header`, and `Custom headers` modes.
+- **App developers**: See [Property Panel Reference](./docs/property-panel-reference.md) for the complete list of menu-item properties, defaults, and nested feedback and bug-report settings.
 
 ## Tooltips
 
@@ -261,22 +284,22 @@ You can configure exactly which fields are visible in the bug report dialog—an
 
 The following fields are available:
 
-| Field Name          | Description                                                      | Example                                                    |
-| ------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------- |
-| `userName`          | Full name of the authenticated user                              | `John Doe`                                                 |
-| `userId`            | User ID of the authenticated user                                | `johnd` (client-managed) / `johnd@example.com` (Cloud)     |
-| `userDirectory`     | Directory of the authenticated user (client-managed only)        | `CORP`                                                     |
-| `tenantId`          | Tenant ID of the user (Qlik Cloud only)                          | `tenantxyz`                                                |
-| `status`            | Account status (Qlik Cloud only)                                 | `active`                                                   |
-| `picture`           | URL to the user's avatar (Qlik Cloud only)                       | `https://s.gravatar.com/...`                               |
-| `preferredZoneinfo` | User's preferred time zone (Qlik Cloud only)                     | `Europe/Stockholm`                                         |
-| `roles`             | Comma-separated list of user roles (Qlik Cloud only)             | `[AnalyticsAdmin], [SharedSpaceCreator]`                   |
-| `appId`             | GUID of the active Qlik Sense application                        | `df68e14d-...`                                             |
-| `sheetId`           | ID of the active sheet                                           | `850cffb0-...`                                             |
-| `urlPath`           | Current URL path context of the browser                          | `/sense/app/.../sheet/...`                                 |
-| `senseVersion`      | Qlik Sense product version (client-managed only)                 | `November 2023 (v14.187.4)`                                |
-| `platform`          | Auto-detected platform type                                      | `client-managed` or `cloud`                                |
-| `browser`           | Browser user-agent string                                        | `Mozilla/5.0...`                                           |
+| Field Name          | Description                                                      | Example                                                                            |
+| ------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `userName`          | Full name of the authenticated user                              | `John Doe`                                                                         |
+| `userId`            | User ID of the authenticated user                                | `johnd` (client-managed) / `johnd@example.com` (Cloud)                             |
+| `userDirectory`     | Directory of the authenticated user (client-managed only)        | `CORP`                                                                             |
+| `tenantId`          | Tenant ID of the user (Qlik Cloud only)                          | `tenantxyz`                                                                        |
+| `status`            | Account status (Qlik Cloud only)                                 | `active`                                                                           |
+| `picture`           | URL to the user's avatar (Qlik Cloud only)                       | `https://s.gravatar.com/...`                                                       |
+| `preferredZoneinfo` | User's preferred time zone (Qlik Cloud only)                     | `Europe/Stockholm`                                                                 |
+| `roles`             | Comma-separated list of user roles (Qlik Cloud only)             | `[AnalyticsAdmin], [SharedSpaceCreator]`                                           |
+| `appId`             | GUID of the active Qlik Sense application                        | `df68e14d-...`                                                                     |
+| `sheetId`           | ID of the active sheet                                           | `850cffb0-...`                                                                     |
+| `urlPath`           | Current URL path context of the browser                          | `/sense/app/.../sheet/...`                                                         |
+| `senseVersion`      | Qlik Sense product version (client-managed only)                 | `November 2023 (v14.187.4)`                                                        |
+| `platform`          | Auto-detected platform type                                      | `client-managed` or `cloud`                                                        |
+| `browser`           | Browser user-agent string                                        | `Mozilla/5.0...`                                                                   |
 | `timestamp`         | Local time the report dialog was opened (format is configurable) | `2026-03-06 08:51:57` (dialog default) or `2026-03-06T08:51:57Z` (payload default) |
 
 _Note: The `timestamp` field format can be customized via the property panel (e.g. ISO8601, ISO8601Z, MM/DD/YYYY, etc.) to match your exact backend requirements._
@@ -319,19 +342,19 @@ The resulting payload `context` object would then look like:
 
 The bug report dialog supports these property panel settings:
 
-| Setting                                            | Type     | Default                       | Description                                                                                                         |
-| -------------------------------------------------- | -------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Webhook URL                                        | string   | _(empty)_                     | POST endpoint to receive bug report data                                                                             |
-| Authentication                                     | dropdown | `None`                        | Auth strategy: `None`, `Authorization header`, `Sense session (XRF key)`, `Custom headers` |
-| &nbsp;&nbsp;↳ _Bearer token_           | string   | _(empty)_                     | Token for `Authorization: Bearer <token>`                                                                                 |
-| &nbsp;&nbsp;↳ _Custom headers_                     | array    | `[]`                          | List of custom `Name: Value` HTTP headers                                                                            |
-| Show severity picker                               | toggle   | On                            | Show a Low / Medium / High picker in the dialog                                                                      |
-| Max description length                             | number   | `1000`                        | Maximum characters allowed in the description (shown as a live counter)                                              |
-| Dialog timestamp format                            | dropdown | `YYYY-MM-DD HH:mm:ss`         | Format for the timestamp shown in the bug report dialog                                                              |
-| Payload timestamp format                           | dropdown | `ISO8601Z`                    | Format for the timestamp in the webhook JSON payload                                                                 |
-| Context fields — Show in Dialog                    | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields appear in the dialog     |
-| Context fields — Include in Payload                | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields are sent to the webhook  |
-| Dialog title                                       | string   | _(auto-translated)_           | Custom dialog title (leave empty for auto-translation)                                                               |
+| Setting                             | Type     | Default                                                                | Description                                                             |
+| ----------------------------------- | -------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Webhook URL                         | string   | _(empty)_                                                              | POST endpoint to receive bug report data                                |
+| Authentication                      | dropdown | `None`                                                                 | Auth strategy: `None`, `Authorization header`, `Custom headers`         |
+| &nbsp;&nbsp;↳ _Bearer token_        | string   | _(empty)_                                                              | Token for `Authorization: Bearer <token>`                               |
+| &nbsp;&nbsp;↳ _Custom headers_      | array    | `[]`                                                                   | List of custom `Name: Value` HTTP headers                               |
+| Show severity picker                | toggle   | On                                                                     | Show a Low / Medium / High picker in the dialog                         |
+| Max description length              | number   | `1000`                                                                 | Maximum characters allowed in the description (shown as a live counter) |
+| Dialog timestamp format             | dropdown | `YYYY-MM-DD HH:mm:ss`                                                  | Format for the timestamp shown in the bug report dialog                 |
+| Payload timestamp format            | dropdown | `ISO8601Z`                                                             | Format for the timestamp in the webhook JSON payload                    |
+| Context fields — Show in Dialog     | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields appear in the dialog         |
+| Context fields — Include in Payload | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields are sent to the webhook      |
+| Dialog title                        | string   | _(auto-translated)_                                                    | Custom dialog title (leave empty for auto-translation)                  |
 
 ### Bug Report Payload
 
@@ -363,20 +386,20 @@ The **Feedback** dialog uses the same context fields as the bug report dialog. Y
 
 The feedback dialog supports these property panel settings:
 
-| Setting                                            | Type     | Default                       | Description                                                                                                         |
-| -------------------------------------------------- | -------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Webhook URL                                        | string   | _(empty)_                     | POST endpoint to receive feedback data                                                                               |
-| Authentication                                     | dropdown | `None`                        | Auth strategy: `None`, `Authorization header`, `Sense session (XRF key)`, `Custom headers` |
-| &nbsp;&nbsp;↳ _Bearer token_           | string   | _(empty)_                     | Token for `Authorization: Bearer <token>`                                                                                 |
-| &nbsp;&nbsp;↳ _Custom headers_                     | array    | `[]`                          | List of custom `Name: Value` HTTP headers                                                                            |
-| Show star rating                                   | toggle   | On                            | Whether to display a 1–5 star rating selector                                                                        |
-| Show free-text comment                             | toggle   | On                            | Whether to display a comment textarea                                                                                |
-| Max comment length                                 | number   | `500`                         | Maximum characters allowed in the comment (shown as a live counter)                                                  |
-| Dialog timestamp format                            | dropdown | `YYYY-MM-DD HH:mm:ss`         | Format for the timestamp shown in the feedback dialog                                                                |
-| Payload timestamp format                           | dropdown | `ISO8601Z`                    | Format for the timestamp in the webhook JSON payload                                                                 |
-| Context fields — Show in Dialog                    | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields appear in the dialog     |
-| Context fields — Include in Payload                | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields are sent to the webhook  |
-| Dialog title                                       | string   | _(auto-translated)_           | Custom dialog title (leave empty for auto-translation)                                                               |
+| Setting                             | Type     | Default                                                                | Description                                                         |
+| ----------------------------------- | -------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Webhook URL                         | string   | _(empty)_                                                              | POST endpoint to receive feedback data                              |
+| Authentication                      | dropdown | `None`                                                                 | Auth strategy: `None`, `Authorization header`, `Custom headers`     |
+| &nbsp;&nbsp;↳ _Bearer token_        | string   | _(empty)_                                                              | Token for `Authorization: Bearer <token>`                           |
+| &nbsp;&nbsp;↳ _Custom headers_      | array    | `[]`                                                                   | List of custom `Name: Value` HTTP headers                           |
+| Show star rating                    | toggle   | On                                                                     | Whether to display a 1–5 star rating selector                       |
+| Show free-text comment              | toggle   | On                                                                     | Whether to display a comment textarea                               |
+| Max comment length                  | number   | `500`                                                                  | Maximum characters allowed in the comment (shown as a live counter) |
+| Dialog timestamp format             | dropdown | `YYYY-MM-DD HH:mm:ss`                                                  | Format for the timestamp shown in the feedback dialog               |
+| Payload timestamp format            | dropdown | `ISO8601Z`                                                             | Format for the timestamp in the webhook JSON payload                |
+| Context fields — Show in Dialog     | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields appear in the dialog     |
+| Context fields — Include in Payload | toggles  | On: `userName`, `platform`, `appId`, `sheetId`, `urlPath`, `timestamp` | Per-field toggles controlling which fields are sent to the webhook  |
+| Dialog title                        | string   | _(auto-translated)_                                                    | Custom dialog title (leave empty for auto-translation)              |
 
 ### Feedback Payload
 
@@ -423,7 +446,3 @@ Not all context fields are available on every platform. The table below summaris
 | `timestamp`         | ✅ Local date/time                                 | ✅ Local date/time                                           |
 
 > **Tip:** For Qlik Cloud deployments, turn off the **"Show in Dialog"** and **"Include in Payload"** toggles for `userDirectory` and `senseVersion`, which are not applicable on Cloud. A recommended Cloud configuration enables: `userId`, `userName`, `appId`, `sheetId`, `urlPath`, `platform`, `timestamp`.
-
----
-
-For technical documentation and development setup, please see the [developer documentation](./docs/DEVELOPMENT.md).

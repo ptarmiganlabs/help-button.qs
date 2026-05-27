@@ -15,16 +15,16 @@ Clicking the button opens a dropdown popup with:
 
 Each language folder is **self-contained** — it includes all the files needed for deployment. Pick the language that matches your organisation, copy its files to the Sense server, and follow the installation steps below.
 
-| Language | Folder | Status |
-|---|---|---|
-| **English** | [`en/`](en/) | ✅ Complete |
+| Language              | Folder       | Status      |
+| --------------------- | ------------ | ----------- |
+| **English**           | [`en/`](en/) | ✅ Complete |
 | **Swedish** (Svenska) | [`sv/`](sv/) | ✅ Complete |
 | **Norwegian** (Norsk) | [`no/`](no/) | ✅ Complete |
-| **Danish** (Dansk) | [`da/`](da/) | ✅ Complete |
-| **Finnish** (Suomi) | [`fi/`](fi/) | ✅ Complete |
-| **German** (Deutsch) | [`de/`](de/) | ✅ Complete |
+| **Danish** (Dansk)    | [`da/`](da/) | ✅ Complete |
+| **Finnish** (Suomi)   | [`fi/`](fi/) | ✅ Complete |
+| **German** (Deutsch)  | [`de/`](de/) | ✅ Complete |
 | **French** (Français) | [`fr/`](fr/) | ✅ Complete |
-| **Polish** (Polski) | [`pl/`](pl/) | ✅ Complete |
+| **Polish** (Polski)   | [`pl/`](pl/) | ✅ Complete |
 | **Spanish** (Español) | [`es/`](es/) | ✅ Complete |
 
 ### What's in each language folder
@@ -69,12 +69,12 @@ Get-Service QlikSense* | Restart-Service
 
 ### Prerequisites
 
-| Requirement | Details |
-|---|---|
-| Qlik Sense Enterprise on Windows | Client-managed deployment (not Qlik Cloud) |
-| Server access | Administrator / RDP access to the Qlik Sense server |
-| Qlik Sense version | Tested with client-managed Qlik Sense; expected to work with most modern versions |
-| Webhook endpoint | A URL that accepts JSON POST requests for bug reports |
+| Requirement                      | Details                                                                           |
+| -------------------------------- | --------------------------------------------------------------------------------- |
+| Qlik Sense Enterprise on Windows | Client-managed deployment (not Qlik Cloud)                                        |
+| Server access                    | Administrator / RDP access to the Qlik Sense server                               |
+| Qlik Sense version               | Tested with client-managed Qlik Sense; expected to work with most modern versions |
+| Webhook endpoint                 | A URL that accepts JSON POST requests for bug reports                             |
 
 ### Step 1 — Copy files to the Sense server
 
@@ -123,40 +123,40 @@ All configuration is done in `helpbutton-qs.config.js`. See the config file in y
 
 ### General options
 
-| Property | Type | Default (English) | Description |
-|---|---|---|---|
-| `buttonLabel` | string | `'Help'` | Text displayed on the toolbar button |
-| `buttonTooltip` | string | `'Open help menu'` | Native tooltip shown on hover |
-| `popupTitle` | string | `'Need assistance?'` | Heading inside the dropdown popup |
-| `menuItems` | array | *(see config file)* | Links shown in the popup |
+| Property        | Type   | Default (English)    | Description                          |
+| --------------- | ------ | -------------------- | ------------------------------------ |
+| `buttonLabel`   | string | `'Help'`             | Text displayed on the toolbar button |
+| `buttonTooltip` | string | `'Open help menu'`   | Native tooltip shown on hover        |
+| `popupTitle`    | string | `'Need assistance?'` | Heading inside the dropdown popup    |
+| `menuItems`     | array  | _(see config file)_  | Links shown in the popup             |
 
 ### Bug Report dialog texts
 
 All text strings in the bug-report dialog are configurable for localisation:
 
-| Property | Default (English) | Swedish |
-|---|---|---|
-| `bugReport.dialogTitle` | `'Report a Bug'` | `'Rapportera ett fel'` |
-| `bugReport.descriptionLabel` | `'Description *'` | `'Beskrivning *'` |
-| `bugReport.descriptionPlaceholder` | `'Describe the issue…'` | `'Beskriv problemet…'` |
-| `bugReport.cancelButtonText` | `'Cancel'` | `'Avbryt'` |
-| `bugReport.submitButtonText` | `'Submit'` | `'Skicka'` |
-| `bugReport.submittingButtonText` | `'Submitting…'` | `'Skickar…'` |
-| `bugReport.loadingMessage` | `'Gathering environment info…'` | `'Samlar in miljöinformation…'` |
-| `bugReport.successMessage` | `'Bug report submitted!'` | `'Felrapporten har skickats!'` |
-| `bugReport.errorMessage` | `'Failed to submit.'` | `'Det gick inte att skicka.'` |
-| `bugReport.fieldLabels.*` | English labels | Swedish labels |
+| Property                           | Default (English)               | Swedish                         |
+| ---------------------------------- | ------------------------------- | ------------------------------- |
+| `bugReport.dialogTitle`            | `'Report a Bug'`                | `'Rapportera ett fel'`          |
+| `bugReport.descriptionLabel`       | `'Description *'`               | `'Beskrivning *'`               |
+| `bugReport.descriptionPlaceholder` | `'Describe the issue…'`         | `'Beskriv problemet…'`          |
+| `bugReport.cancelButtonText`       | `'Cancel'`                      | `'Avbryt'`                      |
+| `bugReport.submitButtonText`       | `'Submit'`                      | `'Skicka'`                      |
+| `bugReport.submittingButtonText`   | `'Submitting…'`                 | `'Skickar…'`                    |
+| `bugReport.loadingMessage`         | `'Gathering environment info…'` | `'Samlar in miljöinformation…'` |
+| `bugReport.successMessage`         | `'Bug report submitted!'`       | `'Felrapporten har skickats!'`  |
+| `bugReport.errorMessage`           | `'Failed to submit.'`           | `'Det gick inte att skicka.'`   |
+| `bugReport.fieldLabels.*`          | English labels                  | Swedish labels                  |
 
 ### Authentication options
 
 The `bugReport.auth` object supports four strategies:
 
-| `auth.type` | Description |
-|---|---|
-| `'none'` | No authentication (default) |
-| `'header'` | Single custom header (e.g. Bearer token) |
+| `auth.type`       | Description                                 |
+| ----------------- | ------------------------------------------- |
+| `'none'`          | No authentication (default)                 |
+| `'header'`        | Single custom header (e.g. Bearer token)    |
 | `'sense-session'` | Forward Qlik Sense session cookie + XRF key |
-| `'custom'` | Arbitrary custom headers |
+| `'custom'`        | Arbitrary custom headers                    |
 
 ---
 

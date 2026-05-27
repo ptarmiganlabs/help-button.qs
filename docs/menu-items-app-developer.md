@@ -330,14 +330,13 @@ sequenceDiagram
 
 ### Bug report webhook and authentication
 
-The bug-report dialog supports four authentication strategies:
+The bug-report dialog supports three authentication strategies:
 
-| Strategy                    | What the code sends                            |
-| --------------------------- | ---------------------------------------------- |
-| **None**                    | No auth headers                                |
-| **Authorization header**    | `Authorization: Bearer <token>`                |
-| **Sense session (XRF key)** | Generated `X-Qlik-Xrfkey` header               |
-| **Custom headers**          | Exact name/value pairs from the property panel |
+| Strategy                 | What the code sends                            |
+| ------------------------ | ---------------------------------------------- |
+| **None**                 | No auth headers                                |
+| **Authorization header** | `Authorization: Bearer <token>`                |
+| **Custom headers**       | Exact name/value pairs from the property panel |
 
 Important notes:
 
@@ -462,7 +461,6 @@ The feedback dialog uses the same webhook and authentication model as bug report
 
 - None
 - Authorization header using a bearer token
-- Sense session using `X-Qlik-Xrfkey`
 - Custom headers
 
 The webhook URL also supports the same template fields described earlier.

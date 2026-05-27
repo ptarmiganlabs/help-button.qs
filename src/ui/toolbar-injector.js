@@ -12,22 +12,23 @@
  * from the remaining registrations — or is destroyed if none remain.
  */
 
-import { makeSvg } from './icons';
-import { createPopupMenu } from './popup-menu';
-import { openBugReportDialog } from './bug-report-dialog';
-import { openFeedbackDialog } from './feedback-dialog';
-import { executeVariableAction } from './variable-action';
-import { escapeHtml } from '../util/template-fields';
-import { resolveColor } from '../util/color';
-import { resolveText } from '../i18n/index';
-import logger from '../util/logger';
+import { makeSvg } from "./icons";
+import { createPopupMenu } from "./popup-menu";
+import { openBugReportDialog } from "./bug-report-dialog";
+import { openFeedbackDialog } from "./feedback-dialog";
+import { executeVariableAction } from "./variable-action";
+import { escapeHtml } from "../util/template-fields";
+import { resolveColor } from "../util/color";
+import { resolveText } from "../i18n/index";
+import { normalizeAuthStrategy } from "../util/auth-strategy";
+import logger from "../util/logger";
 
 /**
  * Unique ID for the injected help button container.
  *
  * @type {string}
  */
-const CONTAINER_ID = 'hbqs-container';
+const CONTAINER_ID = "hbqs-container";
 
 /**
  * Active popup controls — stored to allow cleanup.
@@ -75,16 +76,16 @@ const configRegistry = new Map();
  * @param {object} [app] - Enigma.js Doc/App object.
  */
 export function registerHelpConfig(objectId, layout, adapter, platform, app) {
-    const menuItems = layout.menuItems || [];
-    if (menuItems.length === 0) {
-        unregisterHelpConfig(objectId);
-        return;
-    }
+  const menuItems = layout.menuItems || [];
+  if (menuItems.length === 0) {
+    unregisterHelpConfig(objectId);
+    return;
+  }
 
-    configRegistry.set(objectId, { layout, app });
-    lastConfig = { adapter, platform };
+  configRegistry.set(objectId, { layout, app });
+  lastConfig = { adapter, platform };
 
-    rebuildHelpButton();
+  rebuildHelpButton();
 }
 
 /**
@@ -96,17 +97,17 @@ export function registerHelpConfig(objectId, layout, adapter, platform, app) {
  *   also wipe stored config so watchForRemoval will NOT re-inject.
  */
 export function unregisterHelpConfig(objectId, { clearConfig = false } = {}) {
-    configRegistry.delete(objectId);
+  configRegistry.delete(objectId);
 
-    if (clearConfig && configRegistry.size === 0) {
-        lastConfig = null;
-    }
+  if (clearConfig && configRegistry.size === 0) {
+    lastConfig = null;
+  }
 
-    if (configRegistry.size === 0) {
-        destroyHelpButton({ clearConfig });
-    } else {
-        rebuildHelpButton();
-    }
+  if (configRegistry.size === 0) {
+    destroyHelpButton({ clearConfig });
+  } else {
+    rebuildHelpButton();
+  }
 }
 
 /**
@@ -115,32 +116,35 @@ export function unregisterHelpConfig(objectId, { clearConfig = false } = {}) {
  * registered config; menu items are concatenated from all configs.
  */
 function rebuildHelpButton() {
-    if (!lastConfig || configRegistry.size === 0) return;
-    const { adapter, platform } = lastConfig;
+  if (!lastConfig || configRegistry.size === 0) return;
+  const { adapter, platform } = lastConfig;
 
-    // Build a merged layout: first config provides appearance, all provide menuItems.
-    // Deep-clone before passing to injectHelpButton() because it mutates nested
-    // menu-item config (bugReport.dialogStrings, feedback.dialogStrings).
-    const entries = [...configRegistry.values()];
-    const baseLayout = entries[0].layout;
-    const app = entries[0].app;
+  // Build a merged layout: first config provides appearance, all provide menuItems.
+  // Deep-clone before passing to injectHelpButton() because it mutates nested
+  // menu-item config (bugReport.dialogStrings, feedback.dialogStrings).
+  const entries = [...configRegistry.values()];
+  const baseLayout = entries[0].layout;
+  const app = entries[0].app;
 
-    if (entries.length === 1) {
-        // Single config — clone to protect the stored layout from mutation
-        injectHelpButton(structuredClone(baseLayout), adapter, platform, app);
-        return;
-    }
+  if (entries.length === 1) {
+    // Single config — clone to protect the stored layout from mutation
+    injectHelpButton(structuredClone(baseLayout), adapter, platform, app);
+    return;
+  }
 
-    // Merge menuItems from all configs
-    const mergedMenuItems = [];
-    for (const { layout } of entries) {
-        const items = layout.menuItems || [];
-        mergedMenuItems.push(...items);
-    }
+  // Merge menuItems from all configs
+  const mergedMenuItems = [];
+  for (const { layout } of entries) {
+    const items = layout.menuItems || [];
+    mergedMenuItems.push(...items);
+  }
 
-    // Deep-clone so injectHelpButton() cannot mutate stored registry entries
-    const mergedLayout = structuredClone({ ...baseLayout, menuItems: mergedMenuItems });
-    injectHelpButton(mergedLayout, adapter, platform, app);
+  // Deep-clone so injectHelpButton() cannot mutate stored registry entries
+  const mergedLayout = structuredClone({
+    ...baseLayout,
+    menuItems: mergedMenuItems,
+  });
+  injectHelpButton(mergedLayout, adapter, platform, app);
 }
 
 /**
@@ -153,145 +157,153 @@ function rebuildHelpButton() {
  * @returns {function} Cleanup function to remove the button and listeners.
  */
 export function injectHelpButton(layout, adapter, platform, app) {
-    // If no menu items are defined, do not render the toolbar button
-    const menuItems = layout.menuItems || [];
-    if (menuItems.length === 0) {
-        destroyHelpButton();
-        return () => {};
-    }
+  // If no menu items are defined, do not render the toolbar button
+  const menuItems = layout.menuItems || [];
+  if (menuItems.length === 0) {
+    destroyHelpButton();
+    return () => {};
+  }
 
-    // Persist config so watchForRemoval can re-inject without the component
-    lastConfig = { adapter, platform };
+  // Persist config so watchForRemoval can re-inject without the component
+  lastConfig = { adapter, platform };
 
-    // Guard against double-injection
-    if (document.getElementById(CONTAINER_ID)) {
-        logger.debug('Help button already exists, updating config');
-        destroyHelpButton();
-    }
+  // Guard against double-injection
+  if (document.getElementById(CONTAINER_ID)) {
+    logger.debug("Help button already exists, updating config");
+    destroyHelpButton();
+  }
 
-    const anchor = adapter.getToolbarAnchor(platform.codePath);
-    if (!anchor) {
-        logger.debug('Toolbar anchor not found, will retry via observer');
-        return waitAndInject(layout, adapter, platform, app);
-    }
+  const anchor = adapter.getToolbarAnchor(platform.codePath);
+  if (!anchor) {
+    logger.debug("Toolbar anchor not found, will retry via observer");
+    return waitAndInject(layout, adapter, platform, app);
+  }
 
-    logger.debug('Toolbar anchor found. Injecting help button…');
+  logger.debug("Toolbar anchor found. Injecting help button…");
 
-    // Read config from layout
-    const buttonLabel = resolveText(layout.buttonLabel, 'buttonLabel');
-    const buttonTooltip = resolveText(layout.buttonTooltip, 'buttonTooltip');
-    const buttonIcon = layout.buttonIcon || 'help';
-    const buttonStyle = layout.buttonStyle || {};
-    const popupTitle = resolveText(layout.popupTitle, 'popupTitle');
-    const popupStyle = layout.popupStyle || {};
+  // Read config from layout
+  const buttonLabel = resolveText(layout.buttonLabel, "buttonLabel");
+  const buttonTooltip = resolveText(layout.buttonTooltip, "buttonTooltip");
+  const buttonIcon = layout.buttonIcon || "help";
+  const buttonStyle = layout.buttonStyle || {};
+  const popupTitle = resolveText(layout.popupTitle, "popupTitle");
+  const popupStyle = layout.popupStyle || {};
 
-    // Derive bug-report config from the first menu item with action='bugReport'
-    const bugReportItem = menuItems.find((item) => item.action === 'bugReport');
-    const bugReport = bugReportItem ? bugReportItem.bugReport || {} : null;
+  // Derive bug-report config from the first menu item with action='bugReport'
+  const bugReportItem = menuItems.find((item) => item.action === "bugReport");
+  const bugReport = bugReportItem ? bugReportItem.bugReport || {} : null;
 
-    // Merge global bug-report strings into per-item dialogStrings.
-    // Per-item values (when non-empty) override global values.
-    if (bugReport) {
-        const globalBr = layout.bugReportStrings || {};
-        const perItem = bugReport.dialogStrings || {};
-        bugReport.dialogStrings = { ...globalBr };
-        Object.entries(perItem).forEach(([k, v]) => {
-            if (v !== undefined && v !== null && v !== '') {
-                bugReport.dialogStrings[k] = v;
-            }
-        });
-    }
-
-    // Derive feedback config from the first menu item with action='feedback'
-    const feedbackItem = menuItems.find((item) => item.action === 'feedback');
-    const feedbackConfig = feedbackItem ? feedbackItem.feedback || {} : null;
-
-    // Merge global feedback strings into per-item dialogStrings.
-    if (feedbackConfig) {
-        const globalFb = layout.feedbackStrings || {};
-        const perItem = feedbackConfig.dialogStrings || {};
-        feedbackConfig.dialogStrings = { ...globalFb };
-        Object.entries(perItem).forEach(([k, v]) => {
-            if (v !== undefined && v !== null && v !== '') {
-                feedbackConfig.dialogStrings[k] = v;
-            }
-        });
-    }
-
-    // Resolve button colors (handles both color-picker objects and plain strings)
-    const btnBg = resolveColor(buttonStyle.backgroundColor, '#165a9b');
-    const btnBgHover = resolveColor(buttonStyle.backgroundColorHover, '#12487c');
-    const btnText = resolveColor(buttonStyle.textColor, '#ffffff');
-    const btnBorder = resolveColor(buttonStyle.borderColor, '#0e3b65');
-    const btnRadius = buttonStyle.borderRadius || '4px';
-
-    // -- Container --
-    const container = document.createElement('div');
-    container.id = CONTAINER_ID;
-    container.className = 'hbqs-container';
-
-    // -- Toolbar button --
-    const btn = document.createElement('button');
-    btn.id = 'hbqs-button';
-    btn.className = 'hbqs-button';
-    btn.type = 'button';
-    btn.title = buttonTooltip;
-    btn.setAttribute('aria-label', buttonTooltip);
-    btn.setAttribute('aria-haspopup', 'true');
-    btn.setAttribute('aria-expanded', 'false');
-
-    // Apply button colors from layout (resolved from color-picker objects)
-    btn.style.setProperty('--hbqs-btn-bg', btnBg);
-    btn.style.setProperty('--hbqs-btn-bg-hover', btnBgHover);
-    btn.style.setProperty('--hbqs-btn-text', btnText);
-    btn.style.setProperty('--hbqs-btn-border', btnBorder);
-    btn.style.setProperty('--hbqs-btn-radius', btnRadius);
-
-    btn.innerHTML =
-        `<span class="hbqs-button-icon">${makeSvg(buttonIcon, 16, btnText)}</span>` +
-        `<span class="hbqs-button-label">${escapeHtml(buttonLabel)}</span>`;
-
-    container.appendChild(btn);
-
-    // -- Inject into toolbar --
-    if (platform.type === 'client-managed') {
-        // CM: insert as first child of #top-bar-right-side
-        anchor.insertBefore(container, anchor.firstChild);
-        // Ensure the anchor is wide enough
-        anchor.style.width = 'auto';
-        anchor.style.minWidth = '300px';
-    } else {
-        // Cloud: insert into the toolbar's right section
-        anchor.insertBefore(container, anchor.firstChild);
-    }
-
-    // -- Create popup menu --
-    const popupControls = createPopupMenu(btn, {
-        popupTitle,
-        menuItems,
-        popupStyle,
-        buttonStyle,
-        onBugReport: bugReport
-            ? () => openBugReportDialog(bugReport, platform.type)
-            : undefined,
-        onFeedback: feedbackConfig
-            ? () => openFeedbackDialog(feedbackConfig, platform.type)
-            : undefined,
-        onSetVariable: function (variableConfig) {
-            executeVariableAction(app, variableConfig);
-        },
+  // Merge global bug-report strings into per-item dialogStrings.
+  // Per-item values (when non-empty) override global values.
+  if (bugReport) {
+    bugReport.authStrategy = normalizeAuthStrategy(
+      bugReport.authStrategy,
+      'bugReport.authStrategy',
+    );
+    const globalBr = layout.bugReportStrings || {};
+    const perItem = bugReport.dialogStrings || {};
+    bugReport.dialogStrings = { ...globalBr };
+    Object.entries(perItem).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") {
+        bugReport.dialogStrings[k] = v;
+      }
     });
-    activePopup = popupControls;
+  }
 
-    // Toggle popup on button click
-    btn.addEventListener('click', popupControls.toggle);
+  // Derive feedback config from the first menu item with action='feedback'
+  const feedbackItem = menuItems.find((item) => item.action === "feedback");
+  const feedbackConfig = feedbackItem ? feedbackItem.feedback || {} : null;
 
-    // -- Watch for removal (SPA navigation) --
-    watchForRemoval();
+  // Merge global feedback strings into per-item dialogStrings.
+  if (feedbackConfig) {
+    feedbackConfig.authStrategy = normalizeAuthStrategy(
+      feedbackConfig.authStrategy,
+      'feedback.authStrategy',
+    );
+    const globalFb = layout.feedbackStrings || {};
+    const perItem = feedbackConfig.dialogStrings || {};
+    feedbackConfig.dialogStrings = { ...globalFb };
+    Object.entries(perItem).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") {
+        feedbackConfig.dialogStrings[k] = v;
+      }
+    });
+  }
 
-    logger.info('Help button injected into toolbar');
+  // Resolve button colors (handles both color-picker objects and plain strings)
+  const btnBg = resolveColor(buttonStyle.backgroundColor, "#165a9b");
+  const btnBgHover = resolveColor(buttonStyle.backgroundColorHover, "#12487c");
+  const btnText = resolveColor(buttonStyle.textColor, "#ffffff");
+  const btnBorder = resolveColor(buttonStyle.borderColor, "#0e3b65");
+  const btnRadius = buttonStyle.borderRadius || "4px";
 
-    return () => destroyHelpButton();
+  // -- Container --
+  const container = document.createElement("div");
+  container.id = CONTAINER_ID;
+  container.className = "hbqs-container";
+
+  // -- Toolbar button --
+  const btn = document.createElement("button");
+  btn.id = "hbqs-button";
+  btn.className = "hbqs-button";
+  btn.type = "button";
+  btn.title = buttonTooltip;
+  btn.setAttribute("aria-label", buttonTooltip);
+  btn.setAttribute("aria-haspopup", "true");
+  btn.setAttribute("aria-expanded", "false");
+
+  // Apply button colors from layout (resolved from color-picker objects)
+  btn.style.setProperty("--hbqs-btn-bg", btnBg);
+  btn.style.setProperty("--hbqs-btn-bg-hover", btnBgHover);
+  btn.style.setProperty("--hbqs-btn-text", btnText);
+  btn.style.setProperty("--hbqs-btn-border", btnBorder);
+  btn.style.setProperty("--hbqs-btn-radius", btnRadius);
+
+  btn.innerHTML =
+    `<span class="hbqs-button-icon">${makeSvg(buttonIcon, 16, btnText)}</span>` +
+    `<span class="hbqs-button-label">${escapeHtml(buttonLabel)}</span>`;
+
+  container.appendChild(btn);
+
+  // -- Inject into toolbar --
+  if (platform.type === "client-managed") {
+    // CM: insert as first child of #top-bar-right-side
+    anchor.insertBefore(container, anchor.firstChild);
+    // Ensure the anchor is wide enough
+    anchor.style.width = "auto";
+    anchor.style.minWidth = "300px";
+  } else {
+    // Cloud: insert into the toolbar's right section
+    anchor.insertBefore(container, anchor.firstChild);
+  }
+
+  // -- Create popup menu --
+  const popupControls = createPopupMenu(btn, {
+    popupTitle,
+    menuItems,
+    popupStyle,
+    buttonStyle,
+    onBugReport: bugReport
+      ? () => openBugReportDialog(bugReport, platform.type)
+      : undefined,
+    onFeedback: feedbackConfig
+      ? () => openFeedbackDialog(feedbackConfig, platform.type)
+      : undefined,
+    onSetVariable: function (variableConfig) {
+      executeVariableAction(app, variableConfig);
+    },
+  });
+  activePopup = popupControls;
+
+  // Toggle popup on button click
+  btn.addEventListener("click", popupControls.toggle);
+
+  // -- Watch for removal (SPA navigation) --
+  watchForRemoval();
+
+  logger.info("Help button injected into toolbar");
+
+  return () => destroyHelpButton();
 }
 
 /**
@@ -305,59 +317,63 @@ export function injectHelpButton(layout, adapter, platform, app) {
  * @returns {function} Cleanup function.
  */
 function waitAndInject(layout, adapter, platform, app) {
-    const startTime = Date.now();
-    const timeout = 30000;
-    const pollInterval = 500;
-    let observer = null;
-    let pollTimer = null;
-    let cancelled = false;
+  const startTime = Date.now();
+  const timeout = 30000;
+  const pollInterval = 500;
+  let observer = null;
+  let pollTimer = null;
+  let cancelled = false;
 
-    function tryInject() {
-        if (cancelled) return false;
-        const anchor = adapter.getToolbarAnchor(platform.codePath);
-        if (anchor) {
-            cleanup();
-            injectHelpButton(layout, adapter, platform, app);
-            return true;
-        }
-        return false;
+  function tryInject() {
+    if (cancelled) return false;
+    const anchor = adapter.getToolbarAnchor(platform.codePath);
+    if (anchor) {
+      cleanup();
+      injectHelpButton(layout, adapter, platform, app);
+      return true;
     }
+    return false;
+  }
 
-    function cleanup() {
-        if (observer) {
-            observer.disconnect();
-            observer = null;
-        }
-        if (pollTimer) {
-            clearInterval(pollTimer);
-            pollTimer = null;
-        }
+  function cleanup() {
+    if (observer) {
+      observer.disconnect();
+      observer = null;
     }
-
-    // MutationObserver
-    if (typeof MutationObserver !== 'undefined') {
-        observer = new MutationObserver(() => {
-            tryInject();
-        });
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true,
-        });
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
     }
+  }
 
-    // Polling fallback
-    pollTimer = setInterval(() => {
-        if (tryInject()) return;
-        if (Date.now() - startTime > timeout) {
-            logger.warn('Timeout: toolbar anchor did not appear within', timeout, 'ms');
-            cleanup();
-        }
-    }, pollInterval);
+  // MutationObserver
+  if (typeof MutationObserver !== "undefined") {
+    observer = new MutationObserver(() => {
+      tryInject();
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+  }
 
-    return () => {
-        cancelled = true;
-        cleanup();
-    };
+  // Polling fallback
+  pollTimer = setInterval(() => {
+    if (tryInject()) return;
+    if (Date.now() - startTime > timeout) {
+      logger.warn(
+        "Timeout: toolbar anchor did not appear within",
+        timeout,
+        "ms",
+      );
+      cleanup();
+    }
+  }, pollInterval);
+
+  return () => {
+    cancelled = true;
+    cleanup();
+  };
 }
 
 /**
@@ -366,28 +382,30 @@ function waitAndInject(layout, adapter, platform, app) {
  * Uses the module-level lastConfig for re-injection parameters.
  */
 function watchForRemoval() {
-    if (removalObserver) {
-        removalObserver.disconnect();
-        removalObserver = null;
-    }
+  if (removalObserver) {
+    removalObserver.disconnect();
+    removalObserver = null;
+  }
 
-    if (typeof MutationObserver === 'undefined') return;
+  if (typeof MutationObserver === "undefined") return;
 
-    removalObserver = new MutationObserver(() => {
-        if (!document.getElementById(CONTAINER_ID) && lastConfig) {
-            logger.debug('Help button removed from DOM (SPA navigation?). Re-injecting…');
-            setTimeout(() => {
-                if (lastConfig && configRegistry.size > 0) {
-                    rebuildHelpButton();
-                }
-            }, 300);
+  removalObserver = new MutationObserver(() => {
+    if (!document.getElementById(CONTAINER_ID) && lastConfig) {
+      logger.debug(
+        "Help button removed from DOM (SPA navigation?). Re-injecting…",
+      );
+      setTimeout(() => {
+        if (lastConfig && configRegistry.size > 0) {
+          rebuildHelpButton();
         }
-    });
+      }, 300);
+    }
+  });
 
-    removalObserver.observe(document.documentElement, {
-        childList: true,
-        subtree: true,
-    });
+  removalObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
 }
 
 /**
@@ -402,25 +420,28 @@ function watchForRemoval() {
  *   button survives sheet navigation.
  */
 export function destroyHelpButton({ clearConfig = false } = {}) {
-    if (activePopup) {
-        activePopup.destroy();
-        activePopup = null;
-    }
+  if (activePopup) {
+    activePopup.destroy();
+    activePopup = null;
+  }
 
-    if (clearConfig) {
-        lastConfig = null;
-        configRegistry.clear();
-    }
+  if (clearConfig) {
+    lastConfig = null;
+    configRegistry.clear();
+  }
 
-    if (removalObserver) {
-        removalObserver.disconnect();
-        removalObserver = null;
-    }
+  if (removalObserver) {
+    removalObserver.disconnect();
+    removalObserver = null;
+  }
 
-    const container = document.getElementById(CONTAINER_ID);
-    if (container) {
-        container.remove();
-    }
+  const container = document.getElementById(CONTAINER_ID);
+  if (container) {
+    container.remove();
+  }
 
-    logger.debug('Help button destroyed', clearConfig ? '(config cleared)' : '(config kept)');
+  logger.debug(
+    "Help button destroyed",
+    clearConfig ? "(config cleared)" : "(config kept)",
+  );
 }

@@ -5,14 +5,14 @@
  * Platform-aware: CM uses /qps/user, Cloud uses different detection.
  */
 
-import logger from './logger';
+import logger from "./logger";
 
 /**
  * Cached template context — populated once by fetchTemplateContext().
  *
  * @type {{ userDirectory: string, userId: string }}
  */
-let templateContext = { userDirectory: '', userId: '' };
+let templateContext = { userDirectory: "", userId: "" };
 
 /**
  * Whether template context has been fetched.
@@ -33,33 +33,38 @@ let contextFetched = false;
  * @returns {Promise<void>}
  */
 export async function fetchTemplateContext(platformType) {
-    if (contextFetched) return;
-    contextFetched = true;
+  if (contextFetched) return;
+  contextFetched = true;
 
-    if (platformType === 'cloud') {
-        try {
-            const resp = await fetch('/api/v1/users/me');
-            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            const data = await resp.json();
-            templateContext.userId = data.email || '';
-            templateContext.userDirectory = '';
-            logger.debug('Cloud template context loaded:', JSON.stringify(templateContext));
-        } catch (err) {
-            logger.warn('Failed to fetch Cloud template context (user info):', err);
-        }
-        return;
-    }
-
+  if (platformType === "cloud") {
     try {
-        const resp = await fetch('/qps/user?targetUri=' + encodeURIComponent(window.location.href));
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
-        templateContext.userDirectory = data.userDirectory || '';
-        templateContext.userId = data.userId || '';
-        logger.debug('Template context loaded:', JSON.stringify(templateContext));
+      const resp = await fetch("/api/v1/users/me");
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      templateContext.userId = data.email || "";
+      templateContext.userDirectory = "";
+      logger.debug(
+        "Cloud template context loaded:",
+        JSON.stringify(templateContext),
+      );
     } catch (err) {
-        logger.warn('Failed to fetch template context (user info):', err);
+      logger.warn("Failed to fetch Cloud template context (user info):", err);
     }
+    return;
+  }
+
+  try {
+    const resp = await fetch(
+      "/qps/user?targetUri=" + encodeURIComponent(window.location.href),
+    );
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    templateContext.userDirectory = data.userDirectory || "";
+    templateContext.userId = data.userId || "";
+    logger.debug("Template context loaded:", JSON.stringify(templateContext));
+  } catch (err) {
+    logger.warn("Failed to fetch template context (user info):", err);
+  }
 }
 
 /**
@@ -78,32 +83,32 @@ export async function fetchTemplateContext(platformType) {
  * @returns {string} Resolved URL.
  */
 export function resolveTemplateFields(url) {
-    if (!url || !url.includes('{{')) return url;
+  if (!url || !url.includes("{{")) return url;
 
-    // Parse app/sheet IDs fresh from the current URL (changes on SPA navigation)
-    const path = window.location.pathname;
-    const appMatch = path.match(/\/app\/([0-9a-f-]{36})/i);
-    const sheetMatch = path.match(/\/sheet\/([^/]+)/);
+  // Parse app/sheet IDs fresh from the current URL (changes on SPA navigation)
+  const path = window.location.pathname;
+  const appMatch = path.match(/\/app\/([0-9a-f-]{36})/i);
+  const sheetMatch = path.match(/\/sheet\/([^/]+)/);
 
-    let resolved = url
-        .replace(/\{\{userDirectory\}\}/g, templateContext.userDirectory || '')
-        .replace(/\{\{userId\}\}/g, templateContext.userId || '')
-        .replace(/\{\{appId\}\}/g, appMatch ? appMatch[1] : '')
-        .replace(/\{\{sheetId\}\}/g, sheetMatch ? sheetMatch[1] : '');
+  let resolved = url
+    .replace(/\{\{userDirectory\}\}/g, templateContext.userDirectory || "")
+    .replace(/\{\{userId\}\}/g, templateContext.userId || "")
+    .replace(/\{\{appId\}\}/g, appMatch ? appMatch[1] : "")
+    .replace(/\{\{sheetId\}\}/g, sheetMatch ? sheetMatch[1] : "");
 
-    // Clean up double-slashes in the path portion (preserve :// in protocol)
-    const protocolEnd = resolved.indexOf('://');
-    if (protocolEnd >= 0) {
-        const protocol = resolved.substring(0, protocolEnd + 3);
-        let rest = resolved.substring(protocolEnd + 3);
-        rest = rest.replace(/\/{2,}/g, '/');
-        resolved = protocol + rest;
-    } else {
-        resolved = resolved.replace(/\/{2,}/g, '/');
-    }
+  // Clean up double-slashes in the path portion (preserve :// in protocol)
+  const protocolEnd = resolved.indexOf("://");
+  if (protocolEnd >= 0) {
+    const protocol = resolved.substring(0, protocolEnd + 3);
+    let rest = resolved.substring(protocolEnd + 3);
+    rest = rest.replace(/\/{2,}/g, "/");
+    resolved = protocol + rest;
+  } else {
+    resolved = resolved.replace(/\/{2,}/g, "/");
+  }
 
-    logger.debug('Template URL resolved:', url, '→', resolved);
-    return resolved;
+  logger.debug("Template URL resolved:", url, "→", resolved);
+  return resolved;
 }
 
 /**
@@ -113,7 +118,7 @@ export function resolveTemplateFields(url) {
  * @returns {string} HTML-safe string.
  */
 export function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
+  const div = document.createElement("div");
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
 }

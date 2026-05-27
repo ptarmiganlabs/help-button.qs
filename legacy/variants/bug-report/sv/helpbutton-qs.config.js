@@ -18,25 +18,25 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Text som visas på verktygsfältsknappen */
-  buttonLabel: 'Hjälp',
+  buttonLabel: "Hjälp",
 
   /** Webbläsarens tooltip vid hovring */
-  buttonTooltip: 'Öppna hjälpmenyn',
+  buttonTooltip: "Öppna hjälpmenyn",
 
   /** Ikon för verktygsfältsknappen: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Verktygsfältsknapp — färger / stil
   // --------------------------------------------------------------------------
   buttonStyle: {
-    backgroundColor: '#165a9b',
-    backgroundColorHover: '#12487c',
-    backgroundColorActive: '#0e3b65',
-    textColor: '#ffffff',
-    borderColor: '#0e3b65',
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
+    backgroundColor: "#165a9b",
+    backgroundColorHover: "#12487c",
+    backgroundColorActive: "#0e3b65",
+    textColor: "#ffffff",
+    borderColor: "#0e3b65",
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
   },
 
   // --------------------------------------------------------------------------
@@ -44,17 +44,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Rubrik som visas högst upp i popup-menyn */
-  popupTitle: 'Hur kan vi hjälpa dig?',
+  popupTitle: "Hur kan vi hjälpa dig?",
 
   /** Popup-färger — mörkblå rubrik med gul text */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',
-    headerTextColor: '#ffcc33',
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256",
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256",
+    headerTextColor: "#ffcc33",
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -79,25 +79,25 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Hjälp & dokumentation',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
+      label: "Hjälp & dokumentation",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
       // Färger per alternativ (blå ton)
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Rapportera ett fel',
-      action: 'bugReport',       // <-- Öppnar felrapportdialogen
-      icon: 'bug',
+      label: "Rapportera ett fel",
+      action: "bugReport", // <-- Öppnar felrapportdialogen
+      icon: "bug",
       // Färger per alternativ (varm bärnstenston)
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
     // -- Exempel: ytterligare standard länkalternativ --
     // {                                    // ← Mallfältsexempel
@@ -127,7 +127,7 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
   bugReport: {
     /** Titel som visas högst upp i felrapportdialogen */
-    dialogTitle: 'Rapportera ett fel',
+    dialogTitle: "Rapportera ett fel",
 
     /**
      * OBLIGATORISKT — URL:en att POSTa felrapportens JSON-data till.
@@ -138,10 +138,10 @@ window.helpButtonQsConfig = {
      *   'https://jira.example.com/rest/api/2/issue'           (Jira)
      *   'https://your-server.com/api/bug-reports'             (egen REST)
      */
-    webhookUrl: 'https://localhost:3443/api/bug-reports',
+    webhookUrl: "https://localhost:3443/api/bug-reports",
 
     /** HTTP-metod för webhook-anropet (standard: POST) */
-    webhookMethod: 'POST',
+    webhookMethod: "POST",
 
     /**
      * Autentiseringsstrategi för webhook-anropet.
@@ -152,7 +152,7 @@ window.helpButtonQsConfig = {
      * type: 'custom'         — Skicka godtyckliga headers från customHeaders-objektet
      */
     auth: {
-      type: 'none',
+      type: "none",
 
       // -- För type: 'header' --
       // headerName:  'Authorization',
@@ -172,53 +172,53 @@ window.helpButtonQsConfig = {
      * Ta bort poster du inte behöver, eller ändra ordningen.
      */
     collectFields: [
-      'userName',
-      'userDirectory',
-      'userId',
-      'senseVersion',
-      'appId',
-      'sheetId',
-      'urlPath',
+      "userName",
+      "userDirectory",
+      "userId",
+      "senseVersion",
+      "appId",
+      "sheetId",
+      "urlPath",
     ],
 
     /** Platshållartext för beskrivningstextfältet */
-    descriptionPlaceholder: 'Beskriv problemet du stötte på…',
+    descriptionPlaceholder: "Beskriv problemet du stötte på…",
 
     /** Aviseringsmeddelanden som visas efter inskickning */
-    successMessage: 'Felrapporten har skickats!',
-    errorMessage: 'Det gick inte att skicka felrapporten.',
+    successMessage: "Felrapporten har skickats!",
+    errorMessage: "Det gick inte att skicka felrapporten.",
 
     // -- Textanpassningar för dialogen (lokalisering) --
     // Alla textsträngar i felrapportdialogen är konfigurerbara.
 
     /** Etikett ovanför beskrivningstextfältet */
-    descriptionLabel: 'Beskrivning *',
+    descriptionLabel: "Beskrivning *",
 
     /** Text på Avbryt-knappen */
-    cancelButtonText: 'Avbryt',
+    cancelButtonText: "Avbryt",
 
     /** Text på Skicka-knappen */
-    submitButtonText: 'Skicka',
+    submitButtonText: "Skicka",
 
     /** Text som visas på Skicka-knappen medan rapporten skickas */
-    submittingButtonText: 'Skickar…',
+    submittingButtonText: "Skickar…",
 
     /** Text som visas medan miljökontext laddas */
-    loadingMessage: 'Samlar in miljöinformation…',
+    loadingMessage: "Samlar in miljöinformation…",
 
     /** Aria-etikett för stäng-knappen (×) i dialogens rubrik */
-    closeDialogAriaLabel: 'Stäng dialogrutan',
+    closeDialogAriaLabel: "Stäng dialogrutan",
 
     /** Etiketter för varje kontextfält i dialogen.
      *  Nycklarna måste matcha posterna i collectFields ovan. */
     fieldLabels: {
-      userId: 'Användar-ID',
-      userName: 'Användarnamn',
-      userDirectory: 'Användarkatalog',
-      senseVersion: 'Qlik Sense-version',
-      appId: 'App-ID',
-      sheetId: 'Ark-ID',
-      urlPath: 'URL-sökväg',
+      userId: "Användar-ID",
+      userName: "Användarnamn",
+      userDirectory: "Användarkatalog",
+      senseVersion: "Qlik Sense-version",
+      appId: "App-ID",
+      sheetId: "Ark-ID",
+      urlPath: "URL-sökväg",
     },
 
     // -- Stilanpassningar för dialogen (behöver sällan ändras) --

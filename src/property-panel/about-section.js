@@ -20,7 +20,8 @@ const aboutSection = {
     },
     description: {
       component: "text",
-      label: "Configurable help button for Qlik Sense apps. Brought to you by Ptarmigan Labs.",
+      label:
+        "Configurable help button for Qlik Sense apps. Brought to you by Ptarmigan Labs.",
     },
     linkGithub: {
       component: "link",

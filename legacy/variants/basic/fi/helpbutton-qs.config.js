@@ -19,13 +19,13 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Työkalupalkin painikkeessa näytettävä teksti */
-  buttonLabel: 'Ohje',
+  buttonLabel: "Ohje",
 
   /** Selaimen vihje osoitettaessa */
-  buttonTooltip: 'Avaa ohjevalikko',
+  buttonTooltip: "Avaa ohjevalikko",
 
   /** Työkalupalkin painikkeen kuvake: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: 'help',
+  buttonIcon: "help",
 
   // --------------------------------------------------------------------------
   // Työkalupalkin painike — värit / tyyli
@@ -33,13 +33,13 @@ window.helpButtonQsConfig = {
   // Pääpainike Qlik Sensen työkalupalkissa.
   // Kaikki alla olevat värit ovat oletuksena ammattimaisen sinisiä.
   buttonStyle: {
-    backgroundColor: '#165a9b',        // Ensisijainen sininen
-    backgroundColorHover: '#12487c',   // Tummempi osoitettaessa
-    backgroundColorActive: '#0e3b65',  // Tummin napsautettaessa
-    textColor: '#ffffff',              // Valkoinen teksti ja kuvake
-    borderColor: '#0e3b65',            // Hienovarainen tumma reunaviiva
-    borderRadius: '4px',
-    focusOutlineColor: 'rgba(255, 204, 51, 0.6)', // Keltainen kohdistusrengas
+    backgroundColor: "#165a9b", // Ensisijainen sininen
+    backgroundColorHover: "#12487c", // Tummempi osoitettaessa
+    backgroundColorActive: "#0e3b65", // Tummin napsautettaessa
+    textColor: "#ffffff", // Valkoinen teksti ja kuvake
+    borderColor: "#0e3b65", // Hienovarainen tumma reunaviiva
+    borderRadius: "4px",
+    focusOutlineColor: "rgba(255, 204, 51, 0.6)", // Keltainen kohdistusrengas
   },
 
   // --------------------------------------------------------------------------
@@ -47,17 +47,17 @@ window.helpButtonQsConfig = {
   // --------------------------------------------------------------------------
 
   /** Ponnahdusvalikon yläosassa näytettävä otsikko */
-  popupTitle: 'Tarvitsetko apua?',
+  popupTitle: "Tarvitsetko apua?",
 
   /** Ponnahdusikkunan värit — tummansininen otsikko keltaisella tekstillä */
   popupStyle: {
-    backgroundColor: '#ffffff',
-    borderColor: '#0c3256',            // Tumma laivastonsininen reunaviiva
-    borderRadius: '8px',
-    headerBackgroundColor: '#0c3256',  // Tumma laivastonsininen otsikko
-    headerTextColor: '#ffcc33',        // Keltainen otsikkoteksti
-    separatorColor: '#e0e0e0',
-    shadowColor: 'rgba(12, 50, 86, 0.25)',
+    backgroundColor: "#ffffff",
+    borderColor: "#0c3256", // Tumma laivastonsininen reunaviiva
+    borderRadius: "8px",
+    headerBackgroundColor: "#0c3256", // Tumma laivastonsininen otsikko
+    headerTextColor: "#ffcc33", // Keltainen otsikkoteksti
+    separatorColor: "#e0e0e0",
+    shadowColor: "rgba(12, 50, 86, 0.25)",
   },
 
   // --------------------------------------------------------------------------
@@ -85,37 +85,37 @@ window.helpButtonQsConfig = {
   //
   menuItems: [
     {
-      label: 'Ohje ja dokumentaatio',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs',
-      icon: 'help',
-      target: '_blank',
+      label: "Ohje ja dokumentaatio",
+      url: "https://github.com/ptarmiganlabs/help-button.qs",
+      icon: "help",
+      target: "_blank",
       // Värit per kohde (sininen sävy)
-      iconColor: '#165a9b',
-      bgColor: '#f0f6fc',
-      bgColorHover: '#dbeafe',
-      textColor: '#0c3256',
+      iconColor: "#165a9b",
+      bgColor: "#f0f6fc",
+      bgColorHover: "#dbeafe",
+      textColor: "#0c3256",
     },
     {
-      label: 'Ilmoita virheestä',
-      url: 'https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose',
-      icon: 'bug',
-      target: '_blank',
+      label: "Ilmoita virheestä",
+      url: "https://github.com/ptarmiganlabs/help-button.qs/issues/new/choose",
+      icon: "bug",
+      target: "_blank",
       // Värit per kohde (lämmin meripihkasävy)
-      iconColor: '#b45309',
-      bgColor: '#fffbeb',
-      bgColorHover: '#fef3c7',
-      textColor: '#78350f',
+      iconColor: "#b45309",
+      bgColor: "#fffbeb",
+      bgColorHover: "#fef3c7",
+      textColor: "#78350f",
     },
     {
-      label:  'Ptarmigan Labs',
-      url:    'https://ptarmiganlabs.com',
-      icon:   'link',
-      target: '_blank',
+      label: "Ptarmigan Labs",
+      url: "https://ptarmiganlabs.com",
+      icon: "link",
+      target: "_blank",
       // Värit per kohde (vihreä sävy)
-      iconColor:    '#059669',
-      bgColor:      '#ecfdf5',
-      bgColorHover: '#d1fae5',
-      textColor:    '#065f46',
+      iconColor: "#059669",
+      bgColor: "#ecfdf5",
+      bgColorHover: "#d1fae5",
+      textColor: "#065f46",
     },
   ],
 

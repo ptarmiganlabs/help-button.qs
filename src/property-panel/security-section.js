@@ -11,23 +11,25 @@
  */
 
 const securitySection = {
-    type: 'items',
-    label: 'Security',
-    items: {
-        allowedUriPatternsHeader: {
-            component: 'text',
-            label: 'Restrict which URLs are permitted in embedded videos and iframes in tooltip content. Leave empty to allow all sources.',
-        },
-        allowedUriPatterns: {
-            ref: 'security.allowedUriPatterns',
-            type: 'string',
-            label: 'Allowed URI prefixes',
-            defaultValue: '',
-            component: 'textarea',
-            rows: 3,
-            placeholder: 'https://www.youtube.com/embed/, https://player.vimeo.com/video/, /content/Default/',
-        },
+  type: "items",
+  label: "Security",
+  items: {
+    allowedUriPatternsHeader: {
+      component: "text",
+      label:
+        "Restrict which URLs are permitted in embedded videos and iframes in tooltip content. Leave empty to allow all sources.",
     },
+    allowedUriPatterns: {
+      ref: "security.allowedUriPatterns",
+      type: "string",
+      label: "Allowed URI prefixes",
+      defaultValue: "",
+      component: "textarea",
+      rows: 3,
+      placeholder:
+        "https://www.youtube.com/embed/, https://player.vimeo.com/video/, /content/Default/",
+    },
+  },
 };
 
 export default securitySection;
