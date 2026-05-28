@@ -70,6 +70,14 @@ const TOOLBAR_BUTTONS = [
 // Action dispatcher
 // ---------------------------------------------------------------------------
 
+/**
+ *
+ * Apply a formatting action to the current textarea selection.
+ *
+ * @param {HTMLTextAreaElement} textarea - Editor textarea receiving the action.
+ * @param {string} action - Toolbar action identifier.
+ * @returns {void}
+ */
 function applyAction(textarea, action) {
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;

@@ -23,14 +23,20 @@ const SIZE_CLASSES = {
 };
 
 /**
+ *
  * Open the tooltip detail dialog.
  *
- * @param {object} options
+ * @param {object} options - Dialog configuration.
  * @param {string} options.title - Dialog heading.
  * @param {string} options.content - Markdown content for the body.
  * @param {string} [options.size='medium'] - Size preset.
  * @param {string} [options.allowedUriPatterns] - Comma-separated URL prefixes for
  *   allowed iframe/video/source src attributes. Empty string = allow all.
+ * @param {string} [options.headerBackgroundColor] - Header background color override.
+ * @param {string} [options.headerTextColor] - Header text color override.
+ * @param {string} [options.bodyBackgroundColor] - Body background color override.
+ * @param {string} [options.bodyTextColor] - Body text color override.
+ * @returns {void}
  */
 export function openTooltipDialog({
   title,

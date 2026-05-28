@@ -21,6 +21,12 @@ import {
 // (customHeaders, dialogStrings, variableAssignments, etc.) are shared
 // between menu items.
 // ---------------------------------------------------------------------------
+/**
+ *
+ * Create the default field-toggle set shared by dialog and payload settings.
+ *
+ * @returns {object} Fresh field-toggle configuration object.
+ */
 function createDefaultFields() {
   return {
     userName: true,
@@ -41,6 +47,12 @@ function createDefaultFields() {
   };
 }
 
+/**
+ *
+ * Create the default payload key-name mapping for webhook payloads.
+ *
+ * @returns {object} Fresh payload key-name configuration object.
+ */
 function createDefaultPayloadKeyNames() {
   return {
     userName: "userName",
@@ -61,6 +73,12 @@ function createDefaultPayloadKeyNames() {
   };
 }
 
+/**
+ *
+ * Create the default bug-report action configuration.
+ *
+ * @returns {object} Fresh bug-report configuration object.
+ */
 function createDefaultBugReport() {
   return {
     webhookUrl: "",
@@ -78,6 +96,12 @@ function createDefaultBugReport() {
   };
 }
 
+/**
+ *
+ * Create the default feedback action configuration.
+ *
+ * @returns {object} Fresh feedback configuration object.
+ */
 function createDefaultFeedback() {
   return {
     webhookUrl: "",
@@ -96,6 +120,12 @@ function createDefaultFeedback() {
   };
 }
 
+/**
+ *
+ * Create the default set-variable action configuration.
+ *
+ * @returns {object} Fresh variable-action configuration object.
+ */
 function createDefaultVariableAction() {
   return {
     mode: "set",

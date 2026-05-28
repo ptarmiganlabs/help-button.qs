@@ -19,6 +19,7 @@ let activeHover = null;
 let hideTimer = null;
 
 /**
+ *
  * Show the hover popup near the given icon element.
  *
  * @param {HTMLElement} iconEl - The tooltip trigger icon element.
@@ -29,6 +30,7 @@ let hideTimer = null;
  * @param {string} [colors.borderColor] - Popup border color.
  * @param {string} [allowedUriPatterns] - Comma-separated URL prefixes for
  *   allowed iframe/video/source src attributes. Empty string = allow all.
+ * @returns {void}
  */
 export function showHover(iconEl, content, colors, allowedUriPatterns) {
   // Don't re-create if already showing for this icon

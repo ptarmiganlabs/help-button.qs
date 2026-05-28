@@ -74,22 +74,46 @@ const MONTHS_SHORT = [
   "Dec",
 ];
 
+/**
+ *
+ * Left-pad a number with a leading zero when needed.
+ *
+ * @param {number} n - Number to format.
+ * @returns {string} Two-character number string.
+ */
 function pad2(n) {
   return n < 10 ? "0" + n : "" + n;
 }
 
+/**
+ *
+ * Convert a 24-hour clock value to an AM/PM suffix.
+ *
+ * @param {number} hours - Hour value in 24-hour format.
+ * @returns {"AM"|"PM"} Meridiem suffix for the supplied hour.
+ */
 function ampm(hours) {
   return hours < 12 ? "AM" : "PM";
 }
 
+/**
+ *
+ * Convert a 24-hour clock value to its 12-hour equivalent.
+ *
+ * @param {number} h - Hour value in 24-hour format.
+ * @returns {number} Hour value in 12-hour format.
+ */
 function hours12(h) {
   const h12 = h % 12;
   return h12 === 0 ? 12 : h12;
 }
 
 /**
+ *
  * Get the local timezone offset string in ±HH:MM form.
- * e.g. "+01:00", "-05:00", "+00:00"
+ *
+ * @param {Date} date - Date whose timezone offset should be formatted.
+ * @returns {string} Offset string such as "+01:00", "-05:00", or "+00:00".
  */
 function tzOffsetString(date) {
   const offsetMin = date.getTimezoneOffset(); // e.g. -60 for UTC+1
