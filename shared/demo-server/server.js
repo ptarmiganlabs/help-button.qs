@@ -473,8 +473,9 @@ app.post("/api/feedback", (req, res) => {
   );
   logger.info(formatContextFields(context));
   if (hasRating) {
+    const safeRating = Math.min(5, Math.max(1, Math.floor(rating)));
     logger.info(
-      `                Rating: ${"★".repeat(rating)}${"☆".repeat(5 - rating)} (${rating}/5)`,
+      `                Rating: ${"★".repeat(safeRating)}${"☆".repeat(5 - safeRating)} (${safeRating}/5)`,
     );
   }
   logger.info(`               Comment: ${commentExcerpt}`);
