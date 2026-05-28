@@ -2,7 +2,7 @@
 
 Template fields let you build **dynamic, context-sensitive URLs** in your help button configuration. Instead of hard-coding a single generic help page, you can direct users to an app-specific or sheet-specific page — the URL is resolved at click time using live Qlik Sense context.
 
-Template fields work in **any configurable URL** across both the [basic](../legacy/variants/basic/README.md) and [bug-report](../legacy/variants/bug-report/README.md) variants:
+Template fields work in **any configurable URL** across both the [basic](../../legacy/variants/basic/README.md) and [bug-report](../../legacy/variants/bug-report/README.md) variants:
 
 - `menuItems[].url` — link URLs in the help popup
 - `bugReport.webhookUrl` — the webhook endpoint for bug reports _(bug-report variant only)_
