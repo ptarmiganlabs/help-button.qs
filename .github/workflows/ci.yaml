@@ -312,14 +312,18 @@ jobs:
 
       - name: Generate CycloneDX SBOM
         env:
-          RELEASE_VERSION: ${{ needs.release-please.outputs.release_version }}
-          RELEASE_PRERELEASE_SUFFIX: ${{ steps.prerelease.outputs.prerelease_suffix }}
+          VERSION: ${{ needs.release-please.outputs.release_version }}
+          PRERELEASE_SUFFIX: ${{ steps.prerelease.outputs.prerelease_suffix }}
         run: |
-          npx @cyclonedx/cyclonedx-npm \
+          SBOM_FILE="release-artifacts/${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.sbom.cdx.json"
+
+          ./node_modules/.bin/cyclonedx-npm \
             --omit dev \
             --output-reproducible \
             --output-format JSON \
-            --output-file "release-artifacts/${DIST_FILE_NAME}-v${RELEASE_VERSION}${RELEASE_PRERELEASE_SUFFIX}.sbom.cdx.json"
+            --output-file "${SBOM_FILE}"
+
+          test -s "${SBOM_FILE}" || { echo "SBOM file missing or empty"; exit 1; }
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
