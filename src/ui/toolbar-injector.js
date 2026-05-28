@@ -21,7 +21,7 @@ import { escapeHtml } from "../util/template-fields";
 import { resolveColor } from "../util/color";
 import { resolveText } from "../i18n/index";
 import { normalizeAuthStrategy } from "../util/auth-strategy";
-import { mergeMenuItems } from "../util/menu-item-merge";
+import { mergeMenuItems, DEFAULT_MENU_ITEM_MERGE_MODE } from "../util/menu-item-merge";
 import logger from "../util/logger";
 
 /**
@@ -147,7 +147,7 @@ function rebuildHelpButton() {
   });
   logger.debug(
     "Merged HelpButton.qs menu items using mode",
-    mergeMode,
+    mergeMode ?? DEFAULT_MENU_ITEM_MERGE_MODE,
     `(${mergedMenuItems.length} items)`,
   );
   injectHelpButton(mergedLayout, adapter, platform, app);
