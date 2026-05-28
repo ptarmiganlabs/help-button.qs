@@ -272,6 +272,6 @@ flowchart LR
 
 - **Source & releases:** [github.com/ptarmiganlabs/help-button.qs](https://github.com/ptarmiganlabs/help-button.qs)
 - **Installation guide:** see the [root README](https://github.com/ptarmiganlabs/help-button.qs/blob/main/README.md)
-- **Template fields (dynamic URLs):** see [docs/template-fields.md](https://github.com/ptarmiganlabs/help-button.qs/blob/main/docs/template-fields.md)
+- **Template fields (dynamic URLs):** see [docs/app-developer/template-fields.md](https://github.com/ptarmiganlabs/help-button.qs/blob/main/docs/app-developer/template-fields.md)
 
 Questions or feedback? Drop a comment below! 👇

@@ -4,24 +4,25 @@
 
 ## Documentation
 
-Use the guides below when you need deeper configuration details, implementation notes, or maintainer workflows.
+Documentation is now split into two folders under `docs/`:
 
-| Document                                                                                         | Audience                      | What it covers                                                                                                                  |
-| ------------------------------------------------------------------------------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| [Property Panel Reference](./docs/property-panel-reference.md)                                   | App developers                | Complete property-panel field inventory for the extension, including defaults, conditional settings, and stored property paths. |
-| [Menu Items - App Developer Guide](./docs/menu-items-app-developer.md)                           | App developers                | How to configure menu actions, webhooks, variables, visibility rules, and multi-instance behavior.                              |
-| [Feedback and Bug Report Authentication](./docs/feedback-bug-report-authentication.md)           | App developers                | Explains None, Authorization header, and Custom headers modes for feedback and bug-report menu items.                           |
-| [Tooltips - App Developer Guide](./docs/tooltips-app-developer.md)                               | App developers                | How to target objects or selectors, write Markdown content, tune styling, and work within tooltip limits.                       |
-| [Tooltips - Developer Guide](./docs/tooltips-developer.md)                                       | Extension developers          | Tooltip internals: data model, rendering, sanitization, theming, lifecycle, and extension points.                               |
-| [Client-Managed vs Cloud - App Developer Guide](./docs/client-managed-vs-cloud-app-developer.md) | App developers                | Platform differences that affect links, payload fields, selectors, and other runtime behavior.                                  |
-| [Language and Translations Reference](./docs/language-and-translations.md)                       | App developers                | Locale selection, string override precedence, forced-language settings, and stored translation properties.                      |
-| [Template Fields](./docs/template-fields.md)                                                     | App developers                | Dynamic URL and webhook placeholders, platform-specific values, fallback behavior, and debugging tips.                          |
-| [Security](./docs/SECURITY.md)                                                                   | Developers and administrators | Sanitization, URL validation, webhook trust boundaries, and remaining security considerations.                                  |
-| [Development Guide](./docs/DEVELOPMENT.md)                                                       | Extension developers          | Project structure, local setup, build commands, packaging steps, and development workflow.                                      |
-| [Release Process](./docs/RELEASE_PROCESS.md)                                                     | Maintainers                   | Stable and prerelease branching, release-please automation, versioning rules, and release troubleshooting.                      |
-| [Help Button Visibility Investigation](./docs/investigation-help-button-visibility.md)           | Maintainers                   | Root-cause analysis of delayed toolbar injection and a proposed sessionStorage bootstrap approach.                              |
-| [Multi-Language Support](./docs/multi-language.md)                                               | App developers                | Background guide to locale detection, fallback order, forced-language behavior, and multilingual configuration patterns.        |
-| [Extension Documentation Redirect](./docs/EXTENSION.md)                                          | Legacy links                  | Compatibility redirect to the root manual, legacy variant docs, and the development guide.                                      |
+- `docs/app-developer/` for configuring and using the extension in Qlik Sense apps
+- `docs/extension-developer/` for implementation details, maintenance, and release workflows
+
+### App developer docs
+
+| Document                                                                                                       | What it covers                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [Property Panel Reference](./docs/app-developer/property-panel-reference.md)                                   | Complete property-panel field inventory for the extension, including defaults, conditional settings, and stored property paths. |
+| [Menu Items - App Developer Guide](./docs/app-developer/menu-items-app-developer.md)                           | How to configure menu actions, webhooks, variables, visibility rules, and multi-instance behavior.                              |
+| [Feedback and Bug Report Authentication](./docs/app-developer/feedback-bug-report-authentication.md)           | Explains None, Authorization header, and Custom headers modes for feedback and bug-report menu items.                           |
+| [Tooltips - App Developer Guide](./docs/app-developer/tooltips-app-developer.md)                               | How to target objects or selectors, write Markdown content, tune styling, and work within tooltip limits.                       |
+| [Client-Managed vs Cloud - App Developer Guide](./docs/app-developer/client-managed-vs-cloud-app-developer.md) | Platform differences that affect links, payload fields, selectors, and other runtime behavior.                                  |
+| [Language and Translations Reference](./docs/app-developer/language-and-translations.md)                       | Locale selection, string override precedence, forced-language settings, and stored translation properties.                      |
+| [Template Fields](./docs/app-developer/template-fields.md)                                                     | Dynamic URL and webhook placeholders, platform-specific values, fallback behavior, and debugging tips.                          |
+| [Multi-Language Support](./docs/app-developer/multi-language.md)                                               | Background guide to locale detection, fallback order, forced-language behavior, and multilingual configuration patterns.        |
+
+Extension developers and maintainers can find the implementation, security, and release material in [`docs/extension-developer/`](./docs/extension-developer/).
 
 ## ❤️ Support the project
 
@@ -53,7 +54,7 @@ The bug report and feedback features look like this in action:
 - **Theme Presets**: Apply one of four predefined color palettes (Default, The Lean Green Machine, Corporate Blue, Corporate Gold) to instantly style the toolbar button, popup, menu items, and tooltips to your corporate brand.
 - **Tooltips**: Attach floating help icons to any chart object or page element. Each icon shows a Markdown hover popup — including **embedded videos** (YouTube, Vimeo, or direct `.mp4`/`.webm`/`.ogg` files) — and optionally opens a detail dialog on click. Fully themeable with per-tooltip color overrides.
 - **Context-Aware Links**: Dynamically pass application context (such as App ID, Sheet ID, and user details) to outbound links using template tags.
-- **Built-in Translations**: Supports automatic UI translation into multiple languages based on Qlik Sense locale, with full override capabilities via an expandable "Language & Translations" section in the property panel (see [language & translations docs](./docs/language-and-translations.md) for details).
+- **Built-in Translations**: Supports automatic UI translation into multiple languages based on Qlik Sense locale, with full override capabilities via an expandable "Language & Translations" section in the property panel (see [language & translations docs](./docs/app-developer/language-and-translations.md) for details).
 
 ## Audience
 
@@ -103,7 +104,7 @@ It is valid to place several HelpButton.qs extension objects on the same sheet. 
 2. **Qlik Sense SaaS**: Upload the extension in the Management Console under **Extensions**.
 3. **Qlik Sense Client-Managed**: Import the zip file via the Qlik Management Console (QMC) under the **Extensions** section.
 
-For app-developer guidance on using the extension across both platforms, see [Qlik Sense Client-Managed vs Qlik Cloud — Sense App Developer Guide](./docs/client-managed-vs-cloud-app-developer.md).
+For app-developer guidance on using the extension across both platforms, see [Qlik Sense Client-Managed vs Qlik Cloud — Sense App Developer Guide](./docs/app-developer/client-managed-vs-cloud-app-developer.md).
 
 ## Usage
 
@@ -121,7 +122,7 @@ When configuring the **Menu Items** in the Property Panel, you can add multiple 
 1. **Open URL (`link`)**:
    - Opens a specified URL (can be configured to open in a new tab or the same window).
    - Useful for pointing users to external documentation, intranet pages, wikis, or company portals.
-   - Supports [template fields](./docs/template-fields.md) in the URL (e.g. `https://help.example.com/sys/{{appId}}`), allowing for context-sensitive deep links that adapt to the user's current app or sheet.
+   - Supports [template fields](./docs/app-developer/template-fields.md) in the URL (e.g. `https://help.example.com/sys/{{appId}}`), allowing for context-sensitive deep links that adapt to the user's current app or sheet.
 2. **Bug Report Dialog (`bugReport`)**:
    - Opens an interactive modal directly inside Qlik Sense where users can write a detailed text description of an issue.
    - Optional **severity picker** (Low / Medium / High) can be shown or hidden via the property panel.
@@ -159,9 +160,9 @@ flowchart LR
 
 ### Menu Item Documentation
 
-- **App developers**: See [Menu Items — App Developer Guide](./docs/menu-items-app-developer.md) for a complete walkthrough of configuring menu items from the property panel, including action types, template fields, dialog payload options, variable actions, and multi-instance behavior.
-- **App developers**: See [Feedback and Bug Report Authentication](./docs/feedback-bug-report-authentication.md) for a deeper explanation of the `None`, `Authorization header`, and `Custom headers` modes.
-- **App developers**: See [Property Panel Reference](./docs/property-panel-reference.md) for the complete list of menu-item properties, defaults, and nested feedback and bug-report settings.
+- **App developers**: See [Menu Items — App Developer Guide](./docs/app-developer/menu-items-app-developer.md) for a complete walkthrough of configuring menu items from the property panel, including action types, template fields, dialog payload options, variable actions, and multi-instance behavior.
+- **App developers**: See [Feedback and Bug Report Authentication](./docs/app-developer/feedback-bug-report-authentication.md) for a deeper explanation of the `None`, `Authorization header`, and `Custom headers` modes.
+- **App developers**: See [Property Panel Reference](./docs/app-developer/property-panel-reference.md) for the complete list of menu-item properties, defaults, and nested feedback and bug-report settings.
 
 ## Tooltips
 
@@ -191,8 +192,8 @@ flowchart TD
 
 ### Documentation
 
-- **App developers**: See [Tooltips — App Developer Guide](./docs/tooltips-app-developer.md) for a complete walkthrough of configuring tooltips from the property panel, including how to find CSS selectors using browser DevTools.
-- **Extension developers**: See [Tooltips — Developer Guide](./docs/tooltips-developer.md) for the technical architecture, data model, theme system internals, and how to extend the feature.
+- **App developers**: See [Tooltips — App Developer Guide](./docs/app-developer/tooltips-app-developer.md) for a complete walkthrough of configuring tooltips from the property panel, including how to find CSS selectors using browser DevTools.
+- **Extension developers**: See [Tooltips — Developer Guide](./docs/extension-developer/tooltips-developer.md) for the technical architecture, data model, theme system internals, and how to extend the feature.
 
 ## Markdown Editing
 
@@ -449,7 +450,7 @@ Not all context fields are available on every platform. The table below summaris
 
 ## Security Stance
 
-This project aims to reduce risk with layered controls, but it does **not** claim zero risk and it is not presented as a formally audited product. If you want the implementation-level details, trust boundaries, and remaining known risks, see [docs/SECURITY.md](./docs/SECURITY.md).
+This project aims to reduce risk with layered controls, but it does **not** claim zero risk and it is not presented as a formally audited product. If you want the implementation-level details, trust boundaries, and remaining known risks, see [docs/extension-developer/SECURITY.md](./docs/extension-developer/SECURITY.md).
 
 ### What the source code does to reduce risk
 
