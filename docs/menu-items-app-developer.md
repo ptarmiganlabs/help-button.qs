@@ -53,6 +53,13 @@ The Menu Items section is array-based, which means you can:
 - Reorder items
 - Duplicate items
 
+Top-level property-panel refs in this section:
+
+| UI label             | Ref                 | Type     | Purpose                                                                          |
+| -------------------- | ------------------- | -------- | -------------------------------------------------------------------------------- |
+| **Merge menu items** | `menuItemMergeMode` | `string` | Controls how menu items from multiple active HelpButton.qs objects are combined. |
+| **Menu Items**       | `menuItems`         | `array`  | Stores the ordered list of configured menu items.                                |
+
 The popup renders items in the same order they appear in the property panel.
 
 ---
@@ -132,6 +139,8 @@ Every menu item starts with the same common settings.
 | **Show condition** | All actions   | Optional expression or literal. Controls whether the item is rendered.               |
 | **Icon**           | All actions   | Select from built-in icon set.                                                       |
 | **Item Colors**    | All actions   | Per-item icon, background, hover background, and text colors.                        |
+
+For multi-instance merge modes, only items with a non-empty **Label** take part in duplicate detection. If a menu item has no label, HelpButton.qs always appends it in registration order instead of trying to merge it with unlabeled items from other instances.
 
 Supported menu item icons:
 
@@ -606,7 +615,12 @@ Variable items depend on app context.
 
 ## Multi-Instance Behavior
 
-If you place multiple HelpButton.qs objects on the same sheet, the extension merges them into a single toolbar button.
+If multiple HelpButton.qs objects are active in the same browser tab / app page session, the extension merges them into a single toolbar button.
+
+This can happen in two common ways:
+
+- two or more HelpButton.qs objects exist on the same sheet
+- you navigate between sheets that each contain a HelpButton.qs object, because the toolbar button is session-persistent
 
 ```mermaid
 flowchart TD
@@ -615,14 +629,14 @@ flowchart TD
     C[HelpButton instance 3] --> M
 
     M --> D[Button appearance from first registered instance]
-    M --> E[Popup menu items concatenated from all instances]
+    M --> E[Popup menu items merged by configured merge mode]
     M --> F[First bug-report item defines bug dialog config]
     M --> G[First feedback item defines feedback dialog config]
 ```
 
 Runtime rules:
 
-- Menu items from all registered instances are concatenated into one popup.
+- Menu items from all registered instances are merged into one popup.
 - The first registered instance provides the button appearance and popup shell:
   - Button label
   - Button tooltip
@@ -630,6 +644,34 @@ Runtime rules:
   - Button colors
   - Popup title
   - Popup styling
+- The first registered instance also provides the **Merge menu items** setting that decides how contributed items are combined:
+  - **Append all items** — current behavior, keeps every item in registration order
+  - **Merge duplicate labels** — keeps the first visible item for each label (case-insensitive)
+  - **Merge duplicate label + action pairs** — keeps the first visible item for each label/action pair
+- Menu items without a non-empty label are never de-duplicated. They are always appended in registration order, even when one of the merge modes is selected.
+
+Important caveat for the merge-mode owner:
+
+- The active merge mode always comes from the **first currently registered** HelpButton.qs instance in the shared toolbar set.
+- If that instance is removed from the sheet, unmounted during navigation, or otherwise unregisters first, the next still-registered instance immediately becomes the new owner.
+- When that happens, the shared popup can change mid-session even if none of the remaining menu-item arrays changed, because the new owner may use a different **Merge menu items** setting.
+
+```mermaid
+flowchart TD
+    A[Instance A registers first<br/>merge mode = dedupeLabel] --> B[Shared toolbar menu uses A as base]
+    B --> C{Does A stay registered?}
+    C -->|Yes| D[Keep A button shell and merge mode]
+    C -->|No| E[Promote next registered active instance]
+    E --> F[Shared toolbar menu rebuilds]
+    F --> G[Button shell + merge mode now come from new base instance]
+```
+
+If you need stable multi-instance behavior, keep the intended "base" HelpButton.qs object present on the sheet or ensure all cooperating instances use the same **Merge menu items** value.
+
+Recommended default:
+
+- Leave **Append all items** enabled if you intentionally build one larger shared menu from multiple HelpButton.qs objects.
+- Use one of the de-duplication modes if copy/paste between sheets can create repeated menu entries.
 
 Important caveat for dialog actions:
 

@@ -7,6 +7,7 @@
  */
 
 import { toPickerObj } from "../util/color";
+import { DEFAULT_MENU_ITEM_MERGE_MODE } from "../util/menu-item-merge";
 import {
   TIMESTAMP_FORMAT_OPTIONS,
   DEFAULT_DIALOG_FORMAT,
@@ -17,6 +18,31 @@ const menuItemsSection = {
   type: "items",
   label: "Menu Items",
   items: {
+    menuItemMergeModeInfo: {
+      component: "text",
+      label:
+        "When multiple HelpButton.qs objects are active in the same page session, their toolbar menu items can be appended or de-duplicated.",
+    },
+    menuItemMergeMode: {
+      ref: "menuItemMergeMode",
+      label: "Merge menu items",
+      type: "string",
+      component: "dropdown",
+      // Keep this in sync with the persisted layout default by sharing the
+      // runtime constant instead of repeating the literal in multiple files.
+      defaultValue: DEFAULT_MENU_ITEM_MERGE_MODE,
+      options: [
+        { value: "append", label: "Append all items" },
+        {
+          value: "dedupeLabel",
+          label: "Merge duplicate labels (keep first visible item)",
+        },
+        {
+          value: "dedupeLabelAction",
+          label: "Merge duplicate label + action pairs",
+        },
+      ],
+    },
     menuItems: {
       ref: "menuItems",
       label: "Menu Items",

@@ -180,11 +180,14 @@ Most string fields in this section are designed as overrides. Leaving them empty
 
 ## Menu Items
 
-`menuItems` is an array. Each entry represents one popup menu command.
+The Menu Items section has one top-level merge setting plus the `menuItems` array of popup commands.
 
-| Property panel label | Ref         | Type  | Default     | Shown when | Notes                                                                                    |
-| -------------------- | ----------- | ----- | ----------- | ---------- | ---------------------------------------------------------------------------------------- |
-| Menu Items           | `menuItems` | Array | Empty array | Always     | Supports add, remove, move, and duplicate. Item title is taken from each item's `label`. |
+| Property panel label | Ref                 | Type     | Default     | Shown when | Notes                                                                                                                                  |
+| -------------------- | ------------------- | -------- | ----------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Merge menu items     | `menuItemMergeMode` | Dropdown | `append`    | Always     | Controls shared-toolbar merging when multiple HelpButton.qs objects are active. Options: `append`, `dedupeLabel`, `dedupeLabelAction`. |
+| Menu Items           | `menuItems`         | Array    | Empty array | Always     | Supports add, remove, move, and duplicate. Item title is taken from each item's `label`.                                               |
+
+`menuItemMergeMode` only affects multi-instance/shared-toolbar aggregation. Items without a non-empty `label` are always appended in registration order, even when a de-duplication mode is selected.
 
 ### Common properties for each `menuItems[]` item
 

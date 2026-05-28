@@ -9,6 +9,7 @@
  */
 
 import { toPickerObj } from "./util/color";
+import { DEFAULT_MENU_ITEM_MERGE_MODE } from "./util/menu-item-merge";
 import {
   DEFAULT_DIALOG_FORMAT,
   DEFAULT_PAYLOAD_FORMAT,
@@ -178,6 +179,11 @@ export default {
     headerTextColor: toPickerObj("#ffcc33"),
     separatorColor: toPickerObj("#e0e0e0"),
   },
+
+  // -- Multi-instance menu merge mode --
+  // This persisted layout default is the canonical source used by both the
+  // object model and the property-panel dropdown.
+  menuItemMergeMode: DEFAULT_MENU_ITEM_MERGE_MODE,
 
   // -- Tooltips (icon-on-object with hover + click dialog) --
   tooltips: [

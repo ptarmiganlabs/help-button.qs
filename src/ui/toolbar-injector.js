@@ -21,6 +21,7 @@ import { escapeHtml } from "../util/template-fields";
 import { resolveColor } from "../util/color";
 import { resolveText } from "../i18n/index";
 import { normalizeAuthStrategy } from "../util/auth-strategy";
+import { mergeMenuItems, DEFAULT_MENU_ITEM_MERGE_MODE } from "../util/menu-item-merge";
 import logger from "../util/logger";
 
 /**
@@ -113,7 +114,8 @@ export function unregisterHelpConfig(objectId, { clearConfig = false } = {}) {
 /**
  * Rebuild the help button by merging menu items from all registered configs.
  * Button appearance (label, icon, colours, popup title) comes from the first
- * registered config; menu items are concatenated from all configs.
+ * registered config; menu items from all configs are merged in registration
+ * order using the first config's configured menu-item merge mode.
  */
 function rebuildHelpButton() {
   if (!lastConfig || configRegistry.size === 0) return;
@@ -132,18 +134,22 @@ function rebuildHelpButton() {
     return;
   }
 
-  // Merge menuItems from all configs
-  const mergedMenuItems = [];
-  for (const { layout } of entries) {
-    const items = layout.menuItems || [];
-    mergedMenuItems.push(...items);
-  }
+  const mergeMode = baseLayout.menuItemMergeMode;
+  const mergedMenuItems = mergeMenuItems(
+    entries.map(({ layout }) => layout.menuItems || []),
+    mergeMode,
+  );
 
   // Deep-clone so injectHelpButton() cannot mutate stored registry entries
   const mergedLayout = structuredClone({
     ...baseLayout,
     menuItems: mergedMenuItems,
   });
+  logger.debug(
+    "Merged HelpButton.qs menu items using mode",
+    mergeMode ?? DEFAULT_MENU_ITEM_MERGE_MODE,
+    `(${mergedMenuItems.length} items)`,
+  );
   injectHelpButton(mergedLayout, adapter, platform, app);
 }
 
