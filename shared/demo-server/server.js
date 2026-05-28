@@ -61,6 +61,7 @@ const logger = winston.createLogger({
 const MAX_STORED = 50;
 const bugReports = [];
 const feedbackEntries = [];
+const dashboardClients = new Set();
 
 function storeEntry(list, entry, req) {
   // Detect authentication strategy from request headers
@@ -145,8 +146,7 @@ function formatContextFields(context) {
   const lines = [];
   for (const [key, value] of Object.entries(context)) {
     // Pad key for alignment (right-align keys in a 20-char column)
-    const label =
-      key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
+    const label = formatContextLabel(key);
     lines.push(`  ${label.padStart(22)}: ${value}`);
   }
   return lines.join("\n");
@@ -173,6 +173,10 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
+function formatContextLabel(key) {
+  return key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
+}
+
 function renderContextTable(context) {
   if (
     !context ||
@@ -183,8 +187,7 @@ function renderContextTable(context) {
   }
   let html = '<table class="ctx">';
   for (const [key, value] of Object.entries(context)) {
-    const label =
-      key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
+    const label = formatContextLabel(key);
     html += `<tr><td class="ctx-key">${escapeHtml(label)}</td><td class="ctx-val">${escapeHtml(String(value))}</td></tr>`;
   }
   html += "</table>";
@@ -203,49 +206,209 @@ function renderStars(rating) {
   );
 }
 
-function renderDashboard() {
-  const authHtml = (a) => {
-    if (!a || a.type === "none") return '<span class="ts">None</span>';
-    const typeLabel = {
-      header: "🛡️ Authorization (Bearer)",
-      custom: "⚙️ Custom Headers",
-    };
-    return `<span class="ts" title="${escapeHtml(a.details || "")}">${typeLabel[a.type] || escapeHtml(a.type)}${a.details ? " ℹ️" : ""}</span>`;
+function renderAuthHtml(auth) {
+  if (!auth || auth.type === "none") return '<span class="ts">None</span>';
+  const typeLabel = {
+    header: "🛡️ Authorization (Bearer)",
+    custom: "⚙️ Custom Headers",
   };
+  return `<span class="ts" title="${escapeHtml(auth.details || "")}">${typeLabel[auth.type] || escapeHtml(auth.type)}${auth.details ? " ℹ️" : ""}</span>`;
+}
 
+function renderNoData(message) {
+  return `<div class="no-data">${escapeHtml(message)}</div>`;
+}
+
+function renderBugCard(entry) {
   const severityHtml = { low: "🟢 Low", medium: "🟡 Medium", high: "🔴 High" };
+  const severity = entry.severity
+    ? `<div class="severity">${severityHtml[entry.severity] || escapeHtml(entry.severity)}</div>`
+    : "";
+  const description = entry.description
+    ? `<div class="desc">${escapeHtml(entry.description.length > 200 ? entry.description.substring(0, 200) + "…" : entry.description)}</div>`
+    : "";
+  const clientTimestamp = entry.clientTimestamp
+    ? `<span class="ts" title="Client timestamp">${escapeHtml(entry.clientTimestamp)}</span>`
+    : "";
+  const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${renderAuthHtml(entry.auth)}</span></div>`;
 
-  const bugRows = bugReports
-    .map((b) => {
-      const sev = b.severity
-        ? `<div class="severity">${severityHtml[b.severity] || escapeHtml(b.severity)}</div>`
-        : "";
-      const desc = b.description
-        ? `<div class="desc">${escapeHtml(b.description.length > 200 ? b.description.substring(0, 200) + "…" : b.description)}</div>`
-        : "";
-      const clientTs = b.clientTimestamp
-        ? `<span class="ts" title="Client timestamp">${escapeHtml(b.clientTimestamp)}</span>`
-        : "";
-      const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(b.auth)}</span></div>`;
-      return `<div class="card bug"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTs}<span class="ts">${escapeHtml(b.receivedAt)}</span></div>${renderContextTable(b.context)}${sev}${desc}${auth}</div>`;
-    })
-    .join("");
+  return `<div class="card bug" data-entry-id="${escapeHtml(entry.id || "")}"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTimestamp}<span class="ts">${escapeHtml(entry.receivedAt)}</span></div>${renderContextTable(entry.context)}${severity}${description}${auth}</div>`;
+}
 
-  const fbRows = feedbackEntries
-    .map((f) => {
-      const rating = f.rating
-        ? `<div class="rating">${renderStars(f.rating)}</div>`
-        : "";
-      const comment = f.comment
-        ? `<div class="desc">${escapeHtml(f.comment.length > 200 ? f.comment.substring(0, 200) + "…" : f.comment)}</div>`
-        : "";
-      const clientTs = f.clientTimestamp
-        ? `<span class="ts" title="Client timestamp">${escapeHtml(f.clientTimestamp)}</span>`
-        : "";
-      const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${authHtml(f.auth)}</span></div>`;
-      return `<div class="card fb"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTs}<span class="ts">${escapeHtml(f.receivedAt)}</span></div>${renderContextTable(f.context)}${rating}${comment}${auth}</div>`;
-    })
-    .join("");
+function renderFeedbackCard(entry) {
+  const rating = entry.rating
+    ? `<div class="rating">${renderStars(entry.rating)}</div>`
+    : "";
+  const comment = entry.comment
+    ? `<div class="desc">${escapeHtml(entry.comment.length > 200 ? entry.comment.substring(0, 200) + "…" : entry.comment)}</div>`
+    : "";
+  const clientTimestamp = entry.clientTimestamp
+    ? `<span class="ts" title="Client timestamp">${escapeHtml(entry.clientTimestamp)}</span>`
+    : "";
+  const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${renderAuthHtml(entry.auth)}</span></div>`;
+
+  return `<div class="card fb" data-entry-id="${escapeHtml(entry.id || "")}"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTimestamp}<span class="ts">${escapeHtml(entry.receivedAt)}</span></div>${renderContextTable(entry.context)}${rating}${comment}${auth}</div>`;
+}
+
+function renderBugList(entries) {
+  return entries.length > 0
+    ? entries.map((entry) => renderBugCard(entry)).join("")
+    : renderNoData("No bug reports received yet");
+}
+
+function renderFeedbackList(entries) {
+  return entries.length > 0
+    ? entries.map((entry) => renderFeedbackCard(entry)).join("")
+    : renderNoData("No feedback received yet");
+}
+
+function createDashboardSnapshot() {
+  return {
+    bugReportsHtml: renderBugList(bugReports),
+    bugReportCount: bugReports.length,
+    feedbackHtml: renderFeedbackList(feedbackEntries),
+    feedbackCount: feedbackEntries.length,
+  };
+}
+
+function writeSseEvent(res, eventName, payload) {
+  res.write(`event: ${eventName}\n`);
+  res.write(`data: ${JSON.stringify(payload)}\n\n`);
+}
+
+function broadcastDashboardEvent(eventName, payload) {
+  for (const client of dashboardClients) {
+    try {
+      writeSseEvent(client, eventName, payload);
+    } catch (error) {
+      dashboardClients.delete(client);
+      logger.warn(`SSE broadcast failed: ${error.message}`);
+    }
+  }
+}
+
+function renderDashboardScript() {
+  return `<script>
+(() => {
+  const maxStored = ${MAX_STORED};
+  const streamTargets = {
+    bugReport: { listId: "bug-report-list", countId: "bug-report-count" },
+    feedback: { listId: "feedback-list", countId: "feedback-count" },
+  };
+  const streamStatus = document.getElementById("stream-status");
+
+  function setStreamStatus(state, label) {
+    if (!streamStatus) return;
+    streamStatus.dataset.state = state;
+    streamStatus.textContent = label;
+  }
+
+  function getList(kind) {
+    const target = streamTargets[kind];
+    return target ? document.getElementById(target.listId) : null;
+  }
+
+  function setCount(kind, count) {
+    const target = streamTargets[kind];
+    const countNode = target ? document.getElementById(target.countId) : null;
+    if (countNode) {
+      countNode.textContent = String(count);
+    }
+  }
+
+  function trimCards(listNode) {
+    const cards = listNode.querySelectorAll(".card");
+    for (let index = maxStored; index < cards.length; index += 1) {
+      cards[index].remove();
+    }
+  }
+
+  function animateNewCard(cardNode) {
+    if (!cardNode) return;
+
+    cardNode.classList.add("card-live-added");
+    cardNode.addEventListener(
+      "animationend",
+      () => {
+        cardNode.classList.remove("card-live-added");
+      },
+      { once: true },
+    );
+  }
+
+  function setListContent(kind, html, count) {
+    const listNode = getList(kind);
+    if (!listNode) return;
+    listNode.innerHTML = html;
+    setCount(kind, count);
+  }
+
+  function prependCard(kind, html, count) {
+    const listNode = getList(kind);
+    if (!listNode) return;
+
+    const emptyState = listNode.querySelector(".no-data");
+    if (emptyState) {
+      emptyState.remove();
+    }
+
+    listNode.insertAdjacentHTML("afterbegin", html);
+    animateNewCard(listNode.firstElementChild);
+    trimCards(listNode);
+    setCount(kind, count);
+  }
+
+  if (!window.EventSource) {
+    setStreamStatus("offline", "Live updates unavailable in this browser");
+    return;
+  }
+
+  const stream = new EventSource("/api/stream");
+
+  stream.addEventListener("open", () => {
+    setStreamStatus("live", "Live updates connected");
+  });
+
+  stream.addEventListener("snapshot", (event) => {
+    try {
+      const payload = JSON.parse(event.data);
+      setListContent("bugReport", payload.bugReportsHtml, payload.bugReportCount);
+      setListContent("feedback", payload.feedbackHtml, payload.feedbackCount);
+      setStreamStatus("live", "Live updates connected");
+    } catch (error) {
+      console.error("Failed to apply dashboard snapshot", error);
+    }
+  });
+
+  stream.addEventListener("bug-report", (event) => {
+    try {
+      const payload = JSON.parse(event.data);
+      prependCard("bugReport", payload.html, payload.count);
+      setStreamStatus("live", "Live updates connected");
+    } catch (error) {
+      console.error("Failed to apply bug-report event", error);
+    }
+  });
+
+  stream.addEventListener("feedback", (event) => {
+    try {
+      const payload = JSON.parse(event.data);
+      prependCard("feedback", payload.html, payload.count);
+      setStreamStatus("live", "Live updates connected");
+    } catch (error) {
+      console.error("Failed to apply feedback event", error);
+    }
+  });
+
+  stream.addEventListener("error", () => {
+    setStreamStatus("reconnecting", "Reconnecting live updates...");
+  });
+})();
+</script>`;
+}
+
+function renderDashboard() {
+  const snapshot = createDashboardSnapshot();
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -257,16 +420,24 @@ function renderDashboard() {
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI','Source Sans Pro',system-ui,sans-serif;background:#f0f2f5;color:#1a1a1a;padding:24px}
 h1{font-size:22px;margin-bottom:4px;color:#0c3256}
-.subtitle{color:#6b7280;font-size:13px;margin-bottom:24px}
+.subtitle{display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:#6b7280;font-size:13px;margin-bottom:24px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 .col h2{font-size:16px;margin-bottom:12px;color:#374151;border-bottom:2px solid #d1d5db;padding-bottom:6px}
+.entry-list{min-height:48px}
 .card{background:#fff;border-radius:8px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card-live-added{animation:card-arrive .45s ease-out}
+@keyframes card-arrive{0%{opacity:0;transform:translateY(-8px) scale(.985);box-shadow:0 10px 24px rgba(12,50,86,.08)}100%{opacity:1;transform:translateY(0) scale(1);box-shadow:0 1px 3px rgba(0,0,0,.08)}}
+@media(prefers-reduced-motion:reduce){.card-live-added{animation:none}}
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .badge{font-size:11px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;letter-spacing:.04em}
 .bug-badge{background:#fef2f2;color:#dc2626}
 .fb-badge{background:#f5f3ff;color:#7c3aed}
 .auth-badge{background:#fefcf2;color:#854d0e;margin-left:auto}
+.stream-status{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;font-size:12px;font-weight:600;background:#e5e7eb;color:#374151}
+.stream-status[data-state="live"]{background:#ecfdf5;color:#047857}
+.stream-status[data-state="reconnecting"]{background:#fff7ed;color:#c2410c}
+.stream-status[data-state="offline"]{background:#f3f4f6;color:#6b7280}
 .card-footer{display:flex;justify-content:flex-end;align-items:center;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:4px}
 .ts{font-size:11px;color:#9ca3af}
 .ctx{width:100%;border-collapse:collapse;margin-bottom:6px}
@@ -283,13 +454,29 @@ h1{font-size:22px;margin-bottom:4px;color:#0c3256}
 </head>
 <body>
 <h1>HelpButton.qs Demo Server</h1>
-<p class="subtitle">Received submissions (last ${MAX_STORED} of each type, most recent first). Refresh to update.</p>
+<p class="subtitle">Received submissions (last ${MAX_STORED} of each type, most recent first). New entries appear automatically.<span id="stream-status" class="stream-status" data-state="connecting">Connecting live updates...</span></p>
 <div class="grid">
-<div class="col"><h2>Bug Reports (${bugReports.length})</h2>${bugRows || '<div class="no-data">No bug reports received yet</div>'}</div>
-<div class="col"><h2>Feedback (${feedbackEntries.length})</h2>${fbRows || '<div class="no-data">No feedback received yet</div>'}</div>
+<div class="col"><h2>Bug Reports (<span id="bug-report-count">${snapshot.bugReportCount}</span>)</h2><div id="bug-report-list" class="entry-list">${snapshot.bugReportsHtml}</div></div>
+<div class="col"><h2>Feedback (<span id="feedback-count">${snapshot.feedbackCount}</span>)</h2><div id="feedback-list" class="entry-list">${snapshot.feedbackHtml}</div></div>
 </div>
+${renderDashboardScript()}
 </body>
 </html>`;
+}
+
+function registerDashboardClient(req, res) {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
+  res.flushHeaders();
+
+  dashboardClients.add(res);
+  writeSseEvent(res, "snapshot", createDashboardSnapshot());
+
+  req.on("close", () => {
+    dashboardClients.delete(res);
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -327,6 +514,14 @@ app.get("/", (_req, res) => {
  */
 app.get("/health", (req, res) => {
   res.json({ status: "ok", uptime: process.uptime() });
+});
+
+/**
+ * Dashboard live updates.
+ * GET /api/stream
+ */
+app.get("/api/stream", (req, res) => {
+  registerDashboardClient(req, res);
 });
 
 /**
@@ -372,6 +567,10 @@ app.post("/api/bug-reports", (req, res) => {
     severity: severity || null,
   };
   storeEntry(bugReports, entry, req);
+  broadcastDashboardEvent("bug-report", {
+    html: renderBugCard(entry),
+    count: bugReports.length,
+  });
 
   // --- Log (adaptive — shows whatever context fields are present) ---
   const descExcerpt =
@@ -461,6 +660,10 @@ app.post("/api/feedback", (req, res) => {
     comment: hasComment ? comment : null,
   };
   storeEntry(feedbackEntries, entry, req);
+  broadcastDashboardEvent("feedback", {
+    html: renderFeedbackCard(entry),
+    count: feedbackEntries.length,
+  });
 
   // --- Log (adaptive — shows whatever context fields are present) ---
   const commentExcerpt = hasComment
@@ -548,6 +751,8 @@ if (hasCerts) {
     }
 
     logger.info(`  Listening on:  https://${HOST}:${HTTPS_PORT}`);
+    logger.info(`  Dashboard:     GET  https://${HOST}:${HTTPS_PORT}/`);
+    logger.info(`  Live stream:   GET  https://${HOST}:${HTTPS_PORT}/api/stream`);
     logger.info(
       `  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`,
     );
@@ -567,6 +772,8 @@ if (hasCerts) {
     logger.info("═".repeat(72));
     logger.info("  HelpButton.qs Demo Server  (HTTP)");
     logger.info(`  Listening on:  http://${HOST}:${HTTP_PORT}`);
+    logger.info(`  Dashboard:     GET  http://${HOST}:${HTTP_PORT}/`);
+    logger.info(`  Live stream:   GET  http://${HOST}:${HTTP_PORT}/api/stream`);
     logger.info(
       `  Bug reports:   POST http://${HOST}:${HTTP_PORT}/api/bug-reports`,
     );
