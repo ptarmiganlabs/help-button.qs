@@ -85,17 +85,34 @@ function getMenuItemMergeKey(item, mode) {
  * dedupeLabelAction:
  *   keep the first item for each action+label combination.
  * items without a non-empty label:
- *   never dedupe; always keep them in registration order.
+ *   never dedupe; always keep them in registration order (see note below).
  *
- * If a hidden duplicate is encountered before a visible duplicate, the
- * visible one replaces it and keeps its own later position so visible
- * registration order remains stable.
+ * De-duplication contract – "first visible wins":
+ *   For any given key, the first item that is visible (showCondition truthy)
+ *   wins its slot.  If the first occurrence is hidden but a later occurrence
+ *   is visible, the visible one wins instead.  A visible winner is never
+ *   displaced by any subsequent item with the same key.
+ *
+ * Output order:
+ *   Items appear in their original flattened (registration) order.
+ *   Because the winner is identified in a separate first pass and then
+ *   selected during a second filtering pass, output positions are never
+ *   shifted by splice arithmetic — each item lands exactly where it sat
+ *   in the flattened sequence.
+ *
+ * Note on unlabeled items:
+ *   Items without a non-empty label (separators, dividers, …) have no
+ *   de-duplication key and are therefore always kept as-is.  If two
+ *   instances each contribute an unlabeled separator, both separators will
+ *   appear in the merged result.  This is intentional: there is no reliable
+ *   identity for structural elements that carry no label.
  *
  * @param {object[][]} menuItemGroups - Menu-item arrays in registration order.
- * @param {string} mode - Merge mode.
+ * @param {string} [mode] - Merge mode (will be normalized internally).
  * @returns {object[]} Merged menu items.
  */
 export function mergeMenuItems(menuItemGroups, mode = DEFAULT_MENU_ITEM_MERGE_MODE) {
+  // Normalize internally so callers do not need to pre-normalize.
   const normalizedMode = normalizeMenuItemMergeMode(mode);
   const flattened = menuItemGroups.flat();
 
@@ -103,38 +120,43 @@ export function mergeMenuItems(menuItemGroups, mode = DEFAULT_MENU_ITEM_MERGE_MO
     return flattened;
   }
 
-  const mergedItems = [];
-  const keyToIndex = new Map();
+  // ── Pass 1: determine the winning item for each de-duplication key ────────
+  //
+  // Rule: the first visible item wins its key slot.  If the first occurrence
+  // is hidden, it tentatively holds the slot; if a later visible item with the
+  // same key is found, the visible one takes over.  Once a slot is held by a
+  // visible item it is never updated again.
+  //
+  // Unlabeled items have no key (getMenuItemMergeKey returns null) and are
+  // skipped here; they are always included in pass 2.
+  const winners = new Map(); // key → winning item object reference
 
   for (const item of flattened) {
     const key = getMenuItemMergeKey(item, normalizedMode);
-    if (!key) {
-      mergedItems.push(item);
-      continue;
-    }
+    if (!key) continue; // unlabeled — always kept; no winner slot needed
 
-    const existingIndex = keyToIndex.get(key);
-    if (existingIndex === undefined) {
-      keyToIndex.set(key, mergedItems.length);
-      mergedItems.push(item);
-      continue;
-    }
-
-    const existingItem = mergedItems[existingIndex];
-    if (!isMenuItemVisible(existingItem) && isMenuItemVisible(item)) {
-      // Keep visible registration order stable:
-      // if a later visible duplicate replaces an earlier hidden one,
-      // move it to its own position instead of inheriting the hidden index.
-      mergedItems.splice(existingIndex, 1);
-      for (const [trackedKey, trackedIndex] of keyToIndex.entries()) {
-        if (trackedIndex > existingIndex) {
-          keyToIndex.set(trackedKey, trackedIndex - 1);
-        }
-      }
-      keyToIndex.set(key, mergedItems.length);
-      mergedItems.push(item);
+    if (!winners.has(key)) {
+      // First encounter: tentatively claim the slot regardless of visibility.
+      winners.set(key, item);
+    } else if (!isMenuItemVisible(winners.get(key)) && isMenuItemVisible(item)) {
+      // Upgrade: promote the first visible occurrence over a hidden predecessor.
+      winners.set(key, item);
+      // A visible winner is never displaced further (no else-branch needed).
     }
   }
 
-  return mergedItems;
+  // ── Pass 2: collect output in original flattened order ───────────────────
+  //
+  // An item is kept when:
+  //   • it has no de-duplication key (unlabeled — always include), OR
+  //   • it is the exact object reference stored as the winner for its key.
+  //
+  // Using object-reference equality (===) means each item occupies exactly
+  // the position it held in `flattened` — no index arithmetic, no splicing,
+  // no order surprises.  This is O(n) overall (two linear passes, no nesting).
+  return flattened.filter((item) => {
+    const key = getMenuItemMergeKey(item, normalizedMode);
+    if (!key) return true; // no label → always include
+    return winners.get(key) === item; // keep only the designated winner
+  });
 }
