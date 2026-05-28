@@ -76,7 +76,8 @@ function getMenuItemMergeKey(item, mode) {
  *   keep the first item for each action+label combination.
  *
  * If a hidden duplicate is encountered before a visible duplicate, the
- * visible one replaces it so dedupe does not accidentally hide an item.
+ * visible one replaces it and keeps its own later position so visible
+ * registration order remains stable.
  *
  * @param {object[][]} menuItemGroups - Menu-item arrays in registration order.
  * @param {string} mode - Merge mode.
@@ -109,7 +110,17 @@ export function mergeMenuItems(menuItemGroups, mode = "append") {
 
     const existingItem = mergedItems[existingIndex];
     if (!isMenuItemVisible(existingItem) && isMenuItemVisible(item)) {
-      mergedItems[existingIndex] = item;
+      // Keep visible registration order stable:
+      // if a later visible duplicate replaces an earlier hidden one,
+      // move it to its own position instead of inheriting the hidden index.
+      mergedItems.splice(existingIndex, 1);
+      for (const [trackedKey, trackedIndex] of keyToIndex.entries()) {
+        if (trackedIndex > existingIndex) {
+          keyToIndex.set(trackedKey, trackedIndex - 1);
+        }
+      }
+      keyToIndex.set(key, mergedItems.length);
+      mergedItems.push(item);
     }
   }
 
