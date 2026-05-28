@@ -112,7 +112,8 @@ function getMenuItemMergeKey(item, mode) {
  * @returns {object[]} Merged menu items.
  */
 export function mergeMenuItems(menuItemGroups, mode = DEFAULT_MENU_ITEM_MERGE_MODE) {
-  // Normalize internally so callers do not need to pre-normalize.
+  // Normalization is intentionally kept inside this function so that the
+  // caller does not need to call normalizeMenuItemMergeMode() separately.
   const normalizedMode = normalizeMenuItemMergeMode(mode);
   const flattened = menuItemGroups.flat();
 
@@ -133,7 +134,7 @@ export function mergeMenuItems(menuItemGroups, mode = DEFAULT_MENU_ITEM_MERGE_MO
 
   for (const item of flattened) {
     const key = getMenuItemMergeKey(item, normalizedMode);
-    if (!key) continue; // unlabeled — always kept; no winner slot needed
+    if (!key) continue; // unlabeled — skip winner selection; Pass 2 always includes these
 
     if (!winners.has(key)) {
       // First encounter: tentatively claim the slot regardless of visibility.
