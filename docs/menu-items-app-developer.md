@@ -140,6 +140,8 @@ Every menu item starts with the same common settings.
 | **Icon**           | All actions   | Select from built-in icon set.                                                       |
 | **Item Colors**    | All actions   | Per-item icon, background, hover background, and text colors.                        |
 
+For multi-instance merge modes, only items with a non-empty **Label** take part in duplicate detection. If a menu item has no label, HelpButton.qs always appends it in registration order instead of trying to merge it with unlabeled items from other instances.
+
 Supported menu item icons:
 
 `Bell`, `Bookmark`, `Bug`, `Calendar`, `Chart bar`, `Check`, `Download`, `Eye`, `Flash`, `Globe`, `Heart`, `Help`, `Home`, `Info`, `Lightbulb`, `Link`, `Lock`, `Mail`, `Phone`, `Pin`, `Search`, `Settings`, `Star`, `Toggle`, `User`.
@@ -646,6 +648,7 @@ Runtime rules:
   - **Append all items** — current behavior, keeps every item in registration order
   - **Merge duplicate labels** — keeps the first visible item for each label (case-insensitive)
   - **Merge duplicate label + action pairs** — keeps the first visible item for each label/action pair
+- Menu items without a non-empty label are never de-duplicated. They are always appended in registration order, even when one of the merge modes is selected.
 
 Recommended default:
 

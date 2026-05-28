@@ -7,6 +7,7 @@
  */
 
 import { toPickerObj } from "../util/color";
+import { DEFAULT_MENU_ITEM_MERGE_MODE } from "../util/menu-item-merge";
 import {
   TIMESTAMP_FORMAT_OPTIONS,
   DEFAULT_DIALOG_FORMAT,
@@ -27,7 +28,9 @@ const menuItemsSection = {
       label: "Merge menu items",
       type: "string",
       component: "dropdown",
-      defaultValue: "append",
+      // Keep this in sync with the persisted layout default by sharing the
+      // runtime constant instead of repeating the literal in multiple files.
+      defaultValue: DEFAULT_MENU_ITEM_MERGE_MODE,
       options: [
         { value: "append", label: "Append all items" },
         {

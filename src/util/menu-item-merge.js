@@ -2,6 +2,9 @@
  * Helpers for multi-instance HelpButton.qs menu merging.
  */
 
+// Canonical default for both persisted object properties and property-panel UI.
+export const DEFAULT_MENU_ITEM_MERGE_MODE = "append";
+
 const VALID_MENU_ITEM_MERGE_MODES = new Set([
   "append",
   "dedupeLabel",
@@ -18,7 +21,9 @@ const DEFAULT_MENU_ITEM_ACTION = "link";
  * @returns {string} Supported merge mode.
  */
 export function normalizeMenuItemMergeMode(mode) {
-  return VALID_MENU_ITEM_MERGE_MODES.has(mode) ? mode : "append";
+  return VALID_MENU_ITEM_MERGE_MODES.has(mode)
+    ? mode
+    : DEFAULT_MENU_ITEM_MERGE_MODE;
 }
 
 /**
@@ -49,7 +54,12 @@ export function isMenuItemVisible(item = {}) {
  */
 function getMenuItemMergeKey(item, mode) {
   const normalizedLabel = String(item?.label || "").trim().toLowerCase();
-  if (!normalizedLabel) return null;
+  if (!normalizedLabel) {
+    // Items without a non-empty label never participate in de-duplication.
+    // Keep them in registration order so unlabeled separators/dividers remain
+    // explicit, instance-local additions to the merged menu.
+    return null;
+  }
 
   if (mode === "dedupeLabel") {
     return normalizedLabel;
@@ -74,6 +84,8 @@ function getMenuItemMergeKey(item, mode) {
  *   keep the first item for each label (case-insensitive, trimmed).
  * dedupeLabelAction:
  *   keep the first item for each action+label combination.
+ * items without a non-empty label:
+ *   never dedupe; always keep them in registration order.
  *
  * If a hidden duplicate is encountered before a visible duplicate, the
  * visible one replaces it and keeps its own later position so visible
@@ -83,7 +95,7 @@ function getMenuItemMergeKey(item, mode) {
  * @param {string} mode - Merge mode.
  * @returns {object[]} Merged menu items.
  */
-export function mergeMenuItems(menuItemGroups, mode = "append") {
+export function mergeMenuItems(menuItemGroups, mode = DEFAULT_MENU_ITEM_MERGE_MODE) {
   const normalizedMode = normalizeMenuItemMergeMode(mode);
   const flattened = menuItemGroups.flat();
 
