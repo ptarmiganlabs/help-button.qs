@@ -11,8 +11,8 @@ This file provides guidance to Copilot when working with code in this repository
 At the start of each session, read:
 
 1. The root `README.md`
-2. `docs/template-fields.md`
-3. `docs/RELEASE_PROCESS.md` when working on build, versioning, or CI
+2. `docs/app-developer/template-fields.md`
+3. `docs/extension-developer/RELEASE_PROCESS.md` when working on build, versioning, or CI
 
 ## 🧱 Project Basics
 
@@ -27,7 +27,7 @@ At the start of each session, read:
 ```
 src/                          ← Extension source code
 scripts/                      ← Build and release helpers
-docs/                         ← Extension and repo documentation
+docs/                         ← App-developer and extension-developer documentation
 legacy/variants/              ← Archived HTML injection variants
 shared/demo-server/           ← Express.js webhook demo (dev only, shared)
 ```
