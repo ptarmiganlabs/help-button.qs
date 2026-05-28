@@ -431,7 +431,7 @@ app.post("/api/feedback", (req, res) => {
   // At least one of rating or comment must be provided
   const hasRating = Number.isInteger(rating) && rating >= 1 && rating <= 5;
   const hasComment = typeof comment === "string" && comment.trim().length > 0;
-  const safeRating = hasRating ? Math.min(5, Math.max(1, rating)) : null;
+  const safeRating = hasRating ? rating : null;
 
   if (!hasRating && !hasComment) {
     errors.push("At least one of rating (1-5) or comment must be provided");
