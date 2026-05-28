@@ -650,6 +650,24 @@ Runtime rules:
   - **Merge duplicate label + action pairs** — keeps the first visible item for each label/action pair
 - Menu items without a non-empty label are never de-duplicated. They are always appended in registration order, even when one of the merge modes is selected.
 
+Important caveat for the merge-mode owner:
+
+- The active merge mode always comes from the **first currently registered** HelpButton.qs instance in the shared toolbar set.
+- If that instance is removed from the sheet, unmounted during navigation, or otherwise unregisters first, the next still-registered instance immediately becomes the new owner.
+- When that happens, the shared popup can change mid-session even if none of the remaining menu-item arrays changed, because the new owner may use a different **Merge menu items** setting.
+
+```mermaid
+flowchart TD
+    A[Instance A registers first<br/>merge mode = dedupeLabel] --> B[Shared toolbar menu uses A as base]
+    B --> C{Does A stay registered?}
+    C -->|Yes| D[Keep A button shell and merge mode]
+    C -->|No| E[Promote next registered active instance]
+    E --> F[Shared toolbar menu rebuilds]
+    F --> G[Button shell + merge mode now come from new base instance]
+```
+
+If you need stable multi-instance behavior, keep the intended "base" HelpButton.qs object present on the sheet or ensure all cooperating instances use the same **Merge menu items** value.
+
 Recommended default:
 
 - Leave **Append all items** enabled if you intentionally build one larger shared menu from multiple HelpButton.qs objects.
