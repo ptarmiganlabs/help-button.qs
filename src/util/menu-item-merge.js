@@ -7,6 +7,9 @@ const VALID_MENU_ITEM_MERGE_MODES = new Set([
   "dedupeLabel",
   "dedupeLabelAction",
 ]);
+// Ordinary URL items default to action="link" in the property schema.
+// Mirror that here so unlabeled action values merge the same way at runtime.
+const DEFAULT_MENU_ITEM_ACTION = "link";
 
 /**
  * Normalize menu-item merge mode to a supported value.
@@ -53,7 +56,9 @@ function getMenuItemMergeKey(item, mode) {
   }
 
   if (mode === "dedupeLabelAction") {
-    const action = String(item?.action || "link").trim().toLowerCase();
+    const action = String(item?.action || DEFAULT_MENU_ITEM_ACTION)
+      .trim()
+      .toLowerCase();
     return `${action}::${normalizedLabel}`;
   }
 

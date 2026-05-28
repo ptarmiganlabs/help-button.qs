@@ -606,7 +606,7 @@ Variable items depend on app context.
 
 ## Multi-Instance Behavior
 
-If multiple HelpButton.qs objects are active in the same page session, the extension merges them into a single toolbar button.
+If multiple HelpButton.qs objects are active in the same browser tab / app page session, the extension merges them into a single toolbar button.
 
 This can happen in two common ways:
 
