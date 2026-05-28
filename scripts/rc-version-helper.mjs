@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 import { execSync } from "node:child_process";
 
+/**
+ * Run a shell command and return trimmed stdout.
+ *
+ * @param {string} cmd - Shell command to execute.
+ * @returns {string} Trimmed stdout, or an empty string on failure.
+ */
 function run(cmd) {
   try {
     return execSync(cmd, {
@@ -12,6 +18,12 @@ function run(cmd) {
   }
 }
 
+/**
+ * Parse a semantic-version tag into numeric parts.
+ *
+ * @param {string} tag - Version tag, with or without a leading `v`.
+ * @returns {{major: number, minor: number, patch: number}} Parsed semver parts.
+ */
 function parseSemver(tag) {
   const t = String(tag || "").replace(/^v/, "");
   const parts = t.split(".").map((p) => parseInt(p, 10));
@@ -22,10 +34,23 @@ function parseSemver(tag) {
   };
 }
 
+/**
+ * Convert parsed semantic-version parts back to a string.
+ *
+ * @param {{major: number, minor: number, patch: number}} version - Parsed version parts.
+ * @returns {string} Semantic-version string without a leading `v`.
+ */
 function semverToString({ major, minor, patch }) {
   return `${major}.${minor}.${patch}`;
 }
 
+/**
+ * Increment a semantic version by the requested release level.
+ *
+ * @param {string} base - Base semantic version string.
+ * @param {'major'|'minor'|'patch'} level - Release level to increment.
+ * @returns {string} Incremented semantic-version string.
+ */
 function bumpVersion(base, level) {
   const v = parseSemver(base);
   if (level === "major") {
@@ -41,6 +66,12 @@ function bumpVersion(base, level) {
   return semverToString(v);
 }
 
+/**
+ * Derive the highest semantic-version bump required by a commit list.
+ *
+ * @param {string[]} commits - Commit messages to inspect.
+ * @returns {'major'|'minor'|'patch'|'none'} Highest required change level.
+ */
 function highestChangeTypeFromCommits(commits) {
   // Return 'major' | 'minor' | 'patch' | 'none'
   let level = "none";
@@ -62,6 +93,12 @@ function highestChangeTypeFromCommits(commits) {
   return level;
 }
 
+/**
+ * Decide whether pre-release automation should increment an existing pre-release
+ * tag or fall back to the standard release-please flow.
+ *
+ * @returns {Promise<void>}
+ */
 async function main() {
   const repo = process.env.GITHUB_REPOSITORY;
   const ref = process.env.GITHUB_REF || "";

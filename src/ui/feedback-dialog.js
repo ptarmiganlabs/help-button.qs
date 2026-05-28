@@ -739,11 +739,12 @@ function getSenseVersion() {
 }
 
 /**
- * Gather all context data asynchronously.
+ * Gather all context data asynchronously for the feedback dialog.
  *
  * @param {string[]} fields - Field names to collect.
  * @param {'client-managed' | 'cloud'} platformType - Current platform.
- * @returns {Promise<Record<string, string>>}
+ * @param {string} timestampFmt - Timestamp format key for the generated timestamp.
+ * @returns {Promise<Record<string, string>>} Context values keyed by field name.
  */
 function gatherContextData(fields, platformType, timestampFmt) {
   const path = window.location.pathname;

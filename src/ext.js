@@ -1,12 +1,11 @@
 /**
  * Property panel definition for HelpButton.qs extension.
  *
- * Section order: Widget → Theme & Styling → Language & Translations → Button → Popup → Menu Items → Tooltips → Template Fields → About
+ * Section order: Widget → Theme & Styling → Language & Translations → Button → Popup → Menu Items → Tooltips → Template Fields → About.
  *
- * Each section is defined in its own module under ./property-panel/.
+ * Each section is defined in its own module under `./property-panel/`.
  *
- * @param {object} galaxy - Nebula galaxy object.
- * @returns {object} Extension property panel configuration.
+ * @module ext
  */
 
 import getObjectList from "./property-panel/object-list";
@@ -21,6 +20,12 @@ import documentationSection from "./property-panel/documentation-section";
 import securitySection from "./property-panel/security-section";
 import aboutSection from "./property-panel/about-section";
 
+/**
+ * Build the extension property-panel configuration.
+ *
+ * @param {object} _galaxy - Nebula galaxy object supplied by the runtime.
+ * @returns {{definition: object}} Extension property-panel configuration.
+ */
 export default function ext(_galaxy) {
   return {
     definition: {

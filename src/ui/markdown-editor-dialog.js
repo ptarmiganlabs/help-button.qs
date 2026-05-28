@@ -109,13 +109,14 @@ function confirmDiscardChanges() {
 /**
  * Open the Markdown editor dialog.
  *
- * @param {object} options
+ * @param {object} options - Dialog configuration.
  * @param {string} options.title - Dialog heading.
  * @param {string} options.value - Current Markdown text.
- * @param {number} [options.maxLength] - Max chars (0 = unlimited).
+ * @param {number} [options.maxLength] - Maximum character count (`0` = unlimited).
  * @param {string} [options.allowedUriPatterns=''] - Comma-separated URL prefixes
  *   for allowed iframe/video src in Preview. Empty = allow all.
  * @param {function(string): void} options.onSave - Called with the new text on save.
+ * @returns {void}
  */
 export function openMarkdownEditorDialog({
   title,

@@ -5,8 +5,7 @@
  * into the application toolbar. Supports both client-managed and
  * Qlik Cloud environments.
  *
- * @param {object} galaxy - Nebula galaxy object.
- * @returns {object} Supernova definition.
+ * @module index
  */
 
 import {
@@ -36,6 +35,12 @@ import logger, { PACKAGE_VERSION, BUILD_DATE } from "./util/logger";
 import { extensionState } from "./util/extension-state";
 import "./style.css";
 
+/**
+ * Create the HelpButton.qs supernova definition.
+ *
+ * @param {object} galaxy - Nebula galaxy object.
+ * @returns {object} Supernova definition consumed by Nebula.
+ */
 export default function supernova(galaxy) {
   return {
     qae: {

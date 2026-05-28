@@ -1,9 +1,6 @@
 /**
  * Tooltips (icon-on-object with hover + click dialog) — property panel section.
  *
- * @param {Function} getObjectList - Async function for populating the object dropdown.
- * @returns {object} Tooltips section definition.
- *
  * @module property-panel/tooltips-section
  */
 
@@ -13,6 +10,12 @@ import { openMarkdownEditorDialog } from "../ui/markdown-editor-dialog";
 import { extensionState } from "../util/extension-state";
 import logger from "../util/logger";
 
+/**
+ * Build the Tooltips property-panel section definition.
+ *
+ * @param {Function} getObjectList - Async function for populating the object dropdown.
+ * @returns {object} Tooltips section definition.
+ */
 export default function tooltipsSection(getObjectList) {
   return {
     type: "items",
@@ -390,6 +393,14 @@ export default function tooltipsSection(getObjectList) {
 // Helper — persist a single tooltip property via the engine API
 // ---------------------------------------------------------------------------
 
+/**
+ * Persist a single tooltip property update through the engine API.
+ *
+ * @param {string} cId - Tooltip item identifier.
+ * @param {string} property - Tooltip property name to update.
+ * @param {*} value - New property value to persist.
+ * @returns {Promise<void>}
+ */
 async function persistTooltipProperty(cId, property, value) {
   const { model } = extensionState;
   if (!model) {

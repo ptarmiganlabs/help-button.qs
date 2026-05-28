@@ -373,12 +373,11 @@ export function applyPreset(data, presetKey) {
  * Apply the active preset's tooltip colors to any newly added tooltip items.
  *
  * Newly added array items get hardcoded `defaultValue` colors from the property
- * panel definition. This function detects items that haven't been themed yet
+ * panel definition. This function detects items that have not been themed yet
  * (missing `_themedPreset` matching the current preset) and stamps them.
  *
- * Call this from a `change` handler on the tooltips array.
- *
- * @param {object} data - Extension layout data (mutated in place).
+ * @param {object} data - Extension layout data, mutated in place.
+ * @returns {boolean|undefined} `true` when at least one tooltip was updated.
  */
 export function applyPresetToNewTooltips(data) {
   const presetKey = data.themePreset;
