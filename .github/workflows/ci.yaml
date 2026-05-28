@@ -310,6 +310,17 @@ jobs:
           echo "=== Inner extension zip ==="
           zipinfo "release-staging/${DIST_FILE_NAME}.zip"
 
+      - name: Generate CycloneDX SBOM
+        env:
+          RELEASE_VERSION: ${{ needs.release-please.outputs.release_version }}
+          RELEASE_PRERELEASE_SUFFIX: ${{ steps.prerelease.outputs.prerelease_suffix }}
+        run: |
+          npx @cyclonedx/cyclonedx-npm \
+            --omit dev \
+            --output-reproducible \
+            --output-format JSON \
+            --output-file "${DIST_FILE_NAME}-v${RELEASE_VERSION}${RELEASE_PRERELEASE_SUFFIX}.sbom.cdx.json"
+
       - name: Upload release artifacts
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
@@ -321,6 +332,7 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
           artifacts: |
             ${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
+            ${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.sbom.cdx.json
           prerelease: ${{ env.IS_PRERELEASE }}
 
       - name: Fix pre-release name to include type suffix

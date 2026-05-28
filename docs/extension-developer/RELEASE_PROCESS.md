@@ -166,7 +166,7 @@ The `release-please` job in CI has two possible code paths, selected by `rc-vers
 | First push to `pre-release/*` (no existing RC releases)         | `action=run_release_please`                     | Release-please runs with the prerelease config, creates a Release PR.                                   |
 | Subsequent push to `pre-release/*` (existing RC releases found) | `action=increment_rc` + `releases_created=true` | Skips release-please. Directly sets the next `rc.N` tag. `build-release` job creates draft + artifacts. |
 
-The `build-release` job only runs when `releases_created == true`. It builds zips, generates PDFs, and uploads everything to the GitHub release via `ncipollo/release-action`.
+The `build-release` job only runs when `releases_created == true`. It builds zips, generates PDFs, creates a CycloneDX SBOM for the npm dependency inventory, and uploads everything to the GitHub release via `ncipollo/release-action`.
 
 ## Tips and Known Behaviours
 

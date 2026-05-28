@@ -467,7 +467,7 @@ This project aims to reduce risk with layered controls, but it does **not** clai
 - The published extension package is built from source with repository scripts (`npm ci`, `npm run pack:prod`) rather than by editing release artifacts by hand.
 - Supply-chain risk is reduced by checking in `package-lock.json`, installing with `npm ci`, pinning GitHub Actions to full commit SHAs, and using Dependabot with a 7-day cooldown for GitHub Actions updates before bump PRs are proposed.
 - GitHub Actions workflows use explicit `permissions` blocks, pin third-party actions to full commit SHAs, and commonly set `persist-credentials: false` on checkout.
-- GitHub-hosted automation is used for CI/release workflows plus security scanning with **CodeQL** and **zizmor**; published release archives are also scanned with **VirusTotal**.
+- GitHub-hosted automation is used for CI/release workflows plus security scanning with **CodeQL** and **zizmor**; published release archives are also scanned with **VirusTotal** and now ship with a **CycloneDX SBOM**.
 - GitHub is used for source hosting, issues, pull requests, releases, and workflow history so changes can be reviewed and traced over time.
 
 ### What the extension does not do by itself
