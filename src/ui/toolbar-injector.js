@@ -21,10 +21,7 @@ import { escapeHtml } from "../util/template-fields";
 import { resolveColor } from "../util/color";
 import { resolveText } from "../i18n/index";
 import { normalizeAuthStrategy } from "../util/auth-strategy";
-import {
-  mergeMenuItems,
-  normalizeMenuItemMergeMode,
-} from "../util/menu-item-merge";
+import { mergeMenuItems } from "../util/menu-item-merge";
 import logger from "../util/logger";
 
 /**
@@ -137,7 +134,7 @@ function rebuildHelpButton() {
     return;
   }
 
-  const mergeMode = normalizeMenuItemMergeMode(baseLayout.menuItemMergeMode);
+  const mergeMode = baseLayout.menuItemMergeMode;
   const mergedMenuItems = mergeMenuItems(
     entries.map(({ layout }) => layout.menuItems || []),
     mergeMode,
