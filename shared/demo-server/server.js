@@ -429,15 +429,16 @@ app.post("/api/feedback", (req, res) => {
     errors.push("Missing or invalid field: context");
 
   // At least one of rating or comment must be provided
-  const hasRating = typeof rating === "number" && rating >= 1 && rating <= 5;
+  const hasRating = Number.isInteger(rating) && rating >= 1 && rating <= 5;
   const hasComment = typeof comment === "string" && comment.trim().length > 0;
+  const safeRating = hasRating ? rating : null;
 
   if (!hasRating && !hasComment) {
     errors.push("At least one of rating (1-5) or comment must be provided");
   }
 
   if (typeof rating !== "undefined" && !hasRating) {
-    errors.push("Rating must be a number between 1 and 5");
+    errors.push("Rating must be an integer between 1 and 5");
   }
 
   if (errors.length > 0) {
@@ -454,7 +455,7 @@ app.post("/api/feedback", (req, res) => {
     receivedAt: new Date().toISOString(),
     clientTimestamp: timestamp,
     context,
-    rating: hasRating ? rating : null,
+    rating: safeRating,
     comment: hasComment ? comment : null,
   };
   storeEntry(feedbackEntries, entry, req);
@@ -474,7 +475,7 @@ app.post("/api/feedback", (req, res) => {
   logger.info(formatContextFields(context));
   if (hasRating) {
     logger.info(
-      `                Rating: ${"★".repeat(rating)}${"☆".repeat(5 - rating)} (${rating}/5)`,
+      `                Rating: ${"★".repeat(safeRating)}${"☆".repeat(5 - safeRating)} (${safeRating}/5)`,
     );
   }
   logger.info(`               Comment: ${commentExcerpt}`);
