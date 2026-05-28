@@ -375,7 +375,7 @@ release automation in addition to the browser/runtime paths above.
 
 ### Suggested follow-up tracking items
 
-Per the repository's [security policy](../SECURITY.md), externally reported
+Per the repository's top-level `SECURITY.md` policy, externally reported
 vulnerabilities should be handled through a private advisory or another private
 channel rather than a public issue. The findings above are still suitable for
 internal maintainer tracking:
