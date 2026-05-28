@@ -450,7 +450,7 @@ Not all context fields are available on every platform. The table below summaris
 
 ## Security Stance
 
-This project aims to reduce risk with layered controls, but it does **not** claim zero risk and it is not presented as a formally audited product. If you want the implementation-level details, trust boundaries, and remaining known risks, see [docs/extension-developer/SECURITY.md](./docs/extension-developer/SECURITY.md).
+This project aims to reduce risk with layered controls, but it does **not** claim zero risk and it is not presented as a formally audited product. If you want the implementation-level details, trust boundaries, remaining known risks, and the latest repository/build review notes, see [docs/extension-developer/SECURITY.md](./docs/extension-developer/SECURITY.md).
 
 ### What the source code does to reduce risk
 

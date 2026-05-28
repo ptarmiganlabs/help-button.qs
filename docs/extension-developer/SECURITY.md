@@ -2,7 +2,7 @@
 
 > **Scope:** HelpButton.qs rendering pipeline, webhook integration, and property-panel–authored content.
 > **Audience:** Extension developers, Qlik administrators.
-> **Last updated:** 2026-04-02
+> **Last updated:** 2026-05-28
 
 ---
 
@@ -359,3 +359,32 @@ Legend: green = sanitised path.
 | **Low**  | CSS property allowlist for `style` | DOMPurify hook to restrict inline styles to a safe property set                                        |
 | **Low**  | CSS selector validation            | Dry-run or syntax-check `targetCssSelector` before storage                                             |
 | **Info** | Webhook URL scheme enforcement     | Restrict webhook URLs to `https://` only (currently accepts any scheme the browser allows via `fetch`) |
+
+---
+
+## Repository, build, and dependency review (2026-05)
+
+This review also covered the repository's build pipeline, dependency posture, and
+release automation in addition to the browser/runtime paths above.
+
+| Severity | Area | Finding | Evidence | Recommendation |
+| -------- | ---- | ------- | -------- | -------------- |
+| **Low** | Release workflow | The release workflow installs `md-to-pdf` and `@mermaid-js/mermaid-cli` directly from npm at workflow runtime. Versions are pinned, but they are outside the repository lockfile and therefore not covered by `npm ci` integrity verification. | `.github/workflows/ci.yaml` (`npm install -g md-to-pdf@5.2.4 @mermaid-js/mermaid-cli@11.12.0`) | Prefer installing release-only tooling through a lockfile-backed project dependency set or another reproducible mechanism so the exact resolved dependency tree is reviewable. |
+| **Low** | Release provenance | Release archives are scanned with VirusTotal, but the workflow does not currently publish an SBOM or similar dependency inventory for the shipped artifact. | `.github/workflows/virus-scan.yaml`, release workflow design | Consider generating and publishing an SBOM alongside release artifacts to improve downstream review and supply-chain transparency. |
+
+### Suggested follow-up tracking items
+
+Per the repository's top-level `SECURITY.md` policy, externally reported
+vulnerabilities should be handled through a private advisory or another private
+channel rather than a public issue. The findings above are still suitable for
+internal maintainer tracking:
+
+1. **Review and update Nebula/webpack build dependencies to clear current `npm audit` findings**
+   - Scope: `@nebula.js/cli`, `@nebula.js/cli-serve`, and transitive `webpack-dev-server` / `sockjs` / `uuid`
+   - Acceptance: `npm audit` no longer reports the current moderate advisories for the main build toolchain
+2. **Move README/PDF release tooling to a lockfile-backed installation path**
+   - Scope: `.github/workflows/ci.yaml` and any supporting packaging changes
+   - Acceptance: release workflow no longer depends on ad-hoc `npm install -g` for `md-to-pdf` and Mermaid CLI
+3. **Evaluate SBOM generation for published release artifacts**
+   - Scope: release workflow and release asset set
+   - Acceptance: each release can publish a machine-readable dependency inventory together with the extension archive
