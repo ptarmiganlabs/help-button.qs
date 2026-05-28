@@ -179,6 +179,9 @@ export default {
     separatorColor: toPickerObj("#e0e0e0"),
   },
 
+  // -- Multi-instance menu merge mode --
+  menuItemMergeMode: "append",
+
   // -- Tooltips (icon-on-object with hover + click dialog) --
   tooltips: [
     {

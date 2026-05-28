@@ -8,6 +8,7 @@
 import { makeSvg } from "./icons";
 import { resolveTemplateFields } from "../util/template-fields";
 import { resolveColor } from "../util/color";
+import { isMenuItemVisible } from "../util/menu-item-merge";
 import logger from "../util/logger";
 
 /**
@@ -92,22 +93,7 @@ export function createPopupMenu(triggerButton, config) {
 
   // -- Menu items --
   // Filter out items where showCondition is defined and evaluates to false/0
-  const visibleMenuItems = menuItems.filter((item) => {
-    // If showCondition is undefined or placeholder, show the item.
-    // If it's an expression, the engine replaces it in the layout with the result string.
-    if (
-      item.showCondition === undefined ||
-      item.showCondition === null ||
-      item.showCondition === ""
-    ) {
-      return true;
-    }
-
-    // Qlik expressions returning false/0 often result in the string "0".
-    // Hide ONLY if explicitly "0" or "false".
-    const condition = String(item.showCondition).trim();
-    return condition !== "0" && condition.toLowerCase() !== "false";
-  });
+  const visibleMenuItems = menuItems.filter(isMenuItemVisible);
 
   visibleMenuItems.forEach((item, idx) => {
     if (idx > 0) {

@@ -17,6 +17,29 @@ const menuItemsSection = {
   type: "items",
   label: "Menu Items",
   items: {
+    menuItemMergeModeInfo: {
+      component: "text",
+      label:
+        "When multiple HelpButton.qs objects are active in the same page session, their toolbar menu items can be appended or de-duplicated.",
+    },
+    menuItemMergeMode: {
+      ref: "menuItemMergeMode",
+      label: "Merge menu items",
+      type: "string",
+      component: "dropdown",
+      defaultValue: "append",
+      options: [
+        { value: "append", label: "Append all items" },
+        {
+          value: "dedupeLabel",
+          label: "Merge duplicate labels (keep first visible item)",
+        },
+        {
+          value: "dedupeLabelAction",
+          label: "Merge duplicate label + action pairs",
+        },
+      ],
+    },
     menuItems: {
       ref: "menuItems",
       label: "Menu Items",

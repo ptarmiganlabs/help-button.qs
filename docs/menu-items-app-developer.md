@@ -606,7 +606,12 @@ Variable items depend on app context.
 
 ## Multi-Instance Behavior
 
-If you place multiple HelpButton.qs objects on the same sheet, the extension merges them into a single toolbar button.
+If multiple HelpButton.qs objects are active in the same page session, the extension merges them into a single toolbar button.
+
+This can happen in two common ways:
+
+- two or more HelpButton.qs objects exist on the same sheet
+- you navigate between sheets that each contain a HelpButton.qs object, because the toolbar button is session-persistent
 
 ```mermaid
 flowchart TD
@@ -615,14 +620,14 @@ flowchart TD
     C[HelpButton instance 3] --> M
 
     M --> D[Button appearance from first registered instance]
-    M --> E[Popup menu items concatenated from all instances]
+    M --> E[Popup menu items merged by configured merge mode]
     M --> F[First bug-report item defines bug dialog config]
     M --> G[First feedback item defines feedback dialog config]
 ```
 
 Runtime rules:
 
-- Menu items from all registered instances are concatenated into one popup.
+- Menu items from all registered instances are merged into one popup.
 - The first registered instance provides the button appearance and popup shell:
   - Button label
   - Button tooltip
@@ -630,6 +635,15 @@ Runtime rules:
   - Button colors
   - Popup title
   - Popup styling
+- The first registered instance also provides the **Merge menu items** setting that decides how contributed items are combined:
+  - **Append all items** — current behavior, keeps every item in registration order
+  - **Merge duplicate labels** — keeps the first visible item for each label (case-insensitive)
+  - **Merge duplicate label + action pairs** — keeps the first visible item for each label/action pair
+
+Recommended default:
+
+- Leave **Append all items** enabled if you intentionally build one larger shared menu from multiple HelpButton.qs objects.
+- Use one of the de-duplication modes if copy/paste between sheets can create repeated menu entries.
 
 Important caveat for dialog actions:
 

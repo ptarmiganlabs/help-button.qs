@@ -21,6 +21,10 @@ import { escapeHtml } from "../util/template-fields";
 import { resolveColor } from "../util/color";
 import { resolveText } from "../i18n/index";
 import { normalizeAuthStrategy } from "../util/auth-strategy";
+import {
+  mergeMenuItems,
+  normalizeMenuItemMergeMode,
+} from "../util/menu-item-merge";
 import logger from "../util/logger";
 
 /**
@@ -132,18 +136,22 @@ function rebuildHelpButton() {
     return;
   }
 
-  // Merge menuItems from all configs
-  const mergedMenuItems = [];
-  for (const { layout } of entries) {
-    const items = layout.menuItems || [];
-    mergedMenuItems.push(...items);
-  }
+  const mergeMode = normalizeMenuItemMergeMode(baseLayout.menuItemMergeMode);
+  const mergedMenuItems = mergeMenuItems(
+    entries.map(({ layout }) => layout.menuItems || []),
+    mergeMode,
+  );
 
   // Deep-clone so injectHelpButton() cannot mutate stored registry entries
   const mergedLayout = structuredClone({
     ...baseLayout,
     menuItems: mergedMenuItems,
   });
+  logger.debug(
+    "Merged HelpButton.qs menu items using mode",
+    mergeMode,
+    `(${mergedMenuItems.length} items)`,
+  );
   injectHelpButton(mergedLayout, adapter, platform, app);
 }
 
