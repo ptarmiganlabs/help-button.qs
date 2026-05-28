@@ -53,6 +53,13 @@ The Menu Items section is array-based, which means you can:
 - Reorder items
 - Duplicate items
 
+Top-level property-panel refs in this section:
+
+| UI label             | Ref                 | Type     | Purpose                                                                          |
+| -------------------- | ------------------- | -------- | -------------------------------------------------------------------------------- |
+| **Merge menu items** | `menuItemMergeMode` | `string` | Controls how menu items from multiple active HelpButton.qs objects are combined. |
+| **Menu Items**       | `menuItems`         | `array`  | Stores the ordered list of configured menu items.                                |
+
 The popup renders items in the same order they appear in the property panel.
 
 ---
