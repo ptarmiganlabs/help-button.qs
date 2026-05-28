@@ -192,12 +192,14 @@ function renderContextTable(context) {
 }
 
 function renderStars(rating) {
-  if (typeof rating !== "number") return "";
+  if (typeof rating !== "number" || !Number.isFinite(rating)) return "";
+  const safeRating = Math.floor(rating);
+  if (safeRating < 1 || safeRating > 5) return "";
   return (
     '<span class="stars">' +
-    "★".repeat(rating) +
-    "☆".repeat(5 - rating) +
-    ` (${rating}/5)</span>`
+    "★".repeat(safeRating) +
+    "☆".repeat(5 - safeRating) +
+    ` (${safeRating}/5)</span>`
   );
 }
 
