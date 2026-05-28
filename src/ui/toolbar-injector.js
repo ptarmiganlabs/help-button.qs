@@ -117,7 +117,8 @@ export function unregisterHelpConfig(objectId, { clearConfig = false } = {}) {
 /**
  * Rebuild the help button by merging menu items from all registered configs.
  * Button appearance (label, icon, colours, popup title) comes from the first
- * registered config; menu items are concatenated from all configs.
+ * registered config; menu items from all configs are merged in registration
+ * order using the first config's configured menu-item merge mode.
  */
 function rebuildHelpButton() {
   if (!lastConfig || configRegistry.size === 0) return;
