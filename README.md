@@ -446,3 +446,38 @@ Not all context fields are available on every platform. The table below summaris
 | `timestamp`         | ✅ Local date/time                                 | ✅ Local date/time                                           |
 
 > **Tip:** For Qlik Cloud deployments, turn off the **"Show in Dialog"** and **"Include in Payload"** toggles for `userDirectory` and `senseVersion`, which are not applicable on Cloud. A recommended Cloud configuration enables: `userId`, `userName`, `appId`, `sheetId`, `urlPath`, `platform`, `timestamp`.
+
+## Security Stance
+
+This project aims to reduce risk with layered controls, but it does **not** claim zero risk and it is not presented as a formally audited product. If you want the implementation-level details, trust boundaries, and remaining known risks, see [docs/SECURITY.md](./docs/SECURITY.md).
+
+### What the source code does to reduce risk
+
+- Rich tooltip/dialog Markdown is sanitized with **DOMPurify** before it reaches `innerHTML`.
+- Plain-text UI values use safer browser APIs such as `textContent`, or are escaped with `escapeHtml()`.
+- Menu links are checked by `isSafeUrl()` so dangerous schemes such as `javascript:` and `data:` are rejected.
+- Color values that are inserted into SVG markup are validated by `safeCssColor()`.
+- Tooltip media can be restricted to approved origins via **Security → Allowed URI prefixes**.
+- Bug report and feedback payloads are sent as JSON; user-entered text is treated as data, not executed as code.
+- Qlik expressions are evaluated by the Qlik engine, not by custom `eval()`-style logic in this project.
+
+### Build, release, and GitHub workflow controls
+
+- The published extension package is built from source with repository scripts (`npm ci`, `npm run pack:prod`) rather than by editing release artifacts by hand.
+- Supply-chain risk is reduced by checking in `package-lock.json`, installing with `npm ci`, pinning GitHub Actions to full commit SHAs, and using Dependabot with a 7-day cooldown for GitHub Actions updates before bump PRs are proposed.
+- GitHub Actions workflows use explicit `permissions` blocks, pin third-party actions to full commit SHAs, and commonly set `persist-credentials: false` on checkout.
+- GitHub-hosted automation is used for CI/release workflows plus security scanning with **CodeQL** and **zizmor**; published release archives are also scanned with **VirusTotal**.
+- GitHub is used for source hosting, issues, pull requests, releases, and workflow history so changes can be reviewed and traced over time.
+
+### What the extension does not do by itself
+
+- It does **not** send telemetry or analytics back to the maintainer.
+- It only makes outbound requests when an app builder explicitly configures external links, webhook endpoints, or embedded media sources.
+- The runtime dependency set is intentionally small (currently `dompurify`).
+
+### Important limitations and operator responsibilities
+
+- App builders can configure webhook URLs and embedded content sources, so administrators should review those settings before deploying the extension widely.
+- If **Allowed URI prefixes** is left empty, embedded `https://` iframe/video sources remain broad by default for backward compatibility.
+- The project still depends on upstream packages and GitHub-hosted services, so keeping dependencies and workflows up to date remains important.
+- If you need a stricter deployment posture, disable unneeded webhook/media features, configure URI allowlists, and review each release artifact before importing it into Qlik Sense.
