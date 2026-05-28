@@ -253,9 +253,6 @@ jobs:
           node-version: 24
           package-manager-cache: false
 
-      - name: Install PDF tools
-        run: PUPPETEER_SKIP_DOWNLOAD=true npm install -g md-to-pdf@5.2.4 @mermaid-js/mermaid-cli@11.12.0
-
       - name: Build extension
         run: |
           PUPPETEER_SKIP_DOWNLOAD=true npm ci
@@ -271,10 +268,10 @@ jobs:
           echo "{\"executablePath\":\"$CHROME\",\"args\":[\"--no-sandbox\",\"--disable-setuid-sandbox\"]}" > /tmp/mmdc-puppeteer.json
 
           # Step 1: convert Mermaid code blocks to SVG images
-          mmdc -i README.md -o README-processed.md --puppeteerConfigFile /tmp/mmdc-puppeteer.json
+          npx --no-install mmdc -i README.md -o README-processed.md --puppeteerConfigFile /tmp/mmdc-puppeteer.json
 
           # Step 2: render the processed markdown (with inline SVG refs) to PDF
-          PUPPETEER_EXECUTABLE_PATH="$CHROME" md-to-pdf README-processed.md
+          PUPPETEER_EXECUTABLE_PATH="$CHROME" npx --no-install md-to-pdf README-processed.md
 
           # Clean up intermediate artefacts and give the PDF its final name
           rm -f README-processed.md README-processed-*.svg
