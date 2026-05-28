@@ -292,7 +292,7 @@ jobs:
           # Create readme.txt from template
           sed "s/__VERSION__/${VERSION}/g" release-config/readme-template.txt > readme.txt
 
-          mkdir -p release-staging
+          mkdir -p release-staging release-artifacts
 
           cp "${DIST_FILE_NAME}.zip" "release-staging/${DIST_FILE_NAME}.zip"
           cp README.pdf release-staging/README.pdf
@@ -300,15 +300,30 @@ jobs:
           cp LICENSE release-staging/LICENSE
 
           cd release-staging
-          zip -r "../${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.zip" .
+          zip -r "../release-artifacts/${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.zip" .
           cd ..
 
           echo ""
           echo "=== Outer release zip ==="
-          zipinfo "${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.zip"
+          zipinfo "release-artifacts/${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.zip"
           echo ""
           echo "=== Inner extension zip ==="
           zipinfo "release-staging/${DIST_FILE_NAME}.zip"
+
+      - name: Generate CycloneDX SBOM
+        env:
+          VERSION: ${{ needs.release-please.outputs.release_version }}
+          PRERELEASE_SUFFIX: ${{ steps.prerelease.outputs.prerelease_suffix }}
+        run: |
+          SBOM_FILE="release-artifacts/${DIST_FILE_NAME}-v${VERSION}${PRERELEASE_SUFFIX}.sbom.cdx.json"
+
+          ./node_modules/.bin/cyclonedx-npm \
+            --omit dev \
+            --output-reproducible \
+            --output-format JSON \
+            --output-file "${SBOM_FILE}"
+
+          test -s "${SBOM_FILE}" || { echo "SBOM file missing or empty"; exit 1; }
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
@@ -319,8 +334,7 @@ jobs:
           omitDraftDuringUpdate: true
           tag: ${{ needs.release-please.outputs.release_tag_name }}
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
-          artifacts: |
-            ${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
+          artifacts: "release-artifacts/*"
           prerelease: ${{ env.IS_PRERELEASE }}
 
       - name: Fix pre-release name to include type suffix
