@@ -330,9 +330,7 @@ jobs:
           omitDraftDuringUpdate: true
           tag: ${{ needs.release-please.outputs.release_tag_name }}
           token: ${{ secrets.RELEASE_PLEASE_PAT }}
-          artifacts: |
-            release-artifacts/${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip
-            release-artifacts/${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.sbom.cdx.json
+          artifacts: release-artifacts/${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.zip,release-artifacts/${{ env.DIST_FILE_NAME }}-v${{ needs.release-please.outputs.release_version }}${{ steps.prerelease.outputs.prerelease_suffix }}.sbom.cdx.json
           prerelease: ${{ env.IS_PRERELEASE }}
 
       - name: Fix pre-release name to include type suffix
