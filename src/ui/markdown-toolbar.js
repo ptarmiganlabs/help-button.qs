@@ -71,7 +71,6 @@ const TOOLBAR_BUTTONS = [
 // ---------------------------------------------------------------------------
 
 /**
- *
  * Apply a formatting action to the current textarea selection.
  *
  * @param {HTMLTextAreaElement} textarea - Editor textarea receiving the action.

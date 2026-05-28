@@ -1,5 +1,4 @@
 /**
- *
  * Tooltips (icon-on-object with hover + click dialog) — property panel section.
  *
  * @module property-panel/tooltips-section
@@ -12,7 +11,6 @@ import { extensionState } from "../util/extension-state";
 import logger from "../util/logger";
 
 /**
- *
  * Build the Tooltips property-panel section definition.
  *
  * @param {Function} getObjectList - Async function for populating the object dropdown.
@@ -396,7 +394,6 @@ export default function tooltipsSection(getObjectList) {
 // ---------------------------------------------------------------------------
 
 /**
- *
  * Persist a single tooltip property update through the engine API.
  *
  * @param {string} cId - Tooltip item identifier.

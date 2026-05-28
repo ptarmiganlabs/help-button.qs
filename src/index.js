@@ -1,5 +1,4 @@
 /**
- *
  * HelpButton.qs — Supernova entry point.
  *
  * A Qlik Sense extension that injects a configurable help button
@@ -37,7 +36,6 @@ import { extensionState } from "./util/extension-state";
 import "./style.css";
 
 /**
- *
  * Create the HelpButton.qs supernova definition.
  *
  * @param {object} galaxy - Nebula galaxy object.

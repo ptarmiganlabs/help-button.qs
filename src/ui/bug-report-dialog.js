@@ -747,7 +747,6 @@ function getSenseVersion() {
 }
 
 /**
- *
  * Gather all context data asynchronously for the bug-report dialog.
  *
  * @param {string[]} fields - Field names to collect.

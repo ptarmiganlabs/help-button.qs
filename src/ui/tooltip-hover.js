@@ -19,7 +19,6 @@ let activeHover = null;
 let hideTimer = null;
 
 /**
- *
  * Show the hover popup near the given icon element.
  *
  * @param {HTMLElement} iconEl - The tooltip trigger icon element.

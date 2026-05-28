@@ -370,7 +370,6 @@ export function applyPreset(data, presetKey) {
 }
 
 /**
- *
  * Apply the active preset's tooltip colors to any newly added tooltip items.
  *
  * Newly added array items get hardcoded `defaultValue` colors from the property

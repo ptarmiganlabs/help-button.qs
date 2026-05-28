@@ -107,7 +107,6 @@ function confirmDiscardChanges() {
 // ---------------------------------------------------------------------------
 
 /**
- *
  * Open the Markdown editor dialog.
  *
  * @param {object} options - Dialog configuration.

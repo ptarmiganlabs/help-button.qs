@@ -23,7 +23,6 @@ const SIZE_CLASSES = {
 };
 
 /**
- *
  * Open the tooltip detail dialog.
  *
  * @param {object} options - Dialog configuration.

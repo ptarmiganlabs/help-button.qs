@@ -22,7 +22,6 @@ import {
 // between menu items.
 // ---------------------------------------------------------------------------
 /**
- *
  * Create the default field-toggle set shared by dialog and payload settings.
  *
  * @returns {object} Fresh field-toggle configuration object.
@@ -48,7 +47,6 @@ function createDefaultFields() {
 }
 
 /**
- *
  * Create the default payload key-name mapping for webhook payloads.
  *
  * @returns {object} Fresh payload key-name configuration object.
@@ -74,7 +72,6 @@ function createDefaultPayloadKeyNames() {
 }
 
 /**
- *
  * Create the default bug-report action configuration.
  *
  * @returns {object} Fresh bug-report configuration object.
@@ -97,7 +94,6 @@ function createDefaultBugReport() {
 }
 
 /**
- *
  * Create the default feedback action configuration.
  *
  * @returns {object} Fresh feedback configuration object.
@@ -121,7 +117,6 @@ function createDefaultFeedback() {
 }
 
 /**
- *
  * Create the default set-variable action configuration.
  *
  * @returns {object} Fresh variable-action configuration object.

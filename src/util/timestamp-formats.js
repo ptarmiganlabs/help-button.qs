@@ -75,7 +75,6 @@ const MONTHS_SHORT = [
 ];
 
 /**
- *
  * Left-pad a number with a leading zero when needed.
  *
  * @param {number} n - Number to format.
@@ -86,7 +85,6 @@ function pad2(n) {
 }
 
 /**
- *
  * Convert a 24-hour clock value to an AM/PM suffix.
  *
  * @param {number} hours - Hour value in 24-hour format.
@@ -97,7 +95,6 @@ function ampm(hours) {
 }
 
 /**
- *
  * Convert a 24-hour clock value to its 12-hour equivalent.
  *
  * @param {number} h - Hour value in 24-hour format.
@@ -109,7 +106,6 @@ function hours12(h) {
 }
 
 /**
- *
  * Get the local timezone offset string in ±HH:MM form.
  *
  * @param {Date} date - Date whose timezone offset should be formatted.

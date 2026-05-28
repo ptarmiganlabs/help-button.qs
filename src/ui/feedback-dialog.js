@@ -739,7 +739,6 @@ function getSenseVersion() {
 }
 
 /**
- *
  * Gather all context data asynchronously for the feedback dialog.
  *
  * @param {string[]} fields - Field names to collect.

@@ -2,7 +2,6 @@
 import { execSync } from "node:child_process";
 
 /**
- *
  * Run a shell command and return trimmed stdout.
  *
  * @param {string} cmd - Shell command to execute.
@@ -20,7 +19,6 @@ function run(cmd) {
 }
 
 /**
- *
  * Parse a semantic-version tag into numeric parts.
  *
  * @param {string} tag - Version tag, with or without a leading `v`.
@@ -37,7 +35,6 @@ function parseSemver(tag) {
 }
 
 /**
- *
  * Convert parsed semantic-version parts back to a string.
  *
  * @param {{major: number, minor: number, patch: number}} version - Parsed version parts.
@@ -48,7 +45,6 @@ function semverToString({ major, minor, patch }) {
 }
 
 /**
- *
  * Increment a semantic version by the requested release level.
  *
  * @param {string} base - Base semantic version string.
@@ -71,7 +67,6 @@ function bumpVersion(base, level) {
 }
 
 /**
- *
  * Derive the highest semantic-version bump required by a commit list.
  *
  * @param {string[]} commits - Commit messages to inspect.
@@ -99,7 +94,6 @@ function highestChangeTypeFromCommits(commits) {
 }
 
 /**
- *
  * Decide whether pre-release automation should increment an existing pre-release
  * tag or fall back to the standard release-please flow.
  *
