@@ -2,7 +2,7 @@
 
 A minimal Node.js backend that receives bug reports and user feedback from the current **HelpButton.qs** extension and logs them to the console. Built with [Express](https://expressjs.com) and [Winston](https://github.com/winstonjs/winston).
 
-The server also provides a nice dashboard showing what bug reports and feedback have been received.
+The server also provides a dashboard showing what bug reports and feedback have been received, and it updates live in the browser using Server-Sent Events (SSE).
 
 ![HelpButton.qs Demo Server Dashboard](./docs/helpbutton_demo-server_dashboard-1.png)
 
@@ -29,6 +29,7 @@ The server also provides a nice dashboard showing what bug reports and feedback 
     - [Health check](#health-check)
     - [Submit a bug report](#submit-a-bug-report)
     - [Submit feedback](#submit-feedback)
+    - [Dashboard live updates](#dashboard-live-updates)
   - [Example Console Output](#example-console-output)
     - [Custom Payload Key Names](#custom-payload-key-names)
   - [Troubleshooting](#troubleshooting)
@@ -36,6 +37,8 @@ The server also provides a nice dashboard showing what bug reports and feedback 
     - ["NET::ERR_CERT_AUTHORITY_INVALID" or similar](#neterr_cert_authority_invalid-or-similar)
     - [Server starts in HTTP mode even though certs exist](#server-starts-in-http-mode-even-though-certs-exist)
     - [`fetch()` succeeds from curl but fails from the browser](#fetch-succeeds-from-curl-but-fails-from-the-browser)
+    - [Dashboard shows "Reconnecting live updates..."](#dashboard-shows-reconnecting-live-updates)
+    - [Dashboard reconnects but older entries are gone](#dashboard-reconnects-but-older-entries-are-gone)
     - [PowerShell error: "The underlying connection was closed"](#powershell-error-the-underlying-connection-was-closed)
   - [Beyond the Demo](#beyond-the-demo)
 
@@ -60,7 +63,9 @@ npm install
 npm start
 ```
 
-The server starts on **http://localhost:3000**.
+The server starts on <http://localhost:3000>.
+
+Open <http://localhost:3000/> to view the dashboard. Once the page has loaded, new submissions appear automatically without a manual refresh.
 
 > **Important:** HTTP mode will **not** work when the help button runs inside Qlik Sense Enterprise on Windows, because Qlik Sense serves pages over HTTPS. Modern browsers block JavaScript `fetch()` calls from an HTTPS page to an HTTP endpoint (mixed active content). See [Why HTTPS is required](#why-https-is-required) below.
 
@@ -404,6 +409,36 @@ Expected response:
 { "status": "ok", "message": "Feedback received", "id": "fb-1739530200000" }
 ```
 
+### Dashboard live updates
+
+Open the dashboard in the same browser profile you use for testing:
+
+```text
+http://localhost:3000/
+https://localhost:3443/
+```
+
+The page opens with the current in-memory snapshot and then subscribes to `GET /api/stream` for live updates.
+
+To verify the stream directly from a terminal:
+
+```bash
+# HTTP mode
+curl -N http://localhost:3000/api/stream
+
+# HTTPS mode
+curl -N -k https://localhost:3443/api/stream
+```
+
+You should see an initial `snapshot` event immediately. After that, each new bug report or feedback entry is pushed to connected dashboards without reloading the page.
+
+Recommended verification flow:
+
+1. Start the demo server.
+2. Open the dashboard in one or more browser tabs.
+3. Submit a bug report or feedback entry using the examples above.
+4. Confirm the new card appears automatically, the count increases, and the empty-state message disappears when the first entry arrives.
+
 ---
 
 ## Example Console Output
@@ -484,6 +519,26 @@ When all keys use the default camelCase names, the full payload is only logged a
 **Cause:** `curl -k` skips certificate verification. The browser does not. You need to trust the cert first.
 
 **Fix:** Open `https://localhost:3443/health` directly in the browser and accept the certificate warning.
+
+### Dashboard shows "Reconnecting live updates..."
+
+**Symptom:** The dashboard loads, but the live-update badge changes to "Reconnecting live updates..." and new entries stop appearing.
+
+**Cause:** The SSE connection to `GET /api/stream` was interrupted. This is usually caused by the demo server stopping, restarting, or the browser losing network access to `localhost`.
+
+**Fix:**
+
+- Check that the demo server is still running.
+- Reload the dashboard if the browser does not reconnect on its own after the server is back.
+- If you are using HTTPS, verify that the browser still trusts the current certificate.
+
+### Dashboard reconnects but older entries are gone
+
+**Symptom:** The dashboard reconnects successfully after a server restart, but previously received reports are missing.
+
+**Cause:** The demo server stores submissions in memory only. Restarting the process clears the stored bug reports and feedback entries before the dashboard receives a fresh snapshot.
+
+**Fix:** This is expected for the demo server. If you need entries to survive restarts, add persistent storage such as SQLite, PostgreSQL, MongoDB, or a log-file sink.
 
 ### PowerShell error: "The underlying connection was closed"
 
