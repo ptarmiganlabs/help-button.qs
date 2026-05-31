@@ -1,9 +1,11 @@
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **qs-help-button** (3454 symbols, 5418 relationships, 198 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **qs-help-button** (3454 symbols, 5418 relationships, 198 execution flows). Prefer the GitNexus MCP tools when they are exposed in the current chat. If they are unavailable, use the GitNexus CLI to understand code, assess impact, and navigate safely.
 
-> If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
+> In this multi-repo workspace, always include `-r qs-help-button` on GitNexus CLI commands.
+>
+> Start by checking index freshness with `npx gitnexus status -r qs-help-button`. If the index is stale, rebuild it with `npx gitnexus analyze -r qs-help-button` before relying on impact analysis or graph queries.
 
 ## Always Do
 
@@ -20,10 +22,19 @@ This project is indexed by GitNexus as **qs-help-button** (3454 symbols, 5418 re
 - NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
 - NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
 
+## CLI Fallback
+
+Use these commands when GitNexus MCP tools are not available in the current chat:
+
+- `npx gitnexus impact -r qs-help-button <symbolName>`
+- `npx gitnexus context -r qs-help-button <symbolName> -f src/path/file.js`
+- `npx gitnexus query -r qs-help-button "concept or behavior"`
+- `npx gitnexus detect-changes -r qs-help-button --scope all`
+
 ## Resources
 
 | Resource | Use for |
-|----------|---------|
+| -------- | ------- |
 | `gitnexus://repo/qs-help-button/context` | Codebase overview, check index freshness |
 | `gitnexus://repo/qs-help-button/clusters` | All functional areas |
 | `gitnexus://repo/qs-help-button/processes` | All execution flows |
@@ -32,7 +43,7 @@ This project is indexed by GitNexus as **qs-help-button** (3454 symbols, 5418 re
 ## CLI
 
 | Task | Read this skill file |
-|------|---------------------|
+| ---- | -------------------- |
 | Understand architecture / "How does X work?" | `.claude/skills/gitnexus/gitnexus-exploring/SKILL.md` |
 | Blast radius / "What breaks if I change X?" | `.claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md` |
 | Trace bugs / "Why is X failing?" | `.claude/skills/gitnexus/gitnexus-debugging/SKILL.md` |
