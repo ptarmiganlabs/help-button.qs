@@ -3,7 +3,9 @@
 
 This project is indexed by GitNexus as **qs-help-button** (3454 symbols, 5418 relationships, 198 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
-> If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
+> In this multi-repo workspace, always include `-r qs-help-button` on GitNexus CLI commands.
+>
+> Start by checking index freshness with `npx gitnexus status -r qs-help-button`. If any GitNexus tool warns the index is stale, run `npx gitnexus analyze -r qs-help-button` in terminal first.
 
 ## Always Do
 
