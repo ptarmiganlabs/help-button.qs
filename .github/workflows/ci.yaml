@@ -253,33 +253,13 @@ jobs:
           node-version: 24
           package-manager-cache: false
 
-      - name: Install PDF tools
-        run: PUPPETEER_SKIP_DOWNLOAD=true npm install -g md-to-pdf@5.2.4 @mermaid-js/mermaid-cli@11.12.0
-
       - name: Build extension
         run: |
           PUPPETEER_SKIP_DOWNLOAD=true npm ci
           npm run pack:prod
 
       - name: Generate README PDF
-        run: |
-          # ubuntu-latest ships google-chrome-stable; use it for both mmdc and md-to-pdf
-          CHROME=$(which google-chrome-stable 2>/dev/null || which chromium-browser 2>/dev/null || which chromium)
-          echo "Chrome executable: $CHROME"
-
-          # Write puppeteer config for mmdc
-          echo "{\"executablePath\":\"$CHROME\",\"args\":[\"--no-sandbox\",\"--disable-setuid-sandbox\"]}" > /tmp/mmdc-puppeteer.json
-
-          # Step 1: convert Mermaid code blocks to SVG images
-          mmdc -i README.md -o README-processed.md --puppeteerConfigFile /tmp/mmdc-puppeteer.json
-
-          # Step 2: render the processed markdown (with inline SVG refs) to PDF
-          PUPPETEER_EXECUTABLE_PATH="$CHROME" md-to-pdf README-processed.md
-
-          # Clean up intermediate artefacts and give the PDF its final name
-          rm -f README-processed.md README-processed-*.svg
-          mv README-processed.pdf README.pdf
-          echo "PDF size: $(du -sh README.pdf)"
+        run: npm run generate-pdf
 
       - name: Create extension release zip
         env:
