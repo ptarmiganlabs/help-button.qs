@@ -44,6 +44,10 @@ jobs:
                     exit 0
                   fi
                   echo "Extracting inner zip from: $OUTER_ZIP"
+                  if ! unzip -Z1 "$OUTER_ZIP" "helpbutton-qs.zip" >/dev/null 2>&1; then
+                    echo "::warning::Inner helpbutton-qs.zip not found in $OUTER_ZIP"
+                    exit 0
+                  fi
                   unzip -o "$OUTER_ZIP" "helpbutton-qs.zip" -d extracted/
                   if [ ! -f "extracted/helpbutton-qs.zip" ]; then
                     echo "::warning::Inner helpbutton-qs.zip not found in $OUTER_ZIP"
@@ -79,10 +83,14 @@ jobs:
                     --form "file=@extracted/helpbutton-qs.zip")
 
                   # Extract the analysis ID from the response
-                  ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id // empty')
+                  ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id // empty' 2>/dev/null || true)
                   if [ -z "$ANALYSIS_ID" ]; then
                     echo "::warning::Failed to upload inner zip to VirusTotal"
-                    echo "$RESPONSE" | jq .
+                    if echo "$RESPONSE" | jq . >/dev/null 2>&1; then
+                      echo "$RESPONSE" | jq .
+                    else
+                      echo "$RESPONSE"
+                    fi
                     echo "inner_analysis_url=" >> "$GITHUB_OUTPUT"
                     exit 0
                   fi
@@ -116,6 +124,8 @@ jobs:
 
                       const outerRaw = process.env.OUTER_ANALYSIS || '';
                       const innerUrl = process.env.INNER_ANALYSIS_URL || '';
+                      const sectionStart = '<!-- virustotal-scan-results:start -->';
+                      const sectionEnd = '<!-- virustotal-scan-results:end -->';
 
                       const results = parseAnalysis(outerRaw).map(r => ({
                         ...r,
@@ -137,22 +147,28 @@ jobs:
                       }
 
                       // Build markdown table
-                      let table = '\n\n---\n\n';
+                      let table = `${sectionStart}\n`;
                       table += '## VirusTotal scan results\n\n';
                       table += '| File | Description | VirusTotal Analysis URL |\n';
                       table += '|------|-------------|------------------------|\n';
                       for (const r of results) {
                         table += `| ${r.name} | ${r.description} | [View analysis](${r.url}) |\n`;
                       }
+                      table += `\n${sectionEnd}`;
 
-                      // Get current release and append results
+                      // Get current release and replace any existing section
                       const { data: release } = await github.rest.repos.getRelease({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
                         release_id: context.payload.release.id,
                       });
 
-                      const updatedBody = (release.body || '') + table;
+                      const existingBody = release.body || '';
+                      const sectionRegex = new RegExp(`(?:\\n\\n---\\n\\n)?${sectionStart}[\\s\\S]*?${sectionEnd}`, 'm');
+                      const replacement = `${existingBody.trim() ? '\n\n---\n\n' : ''}${table}`;
+                      const updatedBody = sectionRegex.test(existingBody)
+                        ? existingBody.replace(sectionRegex, replacement)
+                        : existingBody + replacement;
 
                       await github.rest.repos.updateRelease({
                         owner: context.repo.owner,
@@ -161,4 +177,4 @@ jobs:
                         body: updatedBody,
                       });
 
-                      core.info(`Appended VirusTotal results for ${results.length} file(s) to release body`);
+                      core.info(`Updated VirusTotal results for ${results.length} file(s) in release body`);
