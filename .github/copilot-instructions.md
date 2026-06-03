@@ -22,6 +22,18 @@ At the start of each session, read:
 - The repository has a build step. The main local validation commands are `PUPPETEER_SKIP_DOWNLOAD=true npm ci`, `npm run lint`, and `npm run pack:prod` from the repository root.
 - Legacy HTML injection variants still exist under `legacy/variants/`, but they are archived and no longer part of active release/version automation.
 
+## 🧭 GitNexus Code Intelligence
+
+- This repo is indexed in GitNexus as `qs-help-button`.
+- Prefer GitNexus MCP tools when they are exposed in the current chat. If they are unavailable, use the GitNexus CLI.
+- In this multi-repo workspace, always include `-r qs-help-button` on GitNexus CLI commands.
+- Start by checking index freshness with `npx gitnexus status -r qs-help-button`. If the index is stale, rebuild it with `npx gitnexus analyze -r qs-help-button` before relying on impact analysis.
+- Before modifying a function, class, or method, run upstream impact analysis with `npx gitnexus impact -r qs-help-button <symbolName>` and report the blast radius to the user. Warn before editing if the risk is HIGH or CRITICAL.
+- If a symbol is ambiguous, inspect it with `npx gitnexus context -r qs-help-button <symbolName> -f src/path/file.js`.
+- For unfamiliar flows, query the graph before broad grepping: `npx gitnexus query -r qs-help-button "concept or behavior"`.
+- Before finalizing a broad refactor or commit, verify scope with `npx gitnexus detect-changes -r qs-help-button --scope all`.
+- For the full GitNexus workflow, resource URIs, and skill tables, see `AGENTS.md` or `CLAUDE.md` at the repository root.
+
 ## 📁 Project Structure
 
 ```
