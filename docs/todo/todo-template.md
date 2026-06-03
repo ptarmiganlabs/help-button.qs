@@ -10,9 +10,9 @@
 <summary>Example</summary>
 
 ```markdown
-- Onboard.qs has a dedicated PDF generator script at `/Users/goran/code/onboard.qs/scripts/generate-readme-pdf.mjs` and exposes it through `package.json` scripts.
-- HelpButton.qs currently generates `README.pdf` inside `/Users/goran/code/helpbutton.qs/.github/workflows/ci.yaml` as inline shell commands.
-- There is no `/Users/goran/code/helpbutton.qs/scripts/generate-readme-pdf.mjs` file today.
+- Onboard.qs has a dedicated PDF generator script at `<onboard-repo-root>/scripts/generate-readme-pdf.mjs` and exposes it through `package.json` scripts.
+- HelpButton.qs currently generates `README.pdf` inside `<helpbutton-repo-root>/.github/workflows/ci.yaml` as inline shell commands.
+- There is no `<helpbutton-repo-root>/scripts/generate-readme-pdf.mjs` file today.
 ```
 </details>
 
