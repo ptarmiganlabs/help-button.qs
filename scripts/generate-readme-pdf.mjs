@@ -14,7 +14,8 @@ import { mdToPdf } from "md-to-pdf";
  * @throws {Error} If no Chrome/Chromium executable is found.
  */
 function detectChrome() {
-  const configuredPath = process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_PATH;
+  const configuredPath =
+    process.env.PUPPETEER_EXECUTABLE_PATH?.trim() || process.env.CHROME_PATH?.trim();
 
   if (configuredPath) {
     return configuredPath;
