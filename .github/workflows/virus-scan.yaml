@@ -1,28 +1,164 @@
 name: virus-scan
 
 on:
-  release:
-    types: [published]
+    release:
+        types: [published]
 
 permissions: {}
 
 jobs:
-  virustotal:
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    if: |
-      github.event_name != 'pull_request' &&
-      github.repository_owner == 'ptarmiganlabs'
+    virustotal:
+        permissions:
+            contents: write
+        runs-on: ubuntu-latest
+        env:
+            FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        if: |
+            github.event_name != 'pull_request' &&
+            github.repository_owner == 'ptarmiganlabs'
 
-    steps:
-      - name: VirusTotal Scan
-        uses: crazy-max/ghaction-virustotal@936d8c5c00afe97d3d9a1af26d017cfdf26800a2 # v5.0.0
-        with:
-          vt_api_key: ${{ secrets.VIRUSTOTAL_API_KEY }}
-          request_rate: 4
-          update_release_body: true
-          files: |
-            .zip$
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+              with:
+                  persist-credentials: false
+
+            # Download all zip assets from the release
+            - name: Download release assets
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  RELEASE_TAG: ${{ github.event.release.tag_name }}
+              run: |
+                  mkdir -p release-assets
+                  gh release download "$RELEASE_TAG" \
+                    --pattern '*.zip' \
+                    --dir release-assets
+
+            # Extract the inner helpbutton-qs.zip from the outer release zip
+            - name: Extract inner extension zip
+              run: |
+                  mkdir -p extracted
+                  OUTER_ZIP=$(ls release-assets/helpbutton-qs-v*.zip 2>/dev/null | head -1)
+                  if [ -z "$OUTER_ZIP" ]; then
+                    echo "::warning::No outer release zip found matching helpbutton-qs-v*.zip"
+                    exit 0
+                  fi
+                  echo "Extracting inner zip from: $OUTER_ZIP"
+                  unzip -o "$OUTER_ZIP" "helpbutton-qs.zip" -d extracted/
+                  if [ ! -f "extracted/helpbutton-qs.zip" ]; then
+                    echo "::warning::Inner helpbutton-qs.zip not found in $OUTER_ZIP"
+                    exit 0
+                  fi
+                  echo "Inner zip extracted successfully"
+                  ls -la extracted/
+
+            # Scan release assets (outer zip) via VirusTotal
+            - name: VirusTotal Scan - release assets
+              id: scan_outer
+              uses: crazy-max/ghaction-virustotal@936d8c5c00afe97d3d9a1af26d017cfdf26800a2 # v5.0.0
+              with:
+                  vt_api_key: ${{ secrets.VIRUSTOTAL_API_KEY }}
+                  request_rate: 4
+                  update_release_body: false
+                  files: |
+                      .zip$
+
+            # Scan inner extension zip via VirusTotal API directly
+            # Note: The ghaction-virustotal action forces release-asset mode when triggered
+            # by a release event, so we use the VirusTotal API directly for local files.
+            - name: VirusTotal Scan - inner extension zip
+              id: scan_inner
+              if: hashFiles('extracted/helpbutton-qs.zip') != ''
+              env:
+                  VT_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
+              run: |
+                  echo "Uploading extracted/helpbutton-qs.zip to VirusTotal..."
+                  RESPONSE=$(curl -s --request POST \
+                    --url https://www.virustotal.com/api/v3/files \
+                    --header "x-apikey: ${VT_API_KEY}" \
+                    --form "file=@extracted/helpbutton-qs.zip")
+
+                  # Extract the analysis ID from the response
+                  ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id // empty')
+                  if [ -z "$ANALYSIS_ID" ]; then
+                    echo "::warning::Failed to upload inner zip to VirusTotal"
+                    echo "$RESPONSE" | jq .
+                    echo "inner_analysis_url=" >> "$GITHUB_OUTPUT"
+                    exit 0
+                  fi
+
+                  ANALYSIS_URL="https://www.virustotal.com/gui/file-analysis/${ANALYSIS_ID}/detection"
+                  echo "Inner zip analysis: ${ANALYSIS_URL}"
+                  echo "inner_analysis_url=${ANALYSIS_URL}" >> "$GITHUB_OUTPUT"
+
+            # Combine scan results into a single table and append to release body
+            - name: Update release body with combined VirusTotal results
+              uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+              env:
+                  OUTER_ANALYSIS: ${{ steps.scan_outer.outputs.analysis }}
+                  INNER_ANALYSIS_URL: ${{ steps.scan_inner.outputs.inner_analysis_url }}
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      // Parse analysis output from ghaction-virustotal: "filename=url,filename2=url2"
+                      function parseAnalysis(raw) {
+                        if (!raw || raw.trim() === '') return [];
+                        return raw.split(',').map(entry => {
+                          const eqIdx = entry.indexOf('=');
+                          if (eqIdx === -1) return null;
+                          const file = entry.substring(0, eqIdx).trim();
+                          const url = entry.substring(eqIdx + 1).trim();
+                          // Extract just the filename from path
+                          const name = file.split('/').pop();
+                          return { name, url };
+                        }).filter(Boolean);
+                      }
+
+                      const outerRaw = process.env.OUTER_ANALYSIS || '';
+                      const innerUrl = process.env.INNER_ANALYSIS_URL || '';
+
+                      const results = parseAnalysis(outerRaw).map(r => ({
+                        ...r,
+                        description: 'Release download from GitHub'
+                      }));
+
+                      // Add inner zip result from direct API call
+                      if (innerUrl && innerUrl.trim() !== '') {
+                        results.push({
+                          name: 'helpbutton-qs.zip',
+                          url: innerUrl.trim(),
+                          description: 'Qlik Sense extension (inside the release zip)'
+                        });
+                      }
+
+                      if (results.length === 0) {
+                        core.warning('No VirusTotal analysis results to report');
+                        return;
+                      }
+
+                      // Build markdown table
+                      let table = '\n\n---\n\n';
+                      table += '## VirusTotal scan results\n\n';
+                      table += '| File | Description | VirusTotal Analysis URL |\n';
+                      table += '|------|-------------|------------------------|\n';
+                      for (const r of results) {
+                        table += `| ${r.name} | ${r.description} | [View analysis](${r.url}) |\n`;
+                      }
+
+                      // Get current release and append results
+                      const { data: release } = await github.rest.repos.getRelease({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        release_id: context.payload.release.id,
+                      });
+
+                      const updatedBody = (release.body || '') + table;
+
+                      await github.rest.repos.updateRelease({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        release_id: context.payload.release.id,
+                        body: updatedBody,
+                      });
+
+                      core.info(`Appended VirusTotal results for ${results.length} file(s) to release body`);
