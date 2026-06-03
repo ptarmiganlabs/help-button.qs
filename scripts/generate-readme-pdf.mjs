@@ -1,7 +1,7 @@
 import { writeFile, unlink, rm, readdir, access } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { tmpdir, platform } from "node:os";
-import { execSync } from "node:child_process";
+import { execSync, execFileSync } from "node:child_process";
 import { mdToPdf } from "md-to-pdf";
 
 /**
@@ -76,8 +76,9 @@ async function main() {
   try {
     // Step 1: Convert Mermaid code blocks to SVG images
     console.log("Converting Mermaid diagrams to SVG…");
-    execSync(
-      `${mmdcPath} -i ${inputPath} -o ${processedPath} --puppeteerConfigFile ${puppeteerConfigPath}`,
+    execFileSync(
+      mmdcPath,
+      ["-i", inputPath, "-o", processedPath, "--puppeteerConfigFile", puppeteerConfigPath],
       { stdio: "inherit" },
     );
 
