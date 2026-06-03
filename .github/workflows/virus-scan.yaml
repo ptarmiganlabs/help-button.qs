@@ -38,7 +38,10 @@ jobs:
             - name: Extract inner extension zip
               run: |
                   mkdir -p extracted
-                  OUTER_ZIP=$(ls release-assets/helpbutton-qs-v*.zip 2>/dev/null | head -1)
+                  shopt -s nullglob
+                  outer_zips=(release-assets/helpbutton-qs-v*.zip)
+                  shopt -u nullglob
+                  OUTER_ZIP=${outer_zips[0]:-}
                   if [ -z "$OUTER_ZIP" ]; then
                     echo "::warning::No outer release zip found matching helpbutton-qs-v*.zip"
                     exit 0
@@ -122,6 +125,10 @@ jobs:
                         }).filter(Boolean);
                       }
 
+                      function escapeRegExp(value) {
+                        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                      }
+
                       const outerRaw = process.env.OUTER_ANALYSIS || '';
                       const innerUrl = process.env.INNER_ANALYSIS_URL || '';
                       const sectionStart = '<!-- virustotal-scan-results:start -->';
@@ -164,11 +171,10 @@ jobs:
                       });
 
                       const existingBody = release.body || '';
-                      const sectionRegex = new RegExp(`(?:\\n\\n---\\n\\n)?${sectionStart}[\\s\\S]*?${sectionEnd}`, 'm');
-                      const replacement = `${existingBody.trim() ? '\n\n---\n\n' : ''}${table}`;
+                      const sectionRegex = new RegExp(`(\\n\\n---\\n\\n)?${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`, 'm');
                       const updatedBody = sectionRegex.test(existingBody)
-                        ? existingBody.replace(sectionRegex, replacement)
-                        : existingBody + replacement;
+                        ? existingBody.replace(sectionRegex, (_, separator = '') => `${separator}${table}`)
+                        : existingBody + `${existingBody.trim() ? '\n\n---\n\n' : ''}${table}`;
 
                       await github.rest.repos.updateRelease({
                         owner: context.repo.owner,
