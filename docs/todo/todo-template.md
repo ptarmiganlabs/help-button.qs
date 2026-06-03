@@ -74,10 +74,10 @@
 <summary>Example</summary>
 
 ```markdown
-- `/Users/goran/code/helpbutton.qs/scripts/generate-readme-pdf.mjs` - new script
-- `/Users/goran/code/helpbutton.qs/package.json` - add script entry and any required dependency alignment
-- `/Users/goran/code/helpbutton.qs/.github/workflows/ci.yaml` - replace inline PDF shell block with script invocation
-- `/Users/goran/code/helpbutton.qs/README.md` or maintainer docs - optional local PDF-generation note
+- `<helpbutton-repo-root>/scripts/generate-readme-pdf.mjs` - new script
+- `<helpbutton-repo-root>/package.json` - add script entry and any required dependency alignment
+- `<helpbutton-repo-root>/.github/workflows/ci.yaml` - replace inline PDF shell block with script invocation
+- `<helpbutton-repo-root>/README.md` or maintainer docs - optional local PDF-generation note
 ```
 </details>
 
