@@ -171,9 +171,9 @@ jobs:
                       });
 
                       const existingBody = release.body || '';
-                      const sectionRegex = new RegExp(`(\\n\\n---\\n\\n)?${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`, 'm');
+                      const sectionRegex = new RegExp(`(\\n\\n---\\n\\n)?${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`);
                       const updatedBody = sectionRegex.test(existingBody)
-                        ? existingBody.replace(sectionRegex, (_, separator = '') => `${separator}${table}`)
+                        ? existingBody.replace(sectionRegex, (_, separator) => `${separator || ''}${table}`)
                         : existingBody + `${existingBody.trim() ? '\n\n---\n\n' : ''}${table}`;
 
                       await github.rest.repos.updateRelease({
