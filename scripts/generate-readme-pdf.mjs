@@ -14,6 +14,12 @@ import { mdToPdf } from "md-to-pdf";
  * @throws {Error} If no Chrome/Chromium executable is found.
  */
 function detectChrome() {
+  const configuredPath = process.env.PUPPETEER_EXECUTABLE_PATH ?? process.env.CHROME_PATH;
+
+  if (configuredPath) {
+    return configuredPath;
+  }
+
   const isMac = platform() === "darwin";
 
   if (isMac) {
@@ -71,7 +77,8 @@ async function main() {
   await writeFile(puppeteerConfigPath, JSON.stringify(puppeteerConfig));
 
   // Resolve local mmdc binary
-  const mmdcPath = resolve("node_modules", ".bin", "mmdc");
+  const mmdcBinary = platform() === "win32" ? "mmdc.cmd" : "mmdc";
+  const mmdcPath = resolve("node_modules", ".bin", mmdcBinary);
 
   try {
     // Step 1: Convert Mermaid code blocks to SVG images

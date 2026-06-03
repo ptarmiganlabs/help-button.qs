@@ -44,8 +44,8 @@
     "post-build": "node scripts/post-build.mjs",
     "generate-pdf": "node scripts/generate-readme-pdf.mjs",
     "zip": "node scripts/zip-extension.mjs",
-    "pack:dev": "cross-env BUILD_TYPE=development npm run build && npm run sense && cross-env BUILD_TYPE=development npm run post-build && npm run generate-pdf && npm run zip",
-    "pack:prod": "cross-env BUILD_TYPE=production npm run build:dist && cross-env BUILD_TYPE=production npm run sense && cross-env BUILD_TYPE=production npm run post-build && npm run generate-pdf && npm run zip"
+    "pack:dev": "cross-env BUILD_TYPE=development npm run build && npm run sense && cross-env BUILD_TYPE=development npm run post-build && npm run zip",
+    "pack:prod": "cross-env BUILD_TYPE=production npm run build:dist && cross-env BUILD_TYPE=production npm run sense && cross-env BUILD_TYPE=production npm run post-build && npm run zip"
   },
   "devDependencies": {
     "@cyclonedx/cyclonedx-npm": "^4.2.1",
