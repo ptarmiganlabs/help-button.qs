@@ -178,9 +178,13 @@ jobs:
 
                       const existingBody = release.body || '';
                       const sectionRegex = new RegExp(`(\\n\\n---\\n\\n|\\n)?${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`);
+                      const replacementSeparator = '\n\n---\n\n';
                       const updatedBody = sectionRegex.test(existingBody)
-                        ? existingBody.replace(sectionRegex, (_, prefix, offset) => `${prefix === '\n\n---\n\n' ? prefix : (offset > 0 ? '\n\n---\n\n' : '')}${table}`)
-                        : existingBody + `${existingBody.trim() ? '\n\n---\n\n' : ''}${table}`;
+                        ? existingBody.replace(sectionRegex, (_, prefix, offset) => {
+                            const separator = prefix === replacementSeparator ? prefix : (offset > 0 ? replacementSeparator : '');
+                            return `${separator}${table}`;
+                          })
+                        : existingBody + `${existingBody.trim() ? replacementSeparator : ''}${table}`;
 
                       await github.rest.repos.updateRelease({
                         owner: context.repo.owner,
