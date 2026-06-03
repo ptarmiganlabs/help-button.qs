@@ -86,17 +86,23 @@ jobs:
                     --form "file=@extracted/helpbutton-qs.zip")
 
                   # Extract the analysis ID from the response
-                  ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id // empty' 2>/dev/null || true)
+                  JQ_STDERR=$(mktemp)
+                  ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id // empty' 2>"$JQ_STDERR" || true)
                   if [ -z "$ANALYSIS_ID" ]; then
                     echo "::warning::Failed to upload inner zip to VirusTotal"
+                    if [ -s "$JQ_STDERR" ]; then
+                      cat "$JQ_STDERR"
+                    fi
                     if echo "$RESPONSE" | jq . >/dev/null 2>&1; then
                       echo "$RESPONSE" | jq .
                     else
                       echo "$RESPONSE"
                     fi
+                    rm -f "$JQ_STDERR"
                     echo "inner_analysis_url=" >> "$GITHUB_OUTPUT"
                     exit 0
                   fi
+                  rm -f "$JQ_STDERR"
 
                   ANALYSIS_URL="https://www.virustotal.com/gui/file-analysis/${ANALYSIS_ID}/detection"
                   echo "Inner zip analysis: ${ANALYSIS_URL}"
@@ -171,9 +177,9 @@ jobs:
                       });
 
                       const existingBody = release.body || '';
-                      const sectionRegex = new RegExp(`(\\n\\n---\\n\\n)?${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`);
+                      const sectionRegex = new RegExp(`(\\n\\n---\\n\\n|\\n)?${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`);
                       const updatedBody = sectionRegex.test(existingBody)
-                        ? existingBody.replace(sectionRegex, (_, separator) => `${separator || ''}${table}`)
+                        ? existingBody.replace(sectionRegex, (_, prefix, offset) => `${prefix === '\n\n---\n\n' ? prefix : (offset > 0 ? '\n\n---\n\n' : '')}${table}`)
                         : existingBody + `${existingBody.trim() ? '\n\n---\n\n' : ''}${table}`;
 
                       await github.rest.repos.updateRelease({
