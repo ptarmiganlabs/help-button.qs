@@ -1,0 +1,8 @@
+npx lint-staged
+
+if command -v gitleaks > /dev/null; then
+  gitleaks protect -v --staged
+else
+  echo "WARNING: gitleaks is not installed. Skipping secret scanning."
+  echo "Please install gitleaks to enable secret scanning."
+fi

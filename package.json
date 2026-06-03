@@ -45,7 +45,8 @@
     "generate-pdf": "node scripts/generate-readme-pdf.mjs",
     "zip": "node scripts/zip-extension.mjs",
     "pack:dev": "cross-env BUILD_TYPE=development npm run build && npm run sense && cross-env BUILD_TYPE=development npm run post-build && npm run zip",
-    "pack:prod": "cross-env BUILD_TYPE=production npm run build:dist && cross-env BUILD_TYPE=production npm run sense && cross-env BUILD_TYPE=production npm run post-build && npm run zip"
+    "pack:prod": "cross-env BUILD_TYPE=production npm run build:dist && cross-env BUILD_TYPE=production npm run sense && cross-env BUILD_TYPE=production npm run post-build && npm run zip",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@cyclonedx/cyclonedx-npm": "^4.2.1",
@@ -61,6 +62,8 @@
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
     "md-to-pdf": "^5.2.4",
     "prettier": "^3.8.1"
   },

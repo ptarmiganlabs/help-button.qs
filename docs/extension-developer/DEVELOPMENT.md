@@ -46,6 +46,15 @@ For creating a drop-in ready extension, these composite scripts bundle everythin
 | `npm run lint` / `npm run lint:fix`       | Runs ESLint on `src` and `scripts` directories.     |
 | `npm run format` / `npm run format:check` | Runs Prettier to enforce code styling on all files. |
 
+### Pre-Commit Hooks
+
+This project uses [Husky](https://typicode.github.io/husky/) to enforce quality checks automatically before each commit. Running `npm install` (or `npm ci` followed by `npm run prepare`) installs a pre-commit hook that:
+
+1. Runs `lint-staged` to format and lint staged files.
+2. Runs `gitleaks protect -v --staged` to scan for accidentally committed secrets (only if `gitleaks` is installed locally).
+
+If `gitleaks` is not installed, the hook prints a warning and continues without failing. To install `gitleaks`, see the [official installation guide](https://gitleaks.io/documentation/getting-started/installation/).
+
 ## Build Workflow
 
 ```mermaid
