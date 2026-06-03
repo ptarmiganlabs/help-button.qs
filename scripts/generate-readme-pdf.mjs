@@ -1,4 +1,4 @@
-import { writeFile, unlink, rm, readdir, access } from "node:fs/promises";
+import { writeFile, unlink, rm, readdir } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { tmpdir, platform } from "node:os";
 import { execSync, execFileSync } from "node:child_process";
