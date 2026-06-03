@@ -41,8 +41,8 @@
 <summary>Example</summary>
 
 ```markdown
-- `/Users/goran/code/onboard.qs/scripts/generate-readme-pdf.mjs`
-- `/Users/goran/code/onboard.qs/package.json`
+- `<onboard-repo-root>/scripts/generate-readme-pdf.mjs`
+- `<onboard-repo-root>/package.json`
 ```
 </details>
 
