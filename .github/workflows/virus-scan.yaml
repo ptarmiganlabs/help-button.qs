@@ -177,14 +177,22 @@ jobs:
                       });
 
                       const existingBody = release.body || '';
-                      const sectionRegex = new RegExp(`(\\n\\n---\\n\\n|\\n)?${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`);
+                      const sectionRegex = new RegExp(`${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`);
+                      const sectionMatch = existingBody.match(sectionRegex);
                       const replacementSeparator = '\n\n---\n\n';
-                      const updatedBody = sectionRegex.test(existingBody)
-                        ? existingBody.replace(sectionRegex, (_, prefix, offset) => {
-                            const separator = prefix === replacementSeparator ? prefix : (offset > 0 ? replacementSeparator : '');
-                            return `${separator}${table}`;
-                          })
-                        : existingBody + `${existingBody.trim() ? replacementSeparator : ''}${table}`;
+                      let updatedBody;
+
+                      if (sectionMatch && sectionMatch.index !== undefined) {
+                        const beforeSection = existingBody.slice(0, sectionMatch.index);
+                        const afterSection = existingBody.slice(sectionMatch.index + sectionMatch[0].length);
+                        const normalizedBeforeSection = beforeSection.endsWith(replacementSeparator)
+                          ? beforeSection
+                          : beforeSection.replace(/\n*$/, '') + (beforeSection ? replacementSeparator : '');
+
+                        updatedBody = `${normalizedBeforeSection}${table}${afterSection}`;
+                      } else {
+                        updatedBody = existingBody + `${existingBody.trim() ? replacementSeparator : ''}${table}`;
+                      }
 
                       await github.rest.repos.updateRelease({
                         owner: context.repo.owner,
