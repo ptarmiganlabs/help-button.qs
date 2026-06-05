@@ -38,12 +38,19 @@ jobs:
             - name: Extract inner extension zip
               run: |
                   mkdir -p extracted
-                  OUTER_ZIP=$(ls release-assets/helpbutton-qs-v*.zip 2>/dev/null | head -1)
+                  shopt -s nullglob
+                  outer_zips=(release-assets/helpbutton-qs-v*.zip)
+                  shopt -u nullglob
+                  OUTER_ZIP=${outer_zips[0]:-}
                   if [ -z "$OUTER_ZIP" ]; then
                     echo "::warning::No outer release zip found matching helpbutton-qs-v*.zip"
                     exit 0
                   fi
                   echo "Extracting inner zip from: $OUTER_ZIP"
+                  if ! unzip -Z1 "$OUTER_ZIP" "helpbutton-qs.zip" >/dev/null 2>&1; then
+                    echo "::warning::Inner helpbutton-qs.zip not found in $OUTER_ZIP"
+                    exit 0
+                  fi
                   unzip -o "$OUTER_ZIP" "helpbutton-qs.zip" -d extracted/
                   if [ ! -f "extracted/helpbutton-qs.zip" ]; then
                     echo "::warning::Inner helpbutton-qs.zip not found in $OUTER_ZIP"
@@ -79,13 +86,23 @@ jobs:
                     --form "file=@extracted/helpbutton-qs.zip")
 
                   # Extract the analysis ID from the response
-                  ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id // empty')
+                  JQ_STDERR=$(mktemp)
+                  ANALYSIS_ID=$(echo "$RESPONSE" | jq -r '.data.id // empty' 2>"$JQ_STDERR" || true)
                   if [ -z "$ANALYSIS_ID" ]; then
                     echo "::warning::Failed to upload inner zip to VirusTotal"
-                    echo "$RESPONSE" | jq .
+                    if [ -s "$JQ_STDERR" ]; then
+                      cat "$JQ_STDERR"
+                    fi
+                    if echo "$RESPONSE" | jq . >/dev/null 2>&1; then
+                      echo "$RESPONSE" | jq .
+                    else
+                      echo "$RESPONSE"
+                    fi
+                    rm -f "$JQ_STDERR"
                     echo "inner_analysis_url=" >> "$GITHUB_OUTPUT"
                     exit 0
                   fi
+                  rm -f "$JQ_STDERR"
 
                   ANALYSIS_URL="https://www.virustotal.com/gui/file-analysis/${ANALYSIS_ID}/detection"
                   echo "Inner zip analysis: ${ANALYSIS_URL}"
@@ -114,8 +131,14 @@ jobs:
                         }).filter(Boolean);
                       }
 
+                      function escapeRegExp(value) {
+                        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                      }
+
                       const outerRaw = process.env.OUTER_ANALYSIS || '';
                       const innerUrl = process.env.INNER_ANALYSIS_URL || '';
+                      const sectionStart = '<!-- virustotal-scan-results:start -->';
+                      const sectionEnd = '<!-- virustotal-scan-results:end -->';
 
                       const results = parseAnalysis(outerRaw).map(r => ({
                         ...r,
@@ -137,22 +160,39 @@ jobs:
                       }
 
                       // Build markdown table
-                      let table = '\n\n---\n\n';
+                      let table = `${sectionStart}\n`;
                       table += '## VirusTotal scan results\n\n';
                       table += '| File | Description | VirusTotal Analysis URL |\n';
                       table += '|------|-------------|------------------------|\n';
                       for (const r of results) {
                         table += `| ${r.name} | ${r.description} | [View analysis](${r.url}) |\n`;
                       }
+                      table += `\n${sectionEnd}`;
 
-                      // Get current release and append results
+                      // Get current release and replace any existing section
                       const { data: release } = await github.rest.repos.getRelease({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
                         release_id: context.payload.release.id,
                       });
 
-                      const updatedBody = (release.body || '') + table;
+                      const existingBody = release.body || '';
+                      const sectionRegex = new RegExp(`${escapeRegExp(sectionStart)}[\\s\\S]*?${escapeRegExp(sectionEnd)}`);
+                      const sectionMatch = existingBody.match(sectionRegex);
+                      const replacementSeparator = '\n\n---\n\n';
+                      let updatedBody;
+
+                      if (sectionMatch && sectionMatch.index !== undefined) {
+                        const beforeSection = existingBody.slice(0, sectionMatch.index);
+                        const afterSection = existingBody.slice(sectionMatch.index + sectionMatch[0].length);
+                        const normalizedBeforeSection = beforeSection.endsWith(replacementSeparator)
+                          ? beforeSection
+                          : beforeSection.replace(/\n*$/, '') + (beforeSection ? replacementSeparator : '');
+
+                        updatedBody = `${normalizedBeforeSection}${table}${afterSection}`;
+                      } else {
+                        updatedBody = existingBody + `${existingBody.trim() ? replacementSeparator : ''}${table}`;
+                      }
 
                       await github.rest.repos.updateRelease({
                         owner: context.repo.owner,
@@ -161,4 +201,4 @@ jobs:
                         body: updatedBody,
                       });
 
-                      core.info(`Appended VirusTotal results for ${results.length} file(s) to release body`);
+                      core.info(`Updated VirusTotal results for ${results.length} file(s) in release body`);
