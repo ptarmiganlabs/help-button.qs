@@ -46,7 +46,7 @@
     "zip": "node scripts/zip-extension.mjs",
     "pack:dev": "cross-env BUILD_TYPE=development npm run build && npm run sense && cross-env BUILD_TYPE=development npm run post-build && npm run zip",
     "pack:prod": "cross-env BUILD_TYPE=production npm run build:dist && cross-env BUILD_TYPE=production npm run sense && cross-env BUILD_TYPE=production npm run post-build && npm run zip",
-    "prepare": "husky"
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@cyclonedx/cyclonedx-npm": "^4.2.1",
