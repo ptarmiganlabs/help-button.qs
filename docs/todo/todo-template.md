@@ -1,5 +1,10 @@
 # <Task title — action-oriented, e.g. "Move X Into A Repo Script">
 
+## File naming
+
+- Use a normal filename while the task is still open.
+- When the task has been implemented, rename the file by adding a leading underscore to the filename, for example `03-pre-commit-husky-gitleaks.md` -> `_03-pre-commit-husky-gitleaks.md`.
+
 ## Current delta
 
 - <Reference repo> has <feature/pattern> at `<path>` and <how it's exposed/used>.
@@ -14,6 +19,7 @@
 - HelpButton.qs currently generates `README.pdf` inside `<helpbutton-repo-root>/.github/workflows/ci.yaml` as inline shell commands.
 - There is no `<helpbutton-repo-root>/scripts/generate-readme-pdf.mjs` file today.
 ```
+
 </details>
 
 ## Why this matters
@@ -30,6 +36,7 @@
 - Moving complex shell logic out of workflow YAML reduces CI duplication and makes the PDF process testable.
 - It also makes PDF generation easier to document and debug without editing workflow files.
 ```
+
 </details>
 
 ## Reference
@@ -44,6 +51,7 @@
 - `<onboard-repo-root>/scripts/generate-readme-pdf.mjs`
 - `<onboard-repo-root>/package.json`
 ```
+
 </details>
 
 ## Recommended target state for <Target repo>
@@ -62,6 +70,7 @@
 - Update CI to call the repo script instead of carrying the full PDF logic inline.
 - Preserve HelpButton.qs-specific requirements, including Mermaid handling and Chrome path resolution.
 ```
+
 </details>
 
 ## Likely files to touch
@@ -79,6 +88,7 @@
 - `<helpbutton-repo-root>/.github/workflows/ci.yaml` - replace inline PDF shell block with script invocation
 - `<helpbutton-repo-root>/README.md` or maintainer docs - optional local PDF-generation note
 ```
+
 </details>
 
 ## Acceptance checks
@@ -99,4 +109,5 @@
 - [ ] Chrome or Chromium executable detection is handled by the script rather than duplicated in workflow YAML.
 - [ ] Maintainers can reproduce the PDF locally with a documented command.
 ```
+
 </details>
