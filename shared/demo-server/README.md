@@ -46,10 +46,8 @@ The server also provides a dashboard showing what bug reports and feedback have 
 
 ## Prerequisites
 
-| Requirement | Details                                                                                                                                                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Node.js** | Version 14 or later. Download from [nodejs.org](https://nodejs.org).                                                                                                                                                                                   |
-| **OpenSSL** | Required only for generating self-signed certificates. Pre-installed on macOS. On Windows it is bundled with [Git for Windows](https://gitforwindows.org) (available as `openssl` inside Git Bash or at `"C:\Program Files\Git\usr\bin\openssl.exe"`). |
+- **Node.js**: Version 24 or later. Download from [nodejs.org](https://nodejs.org). The repository root includes `.nvmrc`, so `nvm use` from `shared/demo-server/` picks up the same baseline used by the main extension build.
+- **OpenSSL**: Required only for generating self-signed certificates. Pre-installed on macOS. On Windows it is bundled with [Git for Windows](https://gitforwindows.org) (available as `openssl` inside Git Bash or at `"C:\Program Files\Git\usr\bin\openssl.exe"`).
 
 ---
 
@@ -125,7 +123,7 @@ demo-server/
 
 #### Windows (PowerShell 5.1)
 
-**Option A — Using OpenSSL (recommended)**
+##### Option A — Using OpenSSL (recommended)
 
 If you have [Git for Windows](https://gitforwindows.org) installed, OpenSSL is available at
 `C:\Program Files\Git\usr\bin\openssl.exe`.
@@ -150,7 +148,7 @@ $openssl = "C:\Program Files\Git\usr\bin\openssl.exe"
   -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
 ```
 
-**Option B — Using PowerShell's `New-SelfSignedCertificate`**
+##### Option B — Using PowerShell's `New-SelfSignedCertificate`
 
 This approach uses the Windows certificate store and then exports the files to PEM format. It requires **Administrator** privileges and the `certutil` utility (included in Windows).
 

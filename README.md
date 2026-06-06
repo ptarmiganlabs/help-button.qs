@@ -106,6 +106,10 @@ It is valid to place several HelpButton.qs extension objects on the same sheet. 
 
 For app-developer guidance on using the extension across both platforms, see [Qlik Sense Client-Managed vs Qlik Cloud — Sense App Developer Guide](./docs/app-developer/client-managed-vs-cloud-app-developer.md).
 
+### Source Builds
+
+Local development, packaging, and release workflows use **Node.js 24**. The repository root includes `.nvmrc`, so contributors using `nvm` can run `nvm use` before installing dependencies or building the extension from source.
+
 ## Usage
 
 1. Open your Qlik Sense application in Edit Mode.
@@ -129,9 +133,9 @@ When configuring the **Menu Items** in the Property Panel, you can add multiple 
    - Configurable **max description length** (default 1 000 characters), with a live remaining-characters counter in the dialog.
    - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request.
 
-- Supports three authentication strategies: `None`, `Authorization header` (Bearer token), and `Custom headers`.
-- Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles.
-- Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
+   - Supports three authentication strategies: `None`, `Authorization header` (Bearer token), and `Custom headers`.
+   - Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles.
+   - Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
 
 3. **Feedback Dialog (`feedback`)**:
    - Opens a modal dialog where users can rate the current app (1–5 stars) and/or leave a free-text comment.
@@ -190,7 +194,7 @@ flowchart TD
     F -- Click --> H[Detail dialog modal]
 ```
 
-### Documentation
+### Tooltip Documentation
 
 - **App developers**: See [Tooltips — App Developer Guide](./docs/app-developer/tooltips-app-developer.md) for a complete walkthrough of configuring tooltips from the property panel, including how to find CSS selectors using browser DevTools.
 - **Extension developers**: See [Tooltips — Developer Guide](./docs/extension-developer/tooltips-developer.md) for the technical architecture, data model, theme system internals, and how to extend the feature.
@@ -254,7 +258,7 @@ Tooltip hover content and dialog content support two ways to embed video:
 
 **Markdown shorthand** — use `@[title](url)` anywhere in the content field:
 
-```
+```md
 @[Product walkthrough](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 @[](https://vimeo.com/123456789)
 @[Demo recording](https://example.com/demo.mp4)

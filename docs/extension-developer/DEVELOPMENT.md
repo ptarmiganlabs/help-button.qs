@@ -2,6 +2,11 @@
 
 This guide describes how the `helpbutton.qs` extension is built, tested, and distributed. The intended audience is developers who will be maintaining or extending the project.
 
+## Prerequisites
+
+- **Node.js 24**: The repository root includes `.nvmrc` with the expected major version, so `nvm use` from anywhere inside the repo selects the supported runtime.
+- **Install command**: Use `PUPPETEER_SKIP_DOWNLOAD=true npm ci` from the repository root before running the build, lint, or packaging commands documented below.
+
 ## Project Structure
 
 The extension uses ES modules and is built around **Nebula.js**. It consists of several key architectural components:
@@ -45,6 +50,17 @@ For creating a drop-in ready extension, these composite scripts bundle everythin
 | ----------------------------------------- | --------------------------------------------------- |
 | `npm run lint` / `npm run lint:fix`       | Runs ESLint on `src` and `scripts` directories.     |
 | `npm run format` / `npm run format:check` | Runs Prettier to enforce code styling on all files. |
+
+### Pre-Commit Hooks
+
+This project uses [Husky](https://typicode.github.io/husky/) to enforce quality checks automatically before each commit. Running `npm install` or `npm ci` runs the `prepare` script, which installs a pre-commit hook that:
+
+1. Runs `lint-staged` to format and lint staged files.
+2. Runs `gitleaks protect -v --staged` to scan for accidentally committed secrets (only if `gitleaks` is installed locally).
+
+If you install dependencies with `--ignore-scripts`, run `npm run prepare` manually to set up the hook.
+
+If `gitleaks` is not installed, the hook prints a warning and continues without failing. To install `gitleaks`, see the [official installation guide](https://gitleaks.io/documentation/getting-started/installation/).
 
 ## Build Workflow
 
