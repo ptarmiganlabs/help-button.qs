@@ -274,7 +274,7 @@ export default function tooltipsSection(getObjectList) {
                         const layout = await extensionState.model?.getLayout();
                         uriPatterns =
                           layout?.security?.allowedUriPatterns || "";
-                      } catch (_) {
+                      } catch {
                         /* best effort */
                       }
                       openMarkdownEditorDialog({
@@ -347,7 +347,7 @@ export default function tooltipsSection(getObjectList) {
                         const layout = await extensionState.model?.getLayout();
                         uriPatterns =
                           layout?.security?.allowedUriPatterns || "";
-                      } catch (_) {
+                      } catch {
                         /* best effort */
                       }
                       openMarkdownEditorDialog({

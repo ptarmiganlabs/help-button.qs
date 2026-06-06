@@ -28,7 +28,7 @@
     "helpbutton-qs.qext"
   ],
   "engines": {
-    "node": ">=18.10.0"
+    "node": ">=24"
   },
   "main": "dist/helpbutton-qs.js",
   "module": "dist/helpbutton-qs.esm.js",

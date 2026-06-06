@@ -1,20 +1,8 @@
-#!/usr/bin/env sh
-
-set -e
-
-HUSKY_SH="$(dirname -- "$0")/_/husky.sh"
-if [ -f "$HUSKY_SH" ]; then
-  . "$HUSKY_SH"
-fi
-
 npx --no-install lint-staged
 
 if command -v gitleaks >/dev/null 2>&1; then
   gitleaks protect -v --staged
 else
-  echo "WARNING: gitleaks is not installed. Skipping secret scanning."
-  echo "Please install gitleaks to enable secret scanning."
-fi
   echo "WARNING: gitleaks is not installed. Skipping secret scanning."
   echo "Please install gitleaks to enable secret scanning."
 fi
