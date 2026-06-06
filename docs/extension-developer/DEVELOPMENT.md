@@ -55,10 +55,10 @@ For creating a drop-in ready extension, these composite scripts bundle everythin
 
 This project uses [Husky](https://typicode.github.io/husky/) to enforce quality checks automatically before each commit. Running `npm install` or `npm ci` runs the `prepare` script, which installs a pre-commit hook that:
 
-If you install dependencies with `--ignore-scripts`, run `npm run prepare` manually to set up the hook.
-
 1. Runs `lint-staged` to format and lint staged files.
 2. Runs `gitleaks protect -v --staged` to scan for accidentally committed secrets (only if `gitleaks` is installed locally).
+
+If you install dependencies with `--ignore-scripts`, run `npm run prepare` manually to set up the hook.
 
 If `gitleaks` is not installed, the hook prints a warning and continues without failing. To install `gitleaks`, see the [official installation guide](https://gitleaks.io/documentation/getting-started/installation/).
 
