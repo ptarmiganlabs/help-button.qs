@@ -133,7 +133,9 @@ When configuring the **Menu Items** in the Property Panel, you can add multiple 
    - Configurable **max description length** (default 1 000 characters), with a live remaining-characters counter in the dialog.
    - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request.
 
-   Supports three authentication strategies: `None`, `Authorization header` (Bearer token), and `Custom headers`. Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles. Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
+   - Supports three authentication strategies: `None`, `Authorization header` (Bearer token), and `Custom headers`.
+   - Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles.
+   - Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
 
 3. **Feedback Dialog (`feedback`)**:
    - Opens a modal dialog where users can rate the current app (1–5 stars) and/or leave a free-text comment.
