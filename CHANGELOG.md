@@ -1,5 +1,146 @@
 # Changelog
 
+## [4.0.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.0...helpbutton-qs-v4.0.0) (2026-06-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **auth:** Remove the "Sense session" auth strategy, as it really had nothing to do with Sense auth...
+
+### Features
+
+* add configurable menu item merge modes ([b42b371](https://github.com/ptarmiganlabs/help-button.qs/commit/b42b371dabc97d1443a6d01e172a5a0d3e6483ac))
+* add cooldown period for new npm libraries ([bf2c821](https://github.com/ptarmiganlabs/help-button.qs/commit/bf2c8212d2171fdc3b483efd3053d48659cb57df))
+* add live updates to demo server dashboard ([1299b7a](https://github.com/ptarmiganlabs/help-button.qs/commit/1299b7a7cd4f6213eb6b5f7c32849aef6625ed38))
+* add more icon options for help menu items and toolbar button ([ff27d4e](https://github.com/ptarmiganlabs/help-button.qs/commit/ff27d4e2d70971685486a1eca0eb25f4139ef68b))
+* Add optional payload viewer to bug report/feedback dialogs ([662fc78](https://github.com/ptarmiganlabs/help-button.qs/commit/662fc78a4777c0823aa664d45dbfc5dec0d4e573))
+* Add todo template for structured handling of in-repo todo items ([f1fa0ff](https://github.com/ptarmiganlabs/help-button.qs/commit/f1fa0fff5e13d9dc16c291f6e318fbfadad810d4))
+* add video embed support in markdown content (@[title](url) syntax) ([7743046](https://github.com/ptarmiganlabs/help-button.qs/commit/774304646ac611124a7e59ee3f71df95ff6beabb))
+* add video embed support in tooltip and dialog markdown content ([2968b03](https://github.com/ptarmiganlabs/help-button.qs/commit/2968b03f06591558869f1942c6127534c5b72dd7))
+* **auth:** Remove the "Sense session" auth strategy, as it really had nothing to do with Sense auth... ([27852d3](https://github.com/ptarmiganlabs/help-button.qs/commit/27852d3f6afbde8f4be41b03299507f46447fb02))
+* enhance GitNexus code intelligence documentation with CLI commands and usage guidelines ([3e6cf69](https://github.com/ptarmiganlabs/help-button.qs/commit/3e6cf69f7673141acc75d1e52fc8c2411c4bb8c8))
+* Enhance VirusTotal workflow to scan both inner and outer ZIP files ([c710b93](https://github.com/ptarmiganlabs/help-button.qs/commit/c710b93f0c46e9b575e82a7e8beed850c119e27c))
+* **security:** Add new zizmor workflow ([7f54110](https://github.com/ptarmiganlabs/help-button.qs/commit/7f54110217fe4070a5cb1bc2fe0028e4b7e06848))
+* **security:** do security review and take needed actions to mitigate findings ([2e8cf74](https://github.com/ptarmiganlabs/help-button.qs/commit/2e8cf74b8f985d4b120340b1ccf67c0fba8beea3))
+
+
+### Bug Fixes
+
+* address code review - remove autoplay, tighten placeholder regex, improve slot pattern ([18aca01](https://github.com/ptarmiganlabs/help-button.qs/commit/18aca0103f1ba1b3a2f566c302a5a3df48ccc012))
+* address latest payload viewer review comments ([c72769e](https://github.com/ptarmiganlabs/help-button.qs/commit/c72769e3579f9eaee713195f28350a14bd99a15e))
+* address payload viewer review feedback ([986a6b2](https://github.com/ptarmiganlabs/help-button.qs/commit/986a6b2be04ba75156474020e9c4e37208b1e064))
+* Address PR review feedback for payload viewer ([e68cd4f](https://github.com/ptarmiganlabs/help-button.qs/commit/e68cd4f76a73fb268e5e20374079eb513d19f0ee))
+* clamp rating to [1,5] to prevent resource exhaustion in demo-server ([4d6a13c](https://github.com/ptarmiganlabs/help-button.qs/commit/4d6a13c2649f69e2382d497c97cd6b248e4ec67b))
+* disable funding via Polar, as they cannot handle Github sponsorships (according to their won support) ([b1e2886](https://github.com/ptarmiganlabs/help-button.qs/commit/b1e2886be71b21e409389c9cc197412c1541514c))
+* guard renderStars against resource exhaustion via unbounded repeat() ([40787d0](https://github.com/ptarmiganlabs/help-button.qs/commit/40787d056180ee0944d9d2c0e07fabf49ed54b3c))
+* harden VirusTotal release workflow ([581506e](https://github.com/ptarmiganlabs/help-button.qs/commit/581506e0a5de2f83f986cd49cd4c93c4e3e681c1))
+* harden VirusTotal release workflow ([897a373](https://github.com/ptarmiganlabs/help-button.qs/commit/897a373b9c355191b7e2b634b28af3377592da64))
+* harden VirusTotal release workflow ([b0030b8](https://github.com/ptarmiganlabs/help-button.qs/commit/b0030b8c246f9841567dc580dfedc82e9b2ab1fc))
+* harden VirusTotal release workflow ([4c84832](https://github.com/ptarmiganlabs/help-button.qs/commit/4c848327533504d4c8d7eb9899c6ef169dd49f97))
+* harden VirusTotal release workflow ([1793686](https://github.com/ptarmiganlabs/help-button.qs/commit/1793686d8927f8a9abcee7ced02325f67a356e34))
+* harden VirusTotal release workflow ([4ffd88e](https://github.com/ptarmiganlabs/help-button.qs/commit/4ffd88ec380c5bfe260d5694463564cc13b2b2e5))
+* keep focus on confirmation dialog when already open, update stale comment ([a3e5c50](https://github.com/ptarmiganlabs/help-button.qs/commit/a3e5c50465d2e2b1ad1b862ca1595f42c659fd4c))
+* log resolved merge mode in debug output, not raw undefined ([604718c](https://github.com/ptarmiganlabs/help-button.qs/commit/604718c546148be997728ade3c07df6221f28aaf))
+* pin checkout action in copilot setup workflow ([a21ad2d](https://github.com/ptarmiganlabs/help-button.qs/commit/a21ad2d20b6b8ed1211e5c781d3d6a0754bb1d09))
+* remove iframe sandbox attr (YouTube Error 153) and add min-width for hover popup video ([9d9a285](https://github.com/ptarmiganlabs/help-button.qs/commit/9d9a2850889eb02a962767c1fb341d5c47eead10))
+* require integer feedback ratings in demo server ([b15a278](https://github.com/ptarmiganlabs/help-button.qs/commit/b15a27833fe981e4a6947b3683f79b3260b157aa))
+* show generated xrf key in payload viewer ([f2f7d07](https://github.com/ptarmiganlabs/help-button.qs/commit/f2f7d0727e71a9c9cc5a1fa5a57b495f0bf04074))
+* simplify release artifact upload glob ([dfdbcde](https://github.com/ptarmiganlabs/help-button.qs/commit/dfdbcde362ce9ee62d374e97caf1df2fd6591d39))
+* tighten release SBOM generation ([c515d71](https://github.com/ptarmiganlabs/help-button.qs/commit/c515d712d9b377972d49f01e6a9d3898f4cada23))
+* Update conditional checks for repository owner in CI workflows ([fdeca39](https://github.com/ptarmiganlabs/help-button.qs/commit/fdeca399d766ae719d2dc95b64ea45f68b652db9))
+* update dependabot configuration for npm and github-actions ([bd01c50](https://github.com/ptarmiganlabs/help-button.qs/commit/bd01c50539eac7831be3681f472542242909b89e))
+* update express dependency to version 5.2.1 in demo server ([cc3d348](https://github.com/ptarmiganlabs/help-button.qs/commit/cc3d348e867962ac134bcd3bc956c2cb29bd824d))
+* update express dependency to version 5.2.1 in demo server ([394bac4](https://github.com/ptarmiganlabs/help-button.qs/commit/394bac44b2cc09a33abc0596d5280b4d4da70de7))
+* Update todo template with examples ([2e10f42](https://github.com/ptarmiganlabs/help-button.qs/commit/2e10f42796a522fde96ebe6656a646c01a5db2be))
+* update video embed URL format for YouTube in markdown toolbar ([8b177fb](https://github.com/ptarmiganlabs/help-button.qs/commit/8b177fbe970e7a9b7d29886532e1d84740348e89))
+* use comma-separated release artifacts ([2ab1158](https://github.com/ptarmiganlabs/help-button.qs/commit/2ab115811235d3c24c59c0a480d84dcbecbe53bb))
+* use factory functions for menu item defaults and improve dirty-tracking reliability ([1236654](https://github.com/ptarmiganlabs/help-button.qs/commit/12366541ee4525495f96950f54bee190f588935b))
+* Use word-boundary matching for sensitive header detection and remove unused regex params ([d54b8dc](https://github.com/ptarmiganlabs/help-button.qs/commit/d54b8dcd81671fb172bc84771c14b21d45d572f4))
+* validate rating in renderStars to prevent resource exhaustion ([fb5fbd0](https://github.com/ptarmiganlabs/help-button.qs/commit/fb5fbd060995c7d0f4ca180c24a66504cef76d9f))
+
+
+### Miscellaneous
+
+* add Gitleaks configuration to ignore placeholder API keys ([59dd0cc](https://github.com/ptarmiganlabs/help-button.qs/commit/59dd0cc34d217479cfe09a88912c3b1a15c7ef5d))
+* add husky pre-commit hook with lint-staged and gitleaks ([667f1a5](https://github.com/ptarmiganlabs/help-button.qs/commit/667f1a5f9c542bf35d24ec6e6e990ba73d4e4080))
+* add Prettier configuration file for code formatting ([e6396a8](https://github.com/ptarmiganlabs/help-button.qs/commit/e6396a88b3f5224733b424dec92ce5d191681e42))
+* **demo server:** update deps to latest versions ([9ea0669](https://github.com/ptarmiganlabs/help-button.qs/commit/9ea0669ecda96d45b84e8c0a2defa3673b3a532a))
+* **deps:** bump actions/checkout from 4.2.2 to 6.0.2 ([a58a593](https://github.com/ptarmiganlabs/help-button.qs/commit/a58a5933a63dfe261e04e2d87100ab8bab1235dd))
+* **deps:** bump astral-sh/setup-uv from 8.0.0 to 8.1.0 ([2b62380](https://github.com/ptarmiganlabs/help-button.qs/commit/2b6238038b672d1cfd83dbbca84e1a6131db08ba))
+* **deps:** bump crazy-max/ghaction-virustotal from 4.2.0 to 5.0.0 ([7d416f5](https://github.com/ptarmiganlabs/help-button.qs/commit/7d416f511c51cfbaefb965a92b7397638afac2ec))
+* **deps:** bump github/codeql-action from 4.31.7 to 4.35.5 ([f99198e](https://github.com/ptarmiganlabs/help-button.qs/commit/f99198efebf5e5f340daa0b00f52442d84fceeff))
+* **deps:** bump github/codeql-action from 4.31.7 to 4.35.5 ([563777e](https://github.com/ptarmiganlabs/help-button.qs/commit/563777eead46db0a35f4badaf73e40cb373fca97))
+* **deps:** bump github/codeql-action from 4.35.5 to 4.36.0 ([e841b60](https://github.com/ptarmiganlabs/help-button.qs/commit/e841b601a9c32531a1f480a5f33455932ff29ee3))
+* **deps:** bump github/codeql-action from 4.35.5 to 4.36.0 ([28dcc25](https://github.com/ptarmiganlabs/help-button.qs/commit/28dcc25b9f1ded441497b3807c12fff98c0a2ea8))
+* **deps:** bump googleapis/release-please-action from 4.4.0 to 5.0.0 ([c2b3ada](https://github.com/ptarmiganlabs/help-button.qs/commit/c2b3ada59454ba02743194dcdf29eea6115bd303))
+* **deps:** bump googleapis/release-please-action from 4.4.0 to 5.0.0 ([51d5442](https://github.com/ptarmiganlabs/help-button.qs/commit/51d544265a49a39a56afd52e740e1547a7e736f4))
+* **deps:** bump ncipollo/release-action from 1.20.0 to 1.21.0 ([047e4e9](https://github.com/ptarmiganlabs/help-button.qs/commit/047e4e927ae0169ddf16a2838d3f5069e4976bcf))
+* **deps:** bump ncipollo/release-action from 1.20.0 to 1.21.0 ([d647b50](https://github.com/ptarmiganlabs/help-button.qs/commit/d647b50b453d4b55c83adfedb40842a5ead448e5))
+* **deps:** bump webpack-dev-server ([2cfbcab](https://github.com/ptarmiganlabs/help-button.qs/commit/2cfbcab2c96892ac0c50a795313aaeb047032e2d))
+* **deps:** bump webpack-dev-server from 5.2.3 to 5.2.4 in the npm_and_yarn group across 1 directory ([b7cdac2](https://github.com/ptarmiganlabs/help-button.qs/commit/b7cdac2ccca33aa3ad4d7fc678fdcbfdd2ba5e5f))
+* **main:** release helpbutton-qs 2.6.0 ([4672e85](https://github.com/ptarmiganlabs/help-button.qs/commit/4672e850ab53aeb1ebe1bf6f37fd3c7ba74eed77))
+* **main:** release helpbutton-qs 2.6.0 ([0196d9b](https://github.com/ptarmiganlabs/help-button.qs/commit/0196d9b7357474f447c99d55bc3667d020dde806))
+* **main:** release helpbutton-qs 2.7.0 ([0eb7451](https://github.com/ptarmiganlabs/help-button.qs/commit/0eb74512e676e519ee7766bcc3379c0b4012eea6))
+* **main:** release helpbutton-qs 2.7.0 ([ddca1e3](https://github.com/ptarmiganlabs/help-button.qs/commit/ddca1e386b208e1f975eaccd3f5ea24ee4c9a744))
+* **main:** release helpbutton-qs 3.0.0 ([49e86ad](https://github.com/ptarmiganlabs/help-button.qs/commit/49e86ad68918bdc7b7ddf345d4be0af6f831b3c9))
+* **main:** release helpbutton-qs 3.0.0 ([b159eed](https://github.com/ptarmiganlabs/help-button.qs/commit/b159eed866da13de46ac6878c5dc032656ca428a))
+* **main:** release helpbutton-qs 3.1.0 ([8558dda](https://github.com/ptarmiganlabs/help-button.qs/commit/8558dda79d60f45f6c55a1844b07e5e298b8e1c2))
+* **main:** release helpbutton-qs 3.1.0 ([c78c157](https://github.com/ptarmiganlabs/help-button.qs/commit/c78c15706736a5940606e71d52c256884fc2ac9c))
+* merge main branch (refactor-1) into PR branch, accept deletion of extension/README.md ([1d7fb2c](https://github.com/ptarmiganlabs/help-button.qs/commit/1d7fb2c2cc481b26be3afafc27e67718b9605a94))
+* Move legacy HTML inject help button to legacy folder ([e3b6764](https://github.com/ptarmiganlabs/help-button.qs/commit/e3b6764f9209ff8c99b4c7f6f57aa26778821e80))
+* update all source code with new, uniform format ([bee2024](https://github.com/ptarmiganlabs/help-button.qs/commit/bee2024eeeb58524a09ffa3086ef8b22819a27c3))
+* update archiver to version 8.0.0 and refactor zip creation accordingly ([23498b7](https://github.com/ptarmiganlabs/help-button.qs/commit/23498b7e734003844317945e61503d835d1a209f))
+* update demo server to use Node 24 ([1ba7e0f](https://github.com/ptarmiganlabs/help-button.qs/commit/1ba7e0f905d72a2f82ad1d50531dea0ef30363be))
+* update dependencies to latest versions ([047ca43](https://github.com/ptarmiganlabs/help-button.qs/commit/047ca43ca1d3df001c1107dc5921e47b7baca4f2))
+* update nebula.js dependencies and eslint version in package.json ([6600fba](https://github.com/ptarmiganlabs/help-button.qs/commit/6600fbacdcb04eaf8f96e957d53cd3c3d56f4a24))
+* update Node.js version to 24 in configuration files and documentation ([88b6e59](https://github.com/ptarmiganlabs/help-button.qs/commit/88b6e593a334f80a20cf5c0c33b9e4832fb1d711))
+
+
+### Refactoring
+
+* align stored demo rating with integer validation ([21bc131](https://github.com/ptarmiganlabs/help-button.qs/commit/21bc1315950aeb188ace82b746cc9223133db0f6))
+* clarify inline comments in mergeMenuItems two-pass logic ([b4d0c85](https://github.com/ptarmiganlabs/help-button.qs/commit/b4d0c859decaf7db0145e7ef9778f365f01b3b08))
+* Improve PDF generation during CI workflow ([4f51f53](https://github.com/ptarmiganlabs/help-button.qs/commit/4f51f5333e6724d18a2af00a1b3c5a728421cc52))
+* major restructure of the entire repository. HTML-native helpbuttons moved to legecy folder. ([da234a8](https://github.com/ptarmiganlabs/help-button.qs/commit/da234a856977209816bab6aacf28678da66a51d2))
+* normalize menu merge mode internally ([04514fb](https://github.com/ptarmiganlabs/help-button.qs/commit/04514fb9e11657cb3e366e1e9b0b215cc4cb33c8))
+* replace O(n²) splice dedup with O(n) two-pass approach in mergeMenuItems ([9ea62e3](https://github.com/ptarmiganlabs/help-button.qs/commit/9ea62e3d0df85f39add45096453150f0cbf967ea))
+
+
+### Documentation
+
+* Add app developer docs for menu items and tooltips ([fda3155](https://github.com/ptarmiganlabs/help-button.qs/commit/fda31553064a36c51780edf64755645623876790))
+* add cloud vs client-managed app guide ([c3f0d2d](https://github.com/ptarmiganlabs/help-button.qs/commit/c3f0d2d2c5f2f9dbd92663db78e520afe899f447))
+* Add menu item documentation for app developers ([e3314c6](https://github.com/ptarmiganlabs/help-button.qs/commit/e3314c6ff1afc47892f469fca9af979156408aee))
+* add menu items property refs ([42f5ed5](https://github.com/ptarmiganlabs/help-button.qs/commit/42f5ed5b6b73468431fb2e47177de68574045821))
+* add missing JSDoc to source helpers ([9be3ab8](https://github.com/ptarmiganlabs/help-button.qs/commit/9be3ab81e41f7c4b4f7e7b0f315b7b31e1944844))
+* add property panel reference ([63dff6b](https://github.com/ptarmiganlabs/help-button.qs/commit/63dff6b8a309a8e7fe80b8206dbe43b323a5aaec))
+* add README security stance ([ee5c447](https://github.com/ptarmiganlabs/help-button.qs/commit/ee5c44723ca7b8fdcb53876e9c6c49759c399ab1))
+* add security overview for app developers ([41d592d](https://github.com/ptarmiganlabs/help-button.qs/commit/41d592d2ccf970fca68a341cecd2d874d22ea203))
+* add supply-chain security note ([7837e46](https://github.com/ptarmiganlabs/help-button.qs/commit/7837e46ef5c7f54fdfb45bf499fd1384d537c9a9))
+* add template placeholder explanation ([b44ca26](https://github.com/ptarmiganlabs/help-button.qs/commit/b44ca269cb1ff114994bbb1561dbc2c6c05b0dea))
+* align JSDoc formatting with review feedback ([d3cfd96](https://github.com/ptarmiganlabs/help-button.qs/commit/d3cfd96eeeca5aa5c0671306af2dbd1f815fefcd))
+* clarify menu merge behavior ([492a7e6](https://github.com/ptarmiganlabs/help-button.qs/commit/492a7e6f8049cc478164a1f3558195e27150c190))
+* clarify menu merge comment ([640229c](https://github.com/ptarmiganlabs/help-button.qs/commit/640229c99d83035e90a27f7c016bb96ceec46987))
+* clarify merge mode property and caveat ([4ead1ed](https://github.com/ptarmiganlabs/help-button.qs/commit/4ead1ed1dfa517b6f1da5897b17120f4f18c0f01))
+* clarify security review follow-up note ([f74a761](https://github.com/ptarmiganlabs/help-button.qs/commit/f74a7612901300a250d0c00999586b91a499f149))
+* clarify unlabeled merge behavior ([f49aada](https://github.com/ptarmiganlabs/help-button.qs/commit/f49aadaa3eada1f3f86635d10ead1e993cdece73))
+* correct capitalization in project title ([477fce3](https://github.com/ptarmiganlabs/help-button.qs/commit/477fce3cfbf531ba8c145629924300dfc8ff0146))
+* document video embed feature in extension README ([3bfc6c4](https://github.com/ptarmiganlabs/help-button.qs/commit/3bfc6c45a480d27c2f8a5d96f081c11a6f5c8a35))
+* enhance property panel reference with additional sections and details ([d65ae98](https://github.com/ptarmiganlabs/help-button.qs/commit/d65ae98f4f273a4471b4e1d1e8b59c349232536d))
+* enhance todo template with file naming guidelines ([0260f40](https://github.com/ptarmiganlabs/help-button.qs/commit/0260f40d3a7a520427bc2288967a5434a931e589))
+* finalize property panel reference ([c383365](https://github.com/ptarmiganlabs/help-button.qs/commit/c383365615fa5abd04d47701e3725c950d6b5c85))
+* fix bug report dialog heading ([31f8ec2](https://github.com/ptarmiganlabs/help-button.qs/commit/31f8ec2986e2f05fe197f25480f9b2c6d412c9e5))
+* fix bug report webhook heading ([64b7471](https://github.com/ptarmiganlabs/help-button.qs/commit/64b74717481664d9d0a232e2a0595001479465da))
+* fix two remaining README inaccuracies (Qlik Sense product name, Feedback auth description) ([89c97a5](https://github.com/ptarmiganlabs/help-button.qs/commit/89c97a5fafeff7b04ecbd799ba3f4098ad39eeff))
+* merge main into PR branch and resolve conflict in extension/README.md ([ab30cc1](https://github.com/ptarmiganlabs/help-button.qs/commit/ab30cc1bd4e69062d4ee7b017b44fa07eb8408ba))
+* polish platform comparison guide ([c9bcd79](https://github.com/ptarmiganlabs/help-button.qs/commit/c9bcd79d80283c61adbe48587513c4f454388e43))
+* record 2026 security review findings ([f3b68da](https://github.com/ptarmiganlabs/help-button.qs/commit/f3b68da2a857d5efd827f7f1193e52fe8bc32b81))
+* reorganize documentation by audience ([f99eeff](https://github.com/ptarmiganlabs/help-button.qs/commit/f99eeffd7f6590b7479ec28907a6b2b713885449))
+* rewrite README for restructured repo — fix inaccuracies, add missing features ([f8f06ef](https://github.com/ptarmiganlabs/help-button.qs/commit/f8f06eff34306a19b92866a9d657f4cec97c9242))
+* update extension README to match current feature set ([a364ec5](https://github.com/ptarmiganlabs/help-button.qs/commit/a364ec5adadda57b35183d71099295e240407dc5))
+* update extension README to reflect current features accurately ([76bcfc0](https://github.com/ptarmiganlabs/help-button.qs/commit/76bcfc0a16f183e1df3e1df391941eaa5b2fe344))
+* update security findings in release workflow section ([c4d3dd8](https://github.com/ptarmiganlabs/help-button.qs/commit/c4d3dd8ae129e209ed2171f94282b2dc8212a099))
+
 ## [3.1.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.0.0...helpbutton-qs-v3.1.0) (2026-06-07)
 
 
