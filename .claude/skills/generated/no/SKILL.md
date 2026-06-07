@@ -24,26 +24,26 @@ description: 'Skill for the No area of qs-help-button. 43 symbols across 2 files
 
 | Symbol                  | Type     | File                                             | Line |
 | ----------------------- | -------- | ------------------------------------------------ | ---- |
-| `makeSvg`               | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 274  |
-| `escapeHtml`            | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 292  |
-| `resolveTemplateFields` | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 345  |
-| `buildStyles`           | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 377  |
-| `menuItemStyle`         | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 476  |
-| `menuItemHoverStyle`    | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 490  |
-| `createHelpButton`      | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 504  |
-| `openPopup`             | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 636  |
-| `closePopup`            | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 642  |
-| `togglePopup`           | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 648  |
-| `init`                  | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 678  |
-| `poll`                  | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 694  |
-| `onMutation`            | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 712  |
-| `cleanup`               | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 719  |
-| `watchForRemoval`       | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 750  |
-| `buildStyles`           | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 604  |
-| `menuItemStyle`         | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 703  |
-| `menuItemHoverStyle`    | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 717  |
-| `createHelpButton`      | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 1386 |
-| `openPopup`             | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 1457 |
+| `makeSvg`               | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 272  |
+| `escapeHtml`            | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 290  |
+| `resolveTemplateFields` | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 343  |
+| `buildStyles`           | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 375  |
+| `menuItemStyle`         | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 469  |
+| `menuItemHoverStyle`    | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 483  |
+| `createHelpButton`      | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 497  |
+| `openPopup`             | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 629  |
+| `closePopup`            | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 635  |
+| `togglePopup`           | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 641  |
+| `init`                  | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 671  |
+| `poll`                  | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 687  |
+| `onMutation`            | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 701  |
+| `cleanup`               | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 708  |
+| `watchForRemoval`       | Function | `legacy/variants/basic/no/helpbutton-qs.js`      | 739  |
+| `buildStyles`           | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 594  |
+| `menuItemStyle`         | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 688  |
+| `menuItemHoverStyle`    | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 702  |
+| `createHelpButton`      | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 1357 |
+| `openPopup`             | Function | `legacy/variants/bug-report/no/helpbutton-qs.js` | 1428 |
 
 ## Execution Flows
 

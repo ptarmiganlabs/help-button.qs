@@ -23,23 +23,23 @@ description: 'Skill for the Demo-server area of qs-help-button. 17 symbols acros
 
 | Symbol                    | Type     | File                           | Line |
 | ------------------------- | -------- | ------------------------------ | ---- |
-| `renderNoData`            | Function | `shared/demo-server/server.js` | 217  |
-| `renderBugList`           | Function | `shared/demo-server/server.js` | 252  |
-| `renderFeedbackList`      | Function | `shared/demo-server/server.js` | 258  |
-| `createDashboardSnapshot` | Function | `shared/demo-server/server.js` | 264  |
-| `writeSseEvent`           | Function | `shared/demo-server/server.js` | 273  |
-| `broadcastDashboardEvent` | Function | `shared/demo-server/server.js` | 278  |
-| `renderDashboardScript`   | Function | `shared/demo-server/server.js` | 289  |
-| `renderDashboard`         | Function | `shared/demo-server/server.js` | 409  |
-| `registerDashboardClient` | Function | `shared/demo-server/server.js` | 466  |
-| `formatContextFields`     | Function | `shared/demo-server/server.js` | 143  |
-| `escapeHtml`              | Function | `shared/demo-server/server.js` | 167  |
-| `formatContextLabel`      | Function | `shared/demo-server/server.js` | 175  |
-| `renderContextTable`      | Function | `shared/demo-server/server.js` | 179  |
-| `renderStars`             | Function | `shared/demo-server/server.js` | 196  |
-| `renderAuthHtml`          | Function | `shared/demo-server/server.js` | 208  |
-| `renderBugCard`           | Function | `shared/demo-server/server.js` | 221  |
-| `renderFeedbackCard`      | Function | `shared/demo-server/server.js` | 237  |
+| `renderNoData`            | Function | `shared/demo-server/server.js` | 209  |
+| `renderBugList`           | Function | `shared/demo-server/server.js` | 242  |
+| `renderFeedbackList`      | Function | `shared/demo-server/server.js` | 248  |
+| `createDashboardSnapshot` | Function | `shared/demo-server/server.js` | 254  |
+| `writeSseEvent`           | Function | `shared/demo-server/server.js` | 263  |
+| `broadcastDashboardEvent` | Function | `shared/demo-server/server.js` | 268  |
+| `renderDashboardScript`   | Function | `shared/demo-server/server.js` | 279  |
+| `renderDashboard`         | Function | `shared/demo-server/server.js` | 399  |
+| `registerDashboardClient` | Function | `shared/demo-server/server.js` | 456  |
+| `formatContextFields`     | Function | `shared/demo-server/server.js` | 139  |
+| `escapeHtml`              | Function | `shared/demo-server/server.js` | 163  |
+| `formatContextLabel`      | Function | `shared/demo-server/server.js` | 171  |
+| `renderContextTable`      | Function | `shared/demo-server/server.js` | 175  |
+| `renderStars`             | Function | `shared/demo-server/server.js` | 188  |
+| `renderAuthHtml`          | Function | `shared/demo-server/server.js` | 200  |
+| `renderBugCard`           | Function | `shared/demo-server/server.js` | 213  |
+| `renderFeedbackCard`      | Function | `shared/demo-server/server.js` | 229  |
 
 ## Execution Flows
 

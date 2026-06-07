@@ -30,8 +30,8 @@ Start here when exploring this area:
 - **`getSenseVersion`** (Function) — `src/platform/client-managed.js:20`
 - **`resolveCodePath`** (Function) — `src/platform/client-managed.js:60`
 - **`detectPlatformType`** (Function) — `src/platform/index.js:17`
-- **`detectPlatform`** (Function) — `src/platform/index.js:29`
-- **`getPlatformAdapter`** (Function) — `src/platform/index.js:60`
+- **`detectPlatform`** (Function) — `src/platform/index.js:28`
+- **`getPlatformAdapter`** (Function) — `src/platform/index.js:59`
 
 ## Key Symbols
 
@@ -40,21 +40,21 @@ Start here when exploring this area:
 | `getSenseVersion`          | Function | `src/platform/client-managed.js` | 20   |
 | `resolveCodePath`          | Function | `src/platform/client-managed.js` | 60   |
 | `detectPlatformType`       | Function | `src/platform/index.js`          | 17   |
-| `detectPlatform`           | Function | `src/platform/index.js`          | 29   |
-| `getPlatformAdapter`       | Function | `src/platform/index.js`          | 60   |
+| `detectPlatform`           | Function | `src/platform/index.js`          | 28   |
+| `getPlatformAdapter`       | Function | `src/platform/index.js`          | 59   |
 | `parseProductInfoText`     | Function | `src/util/product-info.js`       | 23   |
-| `fetchSenseVersionInfo`    | Function | `src/util/product-info.js`       | 62   |
+| `fetchSenseVersionInfo`    | Function | `src/util/product-info.js`       | 60   |
 | `getToolbarAnchor`         | Function | `src/platform/client-managed.js` | 85   |
 | `getToolbarAnchorSelector` | Function | `src/platform/client-managed.js` | 96   |
-| `getObjectSelector`        | Function | `src/platform/client-managed.js` | 315  |
+| `getObjectSelector`        | Function | `src/platform/client-managed.js` | 305  |
 | `getToolbarAnchor`         | Function | `src/platform/cloud.js`          | 27   |
 | `getToolbarAnchorSelector` | Function | `src/platform/cloud.js`          | 38   |
-| `getObjectSelector`        | Function | `src/platform/cloud.js`          | 229  |
+| `getObjectSelector`        | Function | `src/platform/cloud.js`          | 219  |
 | `getSelectors`             | Function | `src/platform/selectors.js`      | 86   |
-| `getCurrentSheetId`        | Function | `src/platform/client-managed.js` | 168  |
-| `getSheetObjects`          | Function | `src/platform/client-managed.js` | 225  |
-| `getCurrentSheetId`        | Function | `src/platform/cloud.js`          | 116  |
-| `getSheetObjects`          | Function | `src/platform/cloud.js`          | 141  |
+| `getCurrentSheetId`        | Function | `src/platform/client-managed.js` | 166  |
+| `getSheetObjects`          | Function | `src/platform/client-managed.js` | 222  |
+| `getCurrentSheetId`        | Function | `src/platform/cloud.js`          | 113  |
+| `getSheetObjects`          | Function | `src/platform/cloud.js`          | 138  |
 | `compareVersions`          | Function | `src/platform/client-managed.js` | 44   |
 
 ## Execution Flows

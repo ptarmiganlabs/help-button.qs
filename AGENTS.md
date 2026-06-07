@@ -2,7 +2,7 @@
 
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **qs-help-button** (3454 symbols, 5418 relationships, 198 execution flows). Prefer the GitNexus MCP tools when they are exposed in the current chat. If they are unavailable, use the GitNexus CLI to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **qs-help-button** (3511 symbols, 5466 relationships, 198 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > In this multi-repo workspace, always include `-r qs-help-button` on GitNexus CLI commands.
 >
@@ -64,7 +64,7 @@ Use these commands when GitNexus MCP tools are not available in the current chat
 | Work in the Util area (38 symbols)           | `.claude/skills/generated/util/SKILL.md`                    |
 | Work in the Platform area (19 symbols)       | `.claude/skills/generated/platform/SKILL.md`                |
 | Work in the Demo-server area (17 symbols)    | `.claude/skills/generated/demo-server/SKILL.md`             |
-| Work in the Scripts area (8 symbols)         | `.claude/skills/generated/scripts/SKILL.md`                 |
+| Work in the Scripts area (10 symbols)        | `.claude/skills/generated/scripts/SKILL.md`                 |
 | Work in the Property-panel area (8 symbols)  | `.claude/skills/generated/property-panel/SKILL.md`          |
 | Work in the I18n area (5 symbols)            | `.claude/skills/generated/i18n/SKILL.md`                    |
 | Work in the CreateDefault area (4 symbols)   | `.claude/skills/generated/createdefault/SKILL.md`           |

@@ -23,10 +23,10 @@ description: 'Skill for the CreateDefault area of qs-help-button. 4 symbols acro
 
 | Symbol                         | Type     | File                       | Line |
 | ------------------------------ | -------- | -------------------------- | ---- |
-| `createDefaultFields`          | Function | `src/object-properties.js` | 28   |
-| `createDefaultPayloadKeyNames` | Function | `src/object-properties.js` | 53   |
-| `createDefaultBugReport`       | Function | `src/object-properties.js` | 78   |
-| `createDefaultFeedback`        | Function | `src/object-properties.js` | 100  |
+| `createDefaultFields`          | Function | `src/object-properties.js` | 25   |
+| `createDefaultPayloadKeyNames` | Function | `src/object-properties.js` | 50   |
+| `createDefaultBugReport`       | Function | `src/object-properties.js` | 75   |
+| `createDefaultFeedback`        | Function | `src/object-properties.js` | 97   |
 
 ## How to Explore
 
