@@ -29,7 +29,7 @@ safe-outputs:
         run-failure: "😤 Great. [{workflow_name}]({run_url}) {status}. As if my day couldn't get any worse..."
 
 timeout-minutes: 10
-source: githubnext/agentics/workflows/grumpy-reviewer.md@dcdf09723d42ef9b6c75335e4612fd145d4ccdaa
+source: githubnext/agentics/workflows/grumpy-reviewer.md@df35cf29fb856d1c3b8f023ed46d19126e7813bf
 ---
 
 # Grumpy Code Reviewer 🔥
