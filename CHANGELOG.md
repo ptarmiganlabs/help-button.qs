@@ -1,5 +1,50 @@
 # Changelog
 
+## [3.1.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.0.0...helpbutton-qs-v3.1.0) (2026-06-07)
+
+
+### Features
+
+* Add todo template for structured handling of in-repo todo items ([f1fa0ff](https://github.com/ptarmiganlabs/help-button.qs/commit/f1fa0fff5e13d9dc16c291f6e318fbfadad810d4))
+* enhance GitNexus code intelligence documentation with CLI commands and usage guidelines ([3e6cf69](https://github.com/ptarmiganlabs/help-button.qs/commit/3e6cf69f7673141acc75d1e52fc8c2411c4bb8c8))
+* Enhance VirusTotal workflow to scan both inner and outer ZIP files ([c710b93](https://github.com/ptarmiganlabs/help-button.qs/commit/c710b93f0c46e9b575e82a7e8beed850c119e27c))
+
+
+### Bug Fixes
+
+* harden VirusTotal release workflow ([581506e](https://github.com/ptarmiganlabs/help-button.qs/commit/581506e0a5de2f83f986cd49cd4c93c4e3e681c1))
+* harden VirusTotal release workflow ([897a373](https://github.com/ptarmiganlabs/help-button.qs/commit/897a373b9c355191b7e2b634b28af3377592da64))
+* harden VirusTotal release workflow ([b0030b8](https://github.com/ptarmiganlabs/help-button.qs/commit/b0030b8c246f9841567dc580dfedc82e9b2ab1fc))
+* harden VirusTotal release workflow ([4c84832](https://github.com/ptarmiganlabs/help-button.qs/commit/4c848327533504d4c8d7eb9899c6ef169dd49f97))
+* harden VirusTotal release workflow ([1793686](https://github.com/ptarmiganlabs/help-button.qs/commit/1793686d8927f8a9abcee7ced02325f67a356e34))
+* harden VirusTotal release workflow ([4ffd88e](https://github.com/ptarmiganlabs/help-button.qs/commit/4ffd88ec380c5bfe260d5694463564cc13b2b2e5))
+* update dependabot configuration for npm and github-actions ([bd01c50](https://github.com/ptarmiganlabs/help-button.qs/commit/bd01c50539eac7831be3681f472542242909b89e))
+* Update todo template with examples ([2e10f42](https://github.com/ptarmiganlabs/help-button.qs/commit/2e10f42796a522fde96ebe6656a646c01a5db2be))
+
+
+### Miscellaneous
+
+* add Gitleaks configuration to ignore placeholder API keys ([59dd0cc](https://github.com/ptarmiganlabs/help-button.qs/commit/59dd0cc34d217479cfe09a88912c3b1a15c7ef5d))
+* add husky pre-commit hook with lint-staged and gitleaks ([667f1a5](https://github.com/ptarmiganlabs/help-button.qs/commit/667f1a5f9c542bf35d24ec6e6e990ba73d4e4080))
+* add Prettier configuration file for code formatting ([e6396a8](https://github.com/ptarmiganlabs/help-button.qs/commit/e6396a88b3f5224733b424dec92ce5d191681e42))
+* **deps:** bump github/codeql-action from 4.35.5 to 4.36.0 ([e841b60](https://github.com/ptarmiganlabs/help-button.qs/commit/e841b601a9c32531a1f480a5f33455932ff29ee3))
+* **deps:** bump github/codeql-action from 4.35.5 to 4.36.0 ([28dcc25](https://github.com/ptarmiganlabs/help-button.qs/commit/28dcc25b9f1ded441497b3807c12fff98c0a2ea8))
+* update all source code with new, uniform format ([bee2024](https://github.com/ptarmiganlabs/help-button.qs/commit/bee2024eeeb58524a09ffa3086ef8b22819a27c3))
+* update demo server to use Node 24 ([1ba7e0f](https://github.com/ptarmiganlabs/help-button.qs/commit/1ba7e0f905d72a2f82ad1d50531dea0ef30363be))
+* update dependencies to latest versions ([047ca43](https://github.com/ptarmiganlabs/help-button.qs/commit/047ca43ca1d3df001c1107dc5921e47b7baca4f2))
+* update Node.js version to 24 in configuration files and documentation ([88b6e59](https://github.com/ptarmiganlabs/help-button.qs/commit/88b6e593a334f80a20cf5c0c33b9e4832fb1d711))
+
+
+### Refactoring
+
+* Improve PDF generation during CI workflow ([4f51f53](https://github.com/ptarmiganlabs/help-button.qs/commit/4f51f5333e6724d18a2af00a1b3c5a728421cc52))
+
+
+### Documentation
+
+* add security overview for app developers ([41d592d](https://github.com/ptarmiganlabs/help-button.qs/commit/41d592d2ccf970fca68a341cecd2d874d22ea203))
+* enhance todo template with file naming guidelines ([0260f40](https://github.com/ptarmiganlabs/help-button.qs/commit/0260f40d3a7a520427bc2288967a5434a931e589))
+
 ## [3.0.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v2.7.0...helpbutton-qs-v3.0.0) (2026-05-29)
 
 ### ⚠ BREAKING CHANGES
