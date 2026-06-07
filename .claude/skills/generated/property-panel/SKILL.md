@@ -30,7 +30,7 @@ description: 'Skill for the Property-panel area of qs-help-button. 8 symbols acr
 Start here when exploring this area:
 
 - **`ext`** (Function) — `src/ext.js:28`
-- **`supernova`** (Function) — `src/index.js:43`
+- **`supernova`** (Function) — `src/index.js:40`
 - **`tooltipsSection`** (Function) — `src/property-panel/tooltips-section.js:18`
 - **`toPickerObj`** (Function) — `src/util/color.js:16`
 - **`applyPreset`** (Function) — `src/theme/presets.js:314`
@@ -40,13 +40,13 @@ Start here when exploring this area:
 | Symbol              | Type     | File                                     | Line |
 | ------------------- | -------- | ---------------------------------------- | ---- |
 | `ext`               | Function | `src/ext.js`                             | 28   |
-| `supernova`         | Function | `src/index.js`                           | 43   |
+| `supernova`         | Function | `src/index.js`                           | 40   |
 | `tooltipsSection`   | Function | `src/property-panel/tooltips-section.js` | 18   |
 | `toPickerObj`       | Function | `src/util/color.js`                      | 16   |
 | `applyPreset`       | Function | `src/theme/presets.js`                   | 314  |
 | `getObjectList`     | Function | `src/property-panel/object-list.js`      | 16   |
 | `getCurrentSheetId` | Function | `src/property-panel/object-list.js`      | 32   |
-| `change`            | Function | `src/property-panel/theme-section.js`    | 29   |
+| `change`            | Function | `src/property-panel/theme-section.js`    | 28   |
 
 ## Execution Flows
 

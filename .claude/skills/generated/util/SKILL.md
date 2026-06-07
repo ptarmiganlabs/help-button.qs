@@ -34,8 +34,8 @@ Start here when exploring this area:
 - **`openTooltipDialog`** (Function) — `src/ui/tooltip-dialog.js:39`
 - **`onKeyDown`** (Function) — `src/ui/tooltip-dialog.js:99`
 - **`closeTooltipDialog`** (Function) — `src/ui/tooltip-dialog.js:122`
-- **`markdownToHtml`** (Function) — `src/util/markdown.js:177`
-- **`applyLink`** (Function) — `src/util/markdown-shortcuts.js:182`
+- **`markdownToHtml`** (Function) — `src/util/markdown.js:175`
+- **`applyLink`** (Function) — `src/util/markdown-shortcuts.js:180`
 
 ## Key Symbols
 
@@ -44,23 +44,23 @@ Start here when exploring this area:
 | `openTooltipDialog`          | Function | `src/ui/tooltip-dialog.js`       | 39   |
 | `onKeyDown`                  | Function | `src/ui/tooltip-dialog.js`       | 99   |
 | `closeTooltipDialog`         | Function | `src/ui/tooltip-dialog.js`       | 122  |
-| `markdownToHtml`             | Function | `src/util/markdown.js`           | 177  |
-| `applyLink`                  | Function | `src/util/markdown-shortcuts.js` | 182  |
-| `applyOrderedList`           | Function | `src/util/markdown-shortcuts.js` | 186  |
-| `applyUnorderedList`         | Function | `src/util/markdown-shortcuts.js` | 190  |
-| `applyBlockquote`            | Function | `src/util/markdown-shortcuts.js` | 194  |
-| `attachMarkdownShortcuts`    | Function | `src/util/markdown-shortcuts.js` | 207  |
+| `markdownToHtml`             | Function | `src/util/markdown.js`           | 175  |
+| `applyLink`                  | Function | `src/util/markdown-shortcuts.js` | 180  |
+| `applyOrderedList`           | Function | `src/util/markdown-shortcuts.js` | 184  |
+| `applyUnorderedList`         | Function | `src/util/markdown-shortcuts.js` | 188  |
+| `applyBlockquote`            | Function | `src/util/markdown-shortcuts.js` | 192  |
+| `attachMarkdownShortcuts`    | Function | `src/util/markdown-shortcuts.js` | 205  |
 | `formatTimestamp`            | Function | `src/util/timestamp-formats.js`  | 131  |
-| `escapeHtml`                 | Function | `src/util/template-fields.js`    | 119  |
-| `applyBold`                  | Function | `src/util/markdown-shortcuts.js` | 170  |
-| `applyItalic`                | Function | `src/util/markdown-shortcuts.js` | 174  |
-| `applyCode`                  | Function | `src/util/markdown-shortcuts.js` | 178  |
-| `normalizeMenuItemMergeMode` | Function | `src/util/menu-item-merge.js`    | 22   |
-| `isMenuItemVisible`          | Function | `src/util/menu-item-merge.js`    | 34   |
-| `mergeMenuItems`             | Function | `src/util/menu-item-merge.js`    | 113  |
+| `escapeHtml`                 | Function | `src/util/template-fields.js`    | 114  |
+| `applyBold`                  | Function | `src/util/markdown-shortcuts.js` | 168  |
+| `applyItalic`                | Function | `src/util/markdown-shortcuts.js` | 172  |
+| `applyCode`                  | Function | `src/util/markdown-shortcuts.js` | 176  |
+| `normalizeMenuItemMergeMode` | Function | `src/util/menu-item-merge.js`    | 18   |
+| `isMenuItemVisible`          | Function | `src/util/menu-item-merge.js`    | 28   |
+| `mergeMenuItems`             | Function | `src/util/menu-item-merge.js`    | 109  |
 | `youtubeId`                  | Function | `src/util/markdown.js`           | 38   |
-| `vimeoId`                    | Function | `src/util/markdown.js`           | 53   |
-| `iframeHtml`                 | Function | `src/util/markdown.js`           | 68   |
+| `vimeoId`                    | Function | `src/util/markdown.js`           | 51   |
+| `iframeHtml`                 | Function | `src/util/markdown.js`           | 66   |
 
 ## Execution Flows
 

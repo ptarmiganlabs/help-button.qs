@@ -23,20 +23,20 @@ description: 'Skill for the I18n area of qs-help-button. 5 symbols across 1 file
 
 Start here when exploring this area:
 
-- **`getEffectiveLocale`** (Function) — `src/i18n/index.js:66`
-- **`detectLocale`** (Function) — `src/i18n/index.js:88`
-- **`getTranslation`** (Function) — `src/i18n/index.js:141`
-- **`resolveText`** (Function) — `src/i18n/index.js:166`
+- **`getEffectiveLocale`** (Function) — `src/i18n/index.js:56`
+- **`detectLocale`** (Function) — `src/i18n/index.js:74`
+- **`getTranslation`** (Function) — `src/i18n/index.js:127`
+- **`resolveText`** (Function) — `src/i18n/index.js:152`
 
 ## Key Symbols
 
 | Symbol               | Type     | File                | Line |
 | -------------------- | -------- | ------------------- | ---- |
-| `getEffectiveLocale` | Function | `src/i18n/index.js` | 66   |
-| `detectLocale`       | Function | `src/i18n/index.js` | 88   |
-| `getTranslation`     | Function | `src/i18n/index.js` | 141  |
-| `resolveText`        | Function | `src/i18n/index.js` | 166  |
-| `normalizeLocale`    | Function | `src/i18n/index.js` | 125  |
+| `getEffectiveLocale` | Function | `src/i18n/index.js` | 56   |
+| `detectLocale`       | Function | `src/i18n/index.js` | 74   |
+| `getTranslation`     | Function | `src/i18n/index.js` | 127  |
+| `resolveText`        | Function | `src/i18n/index.js` | 152  |
+| `normalizeLocale`    | Function | `src/i18n/index.js` | 111  |
 
 ## Execution Flows
 

@@ -32,36 +32,36 @@ description: 'Skill for the Ui area of qs-help-button. 95 symbols across 15 file
 
 Start here when exploring this area:
 
-- **`openMarkdownEditorDialog`** (Function) — `src/ui/markdown-editor-dialog.js:120`
-- **`updateCounter`** (Function) — `src/ui/markdown-editor-dialog.js:182`
-- **`hasPendingChanges`** (Function) — `src/ui/markdown-editor-dialog.js:197`
-- **`guardedClose`** (Function) — `src/ui/markdown-editor-dialog.js:203`
-- **`onKeyDown`** (Function) — `src/ui/markdown-editor-dialog.js:247`
+- **`openMarkdownEditorDialog`** (Function) — `src/ui/markdown-editor-dialog.js:117`
+- **`updateCounter`** (Function) — `src/ui/markdown-editor-dialog.js:173`
+- **`hasPendingChanges`** (Function) — `src/ui/markdown-editor-dialog.js:184`
+- **`guardedClose`** (Function) — `src/ui/markdown-editor-dialog.js:190`
+- **`onKeyDown`** (Function) — `src/ui/markdown-editor-dialog.js:234`
 
 ## Key Symbols
 
 | Symbol                      | Type     | File                               | Line |
 | --------------------------- | -------- | ---------------------------------- | ---- |
-| `openMarkdownEditorDialog`  | Function | `src/ui/markdown-editor-dialog.js` | 120  |
-| `updateCounter`             | Function | `src/ui/markdown-editor-dialog.js` | 182  |
-| `hasPendingChanges`         | Function | `src/ui/markdown-editor-dialog.js` | 197  |
-| `guardedClose`              | Function | `src/ui/markdown-editor-dialog.js` | 203  |
-| `onKeyDown`                 | Function | `src/ui/markdown-editor-dialog.js` | 247  |
-| `closeMarkdownEditorDialog` | Function | `src/ui/markdown-editor-dialog.js` | 267  |
+| `openMarkdownEditorDialog`  | Function | `src/ui/markdown-editor-dialog.js` | 117  |
+| `updateCounter`             | Function | `src/ui/markdown-editor-dialog.js` | 173  |
+| `hasPendingChanges`         | Function | `src/ui/markdown-editor-dialog.js` | 184  |
+| `guardedClose`              | Function | `src/ui/markdown-editor-dialog.js` | 190  |
+| `onKeyDown`                 | Function | `src/ui/markdown-editor-dialog.js` | 234  |
+| `closeMarkdownEditorDialog` | Function | `src/ui/markdown-editor-dialog.js` | 254  |
 | `openBugReportDialog`       | Function | `src/ui/bug-report-dialog.js`      | 93   |
-| `resolveFieldToggle`        | Function | `src/ui/bug-report-dialog.js`      | 130  |
-| `updateSubmitState`         | Function | `src/ui/bug-report-dialog.js`      | 528  |
-| `closeDialog`               | Function | `src/ui/bug-report-dialog.js`      | 598  |
-| `fetchSenseVersionLabel`    | Function | `src/util/product-info.js`         | 95   |
+| `resolveFieldToggle`        | Function | `src/ui/bug-report-dialog.js`      | 120  |
+| `updateSubmitState`         | Function | `src/ui/bug-report-dialog.js`      | 484  |
+| `closeDialog`               | Function | `src/ui/bug-report-dialog.js`      | 549  |
+| `fetchSenseVersionLabel`    | Function | `src/util/product-info.js`         | 91   |
 | `openFeedbackDialog`        | Function | `src/ui/feedback-dialog.js`        | 97   |
-| `resolveFieldToggle`        | Function | `src/ui/feedback-dialog.js`        | 137  |
-| `updateSubmitState`         | Function | `src/ui/feedback-dialog.js`        | 476  |
-| `closeDialog`               | Function | `src/ui/feedback-dialog.js`        | 560  |
+| `resolveFieldToggle`        | Function | `src/ui/feedback-dialog.js`        | 127  |
+| `updateSubmitState`         | Function | `src/ui/feedback-dialog.js`        | 440  |
+| `closeDialog`               | Function | `src/ui/feedback-dialog.js`        | 516  |
 | `buildHeaderDisplay`        | Function | `src/ui/payload-viewer.js`         | 72   |
-| `syntaxHighlightJson`       | Function | `src/ui/payload-viewer.js`         | 138  |
-| `showPayloadViewer`         | Function | `src/ui/payload-viewer.js`         | 193  |
-| `handleEscapeKey`           | Function | `src/ui/payload-viewer.js`         | 213  |
-| `closeViewer`               | Function | `src/ui/payload-viewer.js`         | 220  |
+| `syntaxHighlightJson`       | Function | `src/ui/payload-viewer.js`         | 136  |
+| `showPayloadViewer`         | Function | `src/ui/payload-viewer.js`         | 191  |
+| `handleEscapeKey`           | Function | `src/ui/payload-viewer.js`         | 211  |
+| `closeViewer`               | Function | `src/ui/payload-viewer.js`         | 218  |
 
 ## Execution Flows
 
