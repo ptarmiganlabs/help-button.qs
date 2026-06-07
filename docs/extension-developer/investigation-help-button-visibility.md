@@ -160,8 +160,8 @@ flowchart TD
 **Disadvantages:**
 
 - **Complex cross-platform implementation:** The `galaxy` object does not expose the app/engine reference directly. Getting it requires different approaches on Cloud vs Client-Managed.
-  - **Client-Managed:** Can use `require(['qlik'], ...)` (RequireJS Capability API) — but this is the **legacy API** and mixing it with nebula.js is not officially supported.
-  - **Cloud:** No direct access to Capability APIs. Would need to establish an enigma.js session or intercept the existing one.
+    - **Client-Managed:** Can use `require(['qlik'], ...)` (RequireJS Capability API) — but this is the **legacy API** and mixing it with nebula.js is not officially supported.
+    - **Cloud:** No direct access to Capability APIs. Would need to establish an enigma.js session or intercept the existing one.
 - Extra network request(s) at app startup — may add latency.
 - The `supernova()` factory function is synchronous (returns a definition object). The Engine API calls are async. This means the injection would happen asynchronously, and there's a timing gap.
 - Fragile: Relies on internal Qlik APIs and Engine session availability at bundle-load time.

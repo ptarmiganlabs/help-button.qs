@@ -1,6 +1,6 @@
 ---
 name: createdefault
-description: "Skill for the CreateDefault area of qs-help-button. 4 symbols across 1 files."
+description: 'Skill for the CreateDefault area of qs-help-button. 4 symbols across 1 files.'
 ---
 
 # CreateDefault
@@ -15,18 +15,18 @@ description: "Skill for the CreateDefault area of qs-help-button. 4 symbols acro
 
 ## Key Files
 
-| File | Symbols |
-|------|---------|
+| File                       | Symbols                                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------------------ |
 | `src/object-properties.js` | createDefaultFields, createDefaultPayloadKeyNames, createDefaultBugReport, createDefaultFeedback |
 
 ## Key Symbols
 
-| Symbol | Type | File | Line |
-|--------|------|------|------|
-| `createDefaultFields` | Function | `src/object-properties.js` | 28 |
-| `createDefaultPayloadKeyNames` | Function | `src/object-properties.js` | 53 |
-| `createDefaultBugReport` | Function | `src/object-properties.js` | 78 |
-| `createDefaultFeedback` | Function | `src/object-properties.js` | 100 |
+| Symbol                         | Type     | File                       | Line |
+| ------------------------------ | -------- | -------------------------- | ---- |
+| `createDefaultFields`          | Function | `src/object-properties.js` | 28   |
+| `createDefaultPayloadKeyNames` | Function | `src/object-properties.js` | 53   |
+| `createDefaultBugReport`       | Function | `src/object-properties.js` | 78   |
+| `createDefaultFeedback`        | Function | `src/object-properties.js` | 100  |
 
 ## How to Explore
 

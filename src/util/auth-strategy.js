@@ -25,7 +25,7 @@ export function normalizeAuthStrategy(strategy, contextLabel) {
     if (!warnedObsoleteStrategies.has(warningKey)) {
         warnedObsoleteStrategies.add(warningKey);
         logger.warn(
-            `Unsupported auth strategy "${value}" encountered in ${contextLabel}; falling back to "none".`,
+            `Unsupported auth strategy "${value}" encountered in ${contextLabel}; falling back to "none".`
         );
     }
 

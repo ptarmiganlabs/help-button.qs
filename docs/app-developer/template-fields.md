@@ -20,7 +20,7 @@ Use double curly braces around the field name:
 Place them anywhere inside a URL string in `helpbutton-qs.config.js`:
 
 ```js
-url: "https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}";
+url: 'https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}';
 ```
 
 At click time, the placeholders are replaced with the actual values from the current Qlik Sense session:
@@ -64,7 +64,7 @@ If a field cannot be resolved, its placeholder is replaced with an **empty strin
 Configuration:
 
 ```js
-url: "https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}/guide";
+url: 'https://help.example.com/apps/{{appId}}/sheets/{{sheetId}}/guide';
 ```
 
 When the user is on the app overview (no sheet open), `{{sheetId}}` is empty:
@@ -95,12 +95,12 @@ Direct users to app-specific documentation:
 
 ```js
 menuItems: [
-  {
-    label: "Help for this app",
-    url: "https://wiki.example.com/qlik/apps/{{appId}}",
-    icon: "help",
-    target: "_blank",
-  },
+    {
+        label: 'Help for this app',
+        url: 'https://wiki.example.com/qlik/apps/{{appId}}',
+        icon: 'help',
+        target: '_blank',
+    },
 ];
 ```
 
@@ -110,12 +110,12 @@ Pre-fill the user's identity in a support page URL:
 
 ```js
 menuItems: [
-  {
-    label: "My support tickets",
-    url: "https://support.example.com/portal?user={{userId}}&dir={{userDirectory}}",
-    icon: "mail",
-    target: "_blank",
-  },
+    {
+        label: 'My support tickets',
+        url: 'https://support.example.com/portal?user={{userId}}&dir={{userDirectory}}',
+        icon: 'mail',
+        target: '_blank',
+    },
 ];
 ```
 
@@ -123,12 +123,12 @@ menuItems: [
 
 ```js
 menuItems: [
-  {
-    label: "Sheet guide",
-    url: "https://docs.example.com/{{appId}}/{{sheetId}}",
-    icon: "info",
-    target: "_blank",
-  },
+    {
+        label: 'Sheet guide',
+        url: 'https://docs.example.com/{{appId}}/{{sheetId}}',
+        icon: 'info',
+        target: '_blank',
+    },
 ];
 ```
 
@@ -138,12 +138,12 @@ Template fields work in any part of the URL — path segments and query paramete
 
 ```js
 menuItems: [
-  {
-    label: "Report an issue",
-    url: "https://jira.example.com/create?project=QLIK&appId={{appId}}&sheet={{sheetId}}&reporter={{userId}}",
-    icon: "bug",
-    target: "_blank",
-  },
+    {
+        label: 'Report an issue',
+        url: 'https://jira.example.com/create?project=QLIK&appId={{appId}}&sheet={{sheetId}}&reporter={{userId}}',
+        icon: 'bug',
+        target: '_blank',
+    },
 ];
 ```
 
@@ -166,18 +166,18 @@ You can freely combine menu items that use template fields with items that use p
 
 ```js
 menuItems: [
-  {
-    label: "General help",
-    url: "https://help.example.com", // static — no template fields
-    icon: "help",
-    target: "_blank",
-  },
-  {
-    label: "Help for this app",
-    url: "https://help.example.com/{{appId}}", // dynamic — resolved at click time
-    icon: "info",
-    target: "_blank",
-  },
+    {
+        label: 'General help',
+        url: 'https://help.example.com', // static — no template fields
+        icon: 'help',
+        target: '_blank',
+    },
+    {
+        label: 'Help for this app',
+        url: 'https://help.example.com/{{appId}}', // dynamic — resolved at click time
+        icon: 'info',
+        target: '_blank',
+    },
 ];
 ```
 

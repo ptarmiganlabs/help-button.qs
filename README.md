@@ -124,32 +124,32 @@ Local development, packaging, and release workflows use **Node.js 24**. The repo
 When configuring the **Menu Items** in the Property Panel, you can add multiple options that map to different actions. Each menu item can be conditionally shown or hidden based on a Qlik expression using the optional **Show Condition** property. Right-click any menu item in the property panel to **Duplicate** it — this copies all of its settings into a new item, making it easy to create similar entries with only minor differences. The help button supports four types of menu actions:
 
 1. **Open URL (`link`)**:
-   - Opens a specified URL (can be configured to open in a new tab or the same window).
-   - Useful for pointing users to external documentation, intranet pages, wikis, or company portals.
-   - Supports [template fields](./docs/app-developer/template-fields.md) in the URL (e.g. `https://help.example.com/sys/{{appId}}`), allowing for context-sensitive deep links that adapt to the user's current app or sheet.
+    - Opens a specified URL (can be configured to open in a new tab or the same window).
+    - Useful for pointing users to external documentation, intranet pages, wikis, or company portals.
+    - Supports [template fields](./docs/app-developer/template-fields.md) in the URL (e.g. `https://help.example.com/sys/{{appId}}`), allowing for context-sensitive deep links that adapt to the user's current app or sheet.
 2. **Bug Report Dialog (`bugReport`)**:
-   - Opens an interactive modal directly inside Qlik Sense where users can write a detailed text description of an issue.
-   - Optional **severity picker** (Low / Medium / High) can be shown or hidden via the property panel.
-   - Configurable **max description length** (default 1 000 characters), with a live remaining-characters counter in the dialog.
-   - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request.
+    - Opens an interactive modal directly inside Qlik Sense where users can write a detailed text description of an issue.
+    - Optional **severity picker** (Low / Medium / High) can be shown or hidden via the property panel.
+    - Configurable **max description length** (default 1 000 characters), with a live remaining-characters counter in the dialog.
+    - Automatically bundles the user's environment metadata into a JSON payload and POSTs it to a configured webhook endpoint via a background request.
 
-   - Supports three authentication strategies: `None`, `Authorization header` (Bearer token), and `Custom headers`.
-   - Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles.
-   - Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
+    - Supports three authentication strategies: `None`, `Authorization header` (Bearer token), and `Custom headers`.
+    - Each context field has independent **"Show in Dialog"** and **"Include in Payload"** toggles.
+    - Timestamps are independently configurable for the dialog display and the webhook payload (e.g. ISO8601Z, ISO8601, MM/DD/YYYY, etc.).
 
 3. **Feedback Dialog (`feedback`)**:
-   - Opens a modal dialog where users can rate the current app (1–5 stars) and/or leave a free-text comment.
-   - Star rating and comment fields can each be independently enabled or disabled via the property panel.
-   - When the comment field is enabled, a configurable maximum character length is enforced, with a live remaining-characters counter shown in the dialog.
-   - Automatically gathers environment context (same fields as the bug report) and POSTs the feedback data as JSON to a configured webhook endpoint.
-   - Like bug reports, supports four authentication strategies and customizable timestamp formatting.
+    - Opens a modal dialog where users can rate the current app (1–5 stars) and/or leave a free-text comment.
+    - Star rating and comment fields can each be independently enabled or disabled via the property panel.
+    - When the comment field is enabled, a configurable maximum character length is enforced, with a live remaining-characters counter shown in the dialog.
+    - Automatically gathers environment context (same fields as the bug report) and POSTs the feedback data as JSON to a configured webhook endpoint.
+    - Like bug reports, supports four authentication strategies and customizable timestamp formatting.
 4. **Set/Toggle Variable (`setVariable`)**:
-   - Directly control Qlik Sense app variable values from the help menu, without leaving the app or opening an external page.
-   - Two sub-modes, selected via the **Variable Settings** section in the property panel:
-     - **Set**: Assign one or more variables to specific values simultaneously. Define an array of `{variableName, variableValue}` pairs — all are applied when the user clicks the menu item.
-     - **Toggle**: Flip a single variable between two values (Value A and Value B). A configurable safety-net default is applied automatically if the variable's current value matches neither.
-   - Useful for controlling sheet-level UI state, such as showing/hiding tooltip icons, switching between view modes, or triggering conditional display logic declared in Qlik expressions.
-   - When `setVariable` is selected, URL and link-target fields are hidden and replaced by the expandable **Variable Settings** section in the property panel.
+    - Directly control Qlik Sense app variable values from the help menu, without leaving the app or opening an external page.
+    - Two sub-modes, selected via the **Variable Settings** section in the property panel:
+        - **Set**: Assign one or more variables to specific values simultaneously. Define an array of `{variableName, variableValue}` pairs — all are applied when the user clicks the menu item.
+        - **Toggle**: Flip a single variable between two values (Value A and Value B). A configurable safety-net default is applied automatically if the variable's current value matches neither.
+    - Useful for controlling sheet-level UI state, such as showing/hiding tooltip icons, switching between view modes, or triggering conditional display logic declared in Qlik expressions.
+    - When `setVariable` is selected, URL and link-target fields are hidden and replaced by the expandable **Variable Settings** section in the property panel.
 
 ```mermaid
 flowchart LR
@@ -269,10 +269,7 @@ YouTube and Vimeo URLs are converted to responsive iframes automatically. Direct
 **Raw HTML** — paste an `<iframe>` or `<video>` tag directly:
 
 ```html
-<iframe
-  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-  allowfullscreen
-></iframe>
+<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
 ```
 
 All content is sanitized by DOMPurify before rendering. To restrict which domains may load embedded content, configure comma-separated URL prefixes in the **Security → Allowed URI prefixes** section of the property panel (empty = allow all).
@@ -332,12 +329,12 @@ The resulting payload `context` object would then look like:
 
 ```json
 {
-  "context": {
-    "username": "John Doe",
-    "appid": "df68e14d-...",
-    "sheetid": "850cffb0-...",
-    "platform": "client-managed"
-  }
+    "context": {
+        "username": "John Doe",
+        "appid": "df68e14d-...",
+        "sheetid": "850cffb0-...",
+        "platform": "client-managed"
+    }
 }
 ```
 
@@ -367,17 +364,17 @@ When the user submits a bug report, it is POSTed as JSON to the configured webho
 
 ```json
 {
-  "timestamp": "2026-03-08T12:00:00Z",
-  "severity": "Medium",
-  "description": "The filter panel does not close after selecting a value.",
-  "context": {
-    "userName": "John Doe",
-    "appId": "df68e14d-...",
-    "sheetId": "850cffb0-...",
-    "urlPath": "/sense/app/.../sheet/.../state/analysis",
-    "platform": "client-managed",
-    "timestamp": "2026-03-08 12:00:00"
-  }
+    "timestamp": "2026-03-08T12:00:00Z",
+    "severity": "Medium",
+    "description": "The filter panel does not close after selecting a value.",
+    "context": {
+        "userName": "John Doe",
+        "appId": "df68e14d-...",
+        "sheetId": "850cffb0-...",
+        "urlPath": "/sense/app/.../sheet/.../state/analysis",
+        "platform": "client-managed",
+        "timestamp": "2026-03-08 12:00:00"
+    }
 }
 ```
 
@@ -412,17 +409,17 @@ When the user submits feedback, it is POSTed as JSON to the configured webhook U
 
 ```json
 {
-  "timestamp": "2026-03-08T12:00:00Z",
-  "context": {
-    "userName": "John Doe",
-    "appId": "df68e14d-...",
-    "sheetId": "850cffb0-...",
-    "urlPath": "/sense/app/.../sheet/.../state/analysis",
-    "platform": "client-managed",
-    "timestamp": "2026-03-08 12:00:00"
-  },
-  "rating": 4,
-  "comment": "Great dashboards, very useful for daily reporting."
+    "timestamp": "2026-03-08T12:00:00Z",
+    "context": {
+        "userName": "John Doe",
+        "appId": "df68e14d-...",
+        "sheetId": "850cffb0-...",
+        "urlPath": "/sense/app/.../sheet/.../state/analysis",
+        "platform": "client-managed",
+        "timestamp": "2026-03-08 12:00:00"
+    },
+    "rating": 4,
+    "comment": "Great dashboards, very useful for daily reporting."
 }
 ```
 

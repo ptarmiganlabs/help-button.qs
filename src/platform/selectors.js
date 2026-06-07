@@ -9,72 +9,72 @@
  */
 
 const selectors = {
-  "client-managed": {
-    /**
-     * Default / current code-path selectors for client-managed Qlik Sense.
-     */
-    default: {
-      /** Primary toolbar anchor — help button is injected as first child. */
-      toolbarAnchor: "#top-bar-right-side",
+    'client-managed': {
+        /**
+         * Default / current code-path selectors for client-managed Qlik Sense.
+         */
+        default: {
+            /** Primary toolbar anchor — help button is injected as first child. */
+            toolbarAnchor: '#top-bar-right-side',
 
-      /** Alternative toolbar selectors for detection. */
-      toolbar: ".qv-toolbar-container, .qs-toolbar",
+            /** Alternative toolbar selectors for detection. */
+            toolbar: '.qv-toolbar-container, .qs-toolbar',
 
-      /** Search toggle button — used as position reference. */
-      searchToggle: "#qv-toolbar-search-toggle",
+            /** Search toggle button — used as position reference. */
+            searchToggle: '#qv-toolbar-search-toggle',
 
-      /** Sheet container — used for SPA navigation detection. */
-      sheetContainer: ".qv-sheet, .qv-panel-sheet, .qv-panel-content",
+            /** Sheet container — used for SPA navigation detection. */
+            sheetContainer: '.qv-sheet, .qv-panel-sheet, .qv-panel-content',
 
-      /**
-       * Selector for a Qlik object by its object ID.
-       *
-       * @param {string} objectId - The Qlik object ID.
-       * @returns {string} CSS selector string.
-       */
-      objectById: (objectId) => `.qv-object-${objectId}`,
+            /**
+             * Selector for a Qlik object by its object ID.
+             *
+             * @param {string} objectId - The Qlik object ID.
+             * @returns {string} CSS selector string.
+             */
+            objectById: (objectId) => `.qv-object-${objectId}`,
 
-      /** Selector for all Qlik objects on the sheet. */
-      allObjects: ".qv-object",
+            /** Selector for all Qlik objects on the sheet. */
+            allObjects: '.qv-object',
 
-      /** Selector for grid cells. */
-      gridCell: ".qv-gridcell",
+            /** Selector for grid cells. */
+            gridCell: '.qv-gridcell',
+        },
     },
-  },
 
-  cloud: {
-    /**
-     * Default Cloud selectors.
-     * Cloud toolbar uses data-testid attributes on MUI components.
-     */
-    default: {
-      /** Primary toolbar anchor — help button is injected as first child. */
-      toolbarAnchor: '[data-testid="top-bar-right-side"]',
+    cloud: {
+        /**
+         * Default Cloud selectors.
+         * Cloud toolbar uses data-testid attributes on MUI components.
+         */
+        default: {
+            /** Primary toolbar anchor — help button is injected as first child. */
+            toolbarAnchor: '[data-testid="top-bar-right-side"]',
 
-      /** Top-level toolbar root (for general detection). */
-      toolbar: '[data-testid="top-bar-root"]',
+            /** Top-level toolbar root (for general detection). */
+            toolbar: '[data-testid="top-bar-root"]',
 
-      /** Sub-toolbar (selections bar). */
-      subToolbar: '[data-testid="qs-sub-toolbar"]',
+            /** Sub-toolbar (selections bar). */
+            subToolbar: '[data-testid="qs-sub-toolbar"]',
 
-      /** Sheet container. */
-      sheetContainer: ".qvt-sheet.qv-panel-sheet",
+            /** Sheet container. */
+            sheetContainer: '.qvt-sheet.qv-panel-sheet',
 
-      /**
-       * Selector for a Qlik object by its object ID.
-       *
-       * @param {string} objectId - The Qlik object ID.
-       * @returns {string} CSS selector string.
-       */
-      objectById: (objectId) => `.qv-object-${objectId}`,
+            /**
+             * Selector for a Qlik object by its object ID.
+             *
+             * @param {string} objectId - The Qlik object ID.
+             * @returns {string} CSS selector string.
+             */
+            objectById: (objectId) => `.qv-object-${objectId}`,
 
-      /** Selector for all Qlik objects on the sheet. */
-      allObjects: ".qv-object",
+            /** Selector for all Qlik objects on the sheet. */
+            allObjects: '.qv-object',
 
-      /** Selector for grid cells. */
-      gridCell: ".qv-gridcell",
+            /** Selector for grid cells. */
+            gridCell: '.qv-gridcell',
+        },
     },
-  },
 };
 
 /**
@@ -85,19 +85,19 @@ const selectors = {
  * @returns {object} Selector strings for the given platform and code path.
  */
 export function getSelectors(platform, codePath) {
-  const platformSelectors = selectors[platform];
-  if (!platformSelectors) {
-    return selectors["client-managed"].default;
-  }
+    const platformSelectors = selectors[platform];
+    if (!platformSelectors) {
+        return selectors['client-managed'].default;
+    }
 
-  const base = platformSelectors.default;
+    const base = platformSelectors.default;
 
-  // Merge overrides if a specific code-path exists
-  if (codePath && codePath !== "default" && platformSelectors[codePath]) {
-    return { ...base, ...platformSelectors[codePath] };
-  }
+    // Merge overrides if a specific code-path exists
+    if (codePath && codePath !== 'default' && platformSelectors[codePath]) {
+        return { ...base, ...platformSelectors[codePath] };
+    }
 
-  return base;
+    return base;
 }
 
 export default selectors;

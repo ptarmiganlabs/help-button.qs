@@ -109,9 +109,9 @@ Once the first pre-release (e.g., `rc.0`) exists as a GitHub release:
 
 1. **Push fix/improvement commits directly** to the `pre-release/rc` branch.
 2. The CI will automatically:
-   - Run `rc-version-helper.mjs`, which finds existing `rc.N` releases and computes the next N.
-   - Set `releases_created=true` with the new tag (e.g., `v2.5.0-rc.1`).
-   - The `build-release` job creates a **new** draft release with the incremented tag and fresh artifacts.
+    - Run `rc-version-helper.mjs`, which finds existing `rc.N` releases and computes the next N.
+    - Set `releases_created=true` with the new tag (e.g., `v2.5.0-rc.1`).
+    - The `build-release` job creates a **new** draft release with the incremented tag and fresh artifacts.
 3. Review and publish the new draft on GitHub Releases.
 
 > [!IMPORTANT]

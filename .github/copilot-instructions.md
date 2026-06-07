@@ -1,5 +1,5 @@
 ---
-applyTo: "**"
+applyTo: '**'
 ---
 
 # copilot-instructions.md
@@ -65,11 +65,11 @@ Users deploy by:
 - The active version files are the root `package.json` and `src/meta.json`.
 - Archived legacy variants are no longer included in active release-please version bumps or release packaging.
 - Use [Conventional Commits](https://www.conventionalcommits.org/) for all commit messages:
-  - `feat:` for new features
-  - `fix:` for bug fixes
-  - `docs:` for documentation changes
-  - `refactor:` for code restructuring
-  - `chore:` for maintenance tasks
+    - `feat:` for new features
+    - `fix:` for bug fixes
+    - `docs:` for documentation changes
+    - `refactor:` for code restructuring
+    - `chore:` for maintenance tasks
 
 ## 🚫 Repo Hygiene
 

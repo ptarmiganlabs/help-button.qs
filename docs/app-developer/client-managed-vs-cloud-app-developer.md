@@ -11,14 +11,14 @@ All behavioral statements in this guide are based on the current implementation 
 ## Table of Contents
 
 - [Qlik Sense Client-Managed vs Qlik Cloud — Sense App Developer Guide](#qlik-sense-client-managed-vs-qlik-cloud--sense-app-developer-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [What Stays the Same](#what-stays-the-same)
-  - [What Differs](#what-differs)
-  - [Template Fields and Context Payloads](#template-fields-and-context-payloads)
-  - [Tooltips and Selector Targeting](#tooltips-and-selector-targeting)
-  - [Recommended Configuration Patterns](#recommended-configuration-patterns)
-  - [Rollout Checklist](#rollout-checklist)
+    - [Table of Contents](#table-of-contents)
+    - [Overview](#overview)
+    - [What Stays the Same](#what-stays-the-same)
+    - [What Differs](#what-differs)
+    - [Template Fields and Context Payloads](#template-fields-and-context-payloads)
+    - [Tooltips and Selector Targeting](#tooltips-and-selector-targeting)
+    - [Recommended Configuration Patterns](#recommended-configuration-patterns)
+    - [Rollout Checklist](#rollout-checklist)
 
 ---
 
@@ -116,12 +116,12 @@ They let you build context-aware links without hardcoding app-specific or user-s
 1. **At configuration time**: You enter a URL pattern containing one or more `{{…}}` placeholders in the property panel
 2. **At startup**: The extension fetches user identity from the platform API and caches it (client-managed: `/qps/user`, Cloud: `/api/v1/users/me`)
 3. **At click time**: When the user clicks a menu item or submits a dialog:
-   - The extension parses the current browser URL to extract `appId` and `sheetId`
-   - The extension reads the cached user identity
-   - All `{{…}}` placeholders in the URL are replaced with their resolved values
-   - If a placeholder cannot be resolved, it is replaced with an empty string
-   - Repeated slashes in the path are collapsed to a single slash
-   - The user is navigated to the resolved URL
+    - The extension parses the current browser URL to extract `appId` and `sheetId`
+    - The extension reads the cached user identity
+    - All `{{…}}` placeholders in the URL are replaced with their resolved values
+    - If a placeholder cannot be resolved, it is replaced with an empty string
+    - Repeated slashes in the path are collapsed to a single slash
+    - The user is navigated to the resolved URL
 
 For more complete documentation on template fields, including syntax, fallback behavior, and debugging, see [Template Fields](./template-fields.md).
 

@@ -14,182 +14,182 @@
  * @see README.md täydellinen dokumentaatio.
  */
 window.helpButtonQsConfig = {
-  // --------------------------------------------------------------------------
-  // Työkalupalkin painike — teksti ja vihje
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Työkalupalkin painike — teksti ja vihje
+    // --------------------------------------------------------------------------
 
-  /** Työkalupalkin painikkeessa näytettävä teksti */
-  buttonLabel: "Ohje",
+    /** Työkalupalkin painikkeessa näytettävä teksti */
+    buttonLabel: 'Ohje',
 
-  /** Selaimen vihje osoitettaessa */
-  buttonTooltip: "Avaa ohjevalikko",
+    /** Selaimen vihje osoitettaessa */
+    buttonTooltip: 'Avaa ohjevalikko',
 
-  /** Työkalupalkin painikkeen kuvake: 'help' | 'bug' | 'info' | 'mail' | 'link' */
-  buttonIcon: "help",
+    /** Työkalupalkin painikkeen kuvake: 'help' | 'bug' | 'info' | 'mail' | 'link' */
+    buttonIcon: 'help',
 
-  // --------------------------------------------------------------------------
-  // Työkalupalkin painike — värit / tyyli
-  // --------------------------------------------------------------------------
-  buttonStyle: {
-    backgroundColor: "#165a9b",
-    backgroundColorHover: "#12487c",
-    backgroundColorActive: "#0e3b65",
-    textColor: "#ffffff",
-    borderColor: "#0e3b65",
-    borderRadius: "4px",
-    focusOutlineColor: "rgba(255, 204, 51, 0.6)",
-  },
-
-  // --------------------------------------------------------------------------
-  // Ponnahdusikkuna — otsikko ja ulkoasu
-  // --------------------------------------------------------------------------
-
-  /** Ponnahdusvalikon yläosassa näytettävä otsikko */
-  popupTitle: "Tarvitsetko apua?",
-
-  /** Ponnahdusikkunan värit — tummansininen otsikko keltaisella tekstillä */
-  popupStyle: {
-    backgroundColor: "#ffffff",
-    borderColor: "#0c3256",
-    borderRadius: "8px",
-    headerBackgroundColor: "#0c3256",
-    headerTextColor: "#ffcc33",
-    separatorColor: "#e0e0e0",
-    shadowColor: "rgba(12, 50, 86, 0.25)",
-  },
-
-  // --------------------------------------------------------------------------
-  // Valikon kohteet
-  // --------------------------------------------------------------------------
-  // Jokainen merkintä luo linkin ponnahdusvalikkoon.
-  //
-  // Vakio linkkikohteet:
-  //   label, url, icon, target, iconColor, bgColor, bgColorHover, textColor
-  //
-  // Viheraportti-toimintokohde:
-  //   Aseta action: 'bugReport' url:n sijaan. Tämän kohteen napsautus
-  //   avaa virheraporttidialogin navigoinnin sijaan.
-  //
-  // Mallikentät: URL-osoitteet voivat sisältää {{…}}-paikkamerkkejä,
-  // jotka korvataan dynaamisesti napsautushetkellä Qlik Sense -kontekstilla:
-  //   {{userDirectory}} — Käyttäjähakemisto (esim. "CORP")
-  //   {{userId}}        — Käyttäjätunnus (esim. "jsmith")
-  //   {{appId}}         — Nykyisen sovelluksen GUID
-  //   {{sheetId}}       — Nykyisen taulukon tunnus
-  // Katso docs/template-fields.md täydellinen dokumentaatio.
-  //
-  menuItems: [
-    {
-      label: "Ohje ja dokumentaatio",
-      url: "https://github.com/ptarmiganlabs/help-button.qs",
-      icon: "help",
-      target: "_blank",
-      iconColor: "#165a9b",
-      bgColor: "#f0f6fc",
-      bgColorHover: "#dbeafe",
-      textColor: "#0c3256",
-    },
-    {
-      label: "Ilmoita virheestä",
-      action: "bugReport", // <-- Avaa virheraporttidialogin
-      icon: "bug",
-      iconColor: "#b45309",
-      bgColor: "#fffbeb",
-      bgColorHover: "#fef3c7",
-      textColor: "#78350f",
-    },
-  ],
-
-  // --------------------------------------------------------------------------
-  // Virheraporttiasetukset
-  // --------------------------------------------------------------------------
-  bugReport: {
-    /** Virheraporttidialogin yläosan otsikko */
-    dialogTitle: "Ilmoita virheestä",
-
-    /**
-     * PAKOLLINEN — URL, johon virheraportin JSON-data lähetetään POST-pyynnöllä.
-     */
-    webhookUrl: "https://localhost:3443/api/bug-reports",
-
-    /** HTTP-metodi webhook-kutsulle (oletus: POST) */
-    webhookMethod: "POST",
-
-    /**
-     * Todennusstrategia webhook-kutsulle.
-     *
-     * type: 'none'           — Ei todennusta (luota verkon turvallisuuteen)
-     * type: 'header'         — Lähetä mukautettu otsikko (esim. Authorization: Bearer …)
-     * type: 'sense-session'  — Välitä Qlik Sense -istuntoeväste + XRF-avain
-     * type: 'custom'         — Lähetä mielivaltaisia otsikoita customHeaders-objektista
-     */
-    auth: {
-      type: "none",
+    // --------------------------------------------------------------------------
+    // Työkalupalkin painike — värit / tyyli
+    // --------------------------------------------------------------------------
+    buttonStyle: {
+        backgroundColor: '#165a9b',
+        backgroundColorHover: '#12487c',
+        backgroundColorActive: '#0e3b65',
+        textColor: '#ffffff',
+        borderColor: '#0e3b65',
+        borderRadius: '4px',
+        focusOutlineColor: 'rgba(255, 204, 51, 0.6)',
     },
 
-    /**
-     * Mitä kontekstikenttiä kerätään ja näytetään dialogissa.
-     */
-    collectFields: [
-      "userName",
-      "userDirectory",
-      "userId",
-      "senseVersion",
-      "appId",
-      "sheetId",
-      "urlPath",
+    // --------------------------------------------------------------------------
+    // Ponnahdusikkuna — otsikko ja ulkoasu
+    // --------------------------------------------------------------------------
+
+    /** Ponnahdusvalikon yläosassa näytettävä otsikko */
+    popupTitle: 'Tarvitsetko apua?',
+
+    /** Ponnahdusikkunan värit — tummansininen otsikko keltaisella tekstillä */
+    popupStyle: {
+        backgroundColor: '#ffffff',
+        borderColor: '#0c3256',
+        borderRadius: '8px',
+        headerBackgroundColor: '#0c3256',
+        headerTextColor: '#ffcc33',
+        separatorColor: '#e0e0e0',
+        shadowColor: 'rgba(12, 50, 86, 0.25)',
+    },
+
+    // --------------------------------------------------------------------------
+    // Valikon kohteet
+    // --------------------------------------------------------------------------
+    // Jokainen merkintä luo linkin ponnahdusvalikkoon.
+    //
+    // Vakio linkkikohteet:
+    //   label, url, icon, target, iconColor, bgColor, bgColorHover, textColor
+    //
+    // Viheraportti-toimintokohde:
+    //   Aseta action: 'bugReport' url:n sijaan. Tämän kohteen napsautus
+    //   avaa virheraporttidialogin navigoinnin sijaan.
+    //
+    // Mallikentät: URL-osoitteet voivat sisältää {{…}}-paikkamerkkejä,
+    // jotka korvataan dynaamisesti napsautushetkellä Qlik Sense -kontekstilla:
+    //   {{userDirectory}} — Käyttäjähakemisto (esim. "CORP")
+    //   {{userId}}        — Käyttäjätunnus (esim. "jsmith")
+    //   {{appId}}         — Nykyisen sovelluksen GUID
+    //   {{sheetId}}       — Nykyisen taulukon tunnus
+    // Katso docs/template-fields.md täydellinen dokumentaatio.
+    //
+    menuItems: [
+        {
+            label: 'Ohje ja dokumentaatio',
+            url: 'https://github.com/ptarmiganlabs/help-button.qs',
+            icon: 'help',
+            target: '_blank',
+            iconColor: '#165a9b',
+            bgColor: '#f0f6fc',
+            bgColorHover: '#dbeafe',
+            textColor: '#0c3256',
+        },
+        {
+            label: 'Ilmoita virheestä',
+            action: 'bugReport', // <-- Avaa virheraporttidialogin
+            icon: 'bug',
+            iconColor: '#b45309',
+            bgColor: '#fffbeb',
+            bgColorHover: '#fef3c7',
+            textColor: '#78350f',
+        },
     ],
 
-    /** Kuvaustekstikentän paikkamerkkiteksti */
-    descriptionPlaceholder: "Kuvaile kohtaamaasi ongelmaa…",
+    // --------------------------------------------------------------------------
+    // Virheraporttiasetukset
+    // --------------------------------------------------------------------------
+    bugReport: {
+        /** Virheraporttidialogin yläosan otsikko */
+        dialogTitle: 'Ilmoita virheestä',
 
-    /** Ilmoitusviestit lähetyksen jälkeen */
-    successMessage: "Virheraportti lähetetty onnistuneesti!",
-    errorMessage: "Virheraportin lähettäminen epäonnistui.",
+        /**
+         * PAKOLLINEN — URL, johon virheraportin JSON-data lähetetään POST-pyynnöllä.
+         */
+        webhookUrl: 'https://localhost:3443/api/bug-reports',
 
-    /** Kuvaustekstikentän yläpuolella oleva otsikko */
-    descriptionLabel: "Kuvaus *",
+        /** HTTP-metodi webhook-kutsulle (oletus: POST) */
+        webhookMethod: 'POST',
 
-    /** Peruuta-painikkeen teksti */
-    cancelButtonText: "Peruuta",
+        /**
+         * Todennusstrategia webhook-kutsulle.
+         *
+         * type: 'none'           — Ei todennusta (luota verkon turvallisuuteen)
+         * type: 'header'         — Lähetä mukautettu otsikko (esim. Authorization: Bearer …)
+         * type: 'sense-session'  — Välitä Qlik Sense -istuntoeväste + XRF-avain
+         * type: 'custom'         — Lähetä mielivaltaisia otsikoita customHeaders-objektista
+         */
+        auth: {
+            type: 'none',
+        },
 
-    /** Lähetä-painikkeen teksti */
-    submitButtonText: "Lähetä",
+        /**
+         * Mitä kontekstikenttiä kerätään ja näytetään dialogissa.
+         */
+        collectFields: [
+            'userName',
+            'userDirectory',
+            'userId',
+            'senseVersion',
+            'appId',
+            'sheetId',
+            'urlPath',
+        ],
 
-    /** Lähetä-painikkeen teksti raportin lähetyksen aikana */
-    submittingButtonText: "Lähetetään…",
+        /** Kuvaustekstikentän paikkamerkkiteksti */
+        descriptionPlaceholder: 'Kuvaile kohtaamaasi ongelmaa…',
 
-    /** Teksti joka näytetään ympäristökontekstin latautuessa */
-    loadingMessage: "Kerätään ympäristötietoja…",
+        /** Ilmoitusviestit lähetyksen jälkeen */
+        successMessage: 'Virheraportti lähetetty onnistuneesti!',
+        errorMessage: 'Virheraportin lähettäminen epäonnistui.',
 
-    /** Sulje-painikkeen (×) aria-otsikko dialogin otsikossa */
-    closeDialogAriaLabel: "Sulje valintaikkuna",
+        /** Kuvaustekstikentän yläpuolella oleva otsikko */
+        descriptionLabel: 'Kuvaus *',
 
-    /** Dialogin kontekstikenttien otsikot. */
-    fieldLabels: {
-      userId: "Käyttäjätunnus",
-      userName: "Käyttäjänimi",
-      userDirectory: "Käyttäjähakemisto",
-      senseVersion: "Qlik Sense -versio",
-      appId: "Sovellustunnus",
-      sheetId: "Taulukon tunnus",
-      urlPath: "URL-polku",
+        /** Peruuta-painikkeen teksti */
+        cancelButtonText: 'Peruuta',
+
+        /** Lähetä-painikkeen teksti */
+        submitButtonText: 'Lähetä',
+
+        /** Lähetä-painikkeen teksti raportin lähetyksen aikana */
+        submittingButtonText: 'Lähetetään…',
+
+        /** Teksti joka näytetään ympäristökontekstin latautuessa */
+        loadingMessage: 'Kerätään ympäristötietoja…',
+
+        /** Sulje-painikkeen (×) aria-otsikko dialogin otsikossa */
+        closeDialogAriaLabel: 'Sulje valintaikkuna',
+
+        /** Dialogin kontekstikenttien otsikot. */
+        fieldLabels: {
+            userId: 'Käyttäjätunnus',
+            userName: 'Käyttäjänimi',
+            userDirectory: 'Käyttäjähakemisto',
+            senseVersion: 'Qlik Sense -versio',
+            appId: 'Sovellustunnus',
+            sheetId: 'Taulukon tunnus',
+            urlPath: 'URL-polku',
+        },
     },
-  },
 
-  // --------------------------------------------------------------------------
-  // Lisäasetukset / injektioasetukset (harvoin tarvitsee muuttaa)
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Lisäasetukset / injektioasetukset (harvoin tarvitsee muuttaa)
+    // --------------------------------------------------------------------------
 
-  /** CSS-valitsin työkalupalkin säilölle, johon injektoidaan */
-  // anchorSelector: '#top-bar-right-side',
+    /** CSS-valitsin työkalupalkin säilölle, johon injektoidaan */
+    // anchorSelector: '#top-bar-right-side',
 
-  /** Kyselyväli millisekunteina työkalupalkin renderöinnin aikana */
-  // pollInterval: 500,
+    /** Kyselyväli millisekunteina työkalupalkin renderöinnin aikana */
+    // pollInterval: 500,
 
-  /** Enimmäisodotusaika millisekunteina ennen luovuttamista */
-  // timeout: 30000,
+    /** Enimmäisodotusaika millisekunteina ennen luovuttamista */
+    // timeout: 30000,
 
-  /** Aseta true:ksi ottaaksesi konsolin virheenkorjauslokin käyttöön */
-  debug: false,
+    /** Aseta true:ksi ottaaksesi konsolin virheenkorjauslokin käyttöön */
+    debug: false,
 };

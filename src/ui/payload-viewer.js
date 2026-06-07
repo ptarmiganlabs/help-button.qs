@@ -6,9 +6,9 @@
  * Restores keyboard focus when the viewer is closed.
  */
 
-import { makeSvg } from "./icons";
-import { escapeHtml } from "../util/template-fields";
-import { getTranslation } from "../i18n/index";
+import { makeSvg } from './icons';
+import { escapeHtml } from '../util/template-fields';
+import { getTranslation } from '../i18n/index';
 
 // ---------------------------------------------------------------------------
 // Header redaction helpers
@@ -22,23 +22,23 @@ import { getTranslation } from "../i18n/index";
  * @returns {boolean}
  */
 function isSensitiveHeader(name) {
-  if (!name) return false;
-  const n = String(name).toLowerCase();
-  return (
-    n === "authorization" ||
-    n === "proxy-authorization" ||
-    n === "cookie" ||
-    n === "set-cookie" ||
-    n === "x-api-key" ||
-    n === "api-key" ||
-    n === "apikey" ||
-    n === "x-auth-token" ||
-    n === "x-access-token" ||
-    n === "access-token" ||
-    /\btoken\b/.test(n) ||
-    /\bsecret\b/.test(n) ||
-    /\bkey\b/.test(n)
-  );
+    if (!name) return false;
+    const n = String(name).toLowerCase();
+    return (
+        n === 'authorization' ||
+        n === 'proxy-authorization' ||
+        n === 'cookie' ||
+        n === 'set-cookie' ||
+        n === 'x-api-key' ||
+        n === 'api-key' ||
+        n === 'apikey' ||
+        n === 'x-auth-token' ||
+        n === 'x-access-token' ||
+        n === 'access-token' ||
+        /\btoken\b/.test(n) ||
+        /\bsecret\b/.test(n) ||
+        /\bkey\b/.test(n)
+    );
 }
 
 /**
@@ -50,9 +50,9 @@ function isSensitiveHeader(name) {
  * @returns {string}
  */
 function formatHeaderValue(name, value) {
-  if (isSensitiveHeader(name)) return "<redacted>";
-  if (Array.isArray(value)) return value.join(", ");
-  return String(value === null || value === undefined ? "" : value);
+    if (isSensitiveHeader(name)) return '<redacted>';
+    if (Array.isArray(value)) return value.join(', ');
+    return String(value === null || value === undefined ? '' : value);
 }
 
 /**
@@ -71,56 +71,54 @@ function formatHeaderValue(name, value) {
  * @returns {string[]} Array of display lines.
  */
 export function buildHeaderDisplay(
-  authStrategy,
-  authToken,
-  authHeaderName,
-  authHeaderValue,
-  customHeaders,
-  headers,
+    authStrategy,
+    authToken,
+    authHeaderName,
+    authHeaderValue,
+    customHeaders,
+    headers
 ) {
-  const display = [];
+    const display = [];
 
-  // Use the actual headers object when available.
-  if (headers && typeof headers === "object" && !Array.isArray(headers)) {
-    const entries = Object.entries(headers);
-    const hasContentType = entries.some(
-      ([k]) => String(k).toLowerCase() === "content-type",
-    );
-    if (!hasContentType) {
-      display.push("Content-Type: application/json");
-    }
-    entries.forEach(([k, v]) => {
-      display.push(`${k}: ${formatHeaderValue(k, v)}`);
-    });
-    return display;
-  }
-
-  // Fallback: derive from auth-strategy parameters.
-  display.push("Content-Type: application/json");
-
-  if (authStrategy === "header") {
-    if (authHeaderName && authHeaderValue) {
-      display.push(
-        `${authHeaderName}: ${formatHeaderValue(authHeaderName, authHeaderValue)}`,
-      );
-    } else if (authToken) {
-      display.push("Authorization: <redacted>");
-    }
-  } else if (authStrategy === "custom") {
-    if (Array.isArray(customHeaders)) {
-      customHeaders.forEach((h) => {
-        if (h && h.name) {
-          display.push(`${h.name}: ${formatHeaderValue(h.name, h.value)}`);
+    // Use the actual headers object when available.
+    if (headers && typeof headers === 'object' && !Array.isArray(headers)) {
+        const entries = Object.entries(headers);
+        const hasContentType = entries.some(([k]) => String(k).toLowerCase() === 'content-type');
+        if (!hasContentType) {
+            display.push('Content-Type: application/json');
         }
-      });
-    } else if (customHeaders && typeof customHeaders === "object") {
-      Object.entries(customHeaders).forEach(([k, v]) => {
-        display.push(`${k}: ${formatHeaderValue(k, v)}`);
-      });
+        entries.forEach(([k, v]) => {
+            display.push(`${k}: ${formatHeaderValue(k, v)}`);
+        });
+        return display;
     }
-  }
 
-  return display;
+    // Fallback: derive from auth-strategy parameters.
+    display.push('Content-Type: application/json');
+
+    if (authStrategy === 'header') {
+        if (authHeaderName && authHeaderValue) {
+            display.push(
+                `${authHeaderName}: ${formatHeaderValue(authHeaderName, authHeaderValue)}`
+            );
+        } else if (authToken) {
+            display.push('Authorization: <redacted>');
+        }
+    } else if (authStrategy === 'custom') {
+        if (Array.isArray(customHeaders)) {
+            customHeaders.forEach((h) => {
+                if (h && h.name) {
+                    display.push(`${h.name}: ${formatHeaderValue(h.name, h.value)}`);
+                }
+            });
+        } else if (customHeaders && typeof customHeaders === 'object') {
+            Object.entries(customHeaders).forEach(([k, v]) => {
+                display.push(`${k}: ${formatHeaderValue(k, v)}`);
+            });
+        }
+    }
+
+    return display;
 }
 
 // ---------------------------------------------------------------------------
@@ -137,37 +135,37 @@ export function buildHeaderDisplay(
  * @returns {string} HTML string with syntax-highlighting spans.
  */
 export function syntaxHighlightJson(obj) {
-  const json = JSON.stringify(obj, null, 2);
-  const pattern =
-    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g;
+    const json = JSON.stringify(obj, null, 2);
+    const pattern =
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g;
 
-  let result = "";
-  let lastIndex = 0;
+    let result = '';
+    let lastIndex = 0;
 
-  json.replace(pattern, (match, ...rest) => {
-    // `rest` contains capture groups and then offset, string, groups.
-    // offset is always at index rest.length - 2 (before the source string).
-    const offset = rest[rest.length - 2];
-    // Escape structural characters (brackets, commas, whitespace) before match.
-    result += escapeHtml(json.slice(lastIndex, offset));
-    lastIndex = offset + match.length;
+    json.replace(pattern, (match, ...rest) => {
+        // `rest` contains capture groups and then offset, string, groups.
+        // offset is always at index rest.length - 2 (before the source string).
+        const offset = rest[rest.length - 2];
+        // Escape structural characters (brackets, commas, whitespace) before match.
+        result += escapeHtml(json.slice(lastIndex, offset));
+        lastIndex = offset + match.length;
 
-    let cls = "hl-number";
-    if (/^"/.test(match)) {
-      cls = /:$/.test(match) ? "hl-key" : "hl-string";
-    } else if (/true|false/.test(match)) {
-      cls = "hl-bool";
-    } else if (/null/.test(match)) {
-      cls = "hl-null";
-    }
+        let cls = 'hl-number';
+        if (/^"/.test(match)) {
+            cls = /:$/.test(match) ? 'hl-key' : 'hl-string';
+        } else if (/true|false/.test(match)) {
+            cls = 'hl-bool';
+        } else if (/null/.test(match)) {
+            cls = 'hl-null';
+        }
 
-    result += '<span class="' + cls + '">' + escapeHtml(match) + "</span>";
-    return match;
-  });
+        result += '<span class="' + cls + '">' + escapeHtml(match) + '</span>';
+        return match;
+    });
 
-  // Escape any remaining structural characters after the last match.
-  result += escapeHtml(json.slice(lastIndex));
-  return result;
+    // Escape any remaining structural characters after the last match.
+    result += escapeHtml(json.slice(lastIndex));
+    return result;
 }
 
 // ---------------------------------------------------------------------------
@@ -192,141 +190,141 @@ export function syntaxHighlightJson(obj) {
  * @param {HTMLElement|null} focusTarget - Element to restore focus to on close.
  */
 export function showPayloadViewer(
-  payload,
-  url,
-  headers,
-  authStrategy,
-  authToken,
-  authHeaderName,
-  authHeaderValue,
-  customHeaders,
-  focusTarget,
-) {
-  const overlay = document.createElement("div");
-  overlay.className = "hbqs-payload-overlay";
-
-  const modal = document.createElement("div");
-  modal.className = "hbqs-payload-modal";
-  modal.setAttribute("role", "dialog");
-  modal.setAttribute("aria-modal", "true");
-  modal.setAttribute("aria-label", getTranslation("payloadViewerAriaLabel"));
-
-  const handleEscapeKey = (e) => {
-    if (e.key !== "Escape") return;
-    e.preventDefault();
-    e.stopPropagation();
-    closeViewer();
-  };
-
-  const closeViewer = () => {
-    document.removeEventListener("keydown", handleEscapeKey, true);
-    overlay.remove();
-    if (focusTarget) focusTarget.focus();
-  };
-
-  // Header row (title + X close button)
-  const headerEl = document.createElement("div");
-  headerEl.className = "hbqs-payload-header";
-
-  const titleEl = document.createElement("h3");
-  titleEl.className = "hbqs-payload-title";
-  titleEl.textContent = getTranslation("payloadViewerTitle");
-  headerEl.appendChild(titleEl);
-
-  const closeBtn = document.createElement("button");
-  closeBtn.className = "hbqs-payload-close";
-  closeBtn.type = "button";
-  closeBtn.setAttribute("aria-label", getTranslation("payloadViewerClose"));
-  closeBtn.innerHTML = makeSvg("close", 18);
-  closeBtn.addEventListener("click", closeViewer);
-  headerEl.appendChild(closeBtn);
-
-  modal.appendChild(headerEl);
-
-  // Body
-  const bodyEl = document.createElement("div");
-  bodyEl.className = "hbqs-payload-body";
-
-  // URL section
-  const urlSection = document.createElement("div");
-  urlSection.className = "hbqs-payload-section";
-  const urlTitle = document.createElement("div");
-  urlTitle.className = "hbqs-payload-section-title";
-  urlTitle.textContent = getTranslation("payloadViewerUrl");
-  urlSection.appendChild(urlTitle);
-  const urlPre = document.createElement("pre");
-  urlPre.className = "hbqs-payload-code hl-url";
-  urlPre.textContent = url;
-  urlSection.appendChild(urlPre);
-  bodyEl.appendChild(urlSection);
-
-  // Method section
-  const methodSection = document.createElement("div");
-  methodSection.className = "hbqs-payload-section";
-  const methodTitle = document.createElement("div");
-  methodTitle.className = "hbqs-payload-section-title";
-  methodTitle.textContent = getTranslation("payloadViewerMethod");
-  methodSection.appendChild(methodTitle);
-  const methodPre = document.createElement("pre");
-  methodPre.className = "hbqs-payload-code hl-method";
-  methodPre.textContent = "POST";
-  methodSection.appendChild(methodPre);
-  bodyEl.appendChild(methodSection);
-
-  // Headers section
-  const headersSection = document.createElement("div");
-  headersSection.className = "hbqs-payload-section";
-  const headersTitle = document.createElement("div");
-  headersTitle.className = "hbqs-payload-section-title";
-  headersTitle.textContent = getTranslation("payloadViewerHeaders");
-  headersSection.appendChild(headersTitle);
-  const headersPre = document.createElement("pre");
-  headersPre.className = "hbqs-payload-code hl-headers";
-  headersPre.textContent = buildHeaderDisplay(
+    payload,
+    url,
+    headers,
     authStrategy,
     authToken,
     authHeaderName,
     authHeaderValue,
     customHeaders,
-    headers,
-  ).join("\n");
-  headersSection.appendChild(headersPre);
-  bodyEl.appendChild(headersSection);
+    focusTarget
+) {
+    const overlay = document.createElement('div');
+    overlay.className = 'hbqs-payload-overlay';
 
-  // Body section
-  const bodySectionEl = document.createElement("div");
-  bodySectionEl.className = "hbqs-payload-section";
-  const bodyTitle = document.createElement("div");
-  bodyTitle.className = "hbqs-payload-section-title";
-  bodyTitle.textContent = getTranslation("payloadViewerBody");
-  bodySectionEl.appendChild(bodyTitle);
-  const bodyPre = document.createElement("pre");
-  bodyPre.className = "hbqs-payload-code hl-body";
-  bodyPre.innerHTML = syntaxHighlightJson(payload);
-  bodySectionEl.appendChild(bodyPre);
-  bodyEl.appendChild(bodySectionEl);
+    const modal = document.createElement('div');
+    modal.className = 'hbqs-payload-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', getTranslation('payloadViewerAriaLabel'));
 
-  modal.appendChild(bodyEl);
+    const handleEscapeKey = (e) => {
+        if (e.key !== 'Escape') return;
+        e.preventDefault();
+        e.stopPropagation();
+        closeViewer();
+    };
 
-  // Footer
-  const footerEl = document.createElement("div");
-  footerEl.className = "hbqs-payload-footer";
-  const closeFooterBtn = document.createElement("button");
-  closeFooterBtn.className = "hbqs-bug-report-btn hbqs-bug-report-btn-cancel";
-  closeFooterBtn.type = "button";
-  closeFooterBtn.textContent = getTranslation("payloadViewerClose");
-  closeFooterBtn.addEventListener("click", closeViewer);
-  footerEl.appendChild(closeFooterBtn);
-  modal.appendChild(footerEl);
+    const closeViewer = () => {
+        document.removeEventListener('keydown', handleEscapeKey, true);
+        overlay.remove();
+        if (focusTarget) focusTarget.focus();
+    };
 
-  overlay.appendChild(modal);
+    // Header row (title + X close button)
+    const headerEl = document.createElement('div');
+    headerEl.className = 'hbqs-payload-header';
 
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) closeViewer();
-  });
+    const titleEl = document.createElement('h3');
+    titleEl.className = 'hbqs-payload-title';
+    titleEl.textContent = getTranslation('payloadViewerTitle');
+    headerEl.appendChild(titleEl);
 
-  document.body.appendChild(overlay);
-  document.addEventListener("keydown", handleEscapeKey, true);
-  modal.setAttribute("tabindex", "-1");
-  modal.focus();
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'hbqs-payload-close';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', getTranslation('payloadViewerClose'));
+    closeBtn.innerHTML = makeSvg('close', 18);
+    closeBtn.addEventListener('click', closeViewer);
+    headerEl.appendChild(closeBtn);
+
+    modal.appendChild(headerEl);
+
+    // Body
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'hbqs-payload-body';
+
+    // URL section
+    const urlSection = document.createElement('div');
+    urlSection.className = 'hbqs-payload-section';
+    const urlTitle = document.createElement('div');
+    urlTitle.className = 'hbqs-payload-section-title';
+    urlTitle.textContent = getTranslation('payloadViewerUrl');
+    urlSection.appendChild(urlTitle);
+    const urlPre = document.createElement('pre');
+    urlPre.className = 'hbqs-payload-code hl-url';
+    urlPre.textContent = url;
+    urlSection.appendChild(urlPre);
+    bodyEl.appendChild(urlSection);
+
+    // Method section
+    const methodSection = document.createElement('div');
+    methodSection.className = 'hbqs-payload-section';
+    const methodTitle = document.createElement('div');
+    methodTitle.className = 'hbqs-payload-section-title';
+    methodTitle.textContent = getTranslation('payloadViewerMethod');
+    methodSection.appendChild(methodTitle);
+    const methodPre = document.createElement('pre');
+    methodPre.className = 'hbqs-payload-code hl-method';
+    methodPre.textContent = 'POST';
+    methodSection.appendChild(methodPre);
+    bodyEl.appendChild(methodSection);
+
+    // Headers section
+    const headersSection = document.createElement('div');
+    headersSection.className = 'hbqs-payload-section';
+    const headersTitle = document.createElement('div');
+    headersTitle.className = 'hbqs-payload-section-title';
+    headersTitle.textContent = getTranslation('payloadViewerHeaders');
+    headersSection.appendChild(headersTitle);
+    const headersPre = document.createElement('pre');
+    headersPre.className = 'hbqs-payload-code hl-headers';
+    headersPre.textContent = buildHeaderDisplay(
+        authStrategy,
+        authToken,
+        authHeaderName,
+        authHeaderValue,
+        customHeaders,
+        headers
+    ).join('\n');
+    headersSection.appendChild(headersPre);
+    bodyEl.appendChild(headersSection);
+
+    // Body section
+    const bodySectionEl = document.createElement('div');
+    bodySectionEl.className = 'hbqs-payload-section';
+    const bodyTitle = document.createElement('div');
+    bodyTitle.className = 'hbqs-payload-section-title';
+    bodyTitle.textContent = getTranslation('payloadViewerBody');
+    bodySectionEl.appendChild(bodyTitle);
+    const bodyPre = document.createElement('pre');
+    bodyPre.className = 'hbqs-payload-code hl-body';
+    bodyPre.innerHTML = syntaxHighlightJson(payload);
+    bodySectionEl.appendChild(bodyPre);
+    bodyEl.appendChild(bodySectionEl);
+
+    modal.appendChild(bodyEl);
+
+    // Footer
+    const footerEl = document.createElement('div');
+    footerEl.className = 'hbqs-payload-footer';
+    const closeFooterBtn = document.createElement('button');
+    closeFooterBtn.className = 'hbqs-bug-report-btn hbqs-bug-report-btn-cancel';
+    closeFooterBtn.type = 'button';
+    closeFooterBtn.textContent = getTranslation('payloadViewerClose');
+    closeFooterBtn.addEventListener('click', closeViewer);
+    footerEl.appendChild(closeFooterBtn);
+    modal.appendChild(footerEl);
+
+    overlay.appendChild(modal);
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeViewer();
+    });
+
+    document.body.appendChild(overlay);
+    document.addEventListener('keydown', handleEscapeKey, true);
+    modal.setAttribute('tabindex', '-1');
+    modal.focus();
 }
