@@ -1,0 +1,11 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Ignore placeholder XRF keys and dummy API keys"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+regexes = [
+  '''xrfKey.*=.*['"][a-z0-9]{16}['"]''',
+  '''abcdefghij123456''',
+]
