@@ -131,9 +131,7 @@ Rather than escaping all `<` and `>` characters, the converter uses a **partial 
 
 ```javascript
 // Escape bare & and < that are NOT part of an existing HTML tag
-text = text
-  .replace(/&(?!#?\w+;)/g, "&amp;")
-  .replace(/<(?![/a-zA-Z!])/g, "&lt;");
+text = text.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?![/a-zA-Z!])/g, '&lt;');
 ```
 
 This means authors can write raw `<iframe>` or `<video>` elements directly in their content fields and they will pass through to the DOMPurify stage rather than being escaped into visible text.
@@ -157,24 +155,24 @@ After the Markdown rules run, the full HTML is passed through [DOMPurify](https:
 
 ```javascript
 DOMPurify.sanitize(html, {
-  ADD_TAGS: ["iframe", "video", "source"],
-  ADD_ATTR: [
-    "target",
-    "rel",
-    "style",
-    "frameborder",
-    "controls",
-    "autoplay",
-    "muted",
-    "loop",
-    "poster",
-    "preload",
-    "playsinline",
-    "allowfullscreen",
-    "allow",
-    "loading",
-    "referrerpolicy",
-  ],
+    ADD_TAGS: ['iframe', 'video', 'source'],
+    ADD_ATTR: [
+        'target',
+        'rel',
+        'style',
+        'frameborder',
+        'controls',
+        'autoplay',
+        'muted',
+        'loop',
+        'poster',
+        'preload',
+        'playsinline',
+        'allowfullscreen',
+        'allow',
+        'loading',
+        'referrerpolicy',
+    ],
 });
 ```
 
@@ -186,20 +184,20 @@ After DOMPurify runs, an optional URI allowlist filter removes any remaining `if
 
 ```javascript
 function filterMediaUris(html, allowedUriPatterns) {
-  if (!allowedUriPatterns) return html; // empty = allow all
+    if (!allowedUriPatterns) return html; // empty = allow all
 
-  const prefixes = allowedUriPatterns
-    .split(",")
-    .map((p) => p.trim())
-    .filter(Boolean);
-  const container = document.createElement("div");
-  container.innerHTML = html;
+    const prefixes = allowedUriPatterns
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean);
+    const container = document.createElement('div');
+    container.innerHTML = html;
 
-  container.querySelectorAll("iframe, video, source").forEach((el) => {
-    const src = el.getAttribute("src") || "";
-    if (!prefixes.some((prefix) => src.startsWith(prefix))) el.remove();
-  });
-  return container.innerHTML;
+    container.querySelectorAll('iframe, video, source').forEach((el) => {
+        const src = el.getAttribute('src') || '';
+        if (!prefixes.some((prefix) => src.startsWith(prefix))) el.remove();
+    });
+    return container.innerHTML;
 }
 ```
 
@@ -255,10 +253,10 @@ The active URI patterns are stored as a module-level variable in `tooltip-inject
 
 ```javascript
 // Module-level in tooltip-injector.js
-let activeAllowedUriPatterns = "";
+let activeAllowedUriPatterns = '';
 
 // Set once per inject cycle
-activeAllowedUriPatterns = layout.security?.allowedUriPatterns ?? "";
+activeAllowedUriPatterns = layout.security?.allowedUriPatterns ?? '';
 ```
 
 ---
@@ -357,10 +355,10 @@ for each item in layout.tooltips:
 6. If `iconFloating` is `true`, adds the `--floating` modifier class and calls `enableDrag()` for pointer-based drag-to-move constrained within the parent
 7. Resolves all 9 theme colors via `resolveColor()`
 8. Attaches event listeners:
-   - `mouseenter` → `showHover(iconEl, content, hoverColors)`
-   - `mouseleave` → `scheduleHide()`
-   - `click` → `openTooltipDialog({...options, ...dialogColors})`
-   - `keydown` (Enter/Space) → same as click
+    - `mouseenter` → `showHover(iconEl, content, hoverColors)`
+    - `mouseleave` → `scheduleHide()`
+    - `click` → `openTooltipDialog({...options, ...dialogColors})`
+    - `keydown` (Enter/Space) → same as click
 
 ### applyPosition()
 
@@ -471,10 +469,10 @@ Icons are defined in `ui/icons.js` as SVG path data inside a 16×16 viewBox:
 
 ```javascript
 const ICONS = {
-  help: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
-  info: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
-  lightbulb: '<path d="M8 1a4.5 4.5 0 0 0-1.5 8.74V11.5..."/>',
-  // ...
+    help: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
+    info: '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm..."/>',
+    lightbulb: '<path d="M8 1a4.5 4.5 0 0 0-1.5 8.74V11.5..."/>',
+    // ...
 };
 ```
 
@@ -482,9 +480,9 @@ To add a new icon:
 
 1. Get the SVG path data for a 16×16 viewBox icon.
 2. Add a new entry to the `ICONS` object:
-   ```javascript
-   'my-icon': '<path d="..."/>',
-   ```
+    ```javascript
+    'my-icon': '<path d="..."/>',
+    ```
 3. `ICON_NAMES` (`Object.keys(ICONS)`) will automatically include it.
 4. The icon will appear in the tooltip icon dropdown in the property panel (unless its name is `close` or `send`, which are filtered out).
 
@@ -535,7 +533,7 @@ myNewProp: {
 In `tooltip-injector.js`, access `item.myNewProp` inside `mountTooltipIcon()` and pass it where needed:
 
 ```javascript
-const myValue = item.myNewProp || "default-value";
+const myValue = item.myNewProp || 'default-value';
 // Use myValue when creating elements or calling showHover/openTooltipDialog
 ```
 
@@ -568,8 +566,8 @@ This check is at the top of `injectHelpButton()` in `toolbar-injector.js`:
 ```javascript
 const menuItems = layout.menuItems || [];
 if (menuItems.length === 0) {
-  destroyHelpButton();
-  return () => {};
+    destroyHelpButton();
+    return () => {};
 }
 ```
 

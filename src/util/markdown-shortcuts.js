@@ -31,7 +31,7 @@
  * @param {HTMLTextAreaElement} textarea
  */
 function notify(textarea) {
-  textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 /**
@@ -44,24 +44,24 @@ function notify(textarea) {
  * @param {string} [placeholder] - Fallback text when nothing is selected.
  */
 function wrapSelection(textarea, before, after, placeholder) {
-  const start = textarea.selectionStart;
-  const end = textarea.selectionEnd;
-  const value = textarea.value;
-  const selected = value.slice(start, end);
-  const inner = selected || placeholder || "";
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const value = textarea.value;
+    const selected = value.slice(start, end);
+    const inner = selected || placeholder || '';
 
-  const replacement = before + inner + after;
-  textarea.value = value.slice(0, start) + replacement + value.slice(end);
+    const replacement = before + inner + after;
+    textarea.value = value.slice(0, start) + replacement + value.slice(end);
 
-  // If there was a selection keep it highlighted inside the markers;
-  // otherwise select the placeholder so the user can type over it.
-  const newStart = start + before.length;
-  const newEnd = newStart + inner.length;
-  textarea.selectionStart = newStart;
-  textarea.selectionEnd = newEnd;
-  textarea.focus();
+    // If there was a selection keep it highlighted inside the markers;
+    // otherwise select the placeholder so the user can type over it.
+    const newStart = start + before.length;
+    const newEnd = newStart + inner.length;
+    textarea.selectionStart = newStart;
+    textarea.selectionEnd = newEnd;
+    textarea.focus();
 
-  notify(textarea);
+    notify(textarea);
 }
 
 /**
@@ -73,29 +73,29 @@ function wrapSelection(textarea, before, after, placeholder) {
  * @param {HTMLTextAreaElement} textarea - Target element.
  */
 function insertLink(textarea) {
-  const start = textarea.selectionStart;
-  const end = textarea.selectionEnd;
-  const value = textarea.value;
-  const selected = value.slice(start, end);
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const value = textarea.value;
+    const selected = value.slice(start, end);
 
-  if (selected) {
-    // Use selection as link text, place cursor inside the URL part
-    const replacement = "[" + selected + "](url)";
-    textarea.value = value.slice(0, start) + replacement + value.slice(end);
-    // Select "url" so the user can type the actual URL immediately
-    const urlStart = start + selected.length + 3; // after "[text]("
-    textarea.selectionStart = urlStart;
-    textarea.selectionEnd = urlStart + 3; // length of "url"
-  } else {
-    const replacement = "[text](url)";
-    textarea.value = value.slice(0, start) + replacement + value.slice(end);
-    // Select "text" so user can type the link label
-    textarea.selectionStart = start + 1;
-    textarea.selectionEnd = start + 5; // length of "text"
-  }
+    if (selected) {
+        // Use selection as link text, place cursor inside the URL part
+        const replacement = '[' + selected + '](url)';
+        textarea.value = value.slice(0, start) + replacement + value.slice(end);
+        // Select "url" so the user can type the actual URL immediately
+        const urlStart = start + selected.length + 3; // after "[text]("
+        textarea.selectionStart = urlStart;
+        textarea.selectionEnd = urlStart + 3; // length of "url"
+    } else {
+        const replacement = '[text](url)';
+        textarea.value = value.slice(0, start) + replacement + value.slice(end);
+        // Select "text" so user can type the link label
+        textarea.selectionStart = start + 1;
+        textarea.selectionEnd = start + 5; // length of "text"
+    }
 
-  textarea.focus();
-  notify(textarea);
+    textarea.focus();
+    notify(textarea);
 }
 
 /**
@@ -113,54 +113,52 @@ function insertLink(textarea) {
  *     Use the special value `"ol"` for ordered-list numbering.
  */
 function toggleLinePrefix(textarea, prefix) {
-  const value = textarea.value;
-  const selStart = textarea.selectionStart;
-  const selEnd = textarea.selectionEnd;
+    const value = textarea.value;
+    const selStart = textarea.selectionStart;
+    const selEnd = textarea.selectionEnd;
 
-  // Expand selection to cover full lines
-  const lineStart = value.lastIndexOf("\n", selStart - 1) + 1;
-  let lineEnd = value.indexOf("\n", selEnd);
-  if (lineEnd === -1) lineEnd = value.length;
+    // Expand selection to cover full lines
+    const lineStart = value.lastIndexOf('\n', selStart - 1) + 1;
+    let lineEnd = value.indexOf('\n', selEnd);
+    if (lineEnd === -1) lineEnd = value.length;
 
-  const block = value.slice(lineStart, lineEnd);
-  const lines = block.split("\n");
+    const block = value.slice(lineStart, lineEnd);
+    const lines = block.split('\n');
 
-  const isOrdered = prefix === "ol";
-  const olPattern = /^\d+\.\s/;
+    const isOrdered = prefix === 'ol';
+    const olPattern = /^\d+\.\s/;
 
-  // Determine if we are toggling off (all lines already prefixed)
-  const allPrefixed = lines.every((line) =>
-    isOrdered ? olPattern.test(line) : line.startsWith(prefix),
-  );
+    // Determine if we are toggling off (all lines already prefixed)
+    const allPrefixed = lines.every((line) =>
+        isOrdered ? olPattern.test(line) : line.startsWith(prefix)
+    );
 
-  let replaced;
-  if (allPrefixed) {
-    // Remove prefixes
-    replaced = lines
-      .map((line) =>
-        isOrdered ? line.replace(olPattern, "") : line.slice(prefix.length),
-      )
-      .join("\n");
-  } else {
-    // Add prefixes where missing
-    replaced = lines
-      .map((line, i) => {
-        if (isOrdered) {
-          return olPattern.test(line) ? line : i + 1 + ". " + line;
-        }
-        return line.startsWith(prefix) ? line : prefix + line;
-      })
-      .join("\n");
-  }
+    let replaced;
+    if (allPrefixed) {
+        // Remove prefixes
+        replaced = lines
+            .map((line) => (isOrdered ? line.replace(olPattern, '') : line.slice(prefix.length)))
+            .join('\n');
+    } else {
+        // Add prefixes where missing
+        replaced = lines
+            .map((line, i) => {
+                if (isOrdered) {
+                    return olPattern.test(line) ? line : i + 1 + '. ' + line;
+                }
+                return line.startsWith(prefix) ? line : prefix + line;
+            })
+            .join('\n');
+    }
 
-  textarea.value = value.slice(0, lineStart) + replaced + value.slice(lineEnd);
+    textarea.value = value.slice(0, lineStart) + replaced + value.slice(lineEnd);
 
-  // Re-select the affected block
-  textarea.selectionStart = lineStart;
-  textarea.selectionEnd = lineStart + replaced.length;
-  textarea.focus();
+    // Re-select the affected block
+    textarea.selectionStart = lineStart;
+    textarea.selectionEnd = lineStart + replaced.length;
+    textarea.focus();
 
-  notify(textarea);
+    notify(textarea);
 }
 
 // ---------------------------------------------------------------------------
@@ -169,31 +167,31 @@ function toggleLinePrefix(textarea, prefix) {
 
 /** @param {HTMLTextAreaElement} ta */
 export function applyBold(ta) {
-  wrapSelection(ta, "**", "**", "bold");
+    wrapSelection(ta, '**', '**', 'bold');
 }
 /** @param {HTMLTextAreaElement} ta */
 export function applyItalic(ta) {
-  wrapSelection(ta, "*", "*", "italic");
+    wrapSelection(ta, '*', '*', 'italic');
 }
 /** @param {HTMLTextAreaElement} ta */
 export function applyCode(ta) {
-  wrapSelection(ta, "`", "`", "code");
+    wrapSelection(ta, '`', '`', 'code');
 }
 /** @param {HTMLTextAreaElement} ta */
 export function applyLink(ta) {
-  insertLink(ta);
+    insertLink(ta);
 }
 /** @param {HTMLTextAreaElement} ta */
 export function applyOrderedList(ta) {
-  toggleLinePrefix(ta, "ol");
+    toggleLinePrefix(ta, 'ol');
 }
 /** @param {HTMLTextAreaElement} ta */
 export function applyUnorderedList(ta) {
-  toggleLinePrefix(ta, "- ");
+    toggleLinePrefix(ta, '- ');
 }
 /** @param {HTMLTextAreaElement} ta */
 export function applyBlockquote(ta) {
-  toggleLinePrefix(ta, "> ");
+    toggleLinePrefix(ta, '> ');
 }
 
 // ---------------------------------------------------------------------------
@@ -206,57 +204,57 @@ export function applyBlockquote(ta) {
  * @param {HTMLTextAreaElement} textarea - The textarea to enhance.
  */
 export function attachMarkdownShortcuts(textarea) {
-  if (!textarea) return;
+    if (!textarea) return;
 
-  textarea.addEventListener("keydown", (e) => {
-    // Require Ctrl (Windows/Linux) or Cmd (macOS)
-    if (!e.ctrlKey && !e.metaKey) return;
-    // Ignore if Alt is also pressed
-    if (e.altKey) return;
+    textarea.addEventListener('keydown', (e) => {
+        // Require Ctrl (Windows/Linux) or Cmd (macOS)
+        if (!e.ctrlKey && !e.metaKey) return;
+        // Ignore if Alt is also pressed
+        if (e.altKey) return;
 
-    const key = e.key.toLowerCase();
+        const key = e.key.toLowerCase();
 
-    // --- Shortcuts WITHOUT Shift ---
-    if (!e.shiftKey) {
-      switch (key) {
-        case "b":
-          e.preventDefault();
-          wrapSelection(textarea, "**", "**", "bold");
-          return;
-        case "i":
-          e.preventDefault();
-          wrapSelection(textarea, "*", "*", "italic");
-          return;
-        case "e":
-          e.preventDefault();
-          wrapSelection(textarea, "`", "`", "code");
-          return;
-        case "k":
-          e.preventDefault();
-          insertLink(textarea);
-          return;
-        // no default
-      }
-    }
+        // --- Shortcuts WITHOUT Shift ---
+        if (!e.shiftKey) {
+            switch (key) {
+                case 'b':
+                    e.preventDefault();
+                    wrapSelection(textarea, '**', '**', 'bold');
+                    return;
+                case 'i':
+                    e.preventDefault();
+                    wrapSelection(textarea, '*', '*', 'italic');
+                    return;
+                case 'e':
+                    e.preventDefault();
+                    wrapSelection(textarea, '`', '`', 'code');
+                    return;
+                case 'k':
+                    e.preventDefault();
+                    insertLink(textarea);
+                    return;
+                // no default
+            }
+        }
 
-    // --- Shortcuts WITH Shift ---
-    if (e.shiftKey) {
-      switch (key) {
-        case "7":
-          e.preventDefault();
-          toggleLinePrefix(textarea, "ol");
-          return;
-        case "8":
-          e.preventDefault();
-          toggleLinePrefix(textarea, "- ");
-          return;
-        case ">": // Shift + . produces ">" on US layout
-        case ".": // fallback — on some international layouts Shift+. keeps "."
-          e.preventDefault();
-          toggleLinePrefix(textarea, "> ");
-          return;
-        // no default
-      }
-    }
-  });
+        // --- Shortcuts WITH Shift ---
+        if (e.shiftKey) {
+            switch (key) {
+                case '7':
+                    e.preventDefault();
+                    toggleLinePrefix(textarea, 'ol');
+                    return;
+                case '8':
+                    e.preventDefault();
+                    toggleLinePrefix(textarea, '- ');
+                    return;
+                case '>': // Shift + . produces ">" on US layout
+                case '.': // fallback — on some international layouts Shift+. keeps "."
+                    e.preventDefault();
+                    toggleLinePrefix(textarea, '> ');
+                    return;
+                // no default
+            }
+        }
+    });
 }

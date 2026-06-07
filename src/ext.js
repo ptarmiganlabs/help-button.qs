@@ -8,17 +8,17 @@
  * @module ext
  */
 
-import getObjectList from "./property-panel/object-list";
-import widgetSection from "./property-panel/widget-section";
-import themeSection from "./property-panel/theme-section";
-import languageSection from "./property-panel/language-section";
-import buttonSection from "./property-panel/button-section";
-import popupSection from "./property-panel/popup-section";
-import menuItemsSection from "./property-panel/menu-items-section";
-import tooltipsSection from "./property-panel/tooltips-section";
-import documentationSection from "./property-panel/documentation-section";
-import securitySection from "./property-panel/security-section";
-import aboutSection from "./property-panel/about-section";
+import getObjectList from './property-panel/object-list';
+import widgetSection from './property-panel/widget-section';
+import themeSection from './property-panel/theme-section';
+import languageSection from './property-panel/language-section';
+import buttonSection from './property-panel/button-section';
+import popupSection from './property-panel/popup-section';
+import menuItemsSection from './property-panel/menu-items-section';
+import tooltipsSection from './property-panel/tooltips-section';
+import documentationSection from './property-panel/documentation-section';
+import securitySection from './property-panel/security-section';
+import aboutSection from './property-panel/about-section';
 
 /**
  * Build the extension property-panel configuration.
@@ -27,22 +27,22 @@ import aboutSection from "./property-panel/about-section";
  * @returns {{definition: object}} Extension property-panel configuration.
  */
 export default function ext(_galaxy) {
-  return {
-    definition: {
-      type: "items",
-      component: "accordion",
-      items: {
-        widgetSection,
-        themeSection,
-        languageSection,
-        buttonSection,
-        popupSection,
-        menuItemsSection,
-        tooltipsSection: tooltipsSection(getObjectList),
-        documentationSection,
-        securitySection,
-        aboutSection,
-      },
-    },
-  };
+    return {
+        definition: {
+            type: 'items',
+            component: 'accordion',
+            items: {
+                widgetSection,
+                themeSection,
+                languageSection,
+                buttonSection,
+                popupSection,
+                menuItemsSection,
+                tooltipsSection: tooltipsSection(getObjectList),
+                documentationSection,
+                securitySection,
+                aboutSection,
+            },
+        },
+    };
 }

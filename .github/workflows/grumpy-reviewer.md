@@ -2,31 +2,31 @@
 description: Performs critical code review with a focus on edge cases, potential bugs, and code quality issues
 
 on:
-  slash_command:
-    name: grumpy
-    events: [pull_request_comment, pull_request_review_comment]
+    slash_command:
+        name: grumpy
+        events: [pull_request_comment, pull_request_review_comment]
 
 permissions:
-  contents: read
-  pull-requests: read
+    contents: read
+    pull-requests: read
 
 tools:
-  cache-memory: true
-  github:
-    lockdown: true
-    toolsets: [pull_requests, repos]
+    cache-memory: true
+    github:
+        lockdown: true
+        toolsets: [pull_requests, repos]
 
 safe-outputs:
-  create-pull-request-review-comment:
-    max: 5
-    side: "RIGHT"
-  submit-pull-request-review:
-    max: 1
-  messages:
-    footer: "> 😤 *Reluctantly reviewed by [{workflow_name}]({run_url})*"
-    run-started: "😤 *sigh* [{workflow_name}]({run_url}) is begrudgingly looking at this {event_type}... This better be worth my time."
-    run-success: "😤 Fine. [{workflow_name}]({run_url}) finished the review. It wasn't completely terrible. I guess. 🙄"
-    run-failure: "😤 Great. [{workflow_name}]({run_url}) {status}. As if my day couldn't get any worse..."
+    create-pull-request-review-comment:
+        max: 5
+        side: 'RIGHT'
+    submit-pull-request-review:
+        max: 1
+    messages:
+        footer: '> 😤 *Reluctantly reviewed by [{workflow_name}]({run_url})*'
+        run-started: '😤 *sigh* [{workflow_name}]({run_url}) is begrudgingly looking at this {event_type}... This better be worth my time.'
+        run-success: "😤 Fine. [{workflow_name}]({run_url}) finished the review. It wasn't completely terrible. I guess. 🙄"
+        run-failure: "😤 Great. [{workflow_name}]({run_url}) {status}. As if my day couldn't get any worse..."
 
 timeout-minutes: 10
 source: githubnext/agentics/workflows/grumpy-reviewer.md@dcdf09723d42ef9b6c75335e4612fd145d4ccdaa
@@ -125,10 +125,10 @@ Submit a review using `submit_pull_request_review` with your overall verdict. Se
 Save your review to cache memory:
 
 - Write a summary to `/tmp/gh-aw/cache-memory/pr-${{ github.event.issue.number }}.json` including:
-  - Date and time of review
-  - Number of issues found
-  - Key patterns or themes
-  - Files reviewed
+    - Date and time of review
+    - Number of issues found
+    - Key patterns or themes
+    - Files reviewed
 - Update the global review log at `/tmp/gh-aw/cache-memory/reviews.json`
 
 ## Guidelines
@@ -159,9 +159,9 @@ Your review comments should be structured as:
 
 ```json
 {
-  "path": "path/to/file.js",
-  "line": 42,
-  "body": "Your grumpy review comment here"
+    "path": "path/to/file.js",
+    "line": 42,
+    "body": "Your grumpy review comment here"
 }
 ```
 

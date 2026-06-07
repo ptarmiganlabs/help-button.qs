@@ -1,6 +1,6 @@
 ---
 name: property-panel
-description: "Skill for the Property-panel area of qs-help-button. 8 symbols across 7 files."
+description: 'Skill for the Property-panel area of qs-help-button. 8 symbols across 7 files.'
 ---
 
 # Property-panel
@@ -15,15 +15,15 @@ description: "Skill for the Property-panel area of qs-help-button. 8 symbols acr
 
 ## Key Files
 
-| File | Symbols |
-|------|---------|
-| `src/property-panel/object-list.js` | getObjectList, getCurrentSheetId |
-| `src/ext.js` | ext |
-| `src/index.js` | supernova |
-| `src/property-panel/tooltips-section.js` | tooltipsSection |
-| `src/util/color.js` | toPickerObj |
-| `src/property-panel/theme-section.js` | change |
-| `src/theme/presets.js` | applyPreset |
+| File                                     | Symbols                          |
+| ---------------------------------------- | -------------------------------- |
+| `src/property-panel/object-list.js`      | getObjectList, getCurrentSheetId |
+| `src/ext.js`                             | ext                              |
+| `src/index.js`                           | supernova                        |
+| `src/property-panel/tooltips-section.js` | tooltipsSection                  |
+| `src/util/color.js`                      | toPickerObj                      |
+| `src/property-panel/theme-section.js`    | change                           |
+| `src/theme/presets.js`                   | applyPreset                      |
 
 ## Entry Points
 
@@ -37,22 +37,22 @@ Start here when exploring this area:
 
 ## Key Symbols
 
-| Symbol | Type | File | Line |
-|--------|------|------|------|
-| `ext` | Function | `src/ext.js` | 28 |
-| `supernova` | Function | `src/index.js` | 43 |
-| `tooltipsSection` | Function | `src/property-panel/tooltips-section.js` | 18 |
-| `toPickerObj` | Function | `src/util/color.js` | 16 |
-| `applyPreset` | Function | `src/theme/presets.js` | 314 |
-| `getObjectList` | Function | `src/property-panel/object-list.js` | 16 |
-| `getCurrentSheetId` | Function | `src/property-panel/object-list.js` | 32 |
-| `change` | Function | `src/property-panel/theme-section.js` | 29 |
+| Symbol              | Type     | File                                     | Line |
+| ------------------- | -------- | ---------------------------------------- | ---- |
+| `ext`               | Function | `src/ext.js`                             | 28   |
+| `supernova`         | Function | `src/index.js`                           | 43   |
+| `tooltipsSection`   | Function | `src/property-panel/tooltips-section.js` | 18   |
+| `toPickerObj`       | Function | `src/util/color.js`                      | 16   |
+| `applyPreset`       | Function | `src/theme/presets.js`                   | 314  |
+| `getObjectList`     | Function | `src/property-panel/object-list.js`      | 16   |
+| `getCurrentSheetId` | Function | `src/property-panel/object-list.js`      | 32   |
+| `change`            | Function | `src/property-panel/theme-section.js`    | 29   |
 
 ## Execution Flows
 
-| Flow | Type | Steps |
-|------|------|-------|
-| `Supernova → ToPickerObj` | intra_community | 4 |
+| Flow                      | Type            | Steps |
+| ------------------------- | --------------- | ----- |
+| `Supernova → ToPickerObj` | intra_community | 4     |
 
 ## How to Explore
 

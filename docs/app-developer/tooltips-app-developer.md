@@ -9,34 +9,34 @@ This guide covers everything a Qlik Sense app developer needs to configure toolt
 ## Table of Contents
 
 - [Tooltips — Sense App Developer Guide](#tooltips--sense-app-developer-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [Adding a Tooltip](#adding-a-tooltip)
-  - [Targeting a Qlik Sense Object](#targeting-a-qlik-sense-object)
-  - [Targeting a CSS Selector](#targeting-a-css-selector)
-    - [Limitations](#limitations)
-  - [Finding CSS Selectors in Qlik Sense](#finding-css-selectors-in-qlik-sense)
-    - [Step 1 — Open Browser DevTools](#step-1--open-browser-devtools)
-    - [Step 2 — Select the Element](#step-2--select-the-element)
-    - [Step 3 — Copy the Selector](#step-3--copy-the-selector)
-    - [Recommended Selector Patterns](#recommended-selector-patterns)
-    - [Tips for Stable Selectors](#tips-for-stable-selectors)
-    - [Example: Target the Sheet Title](#example-target-the-sheet-title)
-    - [Example: Target a Specific Chart Title](#example-target-a-specific-chart-title)
-    - [Example: Target All Chart Containers](#example-target-all-chart-containers)
-  - [Show Condition (Visibility)](#show-condition-visibility)
-    - [Examples](#examples)
-    - [How It Works](#how-it-works)
-  - [Configuring the Icon](#configuring-the-icon)
-  - [Hover Content](#hover-content)
-    - [Embedding videos — Markdown shorthand](#embedding-videos--markdown-shorthand)
-    - [Embedding videos — Raw HTML](#embedding-videos--raw-html)
-  - [Click Dialog](#click-dialog)
-  - [Tooltip Colors](#tooltip-colors)
-  - [Theme Preset Integration](#theme-preset-integration)
-    - [Preset Color Palettes](#preset-color-palettes)
-  - [Security — Allowed URI Prefixes](#security--allowed-uri-prefixes)
-  - [Field Limits](#field-limits)
+    - [Table of Contents](#table-of-contents)
+    - [Overview](#overview)
+    - [Adding a Tooltip](#adding-a-tooltip)
+    - [Targeting a Qlik Sense Object](#targeting-a-qlik-sense-object)
+    - [Targeting a CSS Selector](#targeting-a-css-selector)
+        - [Limitations](#limitations)
+    - [Finding CSS Selectors in Qlik Sense](#finding-css-selectors-in-qlik-sense)
+        - [Step 1 — Open Browser DevTools](#step-1--open-browser-devtools)
+        - [Step 2 — Select the Element](#step-2--select-the-element)
+        - [Step 3 — Copy the Selector](#step-3--copy-the-selector)
+        - [Recommended Selector Patterns](#recommended-selector-patterns)
+        - [Tips for Stable Selectors](#tips-for-stable-selectors)
+        - [Example: Target the Sheet Title](#example-target-the-sheet-title)
+        - [Example: Target a Specific Chart Title](#example-target-a-specific-chart-title)
+        - [Example: Target All Chart Containers](#example-target-all-chart-containers)
+    - [Show Condition (Visibility)](#show-condition-visibility)
+        - [Examples](#examples)
+        - [How It Works](#how-it-works)
+    - [Configuring the Icon](#configuring-the-icon)
+    - [Hover Content](#hover-content)
+        - [Embedding videos — Markdown shorthand](#embedding-videos--markdown-shorthand)
+        - [Embedding videos — Raw HTML](#embedding-videos--raw-html)
+    - [Click Dialog](#click-dialog)
+    - [Tooltip Colors](#tooltip-colors)
+    - [Theme Preset Integration](#theme-preset-integration)
+        - [Preset Color Palettes](#preset-color-palettes)
+    - [Security — Allowed URI Prefixes](#security--allowed-uri-prefixes)
+    - [Field Limits](#field-limits)
 
 ---
 
@@ -334,16 +334,16 @@ For cases where the Markdown shorthand doesn't fit — for example when you need
 
 ```html
 <iframe
-  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-  allowfullscreen
-  width="560"
-  height="315"
+    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+    allowfullscreen
+    width="560"
+    height="315"
 ></iframe>
 ```
 
 ```html
 <video controls width="100%">
-  <source src="https://example.com/demo.mp4" type="video/mp4" />
+    <source src="https://example.com/demo.mp4" type="video/mp4" />
 </video>
 ```
 

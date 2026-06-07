@@ -9,31 +9,28 @@
  */
 
 import {
-  useElement,
-  useLayout,
-  useEffect,
-  useModel,
-  useRef,
-  useState,
-  useOptions,
-  useApp,
-} from "@nebula.js/stardust";
-import ext from "./ext";
-import definition from "./object-properties";
-import { detectPlatform, getPlatformAdapter } from "./platform/index";
-import {
-  registerHelpConfig,
-  unregisterHelpConfig,
-} from "./ui/toolbar-injector";
-import { registerTooltips, unregisterTooltips } from "./ui/tooltip-injector";
-import { makeSvg } from "./ui/icons";
-import { fetchTemplateContext } from "./util/template-fields";
-import { resolveText, setForceLocale } from "./i18n/index";
-import { escapeHtml } from "./util/template-fields";
-import { applyPresetToNewTooltips } from "./theme/presets";
-import logger, { PACKAGE_VERSION, BUILD_DATE } from "./util/logger";
-import { extensionState } from "./util/extension-state";
-import "./style.css";
+    useElement,
+    useLayout,
+    useEffect,
+    useModel,
+    useRef,
+    useState,
+    useOptions,
+    useApp,
+} from '@nebula.js/stardust';
+import ext from './ext';
+import definition from './object-properties';
+import { detectPlatform, getPlatformAdapter } from './platform/index';
+import { registerHelpConfig, unregisterHelpConfig } from './ui/toolbar-injector';
+import { registerTooltips, unregisterTooltips } from './ui/tooltip-injector';
+import { makeSvg } from './ui/icons';
+import { fetchTemplateContext } from './util/template-fields';
+import { resolveText, setForceLocale } from './i18n/index';
+import { escapeHtml } from './util/template-fields';
+import { applyPresetToNewTooltips } from './theme/presets';
+import logger, { PACKAGE_VERSION, BUILD_DATE } from './util/logger';
+import { extensionState } from './util/extension-state';
+import './style.css';
 
 /**
  * Create the HelpButton.qs supernova definition.
@@ -42,273 +39,263 @@ import "./style.css";
  * @returns {object} Supernova definition consumed by Nebula.
  */
 export default function supernova(galaxy) {
-  return {
-    qae: {
-      properties: definition,
-      data: {
-        targets: [],
-      },
-    },
+    return {
+        qae: {
+            properties: definition,
+            data: {
+                targets: [],
+            },
+        },
 
-    /**
-     * Main component logic.
-     */
-    component() {
-      const layout = useLayout();
-      const element = useElement();
-      const model = useModel();
-      extensionState.model = model;
-      const options = useOptions();
-      const app = useApp();
-      const layoutRef = useRef(layout);
-      // Platform detection: async, resolved once then cached in state.
-      const [platform, setPlatform] = useState(null);
-      const [adapter, setAdapter] = useState(null);
+        /**
+         * Main component logic.
+         */
+        component() {
+            const layout = useLayout();
+            const element = useElement();
+            const model = useModel();
+            extensionState.model = model;
+            const options = useOptions();
+            const app = useApp();
+            const layoutRef = useRef(layout);
+            // Platform detection: async, resolved once then cached in state.
+            const [platform, setPlatform] = useState(null);
+            const [adapter, setAdapter] = useState(null);
 
-      // Detect edit vs analysis mode
-      const isEditMode =
-        options.readOnly !== undefined
-          ? !options.readOnly
-          : /\/edit(?:\b|$)/.test(window.location.pathname);
+            // Detect edit vs analysis mode
+            const isEditMode =
+                options.readOnly !== undefined
+                    ? !options.readOnly
+                    : /\/edit(?:\b|$)/.test(window.location.pathname);
 
-      // Keep layout ref current + sync forced locale
-      useEffect(() => {
-        layoutRef.current = layout;
-        // Apply language override from property panel
-        setForceLocale(layout.language || "auto");
-      }, [layout]);
+            // Keep layout ref current + sync forced locale
+            useEffect(() => {
+                layoutRef.current = layout;
+                // Apply language override from property panel
+                setForceLocale(layout.language || 'auto');
+            }, [layout]);
 
-      // Apply theme preset colors to newly added tooltips.
-      // The array-level `change` handler in the property panel does not
-      // fire on item addition, so we detect unthemed items here and
-      // persist the theme colors via the engine API.
-      useEffect(() => {
-        if (!model || !layout.themePreset) return;
-        if (!layout.tooltips || !layout.tooltips.length) return;
+            // Apply theme preset colors to newly added tooltips.
+            // The array-level `change` handler in the property panel does not
+            // fire on item addition, so we detect unthemed items here and
+            // persist the theme colors via the engine API.
+            useEffect(() => {
+                if (!model || !layout.themePreset) return;
+                if (!layout.tooltips || !layout.tooltips.length) return;
 
-        // Check if any tooltip needs theming (fast bail-out)
-        const needsTheming = layout.tooltips.some(
-          (t) => t._themedPreset !== layout.themePreset,
-        );
-        if (!needsTheming) return;
+                // Check if any tooltip needs theming (fast bail-out)
+                const needsTheming = layout.tooltips.some(
+                    (t) => t._themedPreset !== layout.themePreset
+                );
+                if (!needsTheming) return;
 
-        (async () => {
-          try {
-            const props = await model.getProperties();
-            const changed = applyPresetToNewTooltips(props);
-            if (changed) {
-              await model.setProperties(props);
-            }
-          } catch (err) {
-            logger.warn("Could not apply theme to new tooltips:", err);
-          }
-        })();
-      }, [model, layout]);
+                (async () => {
+                    try {
+                        const props = await model.getProperties();
+                        const changed = applyPresetToNewTooltips(props);
+                        if (changed) {
+                            await model.setProperties(props);
+                        }
+                    } catch (err) {
+                        logger.warn('Could not apply theme to new tooltips:', err);
+                    }
+                })();
+            }, [model, layout]);
 
-      // One-time async platform detection + adapter loading
-      useEffect(() => {
-        let cancelled = false;
+            // One-time async platform detection + adapter loading
+            useEffect(() => {
+                let cancelled = false;
 
-        (async () => {
-          if (platform && adapter) return;
+                (async () => {
+                    if (platform && adapter) return;
 
-          try {
-            const detectedAdapter = getPlatformAdapter();
-            const detectedPlatform = await detectPlatform();
+                    try {
+                        const detectedAdapter = getPlatformAdapter();
+                        const detectedPlatform = await detectPlatform();
 
-            if (cancelled) return;
+                        if (cancelled) return;
 
-            setPlatform(detectedPlatform);
-            setAdapter(detectedAdapter);
+                        setPlatform(detectedPlatform);
+                        setAdapter(detectedAdapter);
 
-            // Start fetching template context (fire-and-forget)
-            fetchTemplateContext(detectedPlatform.type);
+                        // Start fetching template context (fire-and-forget)
+                        fetchTemplateContext(detectedPlatform.type);
 
-            logger.info(
-              `Platform ready: ${detectedPlatform.type} v${detectedPlatform.version ?? "?"} (${detectedPlatform.codePath})`,
-            );
-          } catch (err) {
-            if (!cancelled) {
-              logger.error("Platform detection failed:", err);
-            }
-          }
-        })();
+                        logger.info(
+                            `Platform ready: ${detectedPlatform.type} v${detectedPlatform.version ?? '?'} (${detectedPlatform.codePath})`
+                        );
+                    } catch (err) {
+                        if (!cancelled) {
+                            logger.error('Platform detection failed:', err);
+                        }
+                    }
+                })();
 
-        return () => {
-          cancelled = true;
-        };
-      }, []);
+                return () => {
+                    cancelled = true;
+                };
+            }, []);
 
-      // Main render effect — injects toolbar button or shows edit placeholder
-      useEffect(() => {
-        if (!platform || !adapter) return;
+            // Main render effect — injects toolbar button or shows edit placeholder
+            useEffect(() => {
+                if (!platform || !adapter) return;
 
-        if (isEditMode) {
-          // Edit mode: show a placeholder inside the extension cell
-          renderEditPlaceholder(element, layout);
+                if (isEditMode) {
+                    // Edit mode: show a placeholder inside the extension cell
+                    renderEditPlaceholder(element, layout);
 
-          // Responsive size tiers via ResizeObserver
-          const widgetEl = element.querySelector(".hbqs-edit-placeholder");
-          let resizeObserver;
-          if (widgetEl && typeof ResizeObserver !== "undefined") {
-            const classify = () => {
-              const h = widgetEl.clientHeight;
-              const w = widgetEl.clientWidth;
-              let size = "md";
-              if (h < 80) size = "xs";
-              else if (h < 160) size = "sm";
-              widgetEl.setAttribute("data-size", size);
-              widgetEl.setAttribute("data-narrow", w < 160 ? "true" : "false");
-            };
-            resizeObserver = new ResizeObserver(classify);
-            resizeObserver.observe(widgetEl);
-            classify();
-          }
+                    // Responsive size tiers via ResizeObserver
+                    const widgetEl = element.querySelector('.hbqs-edit-placeholder');
+                    let resizeObserver;
+                    if (widgetEl && typeof ResizeObserver !== 'undefined') {
+                        const classify = () => {
+                            const h = widgetEl.clientHeight;
+                            const w = widgetEl.clientWidth;
+                            let size = 'md';
+                            if (h < 80) size = 'xs';
+                            else if (h < 160) size = 'sm';
+                            widgetEl.setAttribute('data-size', size);
+                            widgetEl.setAttribute('data-narrow', w < 160 ? 'true' : 'false');
+                        };
+                        resizeObserver = new ResizeObserver(classify);
+                        resizeObserver.observe(widgetEl);
+                        classify();
+                    }
 
-          // Attach About button handler
-          const aboutBtn = element.querySelector(".hbqs-about-btn");
-          if (aboutBtn) {
-            aboutBtn.addEventListener("click", () => openAboutModal());
-          }
+                    // Attach About button handler
+                    const aboutBtn = element.querySelector('.hbqs-about-btn');
+                    if (aboutBtn) {
+                        aboutBtn.addEventListener('click', () => openAboutModal());
+                    }
 
-          // Keep toolbar button visible while editing
-          if (app) {
-            registerHelpConfig(
-              layout.qInfo.qId,
-              layout,
-              adapter,
-              platform,
-              app,
-            );
-          }
+                    // Keep toolbar button visible while editing
+                    if (app) {
+                        registerHelpConfig(layout.qInfo.qId, layout, adapter, platform, app);
+                    }
 
-          return () => {
-            if (resizeObserver) resizeObserver.disconnect();
-            unregisterHelpConfig(layout.qInfo.qId);
-          };
-        }
-
-        // Analysis mode: inject toolbar button + show placeholder in cell
-        renderAnalysisPlaceholder(element, layout);
-
-        if (app) {
-          registerHelpConfig(layout.qInfo.qId, layout, adapter, platform, app);
-        }
-        // The toolbar button is a page-level singleton that must
-        // survive component unmount on sheet navigation.
-        // Cleanup only unregisters tooltips (sheet-specific); the help
-        // config is deliberately kept so the button persists.
-        // registerHelpConfig() handles updates via the config registry.
-        // watchForRemoval() handles re-injection after SPA navigation.
-
-        // Inject tooltip icons onto chart objects / CSS targets
-        registerTooltips(layout.qInfo.qId, layout, adapter, platform);
-
-        // --- Context menu & hover menu visibility overrides ---
-        const hideContextMenu = layout.widget?.hideContextMenu === true;
-        const hideHoverMenu = layout.widget?.hideHoverMenu === true;
-
-        const qlikWrapper =
-          element.closest(".qv-gridcell") ||
-          element.closest(".qv-object") ||
-          element.parentElement ||
-          element;
-
-        // Context menu: suppress via capture-phase listener + MutationObserver
-        let contextMenuHandler;
-        let contextMenuObserver;
-        let rightClickTimer;
-        if (hideContextMenu) {
-          let recentRightClick = false;
-
-          contextMenuHandler = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            recentRightClick = true;
-            clearTimeout(rightClickTimer);
-            rightClickTimer = setTimeout(() => {
-              recentRightClick = false;
-            }, 500);
-          };
-          qlikWrapper.addEventListener("contextmenu", contextMenuHandler, true);
-
-          contextMenuObserver = new MutationObserver((mutations) => {
-            if (!recentRightClick) return;
-            for (const mutation of mutations) {
-              for (const node of mutation.addedNodes) {
-                if (node.nodeType !== 1) continue;
-                // Client-managed context menu
-                const qvContextMenu = node.classList?.contains("qv-contextmenu")
-                  ? node
-                  : node.querySelector?.(".qv-contextmenu");
-                if (qvContextMenu) {
-                  qvContextMenu.remove();
-                  recentRightClick = false;
-                  return;
+                    return () => {
+                        if (resizeObserver) resizeObserver.disconnect();
+                        unregisterHelpConfig(layout.qInfo.qId);
+                    };
                 }
-                // Cloud context menu (React portal)
-                const cloudMenu =
-                  node.getAttribute?.("data-testid") === "qmfe-menu"
-                    ? node
-                    : node.querySelector?.('[data-testid="qmfe-menu"]');
-                if (cloudMenu) {
-                  cloudMenu.remove();
-                  recentRightClick = false;
-                  return;
+
+                // Analysis mode: inject toolbar button + show placeholder in cell
+                renderAnalysisPlaceholder(element, layout);
+
+                if (app) {
+                    registerHelpConfig(layout.qInfo.qId, layout, adapter, platform, app);
                 }
-              }
-            }
-          });
-          contextMenuObserver.observe(document.body, { childList: true });
-        }
+                // The toolbar button is a page-level singleton that must
+                // survive component unmount on sheet navigation.
+                // Cleanup only unregisters tooltips (sheet-specific); the help
+                // config is deliberately kept so the button persists.
+                // registerHelpConfig() handles updates via the config registry.
+                // watchForRemoval() handles re-injection after SPA navigation.
 
-        // Hover menu: apply hiding CSS class to grid-cell wrapper
-        let hoverMenuTarget;
-        if (hideHoverMenu) {
-          hoverMenuTarget = qlikWrapper;
-          hoverMenuTarget.classList.add("hbqs-no-hover-menu");
-        }
+                // Inject tooltip icons onto chart objects / CSS targets
+                registerTooltips(layout.qInfo.qId, layout, adapter, platform);
 
-        // Completely hide the widget (grid cell) in analysis mode
-        const hideWidget = layout.widget?.hideWidget === true;
-        if (hideWidget) {
-          qlikWrapper.classList.add("hbqs-hidden-widget");
-          qlikWrapper.setAttribute("aria-hidden", "true");
-        }
+                // --- Context menu & hover menu visibility overrides ---
+                const hideContextMenu = layout.widget?.hideContextMenu === true;
+                const hideHoverMenu = layout.widget?.hideHoverMenu === true;
 
-        return () => {
-          if (contextMenuHandler) {
-            qlikWrapper.removeEventListener(
-              "contextmenu",
-              contextMenuHandler,
-              true,
-            );
-            clearTimeout(rightClickTimer);
-          }
-          if (contextMenuObserver) {
-            contextMenuObserver.disconnect();
-          }
-          if (hoverMenuTarget) {
-            hoverMenuTarget.classList.remove("hbqs-no-hover-menu");
-          }
-          qlikWrapper.classList.remove("hbqs-hidden-widget");
-          qlikWrapper.removeAttribute("aria-hidden");
-          // Clean up per-instance tooltips, but keep the global help config
-          // so the toolbar button can persist across sheet navigation.
-          unregisterTooltips(layout.qInfo.qId);
-        };
-      }, [platform, adapter, layout, isEditMode, app]);
+                const qlikWrapper =
+                    element.closest('.qv-gridcell') ||
+                    element.closest('.qv-object') ||
+                    element.parentElement ||
+                    element;
 
-      // NOTE: We intentionally do NOT destroy the toolbar button
-      // on unmount. The button is a page-level singleton that must
-      // persist when navigating to sheets that don't contain the
-      // extension. The watchForRemoval observer in toolbar-injector
-      // handles re-injection after SPA navigation.
-    },
+                // Context menu: suppress via capture-phase listener + MutationObserver
+                let contextMenuHandler;
+                let contextMenuObserver;
+                let rightClickTimer;
+                if (hideContextMenu) {
+                    let recentRightClick = false;
 
-    ext: ext(galaxy),
-  };
+                    contextMenuHandler = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        recentRightClick = true;
+                        clearTimeout(rightClickTimer);
+                        rightClickTimer = setTimeout(() => {
+                            recentRightClick = false;
+                        }, 500);
+                    };
+                    qlikWrapper.addEventListener('contextmenu', contextMenuHandler, true);
+
+                    contextMenuObserver = new MutationObserver((mutations) => {
+                        if (!recentRightClick) return;
+                        for (const mutation of mutations) {
+                            for (const node of mutation.addedNodes) {
+                                if (node.nodeType !== 1) continue;
+                                // Client-managed context menu
+                                const qvContextMenu = node.classList?.contains('qv-contextmenu')
+                                    ? node
+                                    : node.querySelector?.('.qv-contextmenu');
+                                if (qvContextMenu) {
+                                    qvContextMenu.remove();
+                                    recentRightClick = false;
+                                    return;
+                                }
+                                // Cloud context menu (React portal)
+                                const cloudMenu =
+                                    node.getAttribute?.('data-testid') === 'qmfe-menu'
+                                        ? node
+                                        : node.querySelector?.('[data-testid="qmfe-menu"]');
+                                if (cloudMenu) {
+                                    cloudMenu.remove();
+                                    recentRightClick = false;
+                                    return;
+                                }
+                            }
+                        }
+                    });
+                    contextMenuObserver.observe(document.body, { childList: true });
+                }
+
+                // Hover menu: apply hiding CSS class to grid-cell wrapper
+                let hoverMenuTarget;
+                if (hideHoverMenu) {
+                    hoverMenuTarget = qlikWrapper;
+                    hoverMenuTarget.classList.add('hbqs-no-hover-menu');
+                }
+
+                // Completely hide the widget (grid cell) in analysis mode
+                const hideWidget = layout.widget?.hideWidget === true;
+                if (hideWidget) {
+                    qlikWrapper.classList.add('hbqs-hidden-widget');
+                    qlikWrapper.setAttribute('aria-hidden', 'true');
+                }
+
+                return () => {
+                    if (contextMenuHandler) {
+                        qlikWrapper.removeEventListener('contextmenu', contextMenuHandler, true);
+                        clearTimeout(rightClickTimer);
+                    }
+                    if (contextMenuObserver) {
+                        contextMenuObserver.disconnect();
+                    }
+                    if (hoverMenuTarget) {
+                        hoverMenuTarget.classList.remove('hbqs-no-hover-menu');
+                    }
+                    qlikWrapper.classList.remove('hbqs-hidden-widget');
+                    qlikWrapper.removeAttribute('aria-hidden');
+                    // Clean up per-instance tooltips, but keep the global help config
+                    // so the toolbar button can persist across sheet navigation.
+                    unregisterTooltips(layout.qInfo.qId);
+                };
+            }, [platform, adapter, layout, isEditMode, app]);
+
+            // NOTE: We intentionally do NOT destroy the toolbar button
+            // on unmount. The button is a page-level singleton that must
+            // persist when navigating to sheets that don't contain the
+            // extension. The watchForRemoval observer in toolbar-injector
+            // handles re-injection after SPA navigation.
+        },
+
+        ext: ext(galaxy),
+    };
 }
 
 /**
@@ -319,31 +306,25 @@ export default function supernova(galaxy) {
  * @param {object} layout - Extension layout.
  */
 function renderEditPlaceholder(element, layout) {
-  const menuCount = (layout.menuItems || []).length;
-  const hasBugReport = (layout.menuItems || []).some(
-    (item) => item.action === "bugReport",
-  );
-  const hasFeedback = (layout.menuItems || []).some(
-    (item) => item.action === "feedback",
-  );
-  const tooltipCount = (layout.tooltips || []).length;
+    const menuCount = (layout.menuItems || []).length;
+    const hasBugReport = (layout.menuItems || []).some((item) => item.action === 'bugReport');
+    const hasFeedback = (layout.menuItems || []).some((item) => item.action === 'feedback');
+    const tooltipCount = (layout.tooltips || []).length;
 
-  const statsText =
-    `${menuCount} menu item${menuCount !== 1 ? "s" : ""}` +
-    (hasBugReport ? " · Bug report: On" : "") +
-    (hasFeedback ? " · Feedback: On" : "") +
-    (tooltipCount > 0
-      ? ` · ${tooltipCount} tooltip${tooltipCount !== 1 ? "s" : ""}`
-      : "");
+    const statsText =
+        `${menuCount} menu item${menuCount !== 1 ? 's' : ''}` +
+        (hasBugReport ? ' · Bug report: On' : '') +
+        (hasFeedback ? ' · Feedback: On' : '') +
+        (tooltipCount > 0 ? ` · ${tooltipCount} tooltip${tooltipCount !== 1 ? 's' : ''}` : '');
 
-  const placeholderTitle = escapeHtml(resolveText("", "editPlaceholderTitle"));
+    const placeholderTitle = escapeHtml(resolveText('', 'editPlaceholderTitle'));
 
-  element.innerHTML = `
+    element.innerHTML = `
         <div class="hbqs-edit-placeholder"
              title="${placeholderTitle} — ${statsText}">
             <div class="hbqs-edit-placeholder-info">
                 <div class="hbqs-edit-placeholder-icon">
-                    ${makeSvg("help", 32, "#165a9b")}
+                    ${makeSvg('help', 32, '#165a9b')}
                 </div>
                 <div class="hbqs-edit-placeholder-title">${placeholderTitle}</div>
                 <div class="hbqs-edit-placeholder-stats">${statsText}</div>
@@ -366,30 +347,28 @@ function renderEditPlaceholder(element, layout) {
  * @param {object} layout - Extension layout.
  */
 function renderAnalysisPlaceholder(element, layout) {
-  const show = layout.widget?.showAnalysisPlaceholder !== false;
-  const text =
-    layout.widget?.analysisPlaceholderText ||
-    resolveText("", "analysisPlaceholder");
+    const show = layout.widget?.showAnalysisPlaceholder !== false;
+    const text = layout.widget?.analysisPlaceholderText || resolveText('', 'analysisPlaceholder');
 
-  element.innerHTML = show
-    ? `<div class="hbqs-analysis-placeholder">${escapeHtml(text)}</div>`
-    : `<div class="hbqs-analysis-placeholder hbqs-analysis-placeholder--hidden"></div>`;
+    element.innerHTML = show
+        ? `<div class="hbqs-analysis-placeholder">${escapeHtml(text)}</div>`
+        : `<div class="hbqs-analysis-placeholder hbqs-analysis-placeholder--hidden"></div>`;
 }
 
 /**
  * Open a modal "About" dialog with extension info, version, and links.
  */
 function openAboutModal() {
-  // Remove any existing about modal
-  const existing = document.querySelector(".hbqs-about-overlay");
-  if (existing) existing.remove();
+    // Remove any existing about modal
+    const existing = document.querySelector('.hbqs-about-overlay');
+    if (existing) existing.remove();
 
-  const overlay = document.createElement("div");
-  overlay.className = "hbqs-about-overlay";
-  overlay.innerHTML = `
+    const overlay = document.createElement('div');
+    overlay.className = 'hbqs-about-overlay';
+    overlay.innerHTML = `
         <div class="hbqs-about-modal">
             <div class="hbqs-about-modal__header">
-                <span class="hbqs-about-modal__icon">${makeSvg("help", 28, "#165a9b")}</span>
+                <span class="hbqs-about-modal__icon">${makeSvg('help', 28, '#165a9b')}</span>
                 <span class="hbqs-about-modal__title">HelpButton.qs</span>
                 <span class="hbqs-about-modal__version">v${escapeHtml(PACKAGE_VERSION)}</span>
                 <p class="hbqs-about-modal__build-date">Built ${escapeHtml(BUILD_DATE)}</p>
@@ -417,20 +396,18 @@ function openAboutModal() {
         </div>
     `;
 
-  document.body.appendChild(overlay);
+    document.body.appendChild(overlay);
 
-  const close = () => {
-    document.removeEventListener("keydown", onKey);
-    overlay.remove();
-  };
-  const onKey = (e) => {
-    if (e.key === "Escape") close();
-  };
-  document.addEventListener("keydown", onKey);
-  overlay
-    .querySelector(".hbqs-about-close-btn")
-    .addEventListener("click", close);
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) close();
-  });
+    const close = () => {
+        document.removeEventListener('keydown', onKey);
+        overlay.remove();
+    };
+    const onKey = (e) => {
+        if (e.key === 'Escape') close();
+    };
+    document.addEventListener('keydown', onKey);
+    overlay.querySelector('.hbqs-about-close-btn').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+    });
 }

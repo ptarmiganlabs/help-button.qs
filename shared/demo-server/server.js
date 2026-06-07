@@ -1,58 +1,54 @@
-"use strict";
+'use strict';
 
 // Load .env file (if present) before reading any process.env values
-require("dotenv").config();
+require('dotenv').config();
 
-const express = require("express");
-const cors = require("cors");
-const winston = require("winston");
-const https = require("https");
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
+const express = require('express');
+const cors = require('cors');
+const winston = require('winston');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
 // ---------------------------------------------------------------------------
 // Configuration via environment variables
 // ---------------------------------------------------------------------------
-const HOST = process.env.HOST || "localhost";
+const HOST = process.env.HOST || 'localhost';
 const HTTP_PORT = process.env.PORT || 3000;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
-const LOG_LEVEL = process.env.LOG_LEVEL || "info";
-const DEBUG_LOG_AUTH = process.env.DEBUG_LOG_AUTH === "true";
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const DEBUG_LOG_AUTH = process.env.DEBUG_LOG_AUTH === 'true';
 
 // ---------------------------------------------------------------------------
 // TLS certificate paths
 // ---------------------------------------------------------------------------
-const CERT_DIR = path.join(__dirname, "certs");
-const CERT_PATH = process.env.TLS_CERT || path.join(CERT_DIR, "cert.pem");
-const KEY_PATH = process.env.TLS_KEY || path.join(CERT_DIR, "key.pem");
+const CERT_DIR = path.join(__dirname, 'certs');
+const CERT_PATH = process.env.TLS_CERT || path.join(CERT_DIR, 'cert.pem');
+const KEY_PATH = process.env.TLS_KEY || path.join(CERT_DIR, 'key.pem');
 
 // ---------------------------------------------------------------------------
 // Winston logger — follows the pattern from github.com/ptarmiganlabs/butler
 // ---------------------------------------------------------------------------
 const logger = winston.createLogger({
-  level: LOG_LEVEL,
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.printf(
-      (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-    ),
-  ),
-  transports: [
-    new winston.transports.Console({
-      name: "console",
-      level: LOG_LEVEL,
-      format: winston.format.combine(
-        winston.format.errors({ stack: true }),
+    level: LOG_LEVEL,
+    format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.colorize(),
-        winston.format.simple(),
-        winston.format.printf(
-          (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-        ),
-      ),
-    }),
-  ],
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+    ),
+    transports: [
+        new winston.transports.Console({
+            name: 'console',
+            level: LOG_LEVEL,
+            format: winston.format.combine(
+                winston.format.errors({ stack: true }),
+                winston.format.timestamp(),
+                winston.format.colorize(),
+                winston.format.simple(),
+                winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+            ),
+        }),
+    ],
 });
 
 // ---------------------------------------------------------------------------
@@ -64,50 +60,50 @@ const feedbackEntries = [];
 const dashboardClients = new Set();
 
 function storeEntry(list, entry, req) {
-  // Detect authentication strategy from request headers
-  let authType = "none";
-  let authDetails = "";
+    // Detect authentication strategy from request headers
+    let authType = 'none';
+    let authDetails = '';
 
-  const authHeader = req.get("Authorization");
+    const authHeader = req.get('Authorization');
 
-  if (authHeader) {
-    if (authHeader.startsWith("Bearer ")) {
-      authType = "header";
-      if (DEBUG_LOG_AUTH) {
-        // Mask token but show first/last bits for debugging (only when explicitly enabled)
-        const token = authHeader.substring(7);
-        const masked =
-          token.length > 12
-            ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}`
-            : "***";
-        authDetails = `Bearer token: ${masked}`;
-      } else {
-        // Do not store or log any token-derived data by default
-        authDetails = "Bearer token present";
-      }
+    if (authHeader) {
+        if (authHeader.startsWith('Bearer ')) {
+            authType = 'header';
+            if (DEBUG_LOG_AUTH) {
+                // Mask token but show first/last bits for debugging (only when explicitly enabled)
+                const token = authHeader.substring(7);
+                const masked =
+                    token.length > 12
+                        ? `${token.substring(0, 4)}...${token.substring(token.length - 4)}`
+                        : '***';
+                authDetails = `Bearer token: ${masked}`;
+            } else {
+                // Do not store or log any token-derived data by default
+                authDetails = 'Bearer token present';
+            }
+        } else {
+            authType = 'custom';
+            authDetails = 'Authorization header (non-Bearer)';
+        }
     } else {
-      authType = "custom";
-      authDetails = "Authorization header (non-Bearer)";
+        // Check for other headers with a custom/vendor prefix to
+        // distinguish 'custom' from 'none', without relying on a
+        // brittle allowlist of standard browser headers.
+        const customHeaders = Object.keys(req.headers).filter(function (h) {
+            const name = h.toLowerCase();
+            return name.indexOf('x-') === 0;
+        });
+
+        if (customHeaders.length > 0) {
+            authType = 'custom';
+            authDetails = `${customHeaders.length} custom header(s): ${customHeaders.join(', ')}`;
+        }
     }
-  } else {
-    // Check for other headers with a custom/vendor prefix to
-    // distinguish 'custom' from 'none', without relying on a
-    // brittle allowlist of standard browser headers.
-    const customHeaders = Object.keys(req.headers).filter(function (h) {
-      const name = h.toLowerCase();
-      return name.indexOf("x-") === 0;
-    });
 
-    if (customHeaders.length > 0) {
-      authType = "custom";
-      authDetails = `${customHeaders.length} custom header(s): ${customHeaders.join(", ")}`;
-    }
-  }
+    entry.auth = { type: authType, details: authDetails };
 
-  entry.auth = { type: authType, details: authDetails };
-
-  list.unshift(entry);
-  if (list.length > MAX_STORED) list.length = MAX_STORED;
+    list.unshift(entry);
+    if (list.length > MAX_STORED) list.length = MAX_STORED;
 }
 
 // ---------------------------------------------------------------------------
@@ -116,21 +112,21 @@ function storeEntry(list, entry, req) {
 // object-properties.js → payloadKeyNames.
 // ---------------------------------------------------------------------------
 const DEFAULT_CONTEXT_KEYS = new Set([
-  "userName",
-  "platform",
-  "appId",
-  "sheetId",
-  "urlPath",
-  "timestamp",
-  "userId",
-  "userDirectory",
-  "senseVersion",
-  "browser",
-  "tenantId",
-  "status",
-  "picture",
-  "preferredZoneinfo",
-  "roles",
+    'userName',
+    'platform',
+    'appId',
+    'sheetId',
+    'urlPath',
+    'timestamp',
+    'userId',
+    'userDirectory',
+    'senseVersion',
+    'browser',
+    'tenantId',
+    'status',
+    'picture',
+    'preferredZoneinfo',
+    'roles',
 ]);
 
 // ---------------------------------------------------------------------------
@@ -142,14 +138,14 @@ const DEFAULT_CONTEXT_KEYS = new Set([
  * Adapts to whatever fields are present rather than hard-coding.
  */
 function formatContextFields(context) {
-  if (!context || typeof context !== "object") return "  (no context)";
-  const lines = [];
-  for (const [key, value] of Object.entries(context)) {
-    // Pad key for alignment (right-align keys in a 20-char column)
-    const label = formatContextLabel(key);
-    lines.push(`  ${label.padStart(22)}: ${value}`);
-  }
-  return lines.join("\n");
+    if (!context || typeof context !== 'object') return '  (no context)';
+    const lines = [];
+    for (const [key, value] of Object.entries(context)) {
+        // Pad key for alignment (right-align keys in a 20-char column)
+        const label = formatContextLabel(key);
+        lines.push(`  ${label.padStart(22)}: ${value}`);
+    }
+    return lines.join('\n');
 }
 
 /**
@@ -157,8 +153,8 @@ function formatContextFields(context) {
  * default camelCase set (i.e. the user has customised payload key names).
  */
 function hasCustomKeyNames(context) {
-  if (!context || typeof context !== "object") return false;
-  return Object.keys(context).some((k) => !DEFAULT_CONTEXT_KEYS.has(k));
+    if (!context || typeof context !== 'object') return false;
+    return Object.keys(context).some((k) => !DEFAULT_CONTEXT_KEYS.has(k));
 }
 
 // ---------------------------------------------------------------------------
@@ -166,129 +162,123 @@ function hasCustomKeyNames(context) {
 // ---------------------------------------------------------------------------
 
 function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
 }
 
 function formatContextLabel(key) {
-  return key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
+    return key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
 }
 
 function renderContextTable(context) {
-  if (
-    !context ||
-    typeof context !== "object" ||
-    Object.keys(context).length === 0
-  ) {
-    return '<p class="empty">No context fields</p>';
-  }
-  let html = '<table class="ctx">';
-  for (const [key, value] of Object.entries(context)) {
-    const label = formatContextLabel(key);
-    html += `<tr><td class="ctx-key">${escapeHtml(label)}</td><td class="ctx-val">${escapeHtml(String(value))}</td></tr>`;
-  }
-  html += "</table>";
-  return html;
+    if (!context || typeof context !== 'object' || Object.keys(context).length === 0) {
+        return '<p class="empty">No context fields</p>';
+    }
+    let html = '<table class="ctx">';
+    for (const [key, value] of Object.entries(context)) {
+        const label = formatContextLabel(key);
+        html += `<tr><td class="ctx-key">${escapeHtml(label)}</td><td class="ctx-val">${escapeHtml(String(value))}</td></tr>`;
+    }
+    html += '</table>';
+    return html;
 }
 
 function renderStars(rating) {
-  if (typeof rating !== "number" || !Number.isFinite(rating)) return "";
-  const safeRating = Math.floor(rating);
-  if (safeRating < 1 || safeRating > 5) return "";
-  return (
-    '<span class="stars">' +
-    "★".repeat(safeRating) +
-    "☆".repeat(5 - safeRating) +
-    ` (${safeRating}/5)</span>`
-  );
+    if (typeof rating !== 'number' || !Number.isFinite(rating)) return '';
+    const safeRating = Math.floor(rating);
+    if (safeRating < 1 || safeRating > 5) return '';
+    return (
+        '<span class="stars">' +
+        '★'.repeat(safeRating) +
+        '☆'.repeat(5 - safeRating) +
+        ` (${safeRating}/5)</span>`
+    );
 }
 
 function renderAuthHtml(auth) {
-  if (!auth || auth.type === "none") return '<span class="ts">None</span>';
-  const typeLabel = {
-    header: "🛡️ Authorization (Bearer)",
-    custom: "⚙️ Custom Headers",
-  };
-  return `<span class="ts" title="${escapeHtml(auth.details || "")}">${typeLabel[auth.type] || escapeHtml(auth.type)}${auth.details ? " ℹ️" : ""}</span>`;
+    if (!auth || auth.type === 'none') return '<span class="ts">None</span>';
+    const typeLabel = {
+        header: '🛡️ Authorization (Bearer)',
+        custom: '⚙️ Custom Headers',
+    };
+    return `<span class="ts" title="${escapeHtml(auth.details || '')}">${typeLabel[auth.type] || escapeHtml(auth.type)}${auth.details ? ' ℹ️' : ''}</span>`;
 }
 
 function renderNoData(message) {
-  return `<div class="no-data">${escapeHtml(message)}</div>`;
+    return `<div class="no-data">${escapeHtml(message)}</div>`;
 }
 
 function renderBugCard(entry) {
-  const severityHtml = { low: "🟢 Low", medium: "🟡 Medium", high: "🔴 High" };
-  const severity = entry.severity
-    ? `<div class="severity">${severityHtml[entry.severity] || escapeHtml(entry.severity)}</div>`
-    : "";
-  const description = entry.description
-    ? `<div class="desc">${escapeHtml(entry.description.length > 200 ? entry.description.substring(0, 200) + "…" : entry.description)}</div>`
-    : "";
-  const clientTimestamp = entry.clientTimestamp
-    ? `<span class="ts" title="Client timestamp">${escapeHtml(entry.clientTimestamp)}</span>`
-    : "";
-  const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${renderAuthHtml(entry.auth)}</span></div>`;
+    const severityHtml = { low: '🟢 Low', medium: '🟡 Medium', high: '🔴 High' };
+    const severity = entry.severity
+        ? `<div class="severity">${severityHtml[entry.severity] || escapeHtml(entry.severity)}</div>`
+        : '';
+    const description = entry.description
+        ? `<div class="desc">${escapeHtml(entry.description.length > 200 ? entry.description.substring(0, 200) + '…' : entry.description)}</div>`
+        : '';
+    const clientTimestamp = entry.clientTimestamp
+        ? `<span class="ts" title="Client timestamp">${escapeHtml(entry.clientTimestamp)}</span>`
+        : '';
+    const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${renderAuthHtml(entry.auth)}</span></div>`;
 
-  return `<div class="card bug" data-entry-id="${escapeHtml(entry.id || "")}"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTimestamp}<span class="ts">${escapeHtml(entry.receivedAt)}</span></div>${renderContextTable(entry.context)}${severity}${description}${auth}</div>`;
+    return `<div class="card bug" data-entry-id="${escapeHtml(entry.id || '')}"><div class="card-header"><span class="badge bug-badge">BUG REPORT</span>${clientTimestamp}<span class="ts">${escapeHtml(entry.receivedAt)}</span></div>${renderContextTable(entry.context)}${severity}${description}${auth}</div>`;
 }
 
 function renderFeedbackCard(entry) {
-  const rating = entry.rating
-    ? `<div class="rating">${renderStars(entry.rating)}</div>`
-    : "";
-  const comment = entry.comment
-    ? `<div class="desc">${escapeHtml(entry.comment.length > 200 ? entry.comment.substring(0, 200) + "…" : entry.comment)}</div>`
-    : "";
-  const clientTimestamp = entry.clientTimestamp
-    ? `<span class="ts" title="Client timestamp">${escapeHtml(entry.clientTimestamp)}</span>`
-    : "";
-  const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${renderAuthHtml(entry.auth)}</span></div>`;
+    const rating = entry.rating ? `<div class="rating">${renderStars(entry.rating)}</div>` : '';
+    const comment = entry.comment
+        ? `<div class="desc">${escapeHtml(entry.comment.length > 200 ? entry.comment.substring(0, 200) + '…' : entry.comment)}</div>`
+        : '';
+    const clientTimestamp = entry.clientTimestamp
+        ? `<span class="ts" title="Client timestamp">${escapeHtml(entry.clientTimestamp)}</span>`
+        : '';
+    const auth = `<div class="card-footer"><span class="badge auth-badge">Auth: ${renderAuthHtml(entry.auth)}</span></div>`;
 
-  return `<div class="card fb" data-entry-id="${escapeHtml(entry.id || "")}"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTimestamp}<span class="ts">${escapeHtml(entry.receivedAt)}</span></div>${renderContextTable(entry.context)}${rating}${comment}${auth}</div>`;
+    return `<div class="card fb" data-entry-id="${escapeHtml(entry.id || '')}"><div class="card-header"><span class="badge fb-badge">FEEDBACK</span>${clientTimestamp}<span class="ts">${escapeHtml(entry.receivedAt)}</span></div>${renderContextTable(entry.context)}${rating}${comment}${auth}</div>`;
 }
 
 function renderBugList(entries) {
-  return entries.length > 0
-    ? entries.map((entry) => renderBugCard(entry)).join("")
-    : renderNoData("No bug reports received yet");
+    return entries.length > 0
+        ? entries.map((entry) => renderBugCard(entry)).join('')
+        : renderNoData('No bug reports received yet');
 }
 
 function renderFeedbackList(entries) {
-  return entries.length > 0
-    ? entries.map((entry) => renderFeedbackCard(entry)).join("")
-    : renderNoData("No feedback received yet");
+    return entries.length > 0
+        ? entries.map((entry) => renderFeedbackCard(entry)).join('')
+        : renderNoData('No feedback received yet');
 }
 
 function createDashboardSnapshot() {
-  return {
-    bugReportsHtml: renderBugList(bugReports),
-    bugReportCount: bugReports.length,
-    feedbackHtml: renderFeedbackList(feedbackEntries),
-    feedbackCount: feedbackEntries.length,
-  };
+    return {
+        bugReportsHtml: renderBugList(bugReports),
+        bugReportCount: bugReports.length,
+        feedbackHtml: renderFeedbackList(feedbackEntries),
+        feedbackCount: feedbackEntries.length,
+    };
 }
 
 function writeSseEvent(res, eventName, payload) {
-  res.write(`event: ${eventName}\n`);
-  res.write(`data: ${JSON.stringify(payload)}\n\n`);
+    res.write(`event: ${eventName}\n`);
+    res.write(`data: ${JSON.stringify(payload)}\n\n`);
 }
 
 function broadcastDashboardEvent(eventName, payload) {
-  for (const client of dashboardClients) {
-    try {
-      writeSseEvent(client, eventName, payload);
-    } catch (error) {
-      dashboardClients.delete(client);
-      logger.warn(`SSE broadcast failed: ${error.message}`);
+    for (const client of dashboardClients) {
+        try {
+            writeSseEvent(client, eventName, payload);
+        } catch (error) {
+            dashboardClients.delete(client);
+            logger.warn(`SSE broadcast failed: ${error.message}`);
+        }
     }
-  }
 }
 
 function renderDashboardScript() {
-  return `<script>
+    return `<script>
 (() => {
   const maxStored = ${MAX_STORED};
   const streamTargets = {
@@ -408,9 +398,9 @@ function renderDashboardScript() {
 }
 
 function renderDashboard() {
-  const snapshot = createDashboardSnapshot();
+    const snapshot = createDashboardSnapshot();
 
-  return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -465,18 +455,18 @@ ${renderDashboardScript()}
 }
 
 function registerDashboardClient(req, res) {
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache, no-transform");
-  res.setHeader("Connection", "keep-alive");
-  res.setHeader("X-Accel-Buffering", "no");
-  res.flushHeaders();
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
+    res.flushHeaders();
 
-  dashboardClients.add(res);
-  writeSseEvent(res, "snapshot", createDashboardSnapshot());
+    dashboardClients.add(res);
+    writeSseEvent(res, 'snapshot', createDashboardSnapshot());
 
-  req.on("close", () => {
-    dashboardClients.delete(res);
-  });
+    req.on('close', () => {
+        dashboardClients.delete(res);
+    });
 }
 
 // ---------------------------------------------------------------------------
@@ -485,15 +475,15 @@ function registerDashboardClient(req, res) {
 const app = express();
 
 // Parse JSON bodies
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: '1mb' }));
 
 // Enable CORS for all origins (permissive — this is a demo server)
 app.use(cors());
 
 // Request logging middleware
 app.use((req, res, next) => {
-  logger.verbose(`${req.method} ${req.url}`);
-  next();
+    logger.verbose(`${req.method} ${req.url}`);
+    next();
 });
 
 // ---------------------------------------------------------------------------
@@ -504,24 +494,24 @@ app.use((req, res, next) => {
  * Dashboard — HTML view of received submissions.
  * GET /
  */
-app.get("/", (_req, res) => {
-  res.type("html").send(renderDashboard());
+app.get('/', (_req, res) => {
+    res.type('html').send(renderDashboard());
 });
 
 /**
  * Health check endpoint.
  * GET /health
  */
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", uptime: process.uptime() });
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', uptime: process.uptime() });
 });
 
 /**
  * Dashboard live updates.
  * GET /api/stream
  */
-app.get("/api/stream", (req, res) => {
-  registerDashboardClient(req, res);
+app.get('/api/stream', (req, res) => {
+    registerDashboardClient(req, res);
 });
 
 /**
@@ -531,86 +521,70 @@ app.get("/api/stream", (req, res) => {
  * Accepts any JSON payload with { timestamp, context, description }.
  * Context fields are displayed adaptively — whatever is sent is shown.
  */
-app.post("/api/bug-reports", (req, res) => {
-  const { timestamp, context, description, severity } = req.body;
+app.post('/api/bug-reports', (req, res) => {
+    const { timestamp, context, description, severity } = req.body;
 
-  // --- Validation ---
-  const errors = [];
-  if (!timestamp) errors.push("Missing required field: timestamp");
-  if (!context || typeof context !== "object")
-    errors.push("Missing or invalid field: context");
-  if (
-    !description ||
-    typeof description !== "string" ||
-    description.trim().length === 0
-  ) {
-    errors.push("Missing or empty field: description");
-  }
+    // --- Validation ---
+    const errors = [];
+    if (!timestamp) errors.push('Missing required field: timestamp');
+    if (!context || typeof context !== 'object') errors.push('Missing or invalid field: context');
+    if (!description || typeof description !== 'string' || description.trim().length === 0) {
+        errors.push('Missing or empty field: description');
+    }
 
-  if (errors.length > 0) {
-    logger.warn(
-      `BUG REPORT: Rejected — validation failed: ${errors.join("; ")}`,
-    );
-    return res.status(400).json({ status: "error", errors });
-  }
+    if (errors.length > 0) {
+        logger.warn(`BUG REPORT: Rejected — validation failed: ${errors.join('; ')}`);
+        return res.status(400).json({ status: 'error', errors });
+    }
 
-  // --- Store ---
-  // The client-provided timestamp may use any of the supported format strings
-  // (e.g. ISO 8601, locale-specific, compact) configured in the extension.
-  // We store both the original client timestamp and a server-side receivedAt.
-  const entry = {
-    id: `br-${Date.now()}`,
-    receivedAt: new Date().toISOString(),
-    clientTimestamp: timestamp,
-    context,
-    description,
-    severity: severity || null,
-  };
-  storeEntry(bugReports, entry, req);
-  broadcastDashboardEvent("bug-report", {
-    html: renderBugCard(entry),
-    count: bugReports.length,
-  });
+    // --- Store ---
+    // The client-provided timestamp may use any of the supported format strings
+    // (e.g. ISO 8601, locale-specific, compact) configured in the extension.
+    // We store both the original client timestamp and a server-side receivedAt.
+    const entry = {
+        id: `br-${Date.now()}`,
+        receivedAt: new Date().toISOString(),
+        clientTimestamp: timestamp,
+        context,
+        description,
+        severity: severity || null,
+    };
+    storeEntry(bugReports, entry, req);
+    broadcastDashboardEvent('bug-report', {
+        html: renderBugCard(entry),
+        count: bugReports.length,
+    });
 
-  // --- Log (adaptive — shows whatever context fields are present) ---
-  const descExcerpt =
-    description.length > 80 ? description.substring(0, 80) + "…" : description;
+    // --- Log (adaptive — shows whatever context fields are present) ---
+    const descExcerpt = description.length > 80 ? description.substring(0, 80) + '…' : description;
 
-  const severityIcons = { low: "🟢", medium: "🟡", high: "🔴" };
+    const severityIcons = { low: '🟢', medium: '🟡', high: '🔴' };
 
-  logger.info("─".repeat(72));
-  logger.info(`BUG REPORT received at ${timestamp}`);
-  logger.info(
-    `                Auth: ${entry.auth.type} (${entry.auth.details || "no details"})`,
-  );
-  logger.info(formatContextFields(context));
-  if (severity) {
-    logger.info(
-      `              Severity: ${severityIcons[severity] || "?"} ${severity}`,
-    );
-  }
-  logger.info(`           Description: ${descExcerpt}`);
-  logger.info("─".repeat(72));
+    logger.info('─'.repeat(72));
+    logger.info(`BUG REPORT received at ${timestamp}`);
+    logger.info(`                Auth: ${entry.auth.type} (${entry.auth.details || 'no details'})`);
+    logger.info(formatContextFields(context));
+    if (severity) {
+        logger.info(`              Severity: ${severityIcons[severity] || '?'} ${severity}`);
+    }
+    logger.info(`           Description: ${descExcerpt}`);
+    logger.info('─'.repeat(72));
 
-  // When custom payload key names are detected, log the full payload at info
-  // level so operators can see the remapped keys without switching to verbose.
-  if (hasCustomKeyNames(context)) {
-    logger.info(
-      "BUG REPORT: Custom payload key names detected — full payload:",
-    );
-    logger.info(JSON.stringify(req.body, null, 2));
-  }
+    // When custom payload key names are detected, log the full payload at info
+    // level so operators can see the remapped keys without switching to verbose.
+    if (hasCustomKeyNames(context)) {
+        logger.info('BUG REPORT: Custom payload key names detected — full payload:');
+        logger.info(JSON.stringify(req.body, null, 2));
+    }
 
-  // Full payload at verbose level for debugging
-  logger.verbose(
-    `BUG REPORT: Full payload:\n${JSON.stringify(req.body, null, 2)}`,
-  );
+    // Full payload at verbose level for debugging
+    logger.verbose(`BUG REPORT: Full payload:\n${JSON.stringify(req.body, null, 2)}`);
 
-  res.json({
-    status: "ok",
-    message: "Bug report received",
-    id: entry.id,
-  });
+    res.json({
+        status: 'ok',
+        message: 'Bug report received',
+        id: entry.id,
+    });
 });
 
 /**
@@ -620,98 +594,91 @@ app.post("/api/bug-reports", (req, res) => {
  * Accepts any JSON payload with { timestamp, context, rating?, comment? }.
  * Context fields are displayed adaptively — whatever is sent is shown.
  */
-app.post("/api/feedback", (req, res) => {
-  const { timestamp, context, rating, comment } = req.body;
+app.post('/api/feedback', (req, res) => {
+    const { timestamp, context, rating, comment } = req.body;
 
-  // --- Validation ---
-  const errors = [];
-  if (!timestamp) errors.push("Missing required field: timestamp");
-  if (!context || typeof context !== "object")
-    errors.push("Missing or invalid field: context");
+    // --- Validation ---
+    const errors = [];
+    if (!timestamp) errors.push('Missing required field: timestamp');
+    if (!context || typeof context !== 'object') errors.push('Missing or invalid field: context');
 
-  // At least one of rating or comment must be provided
-  const hasRating = Number.isInteger(rating) && rating >= 1 && rating <= 5;
-  const hasComment = typeof comment === "string" && comment.trim().length > 0;
-  const safeRating = hasRating ? rating : null;
+    // At least one of rating or comment must be provided
+    const hasRating = Number.isInteger(rating) && rating >= 1 && rating <= 5;
+    const hasComment = typeof comment === 'string' && comment.trim().length > 0;
+    const safeRating = hasRating ? rating : null;
 
-  if (!hasRating && !hasComment) {
-    errors.push("At least one of rating (1-5) or comment must be provided");
-  }
+    if (!hasRating && !hasComment) {
+        errors.push('At least one of rating (1-5) or comment must be provided');
+    }
 
-  if (typeof rating !== "undefined" && !hasRating) {
-    errors.push("Rating must be an integer between 1 and 5");
-  }
+    if (typeof rating !== 'undefined' && !hasRating) {
+        errors.push('Rating must be an integer between 1 and 5');
+    }
 
-  if (errors.length > 0) {
-    logger.warn(`FEEDBACK: Rejected — validation failed: ${errors.join("; ")}`);
-    return res.status(400).json({ status: "error", errors });
-  }
+    if (errors.length > 0) {
+        logger.warn(`FEEDBACK: Rejected — validation failed: ${errors.join('; ')}`);
+        return res.status(400).json({ status: 'error', errors });
+    }
 
-  // --- Store ---
-  // The client-provided timestamp may use any of the supported format strings
-  // (e.g. ISO 8601, locale-specific, compact) configured in the extension.
-  // We store both the original client timestamp and a server-side receivedAt.
-  const entry = {
-    id: `fb-${Date.now()}`,
-    receivedAt: new Date().toISOString(),
-    clientTimestamp: timestamp,
-    context,
-    rating: safeRating,
-    comment: hasComment ? comment : null,
-  };
-  storeEntry(feedbackEntries, entry, req);
-  broadcastDashboardEvent("feedback", {
-    html: renderFeedbackCard(entry),
-    count: feedbackEntries.length,
-  });
+    // --- Store ---
+    // The client-provided timestamp may use any of the supported format strings
+    // (e.g. ISO 8601, locale-specific, compact) configured in the extension.
+    // We store both the original client timestamp and a server-side receivedAt.
+    const entry = {
+        id: `fb-${Date.now()}`,
+        receivedAt: new Date().toISOString(),
+        clientTimestamp: timestamp,
+        context,
+        rating: safeRating,
+        comment: hasComment ? comment : null,
+    };
+    storeEntry(feedbackEntries, entry, req);
+    broadcastDashboardEvent('feedback', {
+        html: renderFeedbackCard(entry),
+        count: feedbackEntries.length,
+    });
 
-  // --- Log (adaptive — shows whatever context fields are present) ---
-  const commentExcerpt = hasComment
-    ? comment.length > 80
-      ? comment.substring(0, 80) + "…"
-      : comment
-    : "(no comment)";
+    // --- Log (adaptive — shows whatever context fields are present) ---
+    const commentExcerpt = hasComment
+        ? comment.length > 80
+            ? comment.substring(0, 80) + '…'
+            : comment
+        : '(no comment)';
 
-  logger.info("─".repeat(72));
-  logger.info(`FEEDBACK received at ${timestamp}`);
-  logger.info(
-    `                Auth: ${entry.auth.type} (${entry.auth.details || "no details"})`,
-  );
-  logger.info(formatContextFields(context));
-  if (hasRating) {
-    logger.info(
-      `                Rating: ${"★".repeat(safeRating)}${"☆".repeat(5 - safeRating)} (${safeRating}/5)`,
-    );
-  }
-  logger.info(`               Comment: ${commentExcerpt}`);
-  logger.info("─".repeat(72));
+    logger.info('─'.repeat(72));
+    logger.info(`FEEDBACK received at ${timestamp}`);
+    logger.info(`                Auth: ${entry.auth.type} (${entry.auth.details || 'no details'})`);
+    logger.info(formatContextFields(context));
+    if (hasRating) {
+        logger.info(
+            `                Rating: ${'★'.repeat(safeRating)}${'☆'.repeat(5 - safeRating)} (${safeRating}/5)`
+        );
+    }
+    logger.info(`               Comment: ${commentExcerpt}`);
+    logger.info('─'.repeat(72));
 
-  // When custom payload key names are detected, log the full payload at info
-  // level so operators can see the remapped keys without switching to verbose.
-  if (hasCustomKeyNames(context)) {
-    logger.info("FEEDBACK: Custom payload key names detected — full payload:");
-    logger.info(JSON.stringify(req.body, null, 2));
-  }
+    // When custom payload key names are detected, log the full payload at info
+    // level so operators can see the remapped keys without switching to verbose.
+    if (hasCustomKeyNames(context)) {
+        logger.info('FEEDBACK: Custom payload key names detected — full payload:');
+        logger.info(JSON.stringify(req.body, null, 2));
+    }
 
-  // Full payload at verbose level for debugging
-  logger.verbose(
-    `FEEDBACK: Full payload:\n${JSON.stringify(req.body, null, 2)}`,
-  );
+    // Full payload at verbose level for debugging
+    logger.verbose(`FEEDBACK: Full payload:\n${JSON.stringify(req.body, null, 2)}`);
 
-  res.json({
-    status: "ok",
-    message: "Feedback received",
-    id: entry.id,
-  });
+    res.json({
+        status: 'ok',
+        message: 'Feedback received',
+        id: entry.id,
+    });
 });
 
 // Catch-all for unknown routes
 app.use((req, res) => {
-  res
-    .status(404)
-    .json({
-      status: "error",
-      message: `Route not found: ${req.method} ${req.url}`,
+    res.status(404).json({
+        status: 'error',
+        message: `Route not found: ${req.method} ${req.url}`,
     });
 });
 
@@ -723,65 +690,57 @@ app.use((req, res) => {
 const hasCerts = fs.existsSync(CERT_PATH) && fs.existsSync(KEY_PATH);
 
 if (hasCerts) {
-  // ---- HTTPS mode --------------------------------------------------------
-  const certRaw = fs.readFileSync(CERT_PATH);
-  const keyRaw = fs.readFileSync(KEY_PATH);
+    // ---- HTTPS mode --------------------------------------------------------
+    const certRaw = fs.readFileSync(CERT_PATH);
+    const keyRaw = fs.readFileSync(KEY_PATH);
 
-  const tlsOptions = {
-    cert: certRaw,
-    key: keyRaw,
-  };
+    const tlsOptions = {
+        cert: certRaw,
+        key: keyRaw,
+    };
 
-  https.createServer(tlsOptions, app).listen(HTTPS_PORT, HOST, () => {
-    logger.info("═".repeat(72));
-    logger.info("  HelpButton.qs Demo Server  (HTTPS)");
+    https.createServer(tlsOptions, app).listen(HTTPS_PORT, HOST, () => {
+        logger.info('═'.repeat(72));
+        logger.info('  HelpButton.qs Demo Server  (HTTPS)');
 
-    // Parse and log non-sensitive certificate info
-    try {
-      const x509 = new crypto.X509Certificate(certRaw);
-      logger.info("  Certificate Info:");
-      logger.info(`    Subject:          ${x509.subject}`);
-      logger.info(`    Issuer:           ${x509.issuer}`);
-      logger.info(`    Valid to:         ${x509.validTo}`);
-      if (x509.subjectAltName) {
-        logger.info(`    Subject Alt Name: ${x509.subjectAltName}`);
-      }
-    } catch {
-      logger.warn("  (Could not parse certificate details)");
-    }
+        // Parse and log non-sensitive certificate info
+        try {
+            const x509 = new crypto.X509Certificate(certRaw);
+            logger.info('  Certificate Info:');
+            logger.info(`    Subject:          ${x509.subject}`);
+            logger.info(`    Issuer:           ${x509.issuer}`);
+            logger.info(`    Valid to:         ${x509.validTo}`);
+            if (x509.subjectAltName) {
+                logger.info(`    Subject Alt Name: ${x509.subjectAltName}`);
+            }
+        } catch {
+            logger.warn('  (Could not parse certificate details)');
+        }
 
-    logger.info(`  Listening on:  https://${HOST}:${HTTPS_PORT}`);
-    logger.info(`  Dashboard:     GET  https://${HOST}:${HTTPS_PORT}/`);
-    logger.info(`  Live stream:   GET  https://${HOST}:${HTTPS_PORT}/api/stream`);
-    logger.info(
-      `  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`,
-    );
-    logger.info(
-      `  Feedback:      POST https://${HOST}:${HTTPS_PORT}/api/feedback`,
-    );
-    logger.info(`  Health check:  GET  https://${HOST}:${HTTPS_PORT}/health`);
-    logger.info(`  Log level:     ${LOG_LEVEL}`);
-    logger.info("═".repeat(72));
-  });
+        logger.info(`  Listening on:  https://${HOST}:${HTTPS_PORT}`);
+        logger.info(`  Dashboard:     GET  https://${HOST}:${HTTPS_PORT}/`);
+        logger.info(`  Live stream:   GET  https://${HOST}:${HTTPS_PORT}/api/stream`);
+        logger.info(`  Bug reports:   POST https://${HOST}:${HTTPS_PORT}/api/bug-reports`);
+        logger.info(`  Feedback:      POST https://${HOST}:${HTTPS_PORT}/api/feedback`);
+        logger.info(`  Health check:  GET  https://${HOST}:${HTTPS_PORT}/health`);
+        logger.info(`  Log level:     ${LOG_LEVEL}`);
+        logger.info('═'.repeat(72));
+    });
 } else {
-  // ---- HTTP mode (no certs found) ----------------------------------------
-  logger.warn("No TLS certificates found — starting in plain HTTP mode.");
-  logger.warn("  See README.md for instructions on generating certs.");
+    // ---- HTTP mode (no certs found) ----------------------------------------
+    logger.warn('No TLS certificates found — starting in plain HTTP mode.');
+    logger.warn('  See README.md for instructions on generating certs.');
 
-  app.listen(HTTP_PORT, HOST, () => {
-    logger.info("═".repeat(72));
-    logger.info("  HelpButton.qs Demo Server  (HTTP)");
-    logger.info(`  Listening on:  http://${HOST}:${HTTP_PORT}`);
-    logger.info(`  Dashboard:     GET  http://${HOST}:${HTTP_PORT}/`);
-    logger.info(`  Live stream:   GET  http://${HOST}:${HTTP_PORT}/api/stream`);
-    logger.info(
-      `  Bug reports:   POST http://${HOST}:${HTTP_PORT}/api/bug-reports`,
-    );
-    logger.info(
-      `  Feedback:      POST http://${HOST}:${HTTP_PORT}/api/feedback`,
-    );
-    logger.info(`  Health check:  GET  http://${HOST}:${HTTP_PORT}/health`);
-    logger.info(`  Log level:     ${LOG_LEVEL}`);
-    logger.info("═".repeat(72));
-  });
+    app.listen(HTTP_PORT, HOST, () => {
+        logger.info('═'.repeat(72));
+        logger.info('  HelpButton.qs Demo Server  (HTTP)');
+        logger.info(`  Listening on:  http://${HOST}:${HTTP_PORT}`);
+        logger.info(`  Dashboard:     GET  http://${HOST}:${HTTP_PORT}/`);
+        logger.info(`  Live stream:   GET  http://${HOST}:${HTTP_PORT}/api/stream`);
+        logger.info(`  Bug reports:   POST http://${HOST}:${HTTP_PORT}/api/bug-reports`);
+        logger.info(`  Feedback:      POST http://${HOST}:${HTTP_PORT}/api/feedback`);
+        logger.info(`  Health check:  GET  http://${HOST}:${HTTP_PORT}/health`);
+        logger.info(`  Log level:     ${LOG_LEVEL}`);
+        logger.info('═'.repeat(72));
+    });
 }

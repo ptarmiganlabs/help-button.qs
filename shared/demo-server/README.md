@@ -13,34 +13,34 @@ The server also provides a dashboard showing what bug reports and feedback have 
 ## Table of Contents
 
 - [HelpButton.qs Demo Server](#helpbuttonqs-demo-server)
-  - [Table of Contents](#table-of-contents)
-  - [Prerequisites](#prerequisites)
-  - [Quick Start (HTTP)](#quick-start-http)
-  - [HTTPS Setup](#https-setup)
-    - [Why HTTPS is required](#why-https-is-required)
-    - [Step 1 — Generate a self-signed certificate](#step-1--generate-a-self-signed-certificate)
-      - [macOS](#macos)
-      - [Windows (PowerShell 5.1)](#windows-powershell-51)
-    - [Step 2 — Trust the certificate in your browser](#step-2--trust-the-certificate-in-your-browser)
-    - [Step 3 — Start the server](#step-3--start-the-server)
-    - [Step 4 — Update the help-button config](#step-4--update-the-help-button-config)
-  - [Configuration Reference](#configuration-reference)
-  - [Testing](#testing)
-    - [Health check](#health-check)
-    - [Submit a bug report](#submit-a-bug-report)
-    - [Submit feedback](#submit-feedback)
-    - [Dashboard live updates](#dashboard-live-updates)
-  - [Example Console Output](#example-console-output)
-    - [Custom Payload Key Names](#custom-payload-key-names)
-  - [Troubleshooting](#troubleshooting)
-    - ["Mixed Content" — browser silently blocks the request](#mixed-content--browser-silently-blocks-the-request)
-    - ["NET::ERR_CERT_AUTHORITY_INVALID" or similar](#neterr_cert_authority_invalid-or-similar)
-    - [Server starts in HTTP mode even though certs exist](#server-starts-in-http-mode-even-though-certs-exist)
-    - [`fetch()` succeeds from curl but fails from the browser](#fetch-succeeds-from-curl-but-fails-from-the-browser)
-    - [Dashboard shows "Reconnecting live updates..."](#dashboard-shows-reconnecting-live-updates)
-    - [Dashboard reconnects but older entries are gone](#dashboard-reconnects-but-older-entries-are-gone)
-    - [PowerShell error: "The underlying connection was closed"](#powershell-error-the-underlying-connection-was-closed)
-  - [Beyond the Demo](#beyond-the-demo)
+    - [Table of Contents](#table-of-contents)
+    - [Prerequisites](#prerequisites)
+    - [Quick Start (HTTP)](#quick-start-http)
+    - [HTTPS Setup](#https-setup)
+        - [Why HTTPS is required](#why-https-is-required)
+        - [Step 1 — Generate a self-signed certificate](#step-1--generate-a-self-signed-certificate)
+            - [macOS](#macos)
+            - [Windows (PowerShell 5.1)](#windows-powershell-51)
+        - [Step 2 — Trust the certificate in your browser](#step-2--trust-the-certificate-in-your-browser)
+        - [Step 3 — Start the server](#step-3--start-the-server)
+        - [Step 4 — Update the help-button config](#step-4--update-the-help-button-config)
+    - [Configuration Reference](#configuration-reference)
+    - [Testing](#testing)
+        - [Health check](#health-check)
+        - [Submit a bug report](#submit-a-bug-report)
+        - [Submit feedback](#submit-feedback)
+        - [Dashboard live updates](#dashboard-live-updates)
+    - [Example Console Output](#example-console-output)
+        - [Custom Payload Key Names](#custom-payload-key-names)
+    - [Troubleshooting](#troubleshooting)
+        - ["Mixed Content" — browser silently blocks the request](#mixed-content--browser-silently-blocks-the-request)
+        - ["NET::ERR_CERT_AUTHORITY_INVALID" or similar](#neterr_cert_authority_invalid-or-similar)
+        - [Server starts in HTTP mode even though certs exist](#server-starts-in-http-mode-even-though-certs-exist)
+        - [`fetch()` succeeds from curl but fails from the browser](#fetch-succeeds-from-curl-but-fails-from-the-browser)
+        - [Dashboard shows "Reconnecting live updates..."](#dashboard-shows-reconnecting-live-updates)
+        - [Dashboard reconnects but older entries are gone](#dashboard-reconnects-but-older-entries-are-gone)
+        - [PowerShell error: "The underlying connection was closed"](#powershell-error-the-underlying-connection-was-closed)
+    - [Beyond the Demo](#beyond-the-demo)
 
 ---
 
@@ -207,15 +207,15 @@ Because the certificate is self-signed, browsers will not trust it by default. Y
 1. **Start the demo server** (see [Step 3](#step-3--start-the-server) below).
 2. **Open the health-check URL** in the same browser you use for Qlik Sense:
 
-   ```text
-   https://localhost:3443/health
-   ```
+    ```text
+    https://localhost:3443/health
+    ```
 
 3. The browser will show a certificate warning:
-   - **Chrome:** Click _"Advanced"_ → _"Proceed to localhost (unsafe)"_.
-   - **Edge:** Click _"Advanced"_ → _"Continue to localhost (unsafe)"_.
-   - **Firefox:** Click _"Advanced…"_ → _"Accept the Risk and Continue"_.
-   - **Safari:** Click _"Show Details"_ → _"visit this website"_ → _"Visit Website"_ (You may be prompted for your Mac system password).
+    - **Chrome:** Click _"Advanced"_ → _"Proceed to localhost (unsafe)"_.
+    - **Edge:** Click _"Advanced"_ → _"Continue to localhost (unsafe)"_.
+    - **Firefox:** Click _"Advanced…"_ → _"Accept the Risk and Continue"_.
+    - **Safari:** Click _"Show Details"_ → _"visit this website"_ → _"Visit Website"_ (You may be prompted for your Mac system password).
 4. You should see the JSON response: `{"status":"ok","uptime":…}`.
 
 > **Important:** You must complete this step in the **same browser profile** you use for Qlik Sense. The trust decision is stored per browser profile. You only need to do this once (or again after the certificate expires).

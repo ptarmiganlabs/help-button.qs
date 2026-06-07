@@ -121,26 +121,26 @@ Global dialog strings are stored as two root-level objects in the extension prop
 
 ```json
 {
-  "bugReportStrings": {
-    "title": "",
-    "descriptionLabel": "",
-    "descriptionPlaceholder": "",
-    "submitButton": "",
-    "cancelButton": "",
-    "successMessage": "",
-    "errorMessage": "",
-    "loadingMessage": ""
-  },
-  "feedbackStrings": {
-    "title": "",
-    "ratingLabel": "",
-    "commentLabel": "",
-    "commentPlaceholder": "",
-    "submitButton": "",
-    "cancelButton": "",
-    "successMessage": "",
-    "errorMessage": ""
-  }
+    "bugReportStrings": {
+        "title": "",
+        "descriptionLabel": "",
+        "descriptionPlaceholder": "",
+        "submitButton": "",
+        "cancelButton": "",
+        "successMessage": "",
+        "errorMessage": "",
+        "loadingMessage": ""
+    },
+    "feedbackStrings": {
+        "title": "",
+        "ratingLabel": "",
+        "commentLabel": "",
+        "commentPlaceholder": "",
+        "submitButton": "",
+        "cancelButton": "",
+        "successMessage": "",
+        "errorMessage": ""
+    }
 }
 ```
 
@@ -148,26 +148,26 @@ Other properties like `buttonLabel`, `buttonTooltip`, `popupTitle`, and `editPla
 
 ```json
 {
-  "bugReportStrings": {
-    "title": "",
-    "descriptionLabel": "",
-    "descriptionPlaceholder": "",
-    "submitButton": "",
-    "cancelButton": "",
-    "successMessage": "",
-    "errorMessage": "",
-    "loadingMessage": ""
-  },
-  "feedbackStrings": {
-    "title": "",
-    "ratingLabel": "",
-    "commentLabel": "",
-    "commentPlaceholder": "",
-    "submitButton": "",
-    "cancelButton": "",
-    "successMessage": "",
-    "errorMessage": ""
-  }
+    "bugReportStrings": {
+        "title": "",
+        "descriptionLabel": "",
+        "descriptionPlaceholder": "",
+        "submitButton": "",
+        "cancelButton": "",
+        "successMessage": "",
+        "errorMessage": "",
+        "loadingMessage": ""
+    },
+    "feedbackStrings": {
+        "title": "",
+        "ratingLabel": "",
+        "commentLabel": "",
+        "commentPlaceholder": "",
+        "submitButton": "",
+        "cancelButton": "",
+        "successMessage": "",
+        "errorMessage": ""
+    }
 }
 ```
 

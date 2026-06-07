@@ -1,25 +1,25 @@
 {
-  "name": "helpbutton-qs-demo-server",
-  "version": "1.0.0",
-  "description": "Demo backend server for receiving bug reports from HelpButton.qs (extension and HTML variant)",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "keywords": [
-    "qlik-sense",
-    "help-button",
-    "bug-report",
-    "demo"
-  ],
-  "license": "MIT",
-  "engines": {
-    "node": ">=24"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "winston": "^3.17.0"
-  }
+    "name": "helpbutton-qs-demo-server",
+    "version": "1.0.0",
+    "description": "Demo backend server for receiving bug reports from HelpButton.qs (extension and HTML variant)",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "keywords": [
+        "qlik-sense",
+        "help-button",
+        "bug-report",
+        "demo"
+    ],
+    "license": "MIT",
+    "engines": {
+        "node": ">=24"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "winston": "^3.17.0"
+    }
 }

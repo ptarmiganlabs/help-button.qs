@@ -16,22 +16,22 @@ All behavioral statements in this guide are based on the source code in `src`, w
 ## Table of Contents
 
 - [Menu Items — Sense App Developer Guide](#menu-items--sense-app-developer-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [When the Help Menu Appears](#when-the-help-menu-appears)
-  - [Adding a Menu Item](#adding-a-menu-item)
-  - [How Menu Items Work at Runtime](#how-menu-items-work-at-runtime)
-  - [Common Menu Item Settings](#common-menu-item-settings)
-  - [Show Condition (Visibility)](#show-condition-visibility)
-  - [Item Colors and Theme Presets](#item-colors-and-theme-presets)
-  - [Action Type: Open URL](#action-type-open-url)
-  - [Supported URL and Webhook Template Fields](#supported-url-and-webhook-template-fields)
-  - [Action Type: Open Bug Report Dialog](#action-type-open-bug-report-dialog)
-  - [Action Type: Open Feedback Dialog](#action-type-open-feedback-dialog)
-  - [Action Type: Set or Toggle Variable](#action-type-set-or-toggle-variable)
-  - [Multi-Instance Behavior](#multi-instance-behavior)
-  - [Troubleshooting](#troubleshooting)
-  - [Field Limits and Defaults](#field-limits-and-defaults)
+    - [Table of Contents](#table-of-contents)
+    - [Overview](#overview)
+    - [When the Help Menu Appears](#when-the-help-menu-appears)
+    - [Adding a Menu Item](#adding-a-menu-item)
+    - [How Menu Items Work at Runtime](#how-menu-items-work-at-runtime)
+    - [Common Menu Item Settings](#common-menu-item-settings)
+    - [Show Condition (Visibility)](#show-condition-visibility)
+    - [Item Colors and Theme Presets](#item-colors-and-theme-presets)
+    - [Action Type: Open URL](#action-type-open-url)
+    - [Supported URL and Webhook Template Fields](#supported-url-and-webhook-template-fields)
+    - [Action Type: Open Bug Report Dialog](#action-type-open-bug-report-dialog)
+    - [Action Type: Open Feedback Dialog](#action-type-open-feedback-dialog)
+    - [Action Type: Set or Toggle Variable](#action-type-set-or-toggle-variable)
+    - [Multi-Instance Behavior](#multi-instance-behavior)
+    - [Troubleshooting](#troubleshooting)
+    - [Field Limits and Defaults](#field-limits-and-defaults)
 
 ---
 
@@ -428,17 +428,17 @@ Bug reports are submitted as JSON with this structure:
 
 ```json
 {
-  "timestamp": "2026-05-26T13:45:12.345Z",
-  "context": {
-    "userName": "Alex Martin",
-    "platform": "client-managed",
-    "appId": "d6e7f080-ebe6-4bd1-a35d-bd8d2354fc48",
-    "sheetId": "8e8be29d-1336-4971-8a7e-6a626b3d2363",
-    "urlPath": "/sense/app/.../sheet/.../state/analysis",
-    "timestamp": "2026-05-26T13:45:12.345Z"
-  },
-  "description": "The export button is disabled after changing Country.",
-  "severity": "high"
+    "timestamp": "2026-05-26T13:45:12.345Z",
+    "context": {
+        "userName": "Alex Martin",
+        "platform": "client-managed",
+        "appId": "d6e7f080-ebe6-4bd1-a35d-bd8d2354fc48",
+        "sheetId": "8e8be29d-1336-4971-8a7e-6a626b3d2363",
+        "urlPath": "/sense/app/.../sheet/.../state/analysis",
+        "timestamp": "2026-05-26T13:45:12.345Z"
+    },
+    "description": "The export button is disabled after changing Country.",
+    "severity": "high"
 }
 ```
 
@@ -490,8 +490,8 @@ Submit behavior is different from bug reports:
 
 - A description is **not** required, because there is no description field.
 - The **Submit** button is enabled when the user has provided **at least one** of these:
-  - A star rating
-  - A non-empty comment
+    - A star rating
+    - A non-empty comment
 
 The comment input also uses the shared Write/Preview editor, and the payload contains the raw entered text.
 
@@ -510,15 +510,15 @@ Feedback is submitted as JSON with this structure:
 
 ```json
 {
-  "timestamp": "2026-05-26T13:45:12.345Z",
-  "context": {
-    "userName": "Alex Martin",
-    "platform": "cloud",
-    "appId": "d6e7f080-ebe6-4bd1-a35d-bd8d2354fc48",
-    "sheetId": "8e8be29d-1336-4971-8a7e-6a626b3d2363"
-  },
-  "rating": 4,
-  "comment": "The new help menu is much easier to use."
+    "timestamp": "2026-05-26T13:45:12.345Z",
+    "context": {
+        "userName": "Alex Martin",
+        "platform": "cloud",
+        "appId": "d6e7f080-ebe6-4bd1-a35d-bd8d2354fc48",
+        "sheetId": "8e8be29d-1336-4971-8a7e-6a626b3d2363"
+    },
+    "rating": 4,
+    "comment": "The new help menu is much easier to use."
 }
 ```
 
@@ -638,16 +638,16 @@ Runtime rules:
 
 - Menu items from all registered instances are merged into one popup.
 - The first registered instance provides the button appearance and popup shell:
-  - Button label
-  - Button tooltip
-  - Button icon
-  - Button colors
-  - Popup title
-  - Popup styling
+    - Button label
+    - Button tooltip
+    - Button icon
+    - Button colors
+    - Popup title
+    - Popup styling
 - The first registered instance also provides the **Merge menu items** setting that decides how contributed items are combined:
-  - **Append all items** — current behavior, keeps every item in registration order
-  - **Merge duplicate labels** — keeps the first visible item for each label (case-insensitive)
-  - **Merge duplicate label + action pairs** — keeps the first visible item for each label/action pair
+    - **Append all items** — current behavior, keeps every item in registration order
+    - **Merge duplicate labels** — keeps the first visible item for each label (case-insensitive)
+    - **Merge duplicate label + action pairs** — keeps the first visible item for each label/action pair
 - Menu items without a non-empty label are never de-duplicated. They are always appended in registration order, even when one of the merge modes is selected.
 
 Important caveat for the merge-mode owner:

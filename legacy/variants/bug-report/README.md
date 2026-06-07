@@ -170,12 +170,12 @@ The [`shared/demo-server/`](../../shared/demo-server/) folder (at the repository
 
 1. Copy an existing language folder (e.g. `en/`) to a new folder named with the [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code (e.g. `de/` for German).
 2. Edit `helpbutton-qs.config.js` in the new folder — translate all user-facing text strings:
-   - Button label and tooltip
-   - Popup title
-   - Menu item labels
-   - All `bugReport.*` text properties (dialog title, labels, buttons, messages)
-   - All `bugReport.fieldLabels.*` entries
-   - Code comments (optional but recommended)
+    - Button label and tooltip
+    - Popup title
+    - Menu item labels
+    - All `bugReport.*` text properties (dialog title, labels, buttons, messages)
+    - All `bugReport.fieldLabels.*` entries
+    - Code comments (optional but recommended)
 3. The `helpbutton-qs.js` file does not need modification — it's the same across all languages.
 4. Update this README to list the new language.
 

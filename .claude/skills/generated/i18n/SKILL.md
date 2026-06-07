@@ -1,6 +1,6 @@
 ---
 name: i18n
-description: "Skill for the I18n area of qs-help-button. 5 symbols across 1 files."
+description: 'Skill for the I18n area of qs-help-button. 5 symbols across 1 files.'
 ---
 
 # I18n
@@ -15,8 +15,8 @@ description: "Skill for the I18n area of qs-help-button. 5 symbols across 1 file
 
 ## Key Files
 
-| File | Symbols |
-|------|---------|
+| File                | Symbols                                                                        |
+| ------------------- | ------------------------------------------------------------------------------ |
 | `src/i18n/index.js` | getEffectiveLocale, detectLocale, normalizeLocale, getTranslation, resolveText |
 
 ## Entry Points
@@ -30,19 +30,19 @@ Start here when exploring this area:
 
 ## Key Symbols
 
-| Symbol | Type | File | Line |
-|--------|------|------|------|
-| `getEffectiveLocale` | Function | `src/i18n/index.js` | 66 |
-| `detectLocale` | Function | `src/i18n/index.js` | 88 |
-| `getTranslation` | Function | `src/i18n/index.js` | 141 |
-| `resolveText` | Function | `src/i18n/index.js` | 166 |
-| `normalizeLocale` | Function | `src/i18n/index.js` | 125 |
+| Symbol               | Type     | File                | Line |
+| -------------------- | -------- | ------------------- | ---- |
+| `getEffectiveLocale` | Function | `src/i18n/index.js` | 66   |
+| `detectLocale`       | Function | `src/i18n/index.js` | 88   |
+| `getTranslation`     | Function | `src/i18n/index.js` | 141  |
+| `resolveText`        | Function | `src/i18n/index.js` | 166  |
+| `normalizeLocale`    | Function | `src/i18n/index.js` | 125  |
 
 ## Execution Flows
 
-| Flow | Type | Steps |
-|------|------|-------|
-| `ResolveText → NormalizeLocale` | intra_community | 5 |
+| Flow                            | Type            | Steps |
+| ------------------------------- | --------------- | ----- |
+| `ResolveText → NormalizeLocale` | intra_community | 5     |
 
 ## How to Explore
 
