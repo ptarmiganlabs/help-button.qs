@@ -2,7 +2,7 @@
     "name": "HelpButton.qs",
     "description": "Configurable help button for the Qlik Sense toolbar",
     "type": "visualization",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "icon": "shapes",
     "preview": "preview.png",
     "author": "Göran Sander, Ptarmigan Labs",
