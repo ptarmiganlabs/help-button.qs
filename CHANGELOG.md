@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.1.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.0...helpbutton-qs-v3.1.1) (2026-10-04)
+
+
+### Bug Fixes
+
+* render preview.png at the family's 280 x 280 ([f658695](https://github.com/ptarmiganlabs/help-button.qs/commit/f658695bb35bd991a9ab232c7e72f789b8872d74))
+
+
+### Miscellaneous
+
+* register the GitNexus index as helpbutton.qs ([cc38888](https://github.com/ptarmiganlabs/help-button.qs/commit/cc38888eaad8b2cf0d2f516cba717da9f60b8418))
+* register the GitNexus index as helpbutton.qs ([64c539c](https://github.com/ptarmiganlabs/help-button.qs/commit/64c539c9b8445cfc234577b8a2d0bb587c29378c))
+
 ## [3.1.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.0.0...helpbutton-qs-v3.1.0) (2026-06-07)
 
 
