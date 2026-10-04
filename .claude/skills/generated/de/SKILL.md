@@ -1,6 +1,6 @@
 ---
 name: de
-description: 'Skill for the De area of qs-help-button. 43 symbols across 2 files.'
+description: 'Skill for the De area of helpbutton.qs. 43 symbols across 2 files.'
 ---
 
 # De

@@ -1,6 +1,6 @@
 ---
 name: util
-description: 'Skill for the Util area of qs-help-button. 38 symbols across 9 files.'
+description: 'Skill for the Util area of helpbutton.qs. 38 symbols across 9 files.'
 ---
 
 # Util

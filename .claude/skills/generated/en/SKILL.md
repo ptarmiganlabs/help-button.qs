@@ -1,6 +1,6 @@
 ---
 name: en
-description: 'Skill for the En area of qs-help-button. 43 symbols across 2 files.'
+description: 'Skill for the En area of helpbutton.qs. 43 symbols across 2 files.'
 ---
 
 # En

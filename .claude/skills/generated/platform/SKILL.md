@@ -1,6 +1,6 @@
 ---
 name: platform
-description: 'Skill for the Platform area of qs-help-button. 19 symbols across 5 files.'
+description: 'Skill for the Platform area of helpbutton.qs. 19 symbols across 5 files.'
 ---
 
 # Platform

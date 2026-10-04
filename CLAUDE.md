@@ -2,11 +2,11 @@
 
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **qs-help-button** (3511 symbols, 5466 relationships, 198 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **helpbutton.qs** (3511 symbols, 5466 relationships, 198 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
-> In this multi-repo workspace, always include `-r qs-help-button` on GitNexus CLI commands.
+> In this multi-repo workspace, always include `-r helpbutton.qs` on GitNexus CLI commands.
 >
-> Start by checking index freshness with `npx gitnexus status -r qs-help-button`. If any GitNexus tool warns the index is stale, run `npx gitnexus analyze -r qs-help-button` in terminal first.
+> Start by checking index freshness with `npx gitnexus status -r helpbutton.qs`. If any GitNexus tool warns the index is stale, run `npx gitnexus analyze --embeddings --skills` from the main checkout (the repo name comes from `.gitnexusrc`; without `--skills` the analyze deletes the generated area-skills table) first.
 
 ## Always Do
 
@@ -25,12 +25,12 @@ This project is indexed by GitNexus as **qs-help-button** (3511 symbols, 5466 re
 
 ## Resources
 
-| Resource                                        | Use for                                  |
-| ----------------------------------------------- | ---------------------------------------- |
-| `gitnexus://repo/qs-help-button/context`        | Codebase overview, check index freshness |
-| `gitnexus://repo/qs-help-button/clusters`       | All functional areas                     |
-| `gitnexus://repo/qs-help-button/processes`      | All execution flows                      |
-| `gitnexus://repo/qs-help-button/process/{name}` | Step-by-step execution trace             |
+| Resource                                       | Use for                                  |
+| ---------------------------------------------- | ---------------------------------------- |
+| `gitnexus://repo/helpbutton.qs/context`        | Codebase overview, check index freshness |
+| `gitnexus://repo/helpbutton.qs/clusters`       | All functional areas                     |
+| `gitnexus://repo/helpbutton.qs/processes`      | All execution flows                      |
+| `gitnexus://repo/helpbutton.qs/process/{name}` | Step-by-step execution trace             |
 
 ## CLI
 

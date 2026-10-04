@@ -1,6 +1,6 @@
 ---
 name: createdefault
-description: 'Skill for the CreateDefault area of qs-help-button. 4 symbols across 1 files.'
+description: 'Skill for the CreateDefault area of helpbutton.qs. 4 symbols across 1 files.'
 ---
 
 # CreateDefault

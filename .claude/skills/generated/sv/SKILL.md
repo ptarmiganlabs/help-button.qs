@@ -1,6 +1,6 @@
 ---
 name: sv
-description: 'Skill for the Sv area of qs-help-button. 43 symbols across 2 files.'
+description: 'Skill for the Sv area of helpbutton.qs. 43 symbols across 2 files.'
 ---
 
 # Sv
