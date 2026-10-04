@@ -1,6 +1,6 @@
 ---
 name: demo-server
-description: 'Skill for the Demo-server area of qs-help-button. 17 symbols across 1 files.'
+description: 'Skill for the Demo-server area of helpbutton.qs. 17 symbols across 1 files.'
 ---
 
 # Demo-server

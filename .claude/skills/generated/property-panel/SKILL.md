@@ -1,6 +1,6 @@
 ---
 name: property-panel
-description: 'Skill for the Property-panel area of qs-help-button. 8 symbols across 7 files.'
+description: 'Skill for the Property-panel area of helpbutton.qs. 8 symbols across 7 files.'
 ---
 
 # Property-panel

@@ -1,6 +1,6 @@
 ---
 name: i18n
-description: 'Skill for the I18n area of qs-help-button. 5 symbols across 1 files.'
+description: 'Skill for the I18n area of helpbutton.qs. 5 symbols across 1 files.'
 ---
 
 # I18n

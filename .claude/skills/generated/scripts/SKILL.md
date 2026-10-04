@@ -1,6 +1,6 @@
 ---
 name: scripts
-description: 'Skill for the Scripts area of qs-help-button. 10 symbols across 4 files.'
+description: 'Skill for the Scripts area of helpbutton.qs. 10 symbols across 4 files.'
 ---
 
 # Scripts

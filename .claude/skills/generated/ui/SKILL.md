@@ -1,6 +1,6 @@
 ---
 name: ui
-description: 'Skill for the Ui area of qs-help-button. 95 symbols across 15 files.'
+description: 'Skill for the Ui area of helpbutton.qs. 95 symbols across 15 files.'
 ---
 
 # Ui
