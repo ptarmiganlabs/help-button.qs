@@ -70,3 +70,31 @@ Use these commands when GitNexus MCP tools are not available in the current chat
 | Work in the CreateDefault area (4 symbols)   | `.claude/skills/generated/createdefault/SKILL.md`           |
 
 <!-- gitnexus:end -->
+
+## Pull requests and merging
+
+The ruleset `protect_main` requires these checks on `main`, each pinned to GitHub Actions
+(integration 15368):
+
+- `Lint and unit tests` (`.github/workflows/test.yaml`): `npm run lint`, `npm run format:check`
+  and `npm test`.
+- `conventional-title` (`.github/workflows/pr-title.yaml`): fails a pull request whose title is a
+  Conventional Commit.
+
+Commit subjects are Conventional Commits. Pull request titles are plain sentences. GitHub copies
+the title into the merge commit's body, and release-please reads that body as one more commit, so a
+conventional title lists the change twice in the release notes.
+
+Dependabot, Renovate and release-please write conventional titles that nobody can change. Merge
+those pull requests with an empty body, then check that the body really is empty:
+
+```bash
+gh pr merge <n> --repo ptarmiganlabs/help-button.qs --merge --body ""
+git fetch origin
+git log -1 --format=%b "$(gh pr view <n> --repo ptarmiganlabs/help-button.qs --json mergeCommit --jq .mergeCommit.oid)"
+```
+
+If the bot's commit is older than the last release, rebase the pull request first
+(`@dependabot rebase`), or the change is left out of the release notes. The rules and the reasons
+are in `plabs-house-rules`: `rules/git/merging.md`, section "A merge commit carries no pull request
+title", and `templates/pr-title/`.
