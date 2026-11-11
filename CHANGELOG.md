@@ -1,5 +1,50 @@
 # Changelog
 
+## [3.1.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.0...helpbutton-qs-v3.1.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* keep code spans in attributes as text, and line breaks as before ([0f727e1](https://github.com/ptarmiganlabs/help-button.qs/commit/0f727e18fdd568b9190b1094a2436e432a7fda31))
+* render preview.png at the family's 280 x 280 ([f658695](https://github.com/ptarmiganlabs/help-button.qs/commit/f658695bb35bd991a9ab232c7e72f789b8872d74))
+* show code spans in Markdown exactly as written ([0979096](https://github.com/ptarmiganlabs/help-button.qs/commit/0979096ab028632020ac1b4e9b166f1922790d2e))
+
+
+### Miscellaneous
+
+* add Vitest and unit tests for markdownToHtml() ([ca2261a](https://github.com/ptarmiganlabs/help-button.qs/commit/ca2261a8514f2a04204fffad5a9d111f4231c832))
+* also run lint and the Prettier check on pull requests ([c620e55](https://github.com/ptarmiganlabs/help-button.qs/commit/c620e557fb2fe6bc3f65687109d78b1c55ef22c1))
+* check exact values in the attribute and video title tests ([b2b2394](https://github.com/ptarmiganlabs/help-button.qs/commit/b2b2394816b4386848f997e1680f98ab2b0e764c))
+* **deps-dev:** bump eslint from 10.4.1 to 10.14.0 ([b0b43ad](https://github.com/ptarmiganlabs/help-button.qs/commit/b0b43ad500c9b6f83308103b5a7a7942a9a823d9))
+* **deps-dev:** bump eslint from 10.4.1 to 10.14.0 ([6f954fc](https://github.com/ptarmiganlabs/help-button.qs/commit/6f954fce8f4dec554877eabc8639f155bc99686c))
+* **deps-dev:** bump globals from 17.6.0 to 17.14.0 ([d5c285d](https://github.com/ptarmiganlabs/help-button.qs/commit/d5c285d4abc11c95a75ba99abe1eac33b82f0e10))
+* **deps-dev:** bump globals from 17.6.0 to 17.14.0 ([752da84](https://github.com/ptarmiganlabs/help-button.qs/commit/752da848c115543b8e72b24654877d30f0c3da13))
+* **deps-dev:** bump prettier from 3.8.3 to 3.9.10 ([7d5f5dc](https://github.com/ptarmiganlabs/help-button.qs/commit/7d5f5dc5da2e1eb31e3ccc388dcf3528dcedecf4))
+* **deps-dev:** bump prettier from 3.8.3 to 3.9.10 ([9e34c6d](https://github.com/ptarmiganlabs/help-button.qs/commit/9e34c6d94b2042e851886f13e2130c4e7285d546))
+* **deps:** bump actions/checkout from 6.0.2 to 7.0.1 ([a451ae5](https://github.com/ptarmiganlabs/help-button.qs/commit/a451ae520d5d86b9c1c18c8c9ae3b8112bf69bb8))
+* **deps:** bump actions/checkout from 6.0.2 to 7.0.1 ([d7b43b9](https://github.com/ptarmiganlabs/help-button.qs/commit/d7b43b9b043d552215455f251d97f24b2002210c))
+* **deps:** bump actions/setup-node from 6.4.0 to 7.1.0 ([3a1e673](https://github.com/ptarmiganlabs/help-button.qs/commit/3a1e67338c14947412e979c4a25a66c2e6063861))
+* **deps:** bump actions/setup-node from 6.4.0 to 7.1.0 ([78c44a8](https://github.com/ptarmiganlabs/help-button.qs/commit/78c44a8f8e937d23d3c50e8e30064c2ed1723bf6))
+* **deps:** bump astral-sh/setup-uv from 8.1.0 to 10.3.3 ([924bcff](https://github.com/ptarmiganlabs/help-button.qs/commit/924bcffe8cbb5684c6b4fe1a714c49d3acfb39fe))
+* **deps:** bump astral-sh/setup-uv from 8.1.0 to 10.3.3 ([67274c4](https://github.com/ptarmiganlabs/help-button.qs/commit/67274c4a5b98560ca79f31a68ccd3a7f6856cf8c))
+* **deps:** bump body-parser ([1fdfdf7](https://github.com/ptarmiganlabs/help-button.qs/commit/1fdfdf74d131de8cb7160dd580bb206981ba8a40))
+* **deps:** bump body-parser from 2.2.2 to 2.4.0 in /shared/demo-server in the npm_and_yarn group across 1 directory ([884bc4d](https://github.com/ptarmiganlabs/help-button.qs/commit/884bc4d32d31f9dbd97f13d33fa0799ca9c96dc9))
+* **deps:** bump dompurify from 3.4.8 to 3.4.17 ([f136ec0](https://github.com/ptarmiganlabs/help-button.qs/commit/f136ec000c135c2ae79a87b7930d6902e3607492))
+* **deps:** bump dompurify from 3.4.8 to 3.4.17 ([7ab7f57](https://github.com/ptarmiganlabs/help-button.qs/commit/7ab7f574b1a5c762c1ff5edb7b8fcebbf4a8756e))
+* **deps:** bump github/codeql-action/autobuild from 4.36.0 to 4.39.3 ([3e56784](https://github.com/ptarmiganlabs/help-button.qs/commit/3e5678461b24069b4ac2ba9a2a390bcf4f9d78e8))
+* **deps:** bump github/codeql-action/autobuild from 4.36.0 to 4.39.3 ([7f3617c](https://github.com/ptarmiganlabs/help-button.qs/commit/7f3617cd3ea0258af4cda075e14fcb6234f8b36f))
+* **deps:** bump github/codeql-action/upload-sarif ([c763efb](https://github.com/ptarmiganlabs/help-button.qs/commit/c763efbc82ce9b6d47fea9a9dbf7915f3a98bb36))
+* **deps:** bump github/codeql-action/upload-sarif from 4.36.0 to 4.39.3 ([17ec284](https://github.com/ptarmiganlabs/help-button.qs/commit/17ec284cd0e8a4504a929967de76c8acec2fd6cb))
+* **deps:** bump proxy-addr ([85c5014](https://github.com/ptarmiganlabs/help-button.qs/commit/85c50146eae2fc57f70e23225afcc4f2be6e6f46))
+* **deps:** bump proxy-addr from 2.0.7 to 2.0.8 in /shared/demo-server in the npm_and_yarn group across 1 directory ([3e63b69](https://github.com/ptarmiganlabs/help-button.qs/commit/3e63b698b44eeef037877540c635fb4d7905dea2))
+* register the GitNexus index as helpbutton.qs ([cc38888](https://github.com/ptarmiganlabs/help-button.qs/commit/cc38888eaad8b2cf0d2f516cba717da9f60b8418))
+* register the GitNexus index as helpbutton.qs ([64c539c](https://github.com/ptarmiganlabs/help-button.qs/commit/64c539c9b8445cfc234577b8a2d0bb587c29378c))
+* remove GitHub Agentic Workflows (gh-aw) ([6326083](https://github.com/ptarmiganlabs/help-button.qs/commit/6326083826aa961c09fcec067e1ba35a68543b19))
+* require Node 24.15 or newer ([8fa15a3](https://github.com/ptarmiganlabs/help-button.qs/commit/8fa15a37b5762b5da716b59b9e92ea0a727d688d))
+* run the unit tests on every pull request ([b1a75a6](https://github.com/ptarmiganlabs/help-button.qs/commit/b1a75a6105b78b5f3d47ac71fcbf8f73cd14a706))
+* tag each release when release-please creates its draft ([8789e93](https://github.com/ptarmiganlabs/help-button.qs/commit/8789e93102ae03a7a9254d0da1af5efdaa293904))
+* use one codeql-action version in all CodeQL steps ([29a0752](https://github.com/ptarmiganlabs/help-button.qs/commit/29a0752dbf7c2386dad5f48bc2cb7397d3a2cf0f))
+
 ## [3.1.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.0.0...helpbutton-qs-v3.1.0) (2026-06-07)
 
 
