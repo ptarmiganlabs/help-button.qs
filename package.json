@@ -85,6 +85,6 @@
         ]
     },
     "dependencies": {
-        "dompurify": "^3.4.8"
+        "dompurify": "^3.4.17"
     }
 }
