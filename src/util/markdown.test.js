@@ -185,18 +185,25 @@ describe('code spans inside attributes', () => {
     });
 
     it.each([
-        ['an image', '`y` and ![Use `Sum(x)`](https://example.com/a.png)', 'img', 'alt'],
+        [
+            'an image',
+            '`y` and ![Use `Sum(x)`](https://example.com/a.png)',
+            'img',
+            'alt',
+            'Use `Sum(x)`',
+        ],
         [
             'a video',
             '`y` and @[See `x`](https://www.youtube.com/watch?v=dQw4w9WgXcQ)',
             'iframe',
             'title',
+            'See `x`',
         ],
-        ['a raw tag', '`y` and <span title="`a<b>`">t</span>', 'span', 'title'],
-    ])('still makes <code> from a code span in text next to %s', (_, md, tag, attr) => {
+        ['a raw tag', '`y` and <span title="`a<b>`">t</span>', 'span', 'title', '`a<b>`'],
+    ])('still makes <code> from a code span in text next to %s', (_, md, tag, attr, value) => {
         const { root } = render(md);
         expect(codeTexts(root)).toEqual(['y']);
-        expect(root.querySelector(tag).getAttribute(attr)).toContain('`');
+        expect(root.querySelector(tag).getAttribute(attr)).toBe(value);
     });
 });
 
@@ -221,19 +228,39 @@ describe('line breaks next to code spans', () => {
 });
 
 describe('video titles with special characters', () => {
+    const TITLE = 'Rock & "Roll" <x> it\'s';
+
     // The title must come out as the same sanitized HTML as before code spans
-    // were taken out first.  How < and > in an attribute are written back
-    // depends on the HTML serializer (jsdom writes them as they are, newer
-    // browsers write &lt; and &gt;), so the test checks the parsed title.
+    // were taken out first.  The expected HTML is what jsdom writes, which
+    // was the same on main before #224.  jsdom writes < and > in an attribute
+    // as they are, while newer browsers write &lt; and &gt;.  So if a jsdom
+    // update changes that, update these strings: the parsed title, checked
+    // below, must stay the same.
     it.each([
-        ['a YouTube', 'https://youtu.be/dQw4w9WgXcQ', 'iframe'],
-        ['an .mp4', 'https://example.com/demo.mp4', 'video'],
-    ])('escapes & " \' < > in %s title', (_, url, tag) => {
-        const title = 'Rock & "Roll" <x> it\'s';
-        const { html, root } = render('@[' + title + '](' + url + ')');
+        [
+            'a YouTube',
+            'https://youtu.be/dQw4w9WgXcQ',
+            'iframe',
+            '<div class="hbqs-video-wrapper">' +
+                '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"' +
+                ' title="Rock &amp; &quot;Roll&quot; <x> it\'s" frameborder="0"' +
+                ' allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
+                ' allowfullscreen=""></iframe></div>',
+        ],
+        [
+            'an .mp4',
+            'https://example.com/demo.mp4',
+            'video',
+            '<div class="hbqs-video-wrapper hbqs-video-wrapper--native">' +
+                '<video controls="" preload="metadata"' +
+                ' title="Rock &amp; &quot;Roll&quot; <x> it\'s">' +
+                '<source src="https://example.com/demo.mp4"></video></div>',
+        ],
+    ])('escapes & " \' < > in %s title', (_, url, tag, expected) => {
+        const { html, root } = render('@[' + TITLE + '](' + url + ')');
+        expect(html).toBe(expected);
         expect(root.querySelectorAll(tag)).toHaveLength(1);
-        expect(root.querySelector(tag).getAttribute('title')).toBe(title);
-        expect(html).toContain('title="Rock &amp; &quot;Roll&quot; ');
+        expect(root.querySelector(tag).getAttribute('title')).toBe(TITLE);
         expect(root.querySelector('x')).toBeNull();
     });
 });
