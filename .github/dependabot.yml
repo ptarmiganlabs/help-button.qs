@@ -10,5 +10,12 @@ updates:
     directory: "/"
     cooldown:
       default-days: 7
+    groups:
+      # CodeQL needs the same version in every step (init, autobuild,
+      # analyze, upload-sarif), so bump them all in one pull request.
+      codeql-action:
+        patterns:
+          - "github/codeql-action"
+          - "github/codeql-action/*"
     schedule:
       interval: "weekly"
