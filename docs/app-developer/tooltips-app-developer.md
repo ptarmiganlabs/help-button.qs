@@ -305,7 +305,7 @@ Supported Markdown features:
 - Videos (`@[title](url)`) — YouTube, Vimeo, or direct `.mp4`/`.webm`/`.ogg` links
 - Raw HTML `<iframe>` and `<video>` elements
 
-> **💡 Qlik expressions:** Put set analysis and other expressions in inline code, for example `` `Sum({<Region={'North'}>} Sales)` ``. Inline code is shown exactly as written. Outside inline code, text in angle brackets such as `<Region={'North'}>` is read as an HTML tag and removed.
+> **💡 Qlik expressions:** Put set analysis and other expressions in inline code, for example `` `Sum({<Region={'North'}>} Sales)` ``. Inline code is shown exactly as written. Outside inline code, text in angle brackets such as `<Region={'North'}>` is read as an HTML tag, so that text is lost or garbled.
 
 ### Embedding videos — Markdown shorthand
 

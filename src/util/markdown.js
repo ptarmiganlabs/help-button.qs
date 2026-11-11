@@ -21,6 +21,21 @@
 
 import DOMPurify from 'dompurify';
 
+/**
+ * Escape text for use as HTML element content or as a quoted attribute value.
+ *
+ * @param {string} text
+ * @returns {string} The text with &, <, >, " and ' escaped.
+ */
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // ---------------------------------------------------------------------------
 // Video embed helpers
 // ---------------------------------------------------------------------------
@@ -66,11 +81,7 @@ const VIDEO_EXT_RE = /\.(?:mp4|webm|ogg)(?:\?[^)]*)?$/i;
  */
 function iframeHtml(embedUrl, title) {
     const safeUrl = embedUrl.replace(/"/g, '&quot;');
-    const safeTitle = title
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    const safeTitle = escapeHtml(title);
     return (
         '<div class="hbqs-video-wrapper">' +
         '<iframe src="' +
@@ -95,11 +106,7 @@ function iframeHtml(embedUrl, title) {
  */
 function videoTagHtml(src, title) {
     const safeSrc = src.replace(/"/g, '&quot;');
-    const safeTitle = title
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    const safeTitle = escapeHtml(title);
     return (
         '<div class="hbqs-video-wrapper hbqs-video-wrapper--native">' +
         '<video controls preload="metadata" title="' +
@@ -117,10 +124,11 @@ function videoTagHtml(src, title) {
 // ---------------------------------------------------------------------------
 
 /**
- * A line that starts a new block in markdownToHtml(): a blank line, a list
- * item, a heading, a blockquote or a horizontal rule.
+ * A line that starts a new block in markdownToHtml(): an empty line (which
+ * ends the paragraph), a list item, a heading, a blockquote or a horizontal
+ * rule.
  */
-const NEW_BLOCK = /[ \t]*$|[-*][ \t]|\d+\.[ \t]|#{3,6}[ \t]|>[ \t]|[-*_]{3,}[ \t]*$/.source;
+const NEW_BLOCK = /$|[-*][ \t]|\d+\.[ \t]|#{3,6}[ \t]|>[ \t]|[-*_]{3,}[ \t]*$/.source;
 
 /**
  * Pattern for inline code: a backtick, text without a backtick, a backtick.
@@ -137,17 +145,55 @@ const CODE_SPAN_RE = new RegExp('`((?:[^`\\n]|\\n(?!' + NEW_BLOCK + '))+)`', 'gm
  */
 const CODE_START = '\uFDD0';
 const CODE_END = '\uFDD1';
-const CODE_MARK_RE = /[\uFDD0\uFDD1]/g;
-const CODE_PLACEHOLDER_RE = /\uFDD0(\d+)\uFDD1/g;
+
+const CODE_MARK_RE = new RegExp('[' + CODE_START + CODE_END + ']', 'g');
 
 /**
- * Escape text so that it shows as written inside an HTML element.
- *
- * @param {string} text
- * @returns {string} The text with &, < and > escaped.
+ * A single line break that becomes <br>: one that is not followed by a tag.
+ * A code span's placeholder counts as the <code> tag it turns into, so a
+ * line that starts with a code span is treated as it was before code spans
+ * were taken out first.
  */
-function escapeText(text) {
-    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const SOFT_BREAK_RE = new RegExp('\\n(?![<' + CODE_START + '])', 'g');
+
+/**
+ * Put the code spans back in place of their placeholders.  In text, a span
+ * becomes a <code> element with its text escaped.  Inside a tag, for example
+ * in an image's alt text or a link's URL, an element cannot go there, so the
+ * span goes back as written, backticks included.
+ *
+ * @param {string} html - HTML with code span placeholders.
+ * @param {string[]} codeSpans - The text of each code span, as written.
+ * @returns {string} HTML with the code spans back in place.
+ */
+function restoreCodeSpans(html, codeSpans) {
+    let out = '';
+    let copied = 0; // html before this index is already in out
+    let inTag = false; // inside <…>
+    let afterEquals = false; // inside a tag, right after "=" (and any spaces)
+    let quote = ''; // the quote of the attribute value we are in, if any
+    for (let i = 0; i < html.length; i++) {
+        const c = html[i];
+        if (c === CODE_START) {
+            const end = html.indexOf(CODE_END, i);
+            const code = codeSpans[Number(html.slice(i + 1, end))];
+            out += html.slice(copied, i);
+            out += inTag ? escapeHtml('`' + code + '`') : '<code>' + escapeHtml(code) + '</code>';
+            copied = end + 1;
+            i = end;
+        } else if (quote) {
+            if (c === quote) quote = '';
+        } else if (inTag) {
+            if (afterEquals && (c === '"' || c === "'")) quote = c;
+            else if (c === '>') inTag = false;
+            if (c === '=') afterEquals = true;
+            else if (c !== ' ' && c !== '\t' && c !== '\n') afterEquals = false;
+        } else if (c === '<' && /[a-zA-Z]/.test(html[i + 1] || '')) {
+            inTag = true;
+            afterEquals = false;
+        }
+    }
+    return out + html.slice(copied);
 }
 
 // ---------------------------------------------------------------------------
@@ -231,7 +277,7 @@ export function markdownToHtml(md, options) {
     text = text.replace(CODE_MARK_RE, '');
     const codeSpans = [];
     text = text.replace(CODE_SPAN_RE, (_, code) => {
-        codeSpans.push(escapeText(code));
+        codeSpans.push(code);
         return CODE_START + (codeSpans.length - 1) + CODE_END;
     });
 
@@ -329,7 +375,7 @@ export function markdownToHtml(md, options) {
     text = text.replace(/\n{2,}/g, '</p><p>');
 
     // Single newlines → <br> (skip newlines after block-level tags)
-    text = text.replace(/\n(?!<)/g, (match, offset, str) => {
+    text = text.replace(SOFT_BREAK_RE, (match, offset, str) => {
         const before = str.slice(0, offset);
         if (/<\/(?:li|ul|ol|blockquote|h[3-6]|p|div)>$/.test(before) || /<hr>$/.test(before)) {
             return '\n';
@@ -347,8 +393,8 @@ export function markdownToHtml(md, options) {
     // Clean up empty paragraphs
     text = text.replace(/<p>\s*<\/p>/g, '');
 
-    // Put the code spans back, as literal text in <code> elements
-    text = text.replace(CODE_PLACEHOLDER_RE, (_, index) => `<code>${codeSpans[index]}</code>`);
+    // Put the code spans back, as literal text
+    text = restoreCodeSpans(text, codeSpans);
 
     // Sanitize with DOMPurify — allows <iframe>, <video>, <source> and their
     // relevant attributes on top of the default safe-HTML allowlist.
