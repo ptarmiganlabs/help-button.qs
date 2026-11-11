@@ -68,7 +68,7 @@
         "lint-staged": "^17.6.0",
         "md-to-pdf": "^5.2.4",
         "prettier": "^3.9.10",
-        "vitest": "5.0.5"
+        "vitest": "5.1.0"
     },
     "peerDependencies": {
         "@nebula.js/stardust": ">=5.0.0"
