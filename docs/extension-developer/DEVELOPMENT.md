@@ -4,7 +4,7 @@ This guide describes how the `helpbutton.qs` extension is built, tested, and dis
 
 ## Prerequisites
 
-- **Node.js 24**: The repository root includes `.nvmrc` with the expected major version, so `nvm use` from anywhere inside the repo selects the supported runtime.
+- **Node.js 24**, version 24.15 or newer: The repository root includes `.nvmrc` with the expected major version, so `nvm use` from anywhere inside the repo selects the supported runtime.
 - **Install command**: Use `PUPPETEER_SKIP_DOWNLOAD=true npm ci` from the repository root before running the build, lint, or packaging commands documented below.
 
 ## Project Structure
@@ -46,10 +46,11 @@ For creating a drop-in ready extension, these composite scripts bundle everythin
 
 ### Quality Control
 
-| Command                                   | Description                                         |
-| ----------------------------------------- | --------------------------------------------------- |
-| `npm run lint` / `npm run lint:fix`       | Runs ESLint on `src` and `scripts` directories.     |
-| `npm run format` / `npm run format:check` | Runs Prettier to enforce code styling on all files. |
+| Command                                   | Description                                                                                                                           |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run lint` / `npm run lint:fix`       | Runs ESLint on `src` and `scripts` directories.                                                                                       |
+| `npm run format` / `npm run format:check` | Runs Prettier to enforce code styling on all files.                                                                                   |
+| `npm test`                                | Runs the Vitest unit tests in `src` (files named `*.test.js`). CI runs them, with lint and the Prettier check, on every pull request. |
 
 ### Pre-Commit Hooks
 

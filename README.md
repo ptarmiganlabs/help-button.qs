@@ -108,7 +108,7 @@ For app-developer guidance on using the extension across both platforms, see [Ql
 
 ### Source Builds
 
-Local development, packaging, and release workflows use **Node.js 24**. The repository root includes `.nvmrc`, so contributors using `nvm` can run `nvm use` before installing dependencies or building the extension from source.
+Local development, packaging, and release workflows use **Node.js 24**, version 24.15 or newer. The repository root includes `.nvmrc`, so contributors using `nvm` can run `nvm use` before installing dependencies or building the extension from source.
 
 ## Usage
 
