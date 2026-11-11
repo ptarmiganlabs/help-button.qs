@@ -1,0 +1,8 @@
+# release-please writes these files. It adds each release in its own style,
+# so Prettier would flag them again after every release.
+CHANGELOG.md
+.release-please-manifest.json
+
+# Other worktrees of this repo, in the main checkout. They are ignored in
+# .git/info/exclude, which Prettier does not read.
+.claude/worktrees/

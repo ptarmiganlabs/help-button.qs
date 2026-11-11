@@ -46,10 +46,11 @@ For creating a drop-in ready extension, these composite scripts bundle everythin
 
 ### Quality Control
 
-| Command                                   | Description                                         |
-| ----------------------------------------- | --------------------------------------------------- |
-| `npm run lint` / `npm run lint:fix`       | Runs ESLint on `src` and `scripts` directories.     |
-| `npm run format` / `npm run format:check` | Runs Prettier to enforce code styling on all files. |
+| Command                                   | Description                                                                                                                           |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run lint` / `npm run lint:fix`       | Runs ESLint on `src` and `scripts` directories.                                                                                       |
+| `npm run format` / `npm run format:check` | Runs Prettier to enforce code styling on all files.                                                                                   |
+| `npm test`                                | Runs the Vitest unit tests in `src` (files named `*.test.js`). CI runs them, with lint and the Prettier check, on every pull request. |
 
 ### Pre-Commit Hooks
 
