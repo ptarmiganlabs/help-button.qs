@@ -201,12 +201,41 @@ function restoreCodeSpans(html, codeSpans) {
 // ---------------------------------------------------------------------------
 
 /**
- * Remove iframe, video, and source elements whose src does not match any
- * of the allowed URI prefixes.
+ * A prefix that is only an origin, such as `https://media.example.com`, with
+ * no path after the host.
+ */
+const ORIGIN_ONLY_RE = /^(?:[a-z][a-z0-9+.-]*:)?\/\/[^/?#]+$/i;
+
+/**
+ * Whether a URL starts with one of the allowed prefixes.
  *
- * A video with no src of its own is judged by its source children instead:
- * it stays when at least one of them is allowed, and is removed when none
- * is left.
+ * A prefix that is only an origin must be followed in the URL by `/`, `?`,
+ * `#` or the end of the URL.  Otherwise `https://media.example.com` would
+ * also allow `https://media.example.com.attacker.net/`.  Any other prefix,
+ * such as `https://media.example.com/` or `/content/Default/`, is a plain
+ * prefix.
+ *
+ * @param {string} url - The URL to check.
+ * @param {string[]} prefixes - The allowed prefixes.
+ * @returns {boolean}
+ */
+function isAllowedUri(url, prefixes) {
+    return prefixes.some((prefix) => {
+        if (!url.startsWith(prefix)) return false;
+        if (!ORIGIN_ONLY_RE.test(prefix)) return true;
+        return ['', '/', '?', '#'].includes(url.charAt(prefix.length));
+    });
+}
+
+/**
+ * Remove the media elements whose URL does not match any of the allowed URI
+ * prefixes: iframe, video and audio with a src, source, and track.  A poster
+ * on a video that is not allowed is removed, and the video stays.
+ *
+ * A video or audio element with no src of its own plays its source children,
+ * so it is judged by them instead: it stays when at least one of them is
+ * allowed, and is removed when none is left.  A video embed's wrapper that is
+ * left empty is removed too.
  *
  * @param {string} html - Sanitized HTML string.
  * @param {string} [allowedUriPatterns] - Comma-separated URL prefixes.
@@ -225,25 +254,33 @@ function filterMediaUris(html, allowedUriPatterns) {
     const container = document.createElement('div');
     container.innerHTML = html;
 
-    container.querySelectorAll('iframe, video, source').forEach((el) => {
-        // A video with no src of its own plays its source children.  They
-        // are checked one by one in this loop, and the cleanup below removes
-        // the video when none of them is left.  A video that has a src, even
-        // an empty one, plays only that, so it is checked here like the rest.
-        if (el.tagName === 'VIDEO' && !el.hasAttribute('src')) return;
+    // Check every element that loads its src.  A video or audio element with
+    // a src, even an empty one, plays only that src, so it is checked here.
+    // One without a src is not: the cleanup below judges it by its sources.
+    container.querySelectorAll('iframe, video[src], audio[src], source, track').forEach((el) => {
+        if (!isAllowedUri(el.getAttribute('src') || '', prefixes)) el.remove();
+    });
 
-        const src = el.getAttribute('src') || '';
-        const allowed = prefixes.some((prefix) => src.startsWith(prefix));
-        if (!allowed) {
-            el.remove();
+    // A poster image is loaded too.  Remove one that is not allowed.
+    container.querySelectorAll('video[poster]').forEach((video) => {
+        if (!isAllowedUri(video.getAttribute('poster'), prefixes)) {
+            video.removeAttribute('poster');
         }
     });
 
-    // Clean up video elements that lost all their source children
-    container.querySelectorAll('video').forEach((video) => {
-        if (!video.querySelector('source') && !video.getAttribute('src')) {
-            video.remove();
-        }
+    // Remove video and audio elements that have nothing left to play: no src
+    // of their own, and no source child.  A browser uses only the source
+    // elements that are direct children, so nested ones do not count.
+    container.querySelectorAll('video, audio').forEach((media) => {
+        const hasSource = [...media.children].some((child) => child.tagName === 'SOURCE');
+        if (!media.hasAttribute('src') && !hasSource) media.remove();
+    });
+
+    // Remove the wrapper of a video embed whose iframe or video was removed,
+    // so that no empty box is left.  For YouTube and Vimeo, the wrapper's CSS
+    // would show it as a black 16:9 box.
+    container.querySelectorAll('.hbqs-video-wrapper').forEach((wrapper) => {
+        if (wrapper.children.length === 0 && !wrapper.textContent.trim()) wrapper.remove();
     });
 
     return container.innerHTML;

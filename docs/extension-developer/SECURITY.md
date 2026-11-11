@@ -138,9 +138,13 @@ Everything else (event handler attributes like `onclick`/`onerror`, `<script>`, 
 
 The property panel **Security** section exposes a `security.allowedUriPatterns` setting — a comma-separated list of URL prefixes (e.g. `https://www.youtube.com/embed/, /content/Default/`).
 
-When configured, `markdownToHtml()` post-processes the DOMPurify output and removes any `<iframe>`, `<video>`, or `<source>` element whose `src` attribute does not start with one of the allowed prefixes.
+When configured, `markdownToHtml()` post-processes the DOMPurify output and removes any `<iframe>`, `<source>` or `<track>` element whose `src` attribute does not start with one of the allowed prefixes. A `poster` on a `<video>` that does not start with one is removed; the video stays.
 
-A `<video>` with no `src` of its own is judged by its `<source>` children instead. It stays when at least one of them is allowed. The `<source>` elements that are not allowed are removed, and so is a `<video>` that has no `<source>` left. A `<video>` that has a `src`, even an empty one, plays only that, so its own `src` must be allowed.
+A `<video>` or `<audio>` that has a `src`, even an empty one, plays only that, so its own `src` must be allowed. One with no `src` is judged by its `<source>` children instead. It stays when at least one direct `<source>` child is allowed, and is removed when none is left. A browser uses only direct children, so a nested `<source>` does not count.
+
+A prefix that is only an origin, such as `https://media.example.com`, must be followed in the URL by `/`, `?`, `#` or the end of the URL. So it does not allow `https://media.example.com.attacker.net/` or `https://media.example.com@attacker.net/`. Any other prefix is a plain prefix: `https://media.example.com/` allows everything under that path.
+
+`<img>` is not filtered.
 
 When **empty** (default), all sources are allowed. The platform's Content Security Policy still applies as an independent control.
 
