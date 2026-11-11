@@ -4,6 +4,12 @@ updates:
     directory: "/"
     cooldown:
       default-days: 7
+    ignore:
+      # mermaid-cli 12 draws the README PDF diagrams in a new theme and
+      # much larger, so two of them split across pages (see #236). Stay
+      # on 11 until the PDF script sets its own theme and size.
+      - dependency-name: "@mermaid-js/mermaid-cli"
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
