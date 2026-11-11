@@ -7,7 +7,7 @@
  *   - ![images](url "optional title")
  *   - @[videos](url) — YouTube / Vimeo iframes, or .mp4/.webm/.ogg <video>
  *   - Raw HTML (e.g. <iframe>, <video>) — passed through and sanitized by DOMPurify
- *   - `inline code`
+ *   - `inline code` — shown exactly as written: no HTML and no Markdown inside
  *   - Line breaks (double newline → paragraph, single newline → <br>)
  *   - Unordered lists (- item or * item)
  *   - Ordered lists (1. item)
@@ -113,6 +113,44 @@ function videoTagHtml(src, title) {
 }
 
 // ---------------------------------------------------------------------------
+// Code span helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * A line that starts a new block in markdownToHtml(): a blank line, a list
+ * item, a heading, a blockquote or a horizontal rule.
+ */
+const NEW_BLOCK = /[ \t]*$|[-*][ \t]|\d+\.[ \t]|#{3,6}[ \t]|>[ \t]|[-*_]{3,}[ \t]*$/.source;
+
+/**
+ * Pattern for inline code: a backtick, text without a backtick, a backtick.
+ * The text may go over a line break, but not onto a line that starts a new
+ * block, just as a CommonMark code span ends with its paragraph.
+ */
+const CODE_SPAN_RE = new RegExp('`((?:[^`\\n]|\\n(?!' + NEW_BLOCK + '))+)`', 'gm');
+
+/**
+ * Marks around the placeholder that holds a code span's place while the
+ * other Markdown steps run.  U+FDD0 and U+FDD1 are Unicode noncharacters,
+ * set aside for internal use like this, so an author's text does not
+ * contain them.  Any that it does contain are removed first.
+ */
+const CODE_START = '\uFDD0';
+const CODE_END = '\uFDD1';
+const CODE_MARK_RE = /[\uFDD0\uFDD1]/g;
+const CODE_PLACEHOLDER_RE = /\uFDD0(\d+)\uFDD1/g;
+
+/**
+ * Escape text so that it shows as written inside an HTML element.
+ *
+ * @param {string} text
+ * @returns {string} The text with &, < and > escaped.
+ */
+function escapeText(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ---------------------------------------------------------------------------
 // URI filter
 // ---------------------------------------------------------------------------
 
@@ -167,6 +205,10 @@ function filterMediaUris(html, allowedUriPatterns) {
  * The `@[title](url)` shorthand is also supported and generates iframes
  * automatically for YouTube/Vimeo URLs.
  *
+ * Code spans are the exception: their text is shown exactly as written, so
+ * Qlik set analysis such as `Sum({<Year={2025}>} Sales)` keeps its angle
+ * brackets.  No HTML and no Markdown applies inside a code span.
+ *
  * @param {string} md - Markdown source text.
  * @param {object} [options] - Conversion options.
  * @param {string} [options.allowedUriPatterns] - Comma-separated URL prefixes
@@ -178,6 +220,20 @@ export function markdownToHtml(md, options) {
 
     // Normalize line endings
     let text = md.replace(/\r\n?/g, '\n');
+
+    // -------------------------------------------------------------------
+    // Code spans: `code`
+    // Taken out FIRST, before the video embeds and the HTML-escape pass,
+    // so that they show exactly as written, as in CommonMark: no raw HTML,
+    // no video embed and no Markdown inside them.  Each span waits as a
+    // placeholder and is put back just before sanitization.
+    // -------------------------------------------------------------------
+    text = text.replace(CODE_MARK_RE, '');
+    const codeSpans = [];
+    text = text.replace(CODE_SPAN_RE, (_, code) => {
+        codeSpans.push(escapeText(code));
+        return CODE_START + (codeSpans.length - 1) + CODE_END;
+    });
 
     // -------------------------------------------------------------------
     // Video embeds: @[title](url)
@@ -203,7 +259,8 @@ export function markdownToHtml(md, options) {
     // -------------------------------------------------------------------
     // Partial HTML escape: preserve existing HTML tags (raw <iframe>,
     // <video>, etc.) while still protecting bare & and stray < that are
-    // not part of a tag.  DOMPurify sanitizes the final output.
+    // not part of a tag.  DOMPurify sanitizes the final output.  Code
+    // spans are out of the text at this point, so this does not touch them.
     // -------------------------------------------------------------------
     text = text.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?![/a-zA-Z!])/g, '&lt;');
 
@@ -260,9 +317,6 @@ export function markdownToHtml(md, options) {
         return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
     });
 
-    // Inline code
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-
     // Bold
     text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
@@ -292,6 +346,9 @@ export function markdownToHtml(md, options) {
 
     // Clean up empty paragraphs
     text = text.replace(/<p>\s*<\/p>/g, '');
+
+    // Put the code spans back, as literal text in <code> elements
+    text = text.replace(CODE_PLACEHOLDER_RE, (_, index) => `<code>${codeSpans[index]}</code>`);
 
     // Sanitize with DOMPurify — allows <iframe>, <video>, <source> and their
     // relevant attributes on top of the default safe-HTML allowlist.
