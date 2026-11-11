@@ -91,11 +91,16 @@ describe('raw HTML and video embeds outside code', () => {
         expect(iframe.hasAttribute('allowfullscreen')).toBe(true);
     });
 
-    // Only without a URI filter: filterMediaUris() has a separate, known bug
-    // with <video> when an allowlist is set.
-    it('keeps the source of a raw video', () => {
+    it.each([
+        ['without a URI filter', undefined],
+        [
+            'with a URI filter that allows its source',
+            { allowedUriPatterns: 'https://example.com/' },
+        ],
+    ])('keeps the source of a raw video %s', (_, options) => {
         const { root } = render(
-            '<video controls><source src="https://example.com/demo.mp4"></video>'
+            '<video controls><source src="https://example.com/demo.mp4"></video>',
+            options
         );
         const source = root.querySelector('video > source');
         expect(source).not.toBeNull();
@@ -262,5 +267,104 @@ describe('video titles with special characters', () => {
         expect(root.querySelectorAll(tag)).toHaveLength(1);
         expect(root.querySelector(tag).getAttribute('title')).toBe(TITLE);
         expect(root.querySelector('x')).toBeNull();
+    });
+});
+
+describe('URI filter', () => {
+    /** The prefix that the property panel's placeholder suggests. */
+    const CONTENT_LIBRARY = { allowedUriPatterns: '/content/Default/' };
+
+    /**
+     * The src of each <source> in each <video> of the result.
+     *
+     * @param {HTMLElement} root
+     * @returns {string[][]}
+     */
+    function videoSources(root) {
+        return [...root.querySelectorAll('video')].map((video) =>
+            [...video.querySelectorAll('source')].map((source) => source.getAttribute('src'))
+        );
+    }
+
+    it('keeps an .mp4 shorthand whose host is allowed', () => {
+        const { root } = render('@[Clip](https://media.example.com/clip.mp4)', {
+            allowedUriPatterns: 'https://www.youtube.com/embed/, https://media.example.com/',
+        });
+        expect(root.querySelector('.hbqs-video-wrapper--native > video')).not.toBeNull();
+        expect(videoSources(root)).toEqual([['https://media.example.com/clip.mp4']]);
+    });
+
+    it('removes an .mp4 shorthand whose host is not allowed', () => {
+        const { root } = render('@[Clip](https://media.example.com/clip.mp4)', YOUTUBE_ONLY);
+        expect(root.querySelector('video, source')).toBeNull();
+    });
+
+    it('keeps a raw video whose <source> is allowed', () => {
+        const { root } = render(
+            '<video controls><source src="/content/Default/clip.mp4"></video>',
+            CONTENT_LIBRARY
+        );
+        expect(videoSources(root)).toEqual([['/content/Default/clip.mp4']]);
+    });
+
+    it('keeps the allowed <source> of a video and removes the other', () => {
+        const { root } = render(
+            '<video controls>' +
+                '<source src="https://evil.example.com/a.mp4">' +
+                '<source src="/content/Default/b.mp4">' +
+                '</video>',
+            CONTENT_LIBRARY
+        );
+        expect(videoSources(root)).toEqual([['/content/Default/b.mp4']]);
+    });
+
+    it('removes a video whose <source> elements are all not allowed', () => {
+        const { root } = render(
+            '<video controls>' +
+                '<source src="https://evil.example.com/a.mp4">' +
+                '<source src="https://evil.example.com/b.webm">' +
+                '</video>',
+            CONTENT_LIBRARY
+        );
+        expect(root.querySelector('video, source')).toBeNull();
+    });
+
+    it('removes a video with no src and no <source>', () => {
+        const { root } = render('<video controls></video>', CONTENT_LIBRARY);
+        expect(root.querySelector('video')).toBeNull();
+    });
+
+    it('keeps a video whose own src is allowed', () => {
+        const { root } = render(
+            '<video controls src="/content/Default/clip.mp4"></video>',
+            CONTENT_LIBRARY
+        );
+        expect(root.querySelector('video').getAttribute('src')).toBe('/content/Default/clip.mp4');
+    });
+
+    // A browser plays a video's own src when it has one, even an empty one,
+    // and then ignores its <source> children.  So an allowed <source> does
+    // not save a video whose own src is not allowed.
+    it.each([
+        ['not allowed', '<video controls src="https://evil.example.com/x.mp4"></video>'],
+        [
+            'not allowed, with an allowed <source>',
+            '<video controls src="https://evil.example.com/x.mp4">' +
+                '<source src="/content/Default/clip.mp4"></video>',
+        ],
+        [
+            'empty, with an allowed <source>',
+            '<video controls src=""><source src="/content/Default/clip.mp4"></video>',
+        ],
+    ])('removes a video whose own src is %s', (_, md) => {
+        const { root } = render(md, CONTENT_LIBRARY);
+        expect(root.querySelector('video, source')).toBeNull();
+    });
+
+    it('removes an iframe whose src is not allowed', () => {
+        const { root } = render('@[Demo](https://www.youtube.com/watch?v=dQw4w9WgXcQ)', {
+            allowedUriPatterns: 'https://player.vimeo.com/video/',
+        });
+        expect(root.querySelector('iframe')).toBeNull();
     });
 });

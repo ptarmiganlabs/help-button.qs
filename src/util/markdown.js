@@ -204,6 +204,10 @@ function restoreCodeSpans(html, codeSpans) {
  * Remove iframe, video, and source elements whose src does not match any
  * of the allowed URI prefixes.
  *
+ * A video with no src of its own is judged by its source children instead:
+ * it stays when at least one of them is allowed, and is removed when none
+ * is left.
+ *
  * @param {string} html - Sanitized HTML string.
  * @param {string} [allowedUriPatterns] - Comma-separated URL prefixes.
  *   Empty or omitted = allow all.
@@ -222,6 +226,12 @@ function filterMediaUris(html, allowedUriPatterns) {
     container.innerHTML = html;
 
     container.querySelectorAll('iframe, video, source').forEach((el) => {
+        // A video with no src of its own plays its source children.  They
+        // are checked one by one in this loop, and the cleanup below removes
+        // the video when none of them is left.  A video that has a src, even
+        // an empty one, plays only that, so it is checked here like the rest.
+        if (el.tagName === 'VIDEO' && !el.hasAttribute('src')) return;
+
         const src = el.getAttribute('src') || '';
         const allowed = prefixes.some((prefix) => src.startsWith(prefix));
         if (!allowed) {

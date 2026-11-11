@@ -188,7 +188,9 @@ DOMPurify.sanitize(html, {
 
 ### URI filter: `filterMediaUris()`
 
-After DOMPurify runs, an optional URI allowlist filter removes any remaining `iframe`, `video`, or `source` elements whose `src` attribute does not match the configured prefixes:
+After DOMPurify runs, an optional URI allowlist filter removes any remaining `iframe`, `video`, or `source` elements whose `src` attribute does not match the configured prefixes.
+
+A `video` with no `src` of its own is the exception. It plays its `source` children, so it is judged by them: it stays when at least one of them is allowed, and is removed when none is left. The `@[title](url)` shorthand always builds a video like this. A `video` that has a `src`, even an empty one, plays only that, so it is checked like the rest.
 
 ```javascript
 function filterMediaUris(html, allowedUriPatterns) {
@@ -198,13 +200,24 @@ function filterMediaUris(html, allowedUriPatterns) {
         .split(',')
         .map((p) => p.trim())
         .filter(Boolean);
+    if (prefixes.length === 0) return html;
+
     const container = document.createElement('div');
     container.innerHTML = html;
 
     container.querySelectorAll('iframe, video, source').forEach((el) => {
+        // A video with no src is judged by its source children
+        if (el.tagName === 'VIDEO' && !el.hasAttribute('src')) return;
+
         const src = el.getAttribute('src') || '';
         if (!prefixes.some((prefix) => src.startsWith(prefix))) el.remove();
     });
+
+    // Remove video elements that have no allowed source left
+    container.querySelectorAll('video').forEach((video) => {
+        if (!video.querySelector('source') && !video.getAttribute('src')) video.remove();
+    });
+
     return container.innerHTML;
 }
 ```

@@ -138,7 +138,9 @@ Everything else (event handler attributes like `onclick`/`onerror`, `<script>`, 
 
 The property panel **Security** section exposes a `security.allowedUriPatterns` setting — a comma-separated list of URL prefixes (e.g. `https://www.youtube.com/embed/, /content/Default/`).
 
-When configured, `markdownToHtml()` post-processes the DOMPurify output and removes any `<iframe>`, `<video>`, or `<source>` element whose `src` attribute does not start with one of the allowed prefixes. `<video>` elements that lose all their `<source>` children are also removed.
+When configured, `markdownToHtml()` post-processes the DOMPurify output and removes any `<iframe>`, `<video>`, or `<source>` element whose `src` attribute does not start with one of the allowed prefixes.
+
+A `<video>` with no `src` of its own is judged by its `<source>` children instead. It stays when at least one of them is allowed. The `<source>` elements that are not allowed are removed, and so is a `<video>` that has no `<source>` left. A `<video>` that has a `src`, even an empty one, plays only that, so its own `src` must be allowed.
 
 When **empty** (default), all sources are allowed. The platform's Content Security Policy still applies as an independent control.
 
