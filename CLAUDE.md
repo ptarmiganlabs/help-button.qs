@@ -61,3 +61,9 @@ This project is indexed by GitNexus as **helpbutton.qs** (3511 symbols, 5466 rel
 | Work in the CreateDefault area (4 symbols)   | `.claude/skills/generated/createdefault/SKILL.md`           |
 
 <!-- gitnexus:end -->
+
+## Pull requests and merging
+
+Read the section of the same name in `AGENTS.md` before you merge a pull request. In short: pull
+request titles are plain sentences, and Dependabot, Renovate and release-please pull requests are
+merged with `gh pr merge <n> --merge --body ""`, so that release-please lists each change once.

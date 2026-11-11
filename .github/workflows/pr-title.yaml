@@ -1,0 +1,103 @@
+# Refuses a pull request title that reads as a Conventional Commit.
+#
+# From plabs-house-rules, templates/pr-title/; rules/git/commits-and-pull-requests.md
+# there says why it exists. Copy it as .github/workflows/pr-title.yaml and change only
+# what the comments marked EDIT ask for.
+#
+# Commit subjects must be conventional; pull request titles must not. That is not a
+# style preference but arithmetic in the changelog. Pull requests land as merge
+# commits, and GitHub writes the title into the merge commit's *body*. release-please
+# cannot parse the merge subject ("Merge pull request #24 from ..."), so it falls back
+# to the body, and a conventional title there parses as one more commit than happened:
+# a duplicate changelog entry on top of the real ones. No repository setting keeps the
+# title out of the merge commit (rules/git/merging.md says why), so this check and the
+# way machine-titled pull requests are merged are all there is.
+#
+# A workflow of its own rather than a job in ci.yaml: it needs no checkout, no Node and
+# no dependencies, so it answers in seconds, and it keeps working if ci.yaml ever grows
+# filters that skip a pull request entirely.
+name: pr-title
+
+on:
+    pull_request:
+        # `edited` re-judges a title once it has been fixed. `synchronize`, every push
+        # to the pull request, is what lets main require this check: a required check
+        # has to report on each commit the head moves to, and without it the first push
+        # after opening would leave the new head with no verdict and the merge waiting
+        # for one.
+        types: [opened, edited, reopened, synchronize]
+
+# None at all. The title arrives in the event payload; nothing is checked out or
+# written, so the job needs no token.
+permissions: {}
+
+# The expression rules/ci/workflows.md gives, keyed on this workflow's name so that it
+# and CI never cancel each other: a later edit of, or push to, the same pull request
+# supersedes the check of the earlier one, and nothing else does.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    # The check reports under the job's id, `conventional-title`, and that is the name
+    # a ruleset requires. Give the job no `name:`. It would rename the check, and a
+    # ruleset requiring the old name then holds every pull request for a check that
+    # never reports.
+    conventional-title:
+        # Self-hosted Linux, like everything here; one bash script, so it needs nothing
+        # the pool lacks. `plabs-ci` keeps it off the pve101 runner, which answers
+        # self-hosted and linux as well (rules/ci/runners.md).
+        # EDIT: in a repository that names the runner group (persona, audit.qs,
+        # textview.qs, find.qs), write the group form its other workflows use:
+        #     runs-on:
+        #         group: linux-ci
+        #         labels: [self-hosted, linux, plabs-ci]
+        # In a public repository, the GitHub-hosted runner that
+        # rules/ci/public-repositories.md names, and nothing else.
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: Refuse a conventional-commit title
+              # Through the environment, never interpolated into the script. A
+              # pull request title is attacker-supplied text, and `${{ ... }}`
+              # inside a `run:` block is substituted before bash sees it, so a
+              # title carrying a quote and a semicolon would run as commands.
+              env:
+                  TITLE: ${{ github.event.pull_request.title }}
+                  HEAD_REF: ${{ github.head_ref }}
+              run: |
+                  echo "title: $TITLE"
+
+                  # Any type, not only the configured ones: a type outside the
+                  # set still parses, and still lands in the merge body.
+                  if [[ ! "$TITLE" =~ ^[A-Za-z][A-Za-z0-9]*(\([^()]+\))?!?:[[:space:]] ]]; then
+                      echo "Not a Conventional Commit. Good."
+                      exit 0
+                  fi
+
+                  # Two tiers, divided by whether anyone can do anything about
+                  # it. release-please titles itself `chore(main): release
+                  # <component> X.Y.Z`, Dependabot `build(deps): bump X from A to
+                  # B`, and Renovate `chore(deps): update X`; none of them can be
+                  # edited, and failing every one of those would train everybody
+                  # to ignore this check. They get the merge that is safe
+                  # instead: `--body ""` leaves the merge commit with no body for
+                  # release-please to fall back to.
+                  case "$HEAD_REF" in
+                      release-please--*|dependabot/*|renovate/*)
+                          echo "::warning title=Merge this one with --body \"\"::\
+                  This title is machine-generated and cannot be changed, but it would still land in the \
+                  merge commit body and duplicate a changelog entry. Merge it with: \
+                  gh pr merge <n> --merge --body \"\" -- then check the body really is empty with \
+                  git log -1 --format=%b <merge sha>."
+                          exit 0
+                          ;;
+                  esac
+
+                  echo "::error title=Pull request title must not be a Conventional Commit::\
+                  GitHub writes this title into the merge commit body, where release-please parses it as \
+                  an extra commit and emits a duplicate changelog entry. Write an ordinary sentence -- \
+                  \"Show the version in the About box\", not \"feat: about box version\". \
+                  The conventional subjects belong on the commits inside the pull request, which merging \
+                  keeps."
+                  exit 1
