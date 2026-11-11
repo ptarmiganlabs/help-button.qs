@@ -125,6 +125,12 @@ Color properties use the Qlik color-picker object format (`{ color: '#rrggbb', i
 
 Tooltip hover content and dialog body content are both rendered from Markdown by `util/markdown.js`. The converter is intentionally minimal (zero runtime dependencies beyond DOMPurify) to keep the bundle small.
 
+### Code spans: taken out first
+
+Code spans (`` `code` ``) are taken out of the text before any other step. Each one waits as a placeholder while the other steps run, and comes back as a `<code>` element just before DOMPurify. Its `&`, `<` and `>` are escaped when it is taken out, so a code span shows exactly as written, as in CommonMark: no raw HTML, no `@[title](url)` shorthand, and no bold, italic or links apply inside it. This keeps Qlik set analysis such as `Sum({<Region={'North'}>} Sales)` intact. Without it, the partial escape below would keep `<Region={'North'}>` as a tag, and DOMPurify would remove it.
+
+A code span is a backtick, text without a backtick, and a backtick. The text may go over a line break, but not onto a line that starts a new block: an empty line, a list item, a heading, a blockquote or a rule. Inside a tag, for example in an image's alt text or a link's URL, an element cannot go there, so a code span goes back as written, backticks included.
+
 ### HTML escape strategy
 
 Rather than escaping all `<` and `>` characters, the converter uses a **partial escape** that preserves valid HTML tags:
@@ -135,6 +141,8 @@ text = text.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?![/a-zA-Z!])/g, '&lt;')
 ```
 
 This means authors can write raw `<iframe>` or `<video>` elements directly in their content fields and they will pass through to the DOMPurify stage rather than being escaped into visible text.
+
+Outside code spans, the converter cannot tell such text from raw HTML: `<Region={'North'}>` written there is still read as a tag, so that text is lost or garbled. Authors should put set analysis, and any other text in angle brackets, in a code span.
 
 ### Video shorthand: `@[title](url)`
 
