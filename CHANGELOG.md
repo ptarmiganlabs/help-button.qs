@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.4...helpbutton-qs-v3.2.0) (2026-11-12)
+
+
+### Features
+
+* let the tooltip content fields hold expressions ([c143d8a](https://github.com/ptarmiganlabs/help-button.qs/commit/c143d8abdb4b319ca50138958d2fbe176e0ac936))
+
+
+### Bug Fixes
+
+* tidy expression handling in the tooltip content editor ([ce0e070](https://github.com/ptarmiganlabs/help-button.qs/commit/ce0e0708ccf71edaf938bd8147bf44a15ea89824))
+
 ## [3.1.4](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.3...helpbutton-qs-v3.1.4) (2026-11-12)
 
 
