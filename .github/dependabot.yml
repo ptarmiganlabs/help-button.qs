@@ -10,6 +10,13 @@ updates:
       # on 11 until the PDF script sets its own theme and size.
       - dependency-name: "@mermaid-js/mermaid-cli"
         update-types: ["version-update:semver-major"]
+    groups:
+      # The @nebula.js packages are released together, and each one
+      # changes package-lock.json. So bump them all in one pull request,
+      # not one per package that has to be rebased after each merge.
+      nebula:
+        patterns:
+          - "@nebula.js/*"
     schedule:
       interval: "weekly"
   - package-ecosystem: "github-actions"
