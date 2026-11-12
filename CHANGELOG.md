@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.2](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.1...helpbutton-qs-v3.1.2) (2026-11-12)
+
+
+### Bug Fixes
+
+* check every media URL against the URI allowlist ([41308d4](https://github.com/ptarmiganlabs/help-button.qs/commit/41308d45f5466c483b3c2521f15a95f093ec0021))
+* keep allowed videos whose URL is on &lt;source&gt; children ([b35e4f2](https://github.com/ptarmiganlabs/help-button.qs/commit/b35e4f2e2d23f4aeb71f1a73da91f536c8af3b1e)), closes [#245](https://github.com/ptarmiganlabs/help-button.qs/issues/245)
+
+
+### Miscellaneous
+
+* **deps-dev:** bump lint-staged from 17.0.7 to 17.6.0 ([c504e4e](https://github.com/ptarmiganlabs/help-button.qs/commit/c504e4e4bbb8376b79338c7cd0b01e72f92b5edd))
+* keep mermaid-cli on major version 11 ([3641cb3](https://github.com/ptarmiganlabs/help-button.qs/commit/3641cb33b4c928cd9042d33d20bba1cb9affc3a1))
+* refuse pull request titles that are Conventional Commits ([d507e78](https://github.com/ptarmiganlabs/help-button.qs/commit/d507e786fd8ff90519fc479e3cac255b9561f4a0))
+
 ## [3.1.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.0...helpbutton-qs-v3.1.1) (2026-11-11)
 
 
