@@ -11,6 +11,7 @@ import { extensionState } from '../util/extension-state';
 import logger from '../util/logger';
 import {
     evaluateStringExpression,
+    isExpressionText,
     readStringProperty,
     writeStringProperty,
 } from '../util/string-expression';
@@ -264,6 +265,7 @@ export default function tooltipsSection(getObjectList) {
                                         label: 'Tooltip text (Markdown supported)',
                                         type: 'string',
                                         component: 'textarea',
+                                        expression: 'optional',
                                         rows: 4,
                                         defaultValue: '',
                                         maxlength: 256,
@@ -320,6 +322,7 @@ export default function tooltipsSection(getObjectList) {
                                         label: 'Dialog content (Markdown supported)',
                                         type: 'string',
                                         component: 'textarea',
+                                        expression: 'optional',
                                         rows: 6,
                                         defaultValue: '',
                                         maxlength: 16384,
@@ -370,10 +373,11 @@ export default function tooltipsSection(getObjectList) {
 /**
  * Open the Markdown editor for one of a tooltip's Markdown content properties.
  *
- * The content may be plain text or, when set through the engine API, a Qlik
- * string expression (`{ qStringExpression: { qExpr } }`). An expression is
- * edited as its source text, previewed as its evaluated result and saved back
- * as an expression.
+ * The content may be plain text or a Qlik string expression
+ * (`{ qStringExpression: { qExpr } }`). The editor follows the same rule as
+ * the content fields themselves: text that starts with `=` is an expression.
+ * It is edited as its source text, previewed as its evaluated result and
+ * saved as an expression.
  *
  * @param {object} options - Editor options.
  * @param {object} options.item - The tooltip item from the property panel (properties, not layout).
@@ -387,7 +391,7 @@ export default function tooltipsSection(getObjectList) {
  */
 async function openTooltipContentEditor({ item, args, property, title, maxLength }) {
     const itemCId = item.cId;
-    const { text, isExpression, supported } = readStringProperty(item[property]);
+    const { text, supported } = readStringProperty(item[property]);
     if (!supported) {
         // Never open the editor on a value we cannot turn back into the same
         // shape: saving would overwrite it.
@@ -417,16 +421,10 @@ async function openTooltipContentEditor({ item, args, property, title, maxLength
         value: text,
         maxLength,
         allowedUriPatterns: uriPatterns,
-        resolvePreviewSource: isExpression
-            ? (source) => (source.startsWith('=') ? evaluateStringExpression(app, source) : source)
-            : undefined,
+        resolvePreviewSource: (source) =>
+            isExpressionText(source) ? evaluateStringExpression(app, source) : source,
         async onSave(newText) {
-            await persistTooltipProperty(
-                model,
-                itemCId,
-                property,
-                writeStringProperty(newText, isExpression)
-            );
+            await persistTooltipProperty(model, itemCId, property, writeStringProperty(newText));
         },
     });
 }

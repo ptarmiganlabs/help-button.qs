@@ -432,18 +432,18 @@ flowchart TD
 
 ### Hover Content
 
-| Property panel label              | Ref            | Type     | Default | Shown when | Notes                                                                                                           |
-| --------------------------------- | -------------- | -------- | ------- | ---------- | --------------------------------------------------------------------------------------------------------------- |
-| Tooltip text (Markdown supported) | `hoverContent` | Textarea | `""`    | Always     | Plain text / Markdown. Max 256 chars. The adjacent **Edit in Markdown editor** button edits this same property. |
+| Property panel label              | Ref            | Type     | Default | Shown when | Notes                                                                                                                                                                                                 |
+| --------------------------------- | -------------- | -------- | ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tooltip text (Markdown supported) | `hoverContent` | Textarea | `""`    | Always     | Markdown. Supports expressions: text that starts with `=` is evaluated, and its result is shown as Markdown. Max 256 chars. The adjacent **Edit in Markdown editor** button edits this same property. |
 
 ### Click Dialog
 
-| Property panel label                | Ref             | Type           | Default  | Shown when                | Notes                                                                                                             |
-| ----------------------------------- | --------------- | -------------- | -------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Open dialog on click                | `dialogEnabled` | Boolean switch | `true`   | Always                    | `On` / `Off`.                                                                                                     |
-| Dialog title                        | `dialogTitle`   | String         | `""`     | `dialogEnabled !== false` | Supports expressions. Max 128 chars.                                                                              |
-| Dialog content (Markdown supported) | `dialogContent` | Textarea       | `""`     | `dialogEnabled !== false` | Plain text / Markdown. Max 16384 chars. The adjacent **Edit in Markdown editor** button edits this same property. |
-| Dialog size                         | `dialogSize`    | Dropdown       | `medium` | `dialogEnabled !== false` | Options: `small`, `medium`, `large`, `x-large`.                                                                   |
+| Property panel label                | Ref             | Type           | Default  | Shown when                | Notes                                                                                                                                                                                                   |
+| ----------------------------------- | --------------- | -------------- | -------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Open dialog on click                | `dialogEnabled` | Boolean switch | `true`   | Always                    | `On` / `Off`.                                                                                                                                                                                           |
+| Dialog title                        | `dialogTitle`   | String         | `""`     | `dialogEnabled !== false` | Supports expressions. Max 128 chars.                                                                                                                                                                    |
+| Dialog content (Markdown supported) | `dialogContent` | Textarea       | `""`     | `dialogEnabled !== false` | Markdown. Supports expressions: text that starts with `=` is evaluated, and its result is shown as Markdown. Max 16384 chars. The adjacent **Edit in Markdown editor** button edits this same property. |
+| Dialog size                         | `dialogSize`    | Dropdown       | `medium` | `dialogEnabled !== false` | Options: `small`, `medium`, `large`, `x-large`.                                                                                                                                                         |
 
 For more detail on authoring and runtime behaviour, see [Tooltips — Sense App Developer Guide](./tooltips-app-developer.md).
 
