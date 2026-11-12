@@ -394,10 +394,23 @@ Enter a comma-separated list of URL prefixes. Any `<iframe>`, `<video>`, or `<so
 https://www.youtube.com/embed/, https://player.vimeo.com/video/
 ```
 
-| Setting              | Effect                                                                                        |
-| -------------------- | --------------------------------------------------------------------------------------------- |
-| _(empty — default)_  | All `https://` sources are allowed                                                            |
-| One or more prefixes | Only iframes/videos whose `src` starts with a listed prefix are rendered; others are stripped |
+A `<video>` can have its URL on `<source>` elements inside it instead of in its own `src`. Such a video is shown when at least one of its `<source>` URLs begins with a listed prefix. The other `<source>` elements are removed. `<audio>` works the same way.
+
+The other URLs of a video are checked too. A `<track>` (subtitles) whose URL does not match is removed. A `poster` image whose URL does not match is removed, and the video is shown without it.
+
+End a host prefix with `/`, as in `https://media.internal.example.com/`. A prefix with no `/` after the host, such as `https://media.internal.example.com`, works too. It then only allows that exact host, not a longer name such as `https://media.internal.example.com.other.net/`.
+
+When a video from the `@[title](url)` shorthand is removed, its box is removed too. No empty box is left in the tooltip.
+
+For the `@[title](url)` shorthand, the URL that must match is the one the shorthand builds:
+
+- A video file: the file's own URL, for example `https://media.internal.example.com/` for `@[Demo](https://media.internal.example.com/demo.mp4)`.
+- YouTube and Vimeo: the embed URL, `https://www.youtube.com/embed/` or `https://player.vimeo.com/video/`, whatever form of link you write.
+
+| Setting              | Effect                                                                                         |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| _(empty — default)_  | All `https://` sources are allowed                                                             |
+| One or more prefixes | Only iframes and videos whose URL starts with a listed prefix are rendered; others are removed |
 
 ### Examples
 

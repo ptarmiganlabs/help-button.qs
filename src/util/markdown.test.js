@@ -91,11 +91,16 @@ describe('raw HTML and video embeds outside code', () => {
         expect(iframe.hasAttribute('allowfullscreen')).toBe(true);
     });
 
-    // Only without a URI filter: filterMediaUris() has a separate, known bug
-    // with <video> when an allowlist is set.
-    it('keeps the source of a raw video', () => {
+    it.each([
+        ['without a URI filter', undefined],
+        [
+            'with a URI filter that allows its source',
+            { allowedUriPatterns: 'https://example.com/' },
+        ],
+    ])('keeps the source of a raw video %s', (_, options) => {
         const { root } = render(
-            '<video controls><source src="https://example.com/demo.mp4"></video>'
+            '<video controls><source src="https://example.com/demo.mp4"></video>',
+            options
         );
         const source = root.querySelector('video > source');
         expect(source).not.toBeNull();
@@ -262,5 +267,219 @@ describe('video titles with special characters', () => {
         expect(root.querySelectorAll(tag)).toHaveLength(1);
         expect(root.querySelector(tag).getAttribute('title')).toBe(TITLE);
         expect(root.querySelector('x')).toBeNull();
+    });
+});
+
+describe('URI filter', () => {
+    /** The prefix that the property panel's placeholder suggests. */
+    const CONTENT_LIBRARY = { allowedUriPatterns: '/content/Default/' };
+
+    /**
+     * The src of each <source> in each <video> of the result.
+     *
+     * @param {HTMLElement} root
+     * @returns {string[][]}
+     */
+    function videoSources(root) {
+        return [...root.querySelectorAll('video')].map((video) =>
+            [...video.querySelectorAll('source')].map((source) => source.getAttribute('src'))
+        );
+    }
+
+    it('keeps an .mp4 shorthand whose host is allowed', () => {
+        const { root } = render('@[Clip](https://media.example.com/clip.mp4)', {
+            allowedUriPatterns: 'https://www.youtube.com/embed/, https://media.example.com/',
+        });
+        expect(root.querySelector('.hbqs-video-wrapper--native > video')).not.toBeNull();
+        expect(videoSources(root)).toEqual([['https://media.example.com/clip.mp4']]);
+    });
+
+    it('removes an .mp4 shorthand whose host is not allowed, wrapper and all', () => {
+        const { html, root } = render('@[Clip](https://media.example.com/clip.mp4)', YOUTUBE_ONLY);
+        expect(root.querySelector('video, source, .hbqs-video-wrapper')).toBeNull();
+        expect(html).toBe('');
+    });
+
+    it('keeps a raw video whose <source> is allowed', () => {
+        const { root } = render(
+            '<video controls><source src="/content/Default/clip.mp4"></video>',
+            CONTENT_LIBRARY
+        );
+        expect(videoSources(root)).toEqual([['/content/Default/clip.mp4']]);
+    });
+
+    it('keeps the allowed <source> of a video and removes the other', () => {
+        const { root } = render(
+            '<video controls>' +
+                '<source src="https://evil.example.com/a.mp4">' +
+                '<source src="/content/Default/b.mp4">' +
+                '</video>',
+            CONTENT_LIBRARY
+        );
+        expect(videoSources(root)).toEqual([['/content/Default/b.mp4']]);
+    });
+
+    it('removes a video whose <source> elements are all not allowed', () => {
+        const { root } = render(
+            '<video controls>' +
+                '<source src="https://evil.example.com/a.mp4">' +
+                '<source src="https://evil.example.com/b.webm">' +
+                '</video>',
+            CONTENT_LIBRARY
+        );
+        expect(root.querySelector('video, source')).toBeNull();
+    });
+
+    it('removes a video with no src and no <source>', () => {
+        const { root } = render('<video controls></video>', CONTENT_LIBRARY);
+        expect(root.querySelector('video')).toBeNull();
+    });
+
+    it('keeps a video whose own src is allowed', () => {
+        const { root } = render(
+            '<video controls src="/content/Default/clip.mp4"></video>',
+            CONTENT_LIBRARY
+        );
+        expect(root.querySelector('video').getAttribute('src')).toBe('/content/Default/clip.mp4');
+    });
+
+    // A browser plays a video's own src when it has one, even an empty one,
+    // and then ignores its <source> children.  So an allowed <source> does
+    // not save a video whose own src is not allowed.
+    it.each([
+        ['not allowed', '<video controls src="https://evil.example.com/x.mp4"></video>'],
+        [
+            'not allowed, with an allowed <source>',
+            '<video controls src="https://evil.example.com/x.mp4">' +
+                '<source src="/content/Default/clip.mp4"></video>',
+        ],
+        [
+            'empty, with an allowed <source>',
+            '<video controls src=""><source src="/content/Default/clip.mp4"></video>',
+        ],
+    ])('removes a video whose own src is %s', (_, md) => {
+        const { root } = render(md, CONTENT_LIBRARY);
+        expect(root.querySelector('video, source')).toBeNull();
+    });
+
+    it('removes an iframe shorthand whose src is not allowed, with no black box left', () => {
+        const { html, root } = render(
+            'Before\n\n@[Demo](https://www.youtube.com/watch?v=dQw4w9WgXcQ)\n\nAfter',
+            { allowedUriPatterns: 'https://player.vimeo.com/video/' }
+        );
+        expect(root.querySelector('iframe, .hbqs-video-wrapper')).toBeNull();
+        expect(root.textContent).toBe('BeforeAfter');
+        expect(html).not.toContain('hbqs-video-wrapper');
+    });
+
+    it('keeps a wrapper that still holds its iframe', () => {
+        const { root } = render(
+            '@[Demo](https://www.youtube.com/watch?v=dQw4w9WgXcQ)',
+            YOUTUBE_ONLY
+        );
+        expect(root.querySelector('.hbqs-video-wrapper > iframe')).not.toBeNull();
+    });
+
+    it('removes a video whose allowed <source> is not a direct child', () => {
+        const { root } = render(
+            '<video controls><span><source src="/content/Default/clip.mp4"></span></video>',
+            CONTENT_LIBRARY
+        );
+        expect(root.querySelector('video, source')).toBeNull();
+    });
+
+    it.each([
+        ['a video with its own src', '<video controls src="/content/Default/clip.mp4"'],
+        ['a video with a <source>', '<video controls'],
+    ])('removes a poster that is not allowed from %s, and keeps the video', (_, start) => {
+        const md =
+            start +
+            ' poster="https://tracker.example.net/p.png">' +
+            (start.includes('src=') ? '' : '<source src="/content/Default/clip.mp4">') +
+            '</video>';
+        const { root } = render(md, CONTENT_LIBRARY);
+        const video = root.querySelector('video');
+        expect(video).not.toBeNull();
+        expect(video.hasAttribute('poster')).toBe(false);
+    });
+
+    it('keeps a poster that is allowed', () => {
+        const { root } = render(
+            '<video controls src="/content/Default/clip.mp4" poster="/content/Default/p.png"></video>',
+            CONTENT_LIBRARY
+        );
+        expect(root.querySelector('video').getAttribute('poster')).toBe('/content/Default/p.png');
+    });
+
+    it('removes a <track> that is not allowed and keeps one that is', () => {
+        const { root } = render(
+            '<video controls>' +
+                '<source src="/content/Default/clip.mp4">' +
+                '<track src="https://tracker.example.net/t.vtt">' +
+                '<track src="/content/Default/en.vtt">' +
+                '</video>',
+            CONTENT_LIBRARY
+        );
+        const tracks = [...root.querySelectorAll('video > track')].map((t) =>
+            t.getAttribute('src')
+        );
+        expect(tracks).toEqual(['/content/Default/en.vtt']);
+        expect(videoSources(root)).toEqual([['/content/Default/clip.mp4']]);
+    });
+
+    it.each([
+        ['its own src is allowed', '<audio controls src="/content/Default/a.mp3"></audio>', true],
+        [
+            'its own src is not allowed',
+            '<audio controls src="https://evil.example.com/a.mp3"></audio>',
+            false,
+        ],
+        [
+            'its <source> is allowed',
+            '<audio controls><source src="/content/Default/a.mp3"></audio>',
+            true,
+        ],
+        [
+            'its <source> is not allowed',
+            '<audio controls><source src="https://evil.example.com/a.mp3"></audio>',
+            false,
+        ],
+    ])('checks an <audio> like a <video>: %s', (_, md, kept) => {
+        const { root } = render(md, CONTENT_LIBRARY);
+        expect(root.querySelector('audio') !== null).toBe(kept);
+    });
+
+    describe('a prefix that is only an origin', () => {
+        const ORIGIN_ONLY = { allowedUriPatterns: 'https://media.example.com' };
+
+        it.each([
+            'https://media.example.com/clip.mp4',
+            'https://media.example.com?v=1',
+            'https://media.example.com#t=5',
+            'https://media.example.com',
+        ])('allows %s', (url) => {
+            const { root } = render(`<video controls src="${url}"></video>`, ORIGIN_ONLY);
+            expect(root.querySelector('video')).not.toBeNull();
+        });
+
+        it.each([
+            'https://media.example.com.attacker.net/clip.mp4',
+            'https://media.example.com@attacker.net/clip.mp4',
+            'https://media.example.com:8443/clip.mp4',
+        ])('does not allow %s', (url) => {
+            const { root } = render(`<video controls src="${url}"></video>`, ORIGIN_ONLY);
+            expect(root.querySelector('video')).toBeNull();
+        });
+    });
+
+    it.each([
+        ['https://', 'https://media.example.com/clip.mp4'],
+        ['/content/Default', '/content/Default/clip.mp4'],
+        ['https://media.example.com/cl', 'https://media.example.com/clip.mp4'],
+    ])('still treats the prefix %s as a plain prefix', (prefix, url) => {
+        const { root } = render(`<video controls src="${url}"></video>`, {
+            allowedUriPatterns: prefix,
+        });
+        expect(root.querySelector('video')).not.toBeNull();
     });
 });

@@ -184,30 +184,21 @@ DOMPurify.sanitize(html, {
 });
 ```
 
-`iframe`, `video`, and `source` are not in DOMPurify's default safe-tag list, so they must be explicitly added. All other potentially dangerous tags (e.g. `<script>`, `<object>`, `<embed>`) are stripped by default.
+`iframe` is not in DOMPurify's default safe-tag list, so it must be explicitly added. `video` and `source` are already in it, and are listed so that the configuration says what tooltips may contain. All other potentially dangerous tags (e.g. `<script>`, `<object>`, `<embed>`) are stripped by default.
 
 ### URI filter: `filterMediaUris()`
 
-After DOMPurify runs, an optional URI allowlist filter removes any remaining `iframe`, `video`, or `source` elements whose `src` attribute does not match the configured prefixes:
+After DOMPurify runs, an optional URI allowlist filter checks every media element that loads a URL. It runs only when `allowedUriPatterns` has at least one prefix. The rules:
 
-```javascript
-function filterMediaUris(html, allowedUriPatterns) {
-    if (!allowedUriPatterns) return html; // empty = allow all
+- `iframe`, `source` and `track`: removed when their `src` does not match a prefix.
+- `video` and `audio` with a `src` of their own, even an empty one: removed when that `src` does not match. A browser then plays only that `src` and ignores the `source` children.
+- `video` and `audio` with no `src`: judged by their `source` children. They stay when at least one direct `source` child is left, and are removed when none is. A browser uses only `source` elements that are direct children. The `@[title](url)` shorthand always builds a video like this.
+- `poster` on a `video`: removed when it does not match. The video stays.
+- The `hbqs-video-wrapper` `div` of a video embed: removed when the filter left it empty, so that no empty (for YouTube and Vimeo: black) box is shown.
 
-    const prefixes = allowedUriPatterns
-        .split(',')
-        .map((p) => p.trim())
-        .filter(Boolean);
-    const container = document.createElement('div');
-    container.innerHTML = html;
+A URL matches a prefix when it starts with it. A prefix that is only an origin, such as `https://media.example.com`, must also be followed by `/`, `?`, `#` or the end of the URL, so that it does not match `https://media.example.com.attacker.net/`. That check is in `isAllowedUri()`, next to `filterMediaUris()` in `util/markdown.js`, which is the place to read the code.
 
-    container.querySelectorAll('iframe, video, source').forEach((el) => {
-        const src = el.getAttribute('src') || '';
-        if (!prefixes.some((prefix) => src.startsWith(prefix))) el.remove();
-    });
-    return container.innerHTML;
-}
-```
+`img` is not filtered.
 
 The `allowedUriPatterns` value comes from `layout.security.allowedUriPatterns`, which is read in `injectTooltips()` and stored in the module-level `activeAllowedUriPatterns` variable. It is forwarded to both `showHover()` and `openTooltipDialog()` and ultimately passed as `options.allowedUriPatterns` to `markdownToHtml()`.
 
