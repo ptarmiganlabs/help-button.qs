@@ -297,15 +297,21 @@ export function createTabbedMarkdownEditor({
             return;
         }
         const request = ++previewRequest;
+        let result;
         try {
-            const result = resolvePreviewSource(textarea.value);
-            // A plain value needs no waiting, so it renders at once instead
-            // of flashing the "Evaluating" notice.
-            if (typeof result?.then !== 'function') {
-                renderPreview(result ?? '');
-                return;
-            }
-            renderPreviewNotice('Evaluating expression…');
+            result = resolvePreviewSource(textarea.value);
+        } catch (err) {
+            renderPreviewNotice('Could not show the preview: ' + (err?.message || String(err)));
+            return;
+        }
+        // A plain value needs no waiting, so it renders at once instead of
+        // flashing the "Evaluating" notice, and as it would with no resolver.
+        if (typeof result?.then !== 'function') {
+            renderPreview(result ?? '');
+            return;
+        }
+        renderPreviewNotice('Evaluating expression…');
+        try {
             const markdown = await result;
             if (request === previewRequest) renderPreview(markdown);
         } catch (err) {

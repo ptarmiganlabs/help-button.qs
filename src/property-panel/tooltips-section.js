@@ -11,6 +11,7 @@ import { extensionState } from '../util/extension-state';
 import logger from '../util/logger';
 import {
     evaluateStringExpression,
+    isExpressionText,
     readStringProperty,
     writeStringProperty,
 } from '../util/string-expression';
@@ -421,7 +422,7 @@ async function openTooltipContentEditor({ item, args, property, title, maxLength
         maxLength,
         allowedUriPatterns: uriPatterns,
         resolvePreviewSource: (source) =>
-            source.startsWith('=') ? evaluateStringExpression(app, source) : source,
+            isExpressionText(source) ? evaluateStringExpression(app, source) : source,
         async onSave(newText) {
             await persistTooltipProperty(model, itemCId, property, writeStringProperty(newText));
         },

@@ -12,7 +12,6 @@ describe('readStringProperty', () => {
     it('reads plain text as is', () => {
         expect(readStringProperty('**Hi**')).toEqual({
             text: '**Hi**',
-            isExpression: false,
             supported: true,
         });
     });
@@ -20,12 +19,10 @@ describe('readStringProperty', () => {
     it('reads a missing value as empty text', () => {
         expect(readStringProperty(undefined)).toEqual({
             text: '',
-            isExpression: false,
             supported: true,
         });
         expect(readStringProperty(null)).toEqual({
             text: '',
-            isExpression: false,
             supported: true,
         });
     });
@@ -33,7 +30,6 @@ describe('readStringProperty', () => {
     it('unwraps a string expression to its source', () => {
         expect(readStringProperty({ qStringExpression: { qExpr: EXPR } })).toEqual({
             text: EXPR,
-            isExpression: true,
             supported: true,
         });
     });
@@ -41,9 +37,19 @@ describe('readStringProperty', () => {
     it('adds the = to an expression stored without it, as the panel does', () => {
         expect(readStringProperty({ qStringExpression: { qExpr: EXPR.slice(1) } })).toEqual({
             text: EXPR,
-            isExpression: true,
             supported: true,
         });
+    });
+
+    it('reads an empty expression as empty text', () => {
+        expect(readStringProperty({ qStringExpression: { qExpr: '' } })).toEqual({
+            text: '',
+            supported: true,
+        });
+    });
+
+    it('drops whitespace before a stored =', () => {
+        expect(readStringProperty({ qStringExpression: { qExpr: '  ' + EXPR } }).text).toBe(EXPR);
     });
 
     it('flags any other shape as unsupported', () => {
@@ -55,7 +61,6 @@ describe('readStringProperty', () => {
         ]) {
             expect(readStringProperty(value)).toEqual({
                 text: '',
-                isExpression: false,
                 supported: false,
             });
         }

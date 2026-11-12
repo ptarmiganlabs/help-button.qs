@@ -22,31 +22,43 @@
 /**
  * @typedef {object} StringPropertyText
  * @property {string} text - The editable text: the plain string, or the expression source
- *   starting with `=`.
- * @property {boolean} isExpression - True when the property is stored as a string expression.
+ *   starting with `=` (empty for an empty expression).
  * @property {boolean} supported - False when the value has a shape these helpers do not know;
  *   callers must not overwrite such a value.
  */
 
 /**
+ * Whether edited text is an expression, by the property panel's rule: it
+ * starts with `=`.
+ *
+ * @param {string} text - The edited text.
+ * @returns {boolean} True when the text is an expression.
+ */
+export function isExpressionText(text) {
+    return text.startsWith('=');
+}
+
+/**
  * Read a string property value as editable text, the way the property panel shows it.
  *
  * @param {*} value - Raw property value from `model.getProperties()`.
- * @returns {StringPropertyText} The editable text and how the value was stored.
+ * @returns {StringPropertyText} The editable text and whether the value can be edited.
  */
 export function readStringProperty(value) {
     if (value === undefined || value === null) {
-        return { text: '', isExpression: false, supported: true };
+        return { text: '', supported: true };
     }
     if (typeof value === 'string') {
-        return { text: value, isExpression: false, supported: true };
+        return { text: value, supported: true };
     }
     const qExpr = value?.qStringExpression?.qExpr;
     if (typeof qExpr === 'string') {
-        const text = qExpr.startsWith('=') ? qExpr : '=' + qExpr;
-        return { text, isExpression: true, supported: true };
+        // Show one leading `=`, whether or not qExpr kept it. An empty
+        // expression reads as empty text, so saving it stores plain text.
+        const source = qExpr.replace(/^\s*=/, '');
+        return { text: source.trim() === '' ? '' : '=' + source, supported: true };
     }
-    return { text: '', isExpression: false, supported: false };
+    return { text: '', supported: false };
 }
 
 /**
@@ -58,7 +70,7 @@ export function readStringProperty(value) {
  * @returns {string|{ qStringExpression: { qExpr: string } }} The value to store.
  */
 export function writeStringProperty(text) {
-    if (text.startsWith('=')) {
+    if (isExpressionText(text)) {
         return { qStringExpression: { qExpr: text.slice(1) } };
     }
     return text;

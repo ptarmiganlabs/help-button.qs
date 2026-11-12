@@ -67,6 +67,8 @@ If multiple HelpButton.qs extension objects are placed on the same sheet, the to
 5. Configure the tooltip using the fields described below.
 
 > **💡 Note on Qlik Sense Expressions:** Expression support is field-specific. In the current tooltip configuration, fields such as **Label**, **CSS selector**, **Show condition**, **Dialog title**, **Tooltip text** and **Dialog content** expose the **fx** button and can be made dynamic. In the two Markdown content fields, text that starts with `=` is a Qlik expression whose result is shown as Markdown, for example `='Files in the selection: **' & Count(File) & '**'`. The **Edit in Markdown editor** button follows the same rule: it opens an expression as its source text, saves it as an expression, and **Preview** shows the evaluated result.
+>
+> **Upgrading:** plain text that starts with `=` is now read as an expression. Before version 3.2, such text in **Tooltip text** or **Dialog content** was shown as written. It becomes an expression the next time it is saved, from the field or the Markdown editor, and an expression that does not evaluate shows an error. Remove or reword the leading `=` if it was meant as text.
 
 Each tooltip item has a **Label** that identifies it in the property panel list. This label is also used as the default dialog title and the icon's accessibility label.
 
@@ -553,6 +555,8 @@ All translatable string overrides (button labels, dialog strings, placeholder te
 | Hover content  | textarea | 256 chars    |
 | Dialog title   | string   | 128 chars    |
 | Dialog content | textarea | 16 384 chars |
+
+For **Hover content** and **Dialog content**, the limit applies to what is typed in the field. When that is an expression, its result is not limited.
 
 ### Analysis / Placeholder
 

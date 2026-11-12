@@ -74,6 +74,19 @@ describe('createTabbedMarkdownEditor preview', () => {
         expect(preview.querySelector('strong')?.textContent).toBe('plain');
     });
 
+    it('does not call a synchronous resolver failure an expression error', () => {
+        const { tabPreview, preview } = setup({
+            value: 'plain',
+            resolvePreviewSource: () => {
+                throw new Error('broken');
+            },
+        });
+
+        tabPreview.click();
+
+        expect(preview.textContent).toBe('Could not show the preview: broken');
+    });
+
     it('ignores a result that arrives after a newer request', async () => {
         const calls = [];
         const { tabWrite, tabPreview, preview } = setup({
