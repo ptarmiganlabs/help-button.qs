@@ -38,6 +38,14 @@ describe('readStringProperty', () => {
         });
     });
 
+    it('adds the = to an expression stored without it, as the panel does', () => {
+        expect(readStringProperty({ qStringExpression: { qExpr: EXPR.slice(1) } })).toEqual({
+            text: EXPR,
+            isExpression: true,
+            supported: true,
+        });
+    });
+
     it('flags any other shape as unsupported', () => {
         for (const value of [
             42,
@@ -55,25 +63,20 @@ describe('readStringProperty', () => {
 });
 
 describe('writeStringProperty', () => {
-    it('keeps an edited expression an expression', () => {
-        const edited = EXPR + " & '!'";
-        expect(writeStringProperty(edited, true)).toEqual({
-            qStringExpression: { qExpr: edited },
+    it('stores text starting with = as an expression, without the =', () => {
+        expect(writeStringProperty(EXPR + " & '!'")).toEqual({
+            qStringExpression: { qExpr: EXPR.slice(1) + " & '!'" },
         });
     });
 
-    it('turns an expression into plain text when the = is removed', () => {
-        expect(writeStringProperty('Just text', true)).toBe('Just text');
+    it('stores any other text as plain text', () => {
+        expect(writeStringProperty('Just text')).toBe('Just text');
+        expect(writeStringProperty('')).toBe('');
     });
 
-    it('keeps plain text plain, even when it starts with =', () => {
-        expect(writeStringProperty('=not an expression', false)).toBe('=not an expression');
-    });
-
-    it('round-trips an unchanged expression', () => {
-        const stored = { qStringExpression: { qExpr: EXPR } };
-        const { text, isExpression } = readStringProperty(stored);
-        expect(writeStringProperty(text, isExpression)).toEqual(stored);
+    it('round-trips an expression the panel stored', () => {
+        const stored = { qStringExpression: { qExpr: EXPR.slice(1) } };
+        expect(writeStringProperty(readStringProperty(stored).text)).toEqual(stored);
     });
 });
 

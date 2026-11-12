@@ -3,7 +3,13 @@
  *
  * Qlik stores a string property either as plain text or, when it is an
  * expression, as an object:
- *   { qStringExpression: { qExpr: "='Hello ' & Name" } }
+ *   { qStringExpression: { qExpr: "'Hello ' & Name" } }
+ *
+ * For a property with `expression: 'optional'`, the property panel follows
+ * one rule: text that starts with `=` is an expression. It stores the
+ * expression without that `=` and shows it with the `=` again. Expressions
+ * written through the engine API may keep the `=` in `qExpr`; the engine
+ * evaluates both forms the same way.
  *
  * The layout always carries the evaluated string, but the properties carry
  * the raw value. Code that edits properties — such as the property-panel
@@ -15,14 +21,15 @@
 
 /**
  * @typedef {object} StringPropertyText
- * @property {string} text - The editable text: the plain string, or the expression source.
+ * @property {string} text - The editable text: the plain string, or the expression source
+ *   starting with `=`.
  * @property {boolean} isExpression - True when the property is stored as a string expression.
  * @property {boolean} supported - False when the value has a shape these helpers do not know;
  *   callers must not overwrite such a value.
  */
 
 /**
- * Read a string property value as editable text.
+ * Read a string property value as editable text, the way the property panel shows it.
  *
  * @param {*} value - Raw property value from `model.getProperties()`.
  * @returns {StringPropertyText} The editable text and how the value was stored.
@@ -36,25 +43,23 @@ export function readStringProperty(value) {
     }
     const qExpr = value?.qStringExpression?.qExpr;
     if (typeof qExpr === 'string') {
-        return { text: qExpr, isExpression: true, supported: true };
+        const text = qExpr.startsWith('=') ? qExpr : '=' + qExpr;
+        return { text, isExpression: true, supported: true };
     }
     return { text: '', isExpression: false, supported: false };
 }
 
 /**
- * Turn edited text back into a property value, keeping the form the value had.
- *
- * An expression stays an expression as long as the text still starts with
- * `=`; removing the `=` turns it into plain text. Plain text always stays
- * plain text, even when it starts with `=`.
+ * Turn edited text back into a property value, by the property panel's rule:
+ * text that starts with `=` is stored as an expression, without the `=`;
+ * anything else is stored as plain text.
  *
  * @param {string} text - The edited text.
- * @param {boolean} wasExpression - Whether the value was stored as a string expression.
  * @returns {string|{ qStringExpression: { qExpr: string } }} The value to store.
  */
-export function writeStringProperty(text, wasExpression) {
-    if (wasExpression && text.startsWith('=')) {
-        return { qStringExpression: { qExpr: text } };
+export function writeStringProperty(text) {
+    if (text.startsWith('=')) {
+        return { qStringExpression: { qExpr: text.slice(1) } };
     }
     return text;
 }

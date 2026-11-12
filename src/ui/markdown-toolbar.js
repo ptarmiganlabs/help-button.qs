@@ -297,9 +297,16 @@ export function createTabbedMarkdownEditor({
             return;
         }
         const request = ++previewRequest;
-        renderPreviewNotice('Evaluating expression…');
         try {
-            const markdown = await resolvePreviewSource(textarea.value);
+            const result = resolvePreviewSource(textarea.value);
+            // A plain value needs no waiting, so it renders at once instead
+            // of flashing the "Evaluating" notice.
+            if (typeof result?.then !== 'function') {
+                renderPreview(result ?? '');
+                return;
+            }
+            renderPreviewNotice('Evaluating expression…');
+            const markdown = await result;
             if (request === previewRequest) renderPreview(markdown);
         } catch (err) {
             if (request === previewRequest) {

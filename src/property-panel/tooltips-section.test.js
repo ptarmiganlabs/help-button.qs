@@ -77,7 +77,11 @@ afterEach(() => {
 
 describe('Edit in Markdown editor', () => {
     it('edits, previews and saves expression content with the panel model and app', async () => {
-        const tooltip = { cId: 't1', dialogContent: { qStringExpression: { qExpr: EXPR } } };
+        // Stored the way the property panel stores it: without the leading =.
+        const tooltip = {
+            cId: 't1',
+            dialogContent: { qStringExpression: { qExpr: EXPR.slice(1) } },
+        };
         const { model, app, saved } = fakes(tooltip);
 
         // extensionState stays empty, as when the extension has not rendered.
@@ -95,23 +99,39 @@ describe('Edit in Markdown editor', () => {
         ed.save.click();
         await flush();
         expect(saved().dialogContent).toEqual({
-            qStringExpression: { qExpr: EXPR + " & '!'" },
+            qStringExpression: { qExpr: EXPR.slice(1) + " & '!'" },
         });
     });
 
-    it('keeps plain text plain, even when it starts with =', async () => {
+    it('previews plain text at once and saves it as plain text', async () => {
+        const tooltip = { cId: 't1', hoverContent: '**Plain**' };
+        const { model, app, saved } = fakes(tooltip);
+
+        await buttons().hover.action(structuredClone(tooltip), undefined, { model, app });
+
+        const ed = editor();
+        expect(ed.textarea.value).toBe('**Plain**');
+        ed.tabPreview.click();
+        expect(ed.preview.querySelector('strong')?.textContent).toBe('Plain');
+        expect(app.createSessionObject).not.toHaveBeenCalled();
+
+        ed.textarea.value = 'Plain, edited';
+        ed.save.click();
+        await flush();
+        expect(saved().hoverContent).toBe('Plain, edited');
+    });
+
+    it('turns plain text into an expression when it starts with =', async () => {
         const tooltip = { cId: 't1', hoverContent: 'Plain' };
         const { model, app, saved } = fakes(tooltip);
 
         await buttons().hover.action(structuredClone(tooltip), undefined, { model, app });
 
         const ed = editor();
-        expect(ed.textarea.value).toBe('Plain');
-        ed.textarea.value = '=Plain';
+        ed.textarea.value = EXPR;
         ed.save.click();
         await flush();
-        expect(saved().hoverContent).toBe('=Plain');
-        expect(app.createSessionObject).not.toHaveBeenCalled();
+        expect(saved().hoverContent).toEqual({ qStringExpression: { qExpr: EXPR.slice(1) } });
     });
 
     it('falls back to extensionState when the panel passes no arguments', async () => {
