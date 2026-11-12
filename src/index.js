@@ -57,6 +57,7 @@ export default function supernova(galaxy) {
             extensionState.model = model;
             const options = useOptions();
             const app = useApp();
+            extensionState.app = app;
             const layoutRef = useRef(layout);
             // Platform detection: async, resolved once then cached in state.
             const [platform, setPlatform] = useState(null);

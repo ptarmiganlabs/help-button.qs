@@ -214,6 +214,10 @@ function applyAction(textarea, action) {
  * @param {string} [options.className=''] - Extra CSS class for the textarea.
  * @param {string} [options.allowedUriPatterns=''] - Comma-separated URL prefixes
  *   for allowed iframe/video src in Preview. Empty = allow all.
+ * @param {function(string): (string|Promise<string>)} [options.resolvePreviewSource] -
+ *   Optional. Turns the textarea text into the Markdown that Preview renders, for
+ *   example by evaluating a Qlik expression. Without it, Preview renders the
+ *   textarea text directly.
  * @returns {{ container: HTMLElement, textarea: HTMLTextAreaElement }}
  */
 export function createTabbedMarkdownEditor({
@@ -224,6 +228,7 @@ export function createTabbedMarkdownEditor({
     value = '',
     className = '',
     allowedUriPatterns = '',
+    resolvePreviewSource,
 } = {}) {
     // -- Outer container --
     const container = document.createElement('div');
@@ -269,10 +274,40 @@ export function createTabbedMarkdownEditor({
         'hbqs-md-tabbed-panel hbqs-md-tabbed-panel--preview hbqs-markdown-content';
     previewPanel.style.display = 'none';
 
-    function updatePreview() {
+    function renderPreview(markdown) {
         previewPanel.innerHTML =
-            markdownToHtml(textarea.value, { allowedUriPatterns }) ||
+            markdownToHtml(markdown, { allowedUriPatterns }) ||
             '<p style="color:#9ca3af;font-style:italic">Nothing to preview</p>';
+    }
+
+    function renderPreviewNotice(text) {
+        const p = document.createElement('p');
+        p.style.cssText = 'color:#9ca3af;font-style:italic';
+        p.textContent = text;
+        previewPanel.replaceChildren(p);
+    }
+
+    // Counts Preview requests, so a slow resolver result that arrives after
+    // a newer request (or after switching back to Write) is thrown away.
+    let previewRequest = 0;
+
+    async function updatePreview() {
+        if (typeof resolvePreviewSource !== 'function') {
+            renderPreview(textarea.value);
+            return;
+        }
+        const request = ++previewRequest;
+        renderPreviewNotice('Evaluating expression…');
+        try {
+            const markdown = await resolvePreviewSource(textarea.value);
+            if (request === previewRequest) renderPreview(markdown);
+        } catch (err) {
+            if (request === previewRequest) {
+                renderPreviewNotice(
+                    'Could not evaluate the expression: ' + (err?.message || String(err))
+                );
+            }
+        }
     }
 
     // Wire toolbar buttons
@@ -300,6 +335,7 @@ export function createTabbedMarkdownEditor({
 
     // -- Tab switching --
     tabWrite.addEventListener('click', () => {
+        previewRequest++;
         tabWrite.classList.add('hbqs-md-tabbed-tab--active');
         tabPreview.classList.remove('hbqs-md-tabbed-tab--active');
         writePanel.style.display = '';

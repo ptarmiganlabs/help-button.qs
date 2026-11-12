@@ -66,7 +66,7 @@ If multiple HelpButton.qs extension objects are placed on the same sheet, the to
 4. Click **Add Tooltip**.
 5. Configure the tooltip using the fields described below.
 
-> **💡 Note on Qlik Sense Expressions:** Expression support is field-specific. In the current tooltip configuration, fields such as **Label**, **CSS selector**, **Show condition**, and **Dialog title** expose the **fx** button and can be made dynamic. The Markdown content fields (**Tooltip text** and **Dialog content**) are plain text areas and do **not** expose **fx**.
+> **💡 Note on Qlik Sense Expressions:** Expression support is field-specific. In the current tooltip configuration, fields such as **Label**, **CSS selector**, **Show condition**, and **Dialog title** expose the **fx** button and can be made dynamic. The Markdown content fields (**Tooltip text** and **Dialog content**) are plain text areas and do **not** expose **fx**. Content that was stored as a Qlik string expression through the engine API still works: the **Edit in Markdown editor** button opens the expression text, saves it back as an expression, and **Preview** shows the evaluated result.
 
 Each tooltip item has a **Label** that identifies it in the property panel list. This label is also used as the default dialog title and the icon's accessibility label.
 
