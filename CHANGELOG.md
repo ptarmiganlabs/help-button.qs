@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.4](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.3...helpbutton-qs-v3.1.4) (2026-11-12)
+
+
+### Bug Fixes
+
+* **deps:** update @babel/core to 7.29.13 to close a file-read advisory ([b76cb53](https://github.com/ptarmiganlabs/help-button.qs/commit/b76cb53523e4dd74ce7c92a2f432e4487e3fd62f))
+* open expression-based tooltip content in the Markdown editor ([b2eecc1](https://github.com/ptarmiganlabs/help-button.qs/commit/b2eecc10ae187d07e2192f95c9f6013c1687af45))
+* save tooltip content from the Markdown editor in the Sense client ([aa47790](https://github.com/ptarmiganlabs/help-button.qs/commit/aa47790aed0202ec17cdd4ea95c77af683b609bd))
+
 ## [3.1.3](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.2...helpbutton-qs-v3.1.3) (2026-11-12)
 
 
