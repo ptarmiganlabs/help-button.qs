@@ -9,6 +9,11 @@ import { ICON_NAMES } from '../ui/icons';
 import { openMarkdownEditorDialog } from '../ui/markdown-editor-dialog';
 import { extensionState } from '../util/extension-state';
 import logger from '../util/logger';
+import {
+    evaluateStringExpression,
+    readStringProperty,
+    writeStringProperty,
+} from '../util/string-expression';
 
 /**
  * Build the Tooltips property-panel section definition.
@@ -266,29 +271,13 @@ export default function tooltipsSection(getObjectList) {
                                     editHoverContentBtn: {
                                         label: 'Edit in Markdown editor',
                                         component: 'button',
-                                        async action(item) {
-                                            const itemCId = item.cId;
-                                            let uriPatterns = '';
-                                            try {
-                                                const layout =
-                                                    await extensionState.model?.getLayout();
-                                                uriPatterns =
-                                                    layout?.security?.allowedUriPatterns || '';
-                                            } catch {
-                                                /* best effort */
-                                            }
-                                            openMarkdownEditorDialog({
+                                        async action(item, _handler, args) {
+                                            await openTooltipContentEditor({
+                                                item,
+                                                args,
+                                                property: 'hoverContent',
                                                 title: 'Edit Tooltip Text',
-                                                value: item.hoverContent || '',
                                                 maxLength: 256,
-                                                allowedUriPatterns: uriPatterns,
-                                                async onSave(text) {
-                                                    await persistTooltipProperty(
-                                                        itemCId,
-                                                        'hoverContent',
-                                                        text
-                                                    );
-                                                },
                                             });
                                         },
                                     },
@@ -340,29 +329,13 @@ export default function tooltipsSection(getObjectList) {
                                         label: 'Edit in Markdown editor',
                                         component: 'button',
                                         show: (item) => item.dialogEnabled !== false,
-                                        async action(item) {
-                                            const itemCId = item.cId;
-                                            let uriPatterns = '';
-                                            try {
-                                                const layout =
-                                                    await extensionState.model?.getLayout();
-                                                uriPatterns =
-                                                    layout?.security?.allowedUriPatterns || '';
-                                            } catch {
-                                                /* best effort */
-                                            }
-                                            openMarkdownEditorDialog({
+                                        async action(item, _handler, args) {
+                                            await openTooltipContentEditor({
+                                                item,
+                                                args,
+                                                property: 'dialogContent',
                                                 title: 'Edit Dialog Content',
-                                                value: item.dialogContent || '',
                                                 maxLength: 16384,
-                                                allowedUriPatterns: uriPatterns,
-                                                async onSave(text) {
-                                                    await persistTooltipProperty(
-                                                        itemCId,
-                                                        'dialogContent',
-                                                        text
-                                                    );
-                                                },
                                             });
                                         },
                                     },
@@ -391,19 +364,87 @@ export default function tooltipsSection(getObjectList) {
 }
 
 // ---------------------------------------------------------------------------
+// Helper — open the Markdown editor for a tooltip content property
+// ---------------------------------------------------------------------------
+
+/**
+ * Open the Markdown editor for one of a tooltip's Markdown content properties.
+ *
+ * The content may be plain text or, when set through the engine API, a Qlik
+ * string expression (`{ qStringExpression: { qExpr } }`). An expression is
+ * edited as its source text, previewed as its evaluated result and saved back
+ * as an expression.
+ *
+ * @param {object} options - Editor options.
+ * @param {object} options.item - The tooltip item from the property panel (properties, not layout).
+ * @param {object} [options.args] - The property panel's arguments, which Qlik passes as the
+ *   third argument of a button action. In the Qlik Sense client they carry the object's
+ *   `model` and the `app`.
+ * @param {string} options.property - Content property name: `hoverContent` or `dialogContent`.
+ * @param {string} options.title - Editor dialog title.
+ * @param {number} options.maxLength - Maximum number of characters.
+ * @returns {Promise<void>}
+ */
+async function openTooltipContentEditor({ item, args, property, title, maxLength }) {
+    const itemCId = item.cId;
+    const { text, isExpression, supported } = readStringProperty(item[property]);
+    if (!supported) {
+        // Never open the editor on a value we cannot turn back into the same
+        // shape: saving would overwrite it.
+        logger.warn(`Cannot edit tooltip ${property}: unsupported value`, item[property]);
+        return;
+    }
+
+    // Prefer the property panel's own model and app. extensionState is only
+    // filled once the extension has rendered on the sheet, and while a sheet
+    // is edited that does not always happen (seen with a one-column cell in
+    // the Qlik Sense client), which left saving and Preview without either.
+    const model = args?.model || extensionState.model;
+    const app = [args?.app, extensionState.app].find(
+        (candidate) => typeof candidate?.createSessionObject === 'function'
+    );
+
+    let uriPatterns = '';
+    try {
+        const layout = await model?.getLayout();
+        uriPatterns = layout?.security?.allowedUriPatterns || '';
+    } catch {
+        /* best effort */
+    }
+
+    openMarkdownEditorDialog({
+        title,
+        value: text,
+        maxLength,
+        allowedUriPatterns: uriPatterns,
+        resolvePreviewSource: isExpression
+            ? (source) => (source.startsWith('=') ? evaluateStringExpression(app, source) : source)
+            : undefined,
+        async onSave(newText) {
+            await persistTooltipProperty(
+                model,
+                itemCId,
+                property,
+                writeStringProperty(newText, isExpression)
+            );
+        },
+    });
+}
+
+// ---------------------------------------------------------------------------
 // Helper — persist a single tooltip property via the engine API
 // ---------------------------------------------------------------------------
 
 /**
  * Persist a single tooltip property update through the engine API.
  *
+ * @param {object} model - Enigma.js model of the HelpButton.qs object.
  * @param {string} cId - Tooltip item identifier.
  * @param {string} property - Tooltip property name to update.
  * @param {*} value - New property value to persist.
  * @returns {Promise<void>}
  */
-async function persistTooltipProperty(cId, property, value) {
-    const { model } = extensionState;
+async function persistTooltipProperty(model, cId, property, value) {
     if (!model) {
         logger.warn('Cannot persist property change — model not available');
         return;

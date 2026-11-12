@@ -112,10 +112,20 @@ function confirmDiscardChanges() {
  * @param {number} [options.maxLength] - Maximum character count (`0` = unlimited).
  * @param {string} [options.allowedUriPatterns=''] - Comma-separated URL prefixes
  *   for allowed iframe/video src in Preview. Empty = allow all.
+ * @param {function(string): (string|Promise<string>)} [options.resolvePreviewSource] -
+ *   Optional. Turns the edited text into the Markdown that Preview renders, for
+ *   example by evaluating a Qlik expression.
  * @param {function(string): void} options.onSave - Called with the new text on save.
  * @returns {void}
  */
-export function openMarkdownEditorDialog({ title, value, maxLength, allowedUriPatterns, onSave }) {
+export function openMarkdownEditorDialog({
+    title,
+    value,
+    maxLength,
+    allowedUriPatterns,
+    resolvePreviewSource,
+    onSave,
+}) {
     closeMarkdownEditorDialog();
 
     // -- Backdrop --
@@ -154,6 +164,7 @@ export function openMarkdownEditorDialog({ title, value, maxLength, allowedUriPa
         maxLength: maxLength || 0,
         rows: 16,
         allowedUriPatterns: allowedUriPatterns || '',
+        resolvePreviewSource,
     });
 
     // Capture baseline from the actual textarea after creation so that any
