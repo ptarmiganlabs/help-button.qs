@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.3](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.2...helpbutton-qs-v3.1.3) (2026-11-12)
+
+
+### Miscellaneous
+
+* bump the [@nebula](https://github.com/nebula).js packages in one Dependabot pull request ([466f522](https://github.com/ptarmiganlabs/help-button.qs/commit/466f522742be747dff99b1ceb827ea99b11d6cca))
+* **deps-dev:** bump [@nebula](https://github.com/nebula).js/cli-sense from 7.0.1 to 7.9.0 ([7aad18a](https://github.com/ptarmiganlabs/help-button.qs/commit/7aad18a30c94c042f779764f474c6a862dd4b9ef))
+* **deps:** bump the npm_and_yarn group across 1 directory with 12 updates ([8a44ecd](https://github.com/ptarmiganlabs/help-button.qs/commit/8a44ecd9f32d272cba3a669495a0ecd323376cf9))
+
 ## [3.1.2](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.1...helpbutton-qs-v3.1.2) (2026-11-12)
 
 
