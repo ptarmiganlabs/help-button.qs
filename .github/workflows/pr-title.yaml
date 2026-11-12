@@ -31,12 +31,14 @@ on:
 # written, so the job needs no token.
 permissions: {}
 
-# The expression rules/ci/workflows.md gives, keyed on this workflow's name so that it
-# and CI never cancel each other: a later edit of, or push to, the same pull request
-# supersedes the check of the earlier one, and nothing else does.
-concurrency:
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
-    cancel-in-progress: true
+# No `concurrency:`, on purpose: an exception to "Cancel superseded runs" in
+# rules/ci/workflows.md. release-please pushes its branch and rewrites the pull request
+# body in the same second, so `synchronize` and `edited` start two runs on the same
+# head. With cancel-in-progress one cancels the other, and a ruleset can count the
+# cancelled `conventional-title` and block the merge until someone re-runs it
+# (help-button.qs#247, 2026-11-12). Without cancel-in-progress GitHub holds a second
+# run pending and cancels it when a third arrives, so that is no cure either. Every
+# run here takes seconds, so letting each one finish costs next to nothing.
 
 jobs:
     # The check reports under the job's id, `conventional-title`, and that is the name
