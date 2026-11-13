@@ -1,18 +1,10 @@
 // @vitest-environment node
 import { spawnSync } from 'node:child_process';
-import {
-    chmodSync,
-    existsSync,
-    mkdirSync,
-    mkdtempSync,
-    readFileSync,
-    rmSync,
-    writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { testFolders } from './test-folders.js';
 
 /**
  * scripts/zip-extension.mjs zips the extension folder, or fails.
@@ -33,22 +25,11 @@ const EXTENSION = {
 };
 const QEXT = join('helpbutton-qs-ext', 'helpbutton-qs.qext');
 
-let folder;
+const folderWith = testFolders('helpbutton-qs-zip-');
 
-/**
- * Make a folder that holds the given files.
- *
- * @param {Record<string, string>} files - Each file's content, by its path in the folder.
- * @returns {string} The folder's path.
- */
-function folderWith(files) {
-    folder = mkdtempSync(join(tmpdir(), 'helpbutton-qs-zip-'));
-    for (const [path, content] of Object.entries(files)) {
-        mkdirSync(dirname(join(folder, path)), { recursive: true });
-        writeFileSync(join(folder, path), content);
-    }
-    return folder;
-}
+// mkfifo makes the named pipe one case needs; Windows and some minimal images have none.
+const HAS_MKFIFO =
+    process.platform !== 'win32' && !spawnSync('mkfifo', [], { stdio: 'ignore' }).error;
 
 /**
  * Run the zip step in a folder.
@@ -84,11 +65,6 @@ function filesIn(path) {
     return names.filter((name) => !name.endsWith('/')).sort();
 }
 
-afterEach(() => {
-    if (folder) rmSync(folder, { recursive: true, force: true });
-    folder = undefined;
-});
-
 describe('scripts/zip-extension.mjs', () => {
     it('zips every file in the extension folder but its dotfiles', () => {
         const cwd = folderWith({
@@ -111,8 +87,9 @@ describe('scripts/zip-extension.mjs', () => {
     it.each([
         ['there is no extension folder', {}],
         ['the folder holds no .qext', { 'helpbutton-qs-ext/helpbutton-qs.js': 'define();\n' }],
-    ])('fails, and writes no zip, when %s', (_, files) => {
+    ])('fails, and leaves no zip, not even an earlier one, when %s', (_, files) => {
         const cwd = folderWith({ ...PACKAGE, ...files });
+        writeFileSync(join(cwd, 'helpbutton-qs.zip'), 'the zip of an earlier build');
 
         const run = zip(cwd);
 
@@ -140,8 +117,8 @@ describe('scripts/zip-extension.mjs', () => {
         expect(run.stderr).toContain('EISDIR');
     });
 
-    // archiver cannot zip a named pipe: it warns, and leaves the pipe out. Windows has no mkfifo.
-    it.skipIf(process.platform === 'win32')('fails when archiver leaves a file out', () => {
+    // archiver cannot zip a named pipe: it warns, and leaves the pipe out.
+    it.skipIf(!HAS_MKFIFO)('fails, and leaves no zip, when archiver leaves a file out', () => {
         const cwd = folderWith({ ...PACKAGE, ...EXTENSION });
         const mkfifo = spawnSync('mkfifo', [join(cwd, 'helpbutton-qs-ext', 'pipe')]);
         expect(mkfifo.status, 'mkfifo').toBe(0);
@@ -151,11 +128,12 @@ describe('scripts/zip-extension.mjs', () => {
         expect(run.status).toBe(1);
         expect(run.stderr).toContain('Zip: FAILED');
         expect(run.stderr).toContain('ENTRYNOTSUPPORTED');
+        expect(existsSync(join(cwd, 'helpbutton-qs.zip'))).toBe(false);
     });
 
     // Windows ignores the mode, and root reads the file anyway.
     it.skipIf(process.platform === 'win32' || process.getuid?.() === 0)(
-        'fails when it cannot read a file in the extension folder',
+        'fails, and leaves no partial zip, when it cannot read a file in the extension folder',
         () => {
             const cwd = folderWith({ ...PACKAGE, ...EXTENSION });
             chmodSync(join(cwd, 'helpbutton-qs-ext', 'dist', 'helpbutton-qs.js'), 0o000);
@@ -165,6 +143,7 @@ describe('scripts/zip-extension.mjs', () => {
             expect(run.status).toBe(1);
             expect(run.stderr).toContain('Zip: FAILED');
             expect(run.stderr).toContain('EACCES');
+            expect(existsSync(join(cwd, 'helpbutton-qs.zip'))).toBe(false);
         }
     );
 });

@@ -3,20 +3,25 @@
  * that `nebula sense` writes, and post-build completes, into helpbutton-qs.zip, the file that Qlik
  * Sense installs. RELEASE_VERSION and PRERELEASE_SUFFIX, when set, go into the zip's name too.
  *
- * It fails when the folder holds no .qext, so a zip run before `nebula sense` does not leave an
- * empty zip behind it, and when a file cannot be added or the zip cannot be written. Either way
- * `npm run pack:*` and the release build stop there.
+ * It removes the zip of an earlier build first. It fails when the folder holds no .qext, so a zip
+ * run before `nebula sense` leaves no zip behind it, and when a file cannot be added or the zip
+ * cannot be written, and then it removes what it wrote. Either way `npm run pack:*` and the release
+ * build stop there, and no zip is left that looks like a finished build.
  */
 import { createWriteStream, existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { readFile, rm } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { ZipArchive } from 'archiver';
+
+const require = createRequire(import.meta.url);
+const { EXT_DIR, QEXT_PATH } = require('./extension-paths.cjs');
 
 /**
  * Zip the extension folder.
  *
  * @returns {Promise<void>} Resolves when the zip is written. Sets a failing exit code, and stops,
- *     when the folder holds no .qext. Rejects when a file cannot be added or the zip written.
+ *     when the folder holds no .qext. Rejects, with the partial zip removed, when a file cannot be
+ *     added or the zip written.
  */
 async function main() {
     const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
@@ -24,12 +29,12 @@ async function main() {
     const versionTag = (process.env.RELEASE_VERSION && `-v${process.env.RELEASE_VERSION}`) || '';
     const zipName = `${pkg.name}${versionTag}${prerelease}.zip`;
 
-    // nebula sense writes the extension to {package-name}-ext/.
-    const extDir = `${pkg.name}-ext`;
-    const qextPath = join(extDir, `${pkg.name}.qext`);
-    if (!existsSync(qextPath)) {
+    // The zip of an earlier build must not outlive a run that fails.
+    await rm(zipName, { force: true });
+
+    if (!existsSync(QEXT_PATH)) {
         console.error(
-            `Zip: FAILED, no ${qextPath} to zip. Run "npm run sense" first, or "npm run pack:dev" or "npm run pack:prod" for the whole build.`
+            `Zip: FAILED, no ${QEXT_PATH} to zip. Run "npm run sense" first, or "npm run pack:dev" or "npm run pack:prod" for the whole build.`
         );
         process.exitCode = 1;
         return;
@@ -50,10 +55,21 @@ async function main() {
 
     archive.pipe(output);
     archive.glob('**/*', {
-        cwd: extDir,
+        cwd: EXT_DIR,
         ignore: ['.*', '**/.*'],
     });
-    await Promise.all([archive.finalize(), written]);
+    try {
+        await Promise.all([archive.finalize(), written]);
+    } catch (err) {
+        // Stop archiver, close the file, and remove the partial zip. The first error is the one
+        // reported; later ones from the closing stream go to the settled promise.
+        archive.unpipe(output);
+        archive.abort();
+        output.destroy();
+        if (!output.closed) await new Promise((resolve) => output.once('close', resolve));
+        await rm(zipName, { force: true }).catch(() => {});
+        throw err;
+    }
 
     console.log(`${archive.pointer()} total bytes`);
     console.log(`Successfully created ${zipName}`);

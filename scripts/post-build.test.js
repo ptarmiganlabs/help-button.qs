@@ -1,10 +1,10 @@
 // @vitest-environment node
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { testFolders } from './test-folders.js';
 
 /**
  * scripts/post-build.mjs checks the bundles and patches nothing.
@@ -22,22 +22,7 @@ const SCRIPT = fileURLToPath(new URL('./post-build.mjs', import.meta.url));
 const CLEAN_BUNDLE = 'const BUILD_TYPE = "development";\n';
 const QEXT = '{\n  "name": "HelpButton.qs",\n  "type": "visualization"\n}';
 
-let folder;
-
-/**
- * Make a folder that holds the given files.
- *
- * @param {Record<string, string>} files - Each file's content, by its path in the folder.
- * @returns {string} The folder's path.
- */
-function folderWith(files) {
-    folder = mkdtempSync(join(tmpdir(), 'helpbutton-qs-post-build-'));
-    for (const [path, content] of Object.entries(files)) {
-        mkdirSync(dirname(join(folder, path)), { recursive: true });
-        writeFileSync(join(folder, path), content);
-    }
-    return folder;
-}
+const folderWith = testFolders('helpbutton-qs-post-build-');
 
 /**
  * Run the post-build step in a folder.
@@ -48,11 +33,6 @@ function folderWith(files) {
 function postBuild(cwd) {
     return spawnSync(process.execPath, [SCRIPT], { cwd, encoding: 'utf8' });
 }
-
-afterEach(() => {
-    if (folder) rmSync(folder, { recursive: true, force: true });
-    folder = undefined;
-});
 
 describe('scripts/post-build.mjs', () => {
     it('fails when dist/ holds no bundle', () => {
@@ -97,12 +77,18 @@ describe('scripts/post-build.mjs', () => {
         ['there is none', {}],
         ['it is not JSON', { 'helpbutton-qs-ext/helpbutton-qs.qext': '{ "name": ' }],
     ])('fails when it cannot add the bundle metadata to the .qext, because %s', (_, files) => {
-        const run = postBuild(folderWith({ 'dist/helpbutton-qs.js': CLEAN_BUNDLE, ...files }));
+        const cwd = folderWith({ 'dist/helpbutton-qs.js': CLEAN_BUNDLE, ...files });
+
+        const run = postBuild(cwd);
 
         expect(run.status).toBe(1);
         expect(run.stderr).toContain(
             `Post-build: FAILED, could not add the bundle metadata to ${join('helpbutton-qs-ext', 'helpbutton-qs.qext')}`
         );
+        // A .qext it cannot read is left as it was.
+        for (const [path, content] of Object.entries(files)) {
+            expect(readFileSync(join(cwd, path), 'utf8')).toBe(content);
+        }
     });
 
     it('passes bundles with no build token left, and adds the bundle metadata to the .qext', () => {
