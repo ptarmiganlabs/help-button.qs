@@ -12,7 +12,8 @@ import { afterEach, describe, expect, it } from 'vitest';
  * Rollup replaces the build tokens while nebula builds. post-build used to replace them again in
  * the finished bundles, and that hid for years that nebula read no replacement at all
  * (docs/extension-developer/DEVELOPMENT.md, "Build tokens"). So a token left in a bundle, or no
- * bundle to check, now fails the build, and the bundle is left as it was. Each case runs the
+ * bundle to check, now fails the build, and the bundle is left as it was. So does a .qext that it
+ * cannot add the bundle metadata to, which it used to report and then exit 0. Each case runs the
  * script in a folder of its own, as `npm run post-build` runs it in the repository root.
  */
 
@@ -89,6 +90,18 @@ describe('scripts/post-build.mjs', () => {
         // the zip.
         expect(readFileSync(join(cwd, 'helpbutton-qs-ext', 'helpbutton-qs.qext'), 'utf8')).toBe(
             QEXT
+        );
+    });
+
+    it.each([
+        ['there is none', {}],
+        ['it is not JSON', { 'helpbutton-qs-ext/helpbutton-qs.qext': '{ "name": ' }],
+    ])('fails when it cannot add the bundle metadata to the .qext, because %s', (_, files) => {
+        const run = postBuild(folderWith({ 'dist/helpbutton-qs.js': CLEAN_BUNDLE, ...files }));
+
+        expect(run.status).toBe(1);
+        expect(run.stderr).toContain(
+            `Post-build: FAILED, could not add the bundle metadata to ${join('helpbutton-qs-ext', 'helpbutton-qs.qext')}`
         );
     });
 

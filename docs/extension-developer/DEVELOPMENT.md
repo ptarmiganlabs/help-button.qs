@@ -34,8 +34,8 @@ Below is a breakdown of the available `npm run` commands:
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `npm run build:dist` | Runs a production build (`nebula build`).                                                                                               |
 | `npm run sense`      | Generates the Qlik Sense metadata and the `.qext` file from `src` using `nebula sense`.                                                 |
-| `npm run zip`        | Executes `scripts/zip-extension.mjs`, which leverages the `archiver` dependency to package the compiled files into a deployable `.zip`. |
-| `npm run post-build` | Runs `scripts/post-build.mjs`: fails if a build token is left in a bundle, then adds bundle metadata to the `.qext` file.               |
+| `npm run zip`        | Runs `scripts/zip-extension.mjs`: zips the extension folder that `nebula sense` writes into a `.zip`, failing if it holds no `.qext`.   |
+| `npm run post-build` | Runs `scripts/post-build.mjs`: fails on a build token left in a bundle, then adds bundle metadata to the `.qext`, failing if it cannot. |
 
 ### Recommended End-to-End Pack Commands
 

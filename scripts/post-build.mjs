@@ -10,7 +10,7 @@
  *    (docs/extension-developer/DEVELOPMENT.md, "Build tokens"). No bundle in dist/ fails the build
  *    too, so a check that found nothing to read never passes as one that found nothing wrong.
  * 2. Injects the shared `.qs Library` bundle metadata into the .qext manifest that `nebula sense`
- *    writes.
+ *    writes. It fails the build when it cannot, so no zip is made without it.
  *
  * It does not build, replace or zip anything itself.
  */
@@ -71,8 +71,9 @@ async function tokensLeft(files) {
 /**
  * Check the bundles for build tokens, then inject the bundle metadata into the .qext manifest.
  *
- * @returns {Promise<void>} Resolves when the step is done. Sets a failing exit code, and stops,
- *     when dist/ holds no bundle or a build token is left in one.
+ * @returns {Promise<void>} Resolves when the step is done. Sets a failing exit code when dist/
+ *     holds no bundle, when a build token is left in one, or when the bundle metadata cannot be
+ *     added to the .qext.
  */
 async function main() {
     const bundles = await jsFiles('dist');
@@ -105,7 +106,8 @@ async function main() {
         await writeFile(qextPath, JSON.stringify(qext, null, 2) + '\n');
         console.log(`Post-build: Injected bundle metadata into ${qextPath}`);
     } catch (err) {
-        console.error(`Error injecting bundle into ${qextPath}:`, err);
+        console.error(`Post-build: FAILED, could not add the bundle metadata to ${qextPath}:`, err);
+        process.exitCode = 1;
     }
 }
 
