@@ -10,19 +10,17 @@
  *    (docs/extension-developer/DEVELOPMENT.md, "Build tokens"). No bundle in dist/ fails the build
  *    too, so a check that found nothing to read never passes as one that found nothing wrong.
  * 2. Injects the shared `.qs Library` bundle metadata into the .qext manifest that `nebula sense`
- *    writes.
+ *    writes. It fails the build when it cannot, so no zip is made without it.
  *
  * It does not build, replace or zip anything itself.
  */
-import { readFile, writeFile, readdir } from 'node:fs/promises';
+import { readFile, writeFile, readdir, rename, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const { TOKEN_NAMES } = require('./build-tokens.cjs');
-
-/** The extension folder that `nebula sense` writes. */
-const EXT_DIR = 'helpbutton-qs-ext';
+const { EXT_DIR, QEXT_PATH } = require('./extension-paths.cjs');
 
 /** Bundle metadata injected into the .qext file. */
 const BUNDLE_METADATA = {
@@ -71,8 +69,9 @@ async function tokensLeft(files) {
 /**
  * Check the bundles for build tokens, then inject the bundle metadata into the .qext manifest.
  *
- * @returns {Promise<void>} Resolves when the step is done. Sets a failing exit code, and stops,
- *     when dist/ holds no bundle or a build token is left in one.
+ * @returns {Promise<void>} Resolves when the step is done. Sets a failing exit code when dist/
+ *     holds no bundle, when a build token is left in one, or when the bundle metadata cannot be
+ *     added to the .qext.
  */
 async function main() {
     const bundles = await jsFiles('dist');
@@ -97,15 +96,23 @@ async function main() {
     }
     console.log(`Post-build: Checked ${files.length} js file(s), no build token left`);
 
-    // Inject bundle metadata into the .qext manifest
-    const qextPath = join(EXT_DIR, 'helpbutton-qs.qext');
+    // Inject bundle metadata into the .qext manifest. It is written to a dotfile beside it, which
+    // the zip step leaves out, and renamed over it, so a write that fails partway leaves the .qext
+    // as it was.
+    const partPath = join(EXT_DIR, '.qext.part');
     try {
-        const qext = JSON.parse(await readFile(qextPath, 'utf-8'));
+        const qext = JSON.parse(await readFile(QEXT_PATH, 'utf-8'));
         qext.bundle = BUNDLE_METADATA;
-        await writeFile(qextPath, JSON.stringify(qext, null, 2) + '\n');
-        console.log(`Post-build: Injected bundle metadata into ${qextPath}`);
+        await writeFile(partPath, JSON.stringify(qext, null, 2) + '\n');
+        await rename(partPath, QEXT_PATH);
+        console.log(`Post-build: Injected bundle metadata into ${QEXT_PATH}`);
     } catch (err) {
-        console.error(`Error injecting bundle into ${qextPath}:`, err);
+        await rm(partPath, { force: true }).catch(() => {});
+        console.error(
+            `Post-build: FAILED, could not add the bundle metadata to ${QEXT_PATH}:`,
+            err
+        );
+        process.exitCode = 1;
     }
 }
 
