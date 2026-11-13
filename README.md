@@ -1,6 +1,38 @@
-# HelpButton.qs
+<h1 align="center">HelpButton.qs</h1>
 
-**helpbutton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Qlik Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
+<p align="center"><strong>A configurable help button in the Qlik Sense app toolbar</strong></p>
+
+<p align="center">
+<a href="https://github.com/ptarmiganlabs/help-button.qs/releases"><img src="https://img.shields.io/github/v/release/ptarmiganlabs/help-button.qs?include_prereleases" alt="Latest release"></a>
+<a href="https://github.com/ptarmiganlabs/help-button.qs/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green" alt="License: MIT"></a>
+<a href="https://github.com/sponsors/ptarmiganlabs"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2?logo=githubsponsors" alt="Sponsor Ptarmigan Labs on GitHub"></a>
+</p>
+
+<p align="center">
+<a href="#documentation">Documentation</a> ·
+<a href="https://github.com/ptarmiganlabs/help-button.qs/discussions">Questions</a> ·
+<a href="https://github.com/ptarmiganlabs/help-button.qs/issues">Report a bug</a> ·
+<a href="https://github.com/sponsors/ptarmiganlabs">❤️ Sponsor</a>
+</p>
+
+**HelpButton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Qlik Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
+
+## ❤️ Support the project
+
+HelpButton.qs is free and open source, under the MIT licence. If you use it, please consider sponsoring its development: sponsorships pay for maintenance, bug fixes and new features, and keep the project going.
+
+**[❤️ Sponsor Ptarmigan Labs on GitHub](https://github.com/sponsors/ptarmiganlabs)**
+
+Other ways to help:
+
+- ⭐ **Star the repository**: it helps others find the project.
+- 💬 **Share your feedback** in [Discussions](https://github.com/ptarmiganlabs/help-button.qs/discussions): tell us how you use it.
+- 🐛 **Report issues** in [Issues](https://github.com/ptarmiganlabs/help-button.qs/issues).
+- 🍴 **Contribute**: pull requests are welcome.
+
+_Maintained by [Göran Sander](https://github.com/mountaindude) and supported by [Ptarmigan Labs](https://ptarmiganlabs.com)._
+
+---
 
 ## Documentation
 
@@ -23,21 +55,6 @@ Documentation is now split into two folders under `docs/`:
 | [Multi-Language Support](./docs/app-developer/multi-language.md)                                               | Background guide to locale detection, fallback order, forced-language behavior, and multilingual configuration patterns.        |
 
 Extension developers and maintainers can find the implementation, security, and release material in [`docs/extension-developer/`](./docs/extension-developer/).
-
-## ❤️ Support the project
-
-If you find this project helpful and use it in your Qlik Sense environment, please consider supporting it financially! Your sponsorship helps ensure the project's long-term sustainability and allows me to continue maintaining it, fixing bugs, and adding new features.
-
-**👉 [Sponsor the project on GitHub](https://github.com/sponsors/ptarmiganlabs)** - Click the "Sponsor" button at the repository page to become a sponsor.
-
-- ⭐ **Star the repository** on GitHub - it helps others discover the project
-- 🍴 **Fork and contribute** - pull requests are welcome!
-- 💬 **Share your feedback** - let me know how you're using it
-- 🐛 **Report issues** - help improve stability and functionality
-
-_This project is maintained by [Göran Sander](https://github.com/mountaindude) and supported by [Ptarmigan Labs](https://ptarmiganlabs.com)._
-
----
 
 The bug report and feedback features look like this in action:
 
