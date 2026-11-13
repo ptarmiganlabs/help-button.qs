@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.2.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.2.0...helpbutton-qs-v3.2.1) (2026-11-13)
+
+
+### Miscellaneous
+
+* fail the zip and post-build steps when they go wrong ([357fda9](https://github.com/ptarmiganlabs/help-button.qs/commit/357fda9768a88b60ddbc628c47d0e29084f44551))
+* leave no stale or partial zip, and write the .qext atomically ([af06987](https://github.com/ptarmiganlabs/help-button.qs/commit/af069871fd647659c73e7f34e809439e0044f1da))
+* let Rollup replace the build tokens through the option nebula reads ([5e553b2](https://github.com/ptarmiganlabs/help-button.qs/commit/5e553b2996e3c86ba7e7b6bd8b8edc1fde6e4b5f))
+
 ## [3.2.0](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.1.4...helpbutton-qs-v3.2.0) (2026-11-12)
 
 
