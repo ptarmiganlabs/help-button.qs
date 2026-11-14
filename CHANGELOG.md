@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.2.2](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.2.1...helpbutton-qs-v3.2.2) (2026-11-14)
+
+
+### Miscellaneous
+
+* use the organisation's default FUNDING.yml ([f996575](https://github.com/ptarmiganlabs/help-button.qs/commit/f996575b5b315c6760d300a5bf93444052264f54))
+
+
+### Documentation
+
+* add sponsor section to README ([b2b2c82](https://github.com/ptarmiganlabs/help-button.qs/commit/b2b2c82842ac46ce645705fa74375b778ee0f195))
+* show the demo GIF under the README header ([e4eb996](https://github.com/ptarmiganlabs/help-button.qs/commit/e4eb996ed1d6d4100211ae28ee98ca06b6ac469c))
+
 ## [3.2.1](https://github.com/ptarmiganlabs/help-button.qs/compare/helpbutton-qs-v3.2.0...helpbutton-qs-v3.2.1) (2026-11-13)
 
 
