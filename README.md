@@ -15,6 +15,10 @@
 <a href="https://github.com/sponsors/ptarmiganlabs">❤️ Sponsor</a>
 </p>
 
+<p align="center">
+  <img src="docs/img/helpbutton-qs-demo.gif" alt="HelpButton.qs on a Qlik Sense sheet: a help icon explains a chart, then the Help button in the toolbar opens its menu and a bug report is sent with the user and sheet filled in" width="880">
+</p>
+
 **HelpButton.qs** is a Qlik Sense extension that injects a configurable help button directly into the Qlik Sense application's toolbar. It provides a seamless way for end-users to access documentation, support resources, or bug reporting forms without cluttering the app sheet area.
 
 ## ❤️ Support the project
@@ -55,10 +59,6 @@ Documentation is now split into two folders under `docs/`:
 | [Multi-Language Support](./docs/app-developer/multi-language.md)                                               | Background guide to locale detection, fallback order, forced-language behavior, and multilingual configuration patterns.        |
 
 Extension developers and maintainers can find the implementation, security, and release material in [`docs/extension-developer/`](./docs/extension-developer/).
-
-The bug report and feedback features look like this in action:
-
-![Qlik Sense Help Button Demo](./docs/img/helpbutton-qs_animated-demo-2.gif)
 
 > Archived HTML injection variants remain available for existing deployments and migration reference in [legacy/variants/basic/README.md](./legacy/variants/basic/README.md) and [legacy/variants/bug-report/README.md](./legacy/variants/bug-report/README.md). New deployments should use the extension documented below.
 
